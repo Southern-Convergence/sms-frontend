@@ -2,11 +2,12 @@
   <v-app-bar v-bind="$attrs" height="56" border flat>
     <v-container class="fill-height d-flex align-content-center pl-1" v-bind="$attrs">
       <slot name="nav-icon" />
-      <v-avatar class="pa-1">
-        <v-img src="/logo.svg" @click="$router.push({name : 'home'})" style="cursor : pointer" />
-      </v-avatar>
-      <v-app-bar-title class="pt-1" @click="$router.push({name : 'home'})" style="cursor : pointer">
-        {{$props.appbar_title}}
+
+      <!-- <v-avatar class="pa-1">
+        <v-img src="/logo.svg" @click="$router.push({ name: 'home' })" style="cursor : pointer" />
+      </v-avatar> -->
+      <v-app-bar-title class="pt-1 text-indigo" @click="$router.push({ name: 'home' })" style="cursor : pointer">
+        <!-- {{ $props.appbar_title }} --> Prime Reclassification System
       </v-app-bar-title>
       <!-- <dev-display-debugger id="floater" /> -->
       <v-spacer />
@@ -20,8 +21,50 @@
       </v-tooltip>
  -->
 
+      <v-menu location="bottom center" location-strategy="connected" :close-on-content-click="false">
+        <template v-slot:activator="{ props }">
+          <v-btn v-bind="props" @click="notification_menu = false" icon="mdi-tools" color="primary" />
+        </template>
+        <v-card min-width="320" border>
+          <v-card-text class="pt-4 pb-0 px-0">
+            <v-list class="py-0 px-0" density="compact">
+              <v-list-item class="pb-4" title="Administrative Tools" density="compact">
+                <!-- <template v-slot:prepend>
+                  <v-icon>mdi-account</v-icon>
+                </template> -->
+              </v-list-item>
+
+              <v-divider />
+
+            </v-list>
+
+            <v-list class="pt-0 pb-2 ma-4">
+              <v-list-item title="User Management" color="primary"
+                :to="{ name: `user-management`, params: account_params }">
+                <template v-slot:prepend>
+                  <v-icon class="mr-1" icon="mdi-account" />
+                </template>
+              </v-list-item>
+
+              <v-list-item title="Invite School" color="primary"
+                :to="{ name: `school-invite-school`, params: account_params }">
+                <template v-slot:prepend>
+                  <v-icon class="mr-1" icon="mdi-school" />
+                </template>
+              </v-list-item>
+              <v-list-item title="Maintenance Panel" color="primary"
+                :to="{ name: `maintenance-panel`, params: account_params }">
+                <template v-slot:prepend>
+                  <v-icon class="mr-1" icon="mdi-tools" />
+                </template>
+              </v-list-item>
+            </v-list>
+          </v-card-text>
+        </v-card>
+      </v-menu>
+
       <v-menu location="bottom center" :close-on-content-click="false">
-        <template v-slot:activator="{props}">
+        <template v-slot:activator="{ props }">
           <v-btn v-bind="props" @click="notification_menu = false" :icon="!ring_bell ? 'mdi-bell-ring' : 'mdi-bell'"
             color="primary" />
         </template>
@@ -52,7 +95,7 @@
       </v-menu>
 
       <v-menu location="bottom center" location-strategy="connected" :close-on-content-click="false">
-        <template v-slot:activator="{props}">
+        <template v-slot:activator="{ props }">
           <layout-avatar v-bind="props" />
         </template>
         <v-card min-width="320" border>
@@ -81,12 +124,18 @@
 
             <v-list class="pt-0 pb-2" density="compact">
               <v-list-item title="Profile" color="primary"
-                :to="{name : `account-profile-${Object.keys(account_params)[0]}`, params : account_params}">
+                :to="{ name: `account-profile-${Object.keys(account_params)[0]}`, params: account_params }">
                 <template v-slot:prepend>
                   <v-icon class="mr-1" icon="mdi-account" />
                 </template>
               </v-list-item>
-              <v-list-item title="Settings" color="primary" :to="{name : 'account-settings'}">
+
+              <v-list-item title="School Profile" color="primary" :to="{ name: 'school' }">
+                <template v-slot:prepend>
+                  <v-icon class="mr-1" icon="mdi-school" />
+                </template>
+              </v-list-item>
+              <v-list-item title="Settings" color="primary" :to="{ name: 'account-settings' }">
                 <template v-slot:prepend>
                   <v-icon class="mr-1" icon="mdi-cog" />
                 </template>
@@ -113,35 +162,35 @@
 <script lang="ts" setup>
 import useAuth from "~/store/auth";
 import useNav from "~/store/nav";
-import {useTheme} from "vuetify/lib/framework.mjs";
+import { useTheme } from "vuetify/lib/framework.mjs";
 
-import {  useGlobalConfig } from "~/store/index";
+import { useGlobalConfig } from "~/store/index";
 
-const auth   = useAuth();
+const auth = useAuth();
 const router = useRouter();
-const theme  = useTheme();
-const nav    = useNav();
-const cfg    = useGlobalConfig();
+const theme = useTheme();
+const nav = useNav();
+const cfg = useGlobalConfig();
 
 defineProps({
-  appbar_title : String
+  appbar_title: String
 });
 
-onBeforeMount(()=>{
+onBeforeMount(() => {
   theme.global.name.value = cfg.preferences.dark ? "dark" : "light";
 });
 
 const notification_menu = ref(false);
 
-const account_params = computed(()=>  ({[`${auth.type}`] : (auth.user || {}).username}));
-const ring_bell = computed(()=> false);
-const toggle_dark_mode = ()=>{
+const account_params = computed(() => ({ [`${auth.type}`]: (auth.user || {}).username }));
+const ring_bell = computed(() => false);
+const toggle_dark_mode = () => {
   cfg.set_dark_mode();
   theme.global.name.value = cfg.preferences.dark ? "dark" : "light"
 }
 
-const logout = ()=>{
+const logout = () => {
   auth.logout();
-  router.replace({name : "index"})
+  router.replace({ name: "index" })
 }
 </script>

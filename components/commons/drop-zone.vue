@@ -2,13 +2,14 @@
   <v-card v-bind="$attrs" v-on="$listeners" :class="upload_highlight ? 'text-bold-emphasis' : 'text-medium-emphasis'"
     :elevation="upload_highlight ? 2 : 0" @drop.prevent="on_drop" @dragover.prevent="on_drag" @dragenter.prevent="on_drag"
     @dragleave="on_leave" :color="upload_highlight ? 'light-blue-lighten-5' : ''" border>
-    
+
     <v-window v-model="upload_state">
       <v-window-item value="prompt">
         <slot name="default" />
+        <v-card-title> Attach </v-card-title>
         <v-card-title class="d-block text-center">
           <v-avatar size="92" contain>
-            <v-img src="/file-upload.svg" alt="upload-icon"/>
+            <v-img src="/file-upload.svg" alt="upload-icon" />
           </v-avatar>
         </v-card-title>
 
@@ -17,7 +18,7 @@
           <h6 class="text-caption">Or</h6>
           <v-btn class="mb-2" @click="handle_file_pick" variant="outlined" color="primary">Select File</v-btn>
           <v-file-input class="d-none" type="file" ref="img_uploader" @change="img_conversion" />
-          <h6 class="text-caption text-body-1">Maximum Document Size: {{max_total_size}}MB</h6>
+          <h6 class="text-caption text-body-1">Maximum Document Size: {{ max_total_size }}MB</h6>
         </v-card-text>
       </v-window-item>
 
@@ -70,18 +71,18 @@ import swal from 'sweetalert';
 const { $bytes2mem } = useNuxtApp();
 
 const { loading, file_length, max_file_size, max_total_size } = withDefaults(defineProps<UploadProps>(), {
-  loading : false,
-  file_length : 1,
-  max_total_size : 16,
-  max_file_size  : 16
+  loading: false,
+  file_length: 1,
+  max_total_size: 16,
+  max_file_size: 16
 });
 
 type UploadProps = {
-  loading     : boolean;
-  file_length : number;
-  
-  max_file_size  : number;
-  max_total_size : number;
+  loading: boolean;
+  file_length: number;
+
+  max_file_size: number;
+  max_total_size: number;
 }
 
 const emit = defineEmits(["update:modelValue", "upload"]);
@@ -93,15 +94,15 @@ onUnmounted(() => events.forEach((event) => document.body.removeEventListener(ev
 const upload_highlight = ref(false);
 const img_uploader = ref(null);
 
-function on_drop(e : DragEvent) {
+function on_drop(e: DragEvent) {
   /* @ts-ignore */
   const files = [...e.dataTransfer?.files!];
 
-  if(files.length > file_length){
+  if (files.length > file_length) {
     return swal({
-      title : "Not allowed",
-      text  : `You are only allowed to upload ${file_length} file${file_length > 1 ? "s" : ""}`,
-      icon  : "error"
+      title: "Not allowed",
+      text: `You are only allowed to upload ${file_length} file${file_length > 1 ? "s" : ""}`,
+      icon: "error"
     });
   }
 
@@ -111,21 +112,21 @@ function on_drop(e : DragEvent) {
   upload_highlight.value = false;
 }
 
-function on_drag(){
+function on_drag() {
   upload_highlight.value = true;
 }
 
-function on_leave(){
+function on_leave() {
   upload_highlight.value = false;
 }
 
-function prevent_defaults(e : Event) {
+function prevent_defaults(e: Event) {
   e.preventDefault();
 }
 
 
 const upload_form = ref({
-  files : [] as File[]
+  files: [] as File[]
 });
 
 const focused_file = ref(0);
@@ -133,7 +134,7 @@ const focused_file = ref(0);
 const upload_state = ref("prompt");
 const uploading = ref(false);
 
-function clear_upload(){
+function clear_upload() {
   upload_state.value = "prompt";
   upload_form.value.files = [];
 }
@@ -164,39 +165,39 @@ const POWERPOINT_MIMETYPES = [
   "application/vnd.ms-powerpoint.template.macroEnabled.12"
 ];
 
-const uploaded_files = computed(()=> {
+const uploaded_files = computed(() => {
   const files = upload_form.value.files;
 
-  return files.map((v)=> {
+  return files.map((v) => {
     const { name, type, size } = v;
-    
+
     let icon = "file";
 
-    if(type.includes("audio"))icon = "file-sound";
-    if(type.includes("image"))icon = "file-image";
-    if(type.includes("video"))icon = "file-video";
-    if(type.includes("text")) icon = "file-document";
+    if (type.includes("audio")) icon = "file-sound";
+    if (type.includes("image")) icon = "file-image";
+    if (type.includes("video")) icon = "file-video";
+    if (type.includes("text")) icon = "file-document";
 
-    if(type.includes("pdf"))  icon = "file-pdf";
+    if (type.includes("pdf")) icon = "file-pdf";
 
-    if(EXCEL_MIMETYPES.includes(type))icon       = "file-excel";
-    if(WORD_MIMETYPES.includes(type))icon        = "file-word";
-    if(POWERPOINT_MIMETYPES.includes(type))icon  = "file-powerpoint";
+    if (EXCEL_MIMETYPES.includes(type)) icon = "file-excel";
+    if (WORD_MIMETYPES.includes(type)) icon = "file-word";
+    if (POWERPOINT_MIMETYPES.includes(type)) icon = "file-powerpoint";
 
-    return { name, type, size : $bytes2mem(size), icon }
+    return { name, type, size: $bytes2mem(size), icon }
   });
 });
 
-function handle_file_pick(){
+function handle_file_pick() {
   /* @ts-ignore */
   img_uploader.value.click()
 }
 
-async function upload_files(){
+async function upload_files() {
   emit("upload", upload_form.value.files);
 }
 
-async function img_conversion(e : any){
+async function img_conversion(e: any) {
   upload_form.value.files = e.target.files;
   upload_files();
 }

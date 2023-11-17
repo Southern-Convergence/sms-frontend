@@ -1,26 +1,26 @@
 <template>
-  <!-- <v-card border :rounded="0" class="w-50">
-    <v-card-title class="d-flex align-center " >
+  <v-card border :rounded="0" class="w-50">
+    <v-card-title class="d-flex align-center ">
       <v-icon class="mr-2">mdi-record</v-icon>
       <span>INCREMENTING</span>
     </v-card-title>
     <v-divider />
     <v-card-text class="pa-1 ma-0">
       <v-sheet border class="pa-4">
-        <div class="text-center text-h1">{{  count }}</div>
+        <div class="text-center text-h1">{{ count }}</div>
       </v-sheet>
     </v-card-text>
 
-    
+
     <v-divider />
     <v-card-actions class="pa-0 ma-0">
       <v-btn :disabled="is_disabled" variant="tonal" block @click="increment">Increment</v-btn>
     </v-card-actions>
-  </v-card> -->
+  </v-card>
 
-
+  <!-- 
   <v-card border :rounded="0" class="w-50">
-    <v-card-title class="d-flex align-center " >
+    <v-card-title class="d-flex align-center ">
       <v-icon class="mr-2">mdi-record</v-icon>
       <span>INCREMENTING</span>
     </v-card-title>
@@ -39,7 +39,7 @@
     <v-card-actions class="pa-0 ma-0">
       <v-btn :disabled="is_disabled" variant="tonal" block @click="submit_marianne">Submit</v-btn>
     </v-card-actions>
-  </v-card>
+  </v-card> -->
 </template>
 
 <script setup lang="ts">
@@ -55,11 +55,11 @@ interface Marianne {
   name: string;
 }
 
-interface SMS_FORM { 
+interface SMS_FORM {
   marianne: Marianne;
 }
 
-const clone_marianne_1 = ref<Marianne>({ height: 6, weight: 60, age: "18",name: "Hello" });
+const clone_marianne_1 = ref<Marianne>({ height: 6, weight: 60, age: "18", name: "Hello" });
 const form_ref = ref({})
 
 function submit_marianne() {
@@ -87,7 +87,7 @@ const is_disabled = computed(() => {
 })
 
 
-function add(num1 : number, num2 : number) : number {
+function add(num1: number, num2: number): number {
   return num1 + num2
 }
 </script>

@@ -1,22 +1,10 @@
 <template>
-  <v-app>
-    <layout-std-appbar appbar_title="Systems" :fluid="true">
+  <v-app style="border: red 1px solid">
+    <layout-std-appbar appbar_title="Appllicant Equvalent Record Form" :fluid="true">
       <template v-slot:nav-icon>
-        <v-app-bar-nav-icon class="mr-4" expand-on-hover variant="text" @click.stop="drawer = !drawer" />
+        <v-app-bar-nav-icon class="mr-4" expand-on-hover variant="text" />
       </template>
     </layout-std-appbar>
-
-    <v-navigation-drawer v-model="drawer" :rail="$vuetify.display.smAndDown" clipped>
-      <v-sheet border>
-        <v-img class="ma-2" src="/deped.svg" cover />
-      </v-sheet>
-
-      <v-sheet>
-        <v-list class="pb-0">
-          <NavItem :items="nav.systems_navs" />
-        </v-list>
-      </v-sheet>
-    </v-navigation-drawer>
 
     <v-main>
       <slot />
