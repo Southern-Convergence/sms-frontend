@@ -46,7 +46,8 @@
 											<div class="text-body-1 mb-1 ">
 												Position : <b>{{ a.position }}</b>
 											</div>
-											<div class="text-body-2"> Name : <b>{{ a.surname }}, {{ a.givenname }} </b>
+											<div class="text-body-2"> Name : <b class="text-capitalize">{{ a.surname }}, {{
+												a.givenname }} </b>
 											</div>
 											<div class="text-body-2"> School : {{ a.school }}</div>
 											<div class="text-body-2"> Division : {{ a.division }}</div>
@@ -87,7 +88,8 @@
 											<div class="text-body-1 mb-1 ">
 												Position : <b>{{ a.position }}</b>
 											</div>
-											<div class="text-body-2"> Name : <b>{{ a.surname }}, {{ a.givenname }} </b>
+											<div class="text-body-2"> Name : <b class="text-capitalize">{{ a.surname }}, {{
+												a.givenname }} </b>
 											</div>
 											<div class="text-body-2"> School : {{ a.school }}</div>
 											<div class="text-body-2"> Division : {{ a.division }}</div>
@@ -127,7 +129,8 @@
 											<div class="text-body-1 mb-1 ">
 												Position : <b>{{ a.position }}</b>
 											</div>
-											<div class="text-body-2"> Name : <b>{{ a.surname }}, {{ a.givenname }} </b>
+											<div class="text-body-2"> Name : <b class="text-capitalize">{{ a.surname }}, {{
+												a.givenname }} </b>
 											</div>
 											<div class="text-body-2"> School : {{ a.school }}</div>
 											<div class="text-body-2"> Division : {{ a.division }}</div>
@@ -138,7 +141,7 @@
 											View Application
 										</v-btn>
 										<v-spacer />
-										<span> Status : <v-chip color="orange" class="font-weight-bold"> {{ a.status
+										<span> Status : <v-chip color="error" class="font-weight-bold"> {{ a.status
 										}}</v-chip></span>
 									</v-card-actions>
 								</v-card>
@@ -168,9 +171,12 @@
 				<v-card-text>
 					<v-row dense>
 						<v-col cols="6">
-							Applicant Name: <b>{{ `${selected_application.surname},
-															${selected_application.givenname} ${selected_application.middlename.charAt(0)}.` }}</b>
+							Applicant Name: <b class="text-uppercase">{{ `${selected_application.surname},
+															${selected_application.givenname}
+								` }}
+							</b>
 						</v-col>
+
 						<v-col cols="6" class="font-weight-bold"> CONTROL NUMBER : <v-chip class="font-weight-bold"
 								color="primary">{{
 									selected_application.control_no }}</v-chip></v-col>
@@ -212,6 +218,39 @@
 								bg-color="grey-lighten-4" :model-value="selected_application.eligibility" variant="solo"
 								readonly />
 						</v-col>
+						<v-col cols="6" v-if="selected_application.performance_rating"> Performance Rating:<v-textarea
+								rows="3" bg-color="grey-lighten-4" :model-value="selected_application.performance_rating"
+								variant="solo" readonly />
+						</v-col>
+						<!-- <v-col cols="12">
+							<v-list lines="auto" density="compact">
+								<v-list-item>
+									<v-list-item-title>Education : </v-list-item-title>
+									<v-list-item-subtitle class="text-justify">
+										{{ selected_application.performance_rating }}
+									</v-list-item-subtitle>
+								</v-list-item>
+								<v-list-item>
+									<v-list-item-title>Experience : </v-list-item-title>
+									<v-list-item-subtitle class="text-justify">
+										{{ selected_application.experience }}
+									</v-list-item-subtitle>
+								</v-list-item>
+								<v-list-item>
+									<v-list-item-title>Training : </v-list-item-title>
+									<v-list-item-subtitle class="text-justify">
+										{{ selected_application.training }}
+									</v-list-item-subtitle>
+								</v-list-item>
+								<v-list-item>
+									<v-list-item-title>Performance Rating : </v-list-item-title>
+									<v-list-item-subtitle class="text-justify">
+										{{ selected_application.performance_rating }}
+									</v-list-item-subtitle>
+								</v-list-item>
+							</v-list>
+						</v-col> -->
+
 					</v-row>
 				</v-card-text>
 				<v-divider />

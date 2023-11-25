@@ -44,7 +44,7 @@
           </v-sheet>
         </v-card-text>
       </v-sheet>
-
+      <!-- 
       <v-sheet class="overflow-y-auto" height="65vh">
         <v-card-text>
           <v-row dense>
@@ -92,7 +92,7 @@
             </v-col>
           </v-row>
         </v-card-text>
-      </v-sheet>
+      </v-sheet> -->
     </v-card>
     <commons-dialog max-width=" 45%" v-model="qs_dialog.dialog" icon="mdi-school" :title="qs_dialog.title"
       :subtitle="qs_dialog.subtitle" @submit="create_qs" :submitText="'Submit'">

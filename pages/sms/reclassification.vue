@@ -46,7 +46,8 @@
                       <div class="text-body-1 mb-1 ">
                         Position : <b>{{ d.position }}</b>
                       </div>
-                      <div class="text-body-2"> Name : <b>{{ d.surname }}, {{ d.givenname }} </b></div>
+                      <div class="text-body-2"> Name : <b class="text-capitalize">{{ d.surname }}, {{ d.givenname }} </b>
+                      </div>
                       <div class="text-body-2"> School : {{ d.school }}</div>
                       <div class="text-body-2"> Division : {{ d.division }}</div>
                     </div>
@@ -83,7 +84,8 @@
                       <div class="text-body-1 mb-1 ">
                         Position : <b>{{ d.position }}</b>
                       </div>
-                      <div class="text-body-2"> Name : <b>{{ d.surname }}, {{ d.givenname }} </b></div>
+                      <div class="text-body-2"> Name : <b class="text-capitalize">{{ d.surname }}, {{ d.givenname }} </b>
+                      </div>
                       <div class="text-body-2"> School : {{ d.school }}</div>
                       <div class="text-body-2"> Division : {{ d.division }}</div>
                     </div>

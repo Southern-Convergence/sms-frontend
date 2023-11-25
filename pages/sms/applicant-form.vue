@@ -118,7 +118,6 @@
 
       <v-card-text>
         <v-row dense>
-
           <v-col cols="12"> <v-icon class="mr-2 pb-2" size="26" color="primary">mdi-seal</v-icon>
             Individual Qualification</v-col>
           <v-col cols="4" class="px-1">
@@ -134,22 +133,28 @@
           <v-col cols="6" class="px-1">
             <v-textarea v-model="applicant.education" rows="2" class="w-100" label="Education" bg-color="white"
               hide-details />
+
+            <v-file-input v-if="applicant.education" label="Attach proof of education" class="mt-2" />
           </v-col>
           <v-col cols="6" class="px-1">
             <v-textarea v-model="applicant.experience" rows="2" class="w-100" label="Experience" bg-color="white"
               hide-details />
+            <v-file-input v-if="applicant.experience" label="Attach proof of experience" class="mt-2" />
           </v-col>
           <v-col cols="6" class="px-1">
             <v-textarea v-model="applicant.training" rows="2" class="w-100" label="Training" bg-color="white"
               hide-details />
+            <v-file-input v-if="applicant.training" label="Attach proof of training/s" class="mt-2" />
           </v-col>
           <v-col cols="6" class="px-1">
             <v-textarea v-model="applicant.eligibility" rows="2" class="w-100" label="Eligibility" bg-color="white"
               hide-details />
+            <v-file-input v-if="applicant.eligibility" label="Attach proof of eligibility" class="mt-2" />
           </v-col>
           <v-col cols="6" class="px-1">
             <v-textarea v-model="applicant.performance_rating" rows="2" class="w-100" label="Performance Rating"
               bg-color="white" hide-details />
+            <v-file-input v-if="applicant.performance_rating" label="Attach proof of performance rating" class="mt-2" />
           </v-col>
         </v-row>
       </v-card-text>
@@ -169,7 +174,6 @@
         </v-row>
       </v-card-actions>
     </v-card>
-
 
 
 
