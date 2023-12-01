@@ -1,235 +1,397 @@
 <template>
-  <v-sheet width="85%" class=" mx-auto ma-5">
+  <v-sheet width="85%" class="mx-auto ma-5">
     <v-card height="90vh">
       <v-sheet class="pa-6" height="auto" color="grey-lighten-4">
         <v-row no-gutters>
           <v-col cols="12" class="text-h6 font-weight-bold text-indigo">MODIFIED QUALIFICATION STANDARDS </v-col>
           <v-col cols="12" class="text-grey">Provides customized eligibility criteria, promoting fairness and
             inclusivity. </v-col>
-          <v-col cols="3"> <v-text-field prepend-inner-icon="mdi-magnify" label="Search" hide-details
-              density="compact" /></v-col>
-          <v-spacer />
-          <v-col cols="auto"> <v-btn color="indigo" variant="text" icon="mdi-table" />
-            <v-btn color="indigo" variant="text" icon="mdi-view-grid" /></v-col>
         </v-row>
       </v-sheet>
-      <v-toolbar color="indigo" border>
-        <v-list-item class="pl-2" :dense="true">
-          <template v-slot:prepend>
-            <v-avatar class="mr-1" variant="text">
-              <v-icon dark>mdi-wrench-clock</v-icon>
-            </v-avatar>
-          </template>
-          <v-list-item-title>Maintenance Panel</v-list-item-title>
-          <v-list-item-subtitle>A brief overview of the maintenance panel for our reclassification
-            system.</v-list-item-subtitle>
-        </v-list-item>
-        <v-spacer></v-spacer>
-        <v-btn variant="outlined" @click="qs_dialog.dialog = true">
-          <v-icon>mdi-plus</v-icon> Create QS</v-btn>
-      </v-toolbar>
 
-      <v-sheet class="overflow-y-auto" height="65vh">
-        <v-card-text>
-          <v-sheet border>
-            <v-data-table :items="qs_data" :headers="maintenance_headers">
-              <template v-slot:item.actions="{ item }">
-                <v-btn @click="show_update_dialog(item)" density="compact" variant="tonal" color="primary">
-                  Update </v-btn>
-              </template>
-              <template v-slot:item.position="{ item }">
-                <v-chip color="indigo">{{ item.selectable.position }}</v-chip>
-              </template>
-            </v-data-table>
-          </v-sheet>
-        </v-card-text>
-      </v-sheet>
-      <!-- 
-      <v-sheet class="overflow-y-auto" height="65vh">
-        <v-card-text>
-          <v-row dense>
-            <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12" v-for="qs in qs_data" :key="index">
-              <v-card class="mx-auto" variant="tonal" color="indigo">
-                <v-card-item>
-                  <v-list lines="auto" density="compact">
-                    <v-list-item>
-                      <v-list-item-title>Position : <span class="font-weight-bold mb-2  text-indigo"> {{
-                        qs.position
-                      }}</span></v-list-item-title>
-                    </v-list-item>
-                    <v-list-item v-if="qs.education_level">
-                      <v-list-item-title>Education Level : <span class="text-grey"> {{
-                        qs.education_level }}</span></v-list-item-title>
-                    </v-list-item>
-                    <v-list-item>
-                      <v-list-item-title>Salary Grade : <span class="text-grey"> {{ qs.salary_grade
-                      }}</span> </v-list-item-title>
-                    </v-list-item>
-                    <v-list-item>
-                      <v-list-item-title>Experience : </v-list-item-title>
-                      <v-list-item-subtitle class="text-justify">
-                        {{ qs.experience }}
-                      </v-list-item-subtitle>
-                    </v-list-item>
-                    <v-list-item>
-                      <v-list-item-title>Training : </v-list-item-title>
-                      <v-list-item-subtitle class="text-justify">
-                        {{ qs.training }}
-                      </v-list-item-subtitle>
-                    </v-list-item>
-                    <v-list-item v-if="qs.performance_rating">
-                      <v-list-item-title>Performance Rating : </v-list-item-title>
-                      <v-list-item-subtitle class="text-justify">
-                        {{ qs.performance_rating }}
-                      </v-list-item-subtitle>
-                    </v-list-item>
-                  </v-list>
-                </v-card-item>
-                <v-card-actions>
-                  <v-btn @click="show_update_dialog(qs)" class="mx-5" variant="outlined" density="compact">UPDATE </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-card-text>
-      </v-sheet> -->
+      <v-tabs v-model="tab" color="primary">
+        <v-tab :value="1">Education </v-tab>
+        <v-tab :value="2">Experience</v-tab>
+        <v-tab :value="3">Performance Rating</v-tab>
+        <v-tab :value="4">Salary Grade</v-tab>
+        <v-tab :value="5">Position</v-tab>
+      </v-tabs>
+      <v-divider />
+      <v-card-text>
+        <v-window v-model="tab">
+          <v-window-item :value="1">
+            <v-btn class="my-2" @click="education_dialog = true" color="indigo" elevation="2"> Create
+              Education
+            </v-btn>
+            <v-row dense>
+
+
+              <v-col cols="12" xxl="4" xl="3" lg="3" md="6" sm="12" v-for="educ in education_data" :key="educ">
+                <v-card class="mx-auto" color="indigo" variant="tonal">
+                  <v-card-item>
+                    <span> {{ educ.title }}</span>
+                  </v-card-item>
+                </v-card>
+              </v-col>
+
+            </v-row>
+          </v-window-item>
+          <v-window-item :value="2">
+            <v-btn class="my-2" @click="experience_dialog = true" color="indigo"> Create Experience </v-btn>
+            <v-row dense>
+
+              <v-col cols="12" xxl="4" xl="3" lg="3" md="6" sm="12" v-for="ex in experience_data" :key="ex">
+                <v-card class="mx-auto" color="indigo" variant="tonal" flat>
+                  <v-card-item>
+                    <span>A minimum of <b> {{ ex.number_of_years }}
+                      </b> years of experience is required as a <b>"{{ ex.position }} "</b>
+                    </span>
+                  </v-card-item>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-window-item>
+          <v-window-item :value="3">
+            <v-btn class="my-2" @click="rating_dialog = true" color="indigo"> Create
+              Rating </v-btn>
+            <v-row dense>
+              <v-col cols="12" xxl="4" xl="3" lg="3" md="6" sm="12" v-for="rate in rating_data" :key="rate">
+                <v-card class="mx-auto" color="indigo" variant="tonal" flat>
+                  <v-card-item>
+                    <div> Number of Year Experience Required : <b> {{ rate.number_of_years }} </b> years
+                    </div>
+                    <div> Rating :
+                    </div>
+                    <div>
+                      <v-list-item class="font-weight-bold" density="compact">
+                        {{ rate.rating }}
+                      </v-list-item>
+                    </div>
+                  </v-card-item>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-window-item>
+          <v-window-item :value="4">
+            <v-btn class="my-2" @click="salary_grade_dialog = true" color="indigo"> Create Salary Grade </v-btn>
+            <v-row dense>
+              <v-col cols="12" xxl="4" xl="3" lg="3" md="6" sm="12" v-for="sg in sg_data" :key="sg">
+                <v-card class="mx-auto" color="indigo" variant="tonal" flat>
+                  <v-card-item>
+                    <div> Salary Grade : <b> {{ sg.salary_grade }} </b></div>
+                    <div> Equivalent : <b> {{ sg.equivalent }} </b></div>
+                  </v-card-item>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-window-item>
+          <v-window-item :value="5">
+            <v-btn class="my-2" @click="position_dialog = true" color="indigo"> Create
+              Position </v-btn>
+            <v-row dense>
+              <v-col cols="12" xxl="4" xl="3" lg="4" md="6" sm="12" v-for="p in position_data" :key="p">
+                <v-card :title="p.title" class="mx-auto" color="indigo" variant="tonal">
+                  <v-card-text>
+                    <div class="text-caption">Education :</div>
+                    <div v-for="educ in p.education" :key="educ" class="text-caption text-grey">
+                      {{ educ }} <br />
+
+                    </div>
+                    <div class="text-caption" v-if="p.education_level">
+                      Education Level :
+                      <span class="text-caption text-grey"> {{ p.education_level }} </span>
+                    </div>
+                    <div class="text-caption" v-if="p.experience">Experience :</div>
+                    <div v-for="exp in p.experience" :key="exp" class="text-caption text-grey">
+                      {{ exp }} <br />
+
+                    </div>
+                    <div class="text-caption" v-if="p.training_hours">
+                      Training Hours :
+                      <span class="text-caption text-grey"> {{ p.training_hours }} </span>
+                    </div>
+                    <div class="text-caption" v-if="p.rating">Performance Rating :
+                      <div class="text-caption text-grey" v-for="r in p.rating" :key="r">
+                        {{ r }}
+                        <br />
+                      </div>
+                    </div>
+                    <div class="text-caption" v-if="p.sg">
+                      Salary Grade :
+                      <span class="text-caption text-grey"> {{ p.sg }} </span>
+                    </div>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn class="text-caption" variant="tonal" density="compact">
+                      UPDATE
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-window-item>
+        </v-window>
+      </v-card-text>
     </v-card>
-    <commons-dialog max-width=" 45%" v-model="qs_dialog.dialog" icon="mdi-school" :title="qs_dialog.title"
-      :subtitle="qs_dialog.subtitle" @submit="create_qs" :submitText="'Submit'">
+    <commons-dialog max-width="35%" v-model="education_dialog" icon="mdi-school" :title="'Create Education Qualification'"
+      @submit="create_education" :subtitle="'Create education for position Qualification Standards'"
+      :submitText="'Submit'">
       <v-card-text>
-        <v-row dense>
-          <v-col cols="4"> <v-combobox v-model="qs.position" label="Position" hide-details :items="$position" /></v-col>
-          <v-col cols="4"> <v-select v-model="qs.education_level" label="Level of Education" hide-details
-              :items="$education_level" /></v-col>
-
-          <v-col cols="4"> <v-combobox v-model.number="qs.salary_grade" label="Salary Grade" :items="$salary_items"
-              hide-details type="number" /></v-col>
-
-          <v-col cols="6"> <v-textarea rows="3" v-model="qs.education" label="Education" hide-details /></v-col>
-          <v-col cols="6"> <v-textarea rows="3" v-model="qs.experience" label="Experience" hide-details /></v-col>
-          <v-col cols="6"> <v-textarea rows="3" v-model="qs.training" label="Training" hide-details /></v-col>
-          <v-col cols="6"> <v-textarea rows="3" v-model="qs.eligibility" label="Eligibility" hide-details /></v-col>
-          <v-col cols="6"> <v-textarea rows="3" v-model="qs.performance_rating" label="Performance Rating"
-              hide-details /></v-col>
-        </v-row>
+        <v-text-field v-model="education.title" label="Enter Education Title" />
       </v-card-text>
     </commons-dialog>
-    <commons-dialog max-width=" 45%" v-model="update_dialog.dialog" icon="mdi-school" :title="update_dialog.title"
-      :subtitle="update_dialog.subtitle" @submit="update_qs" :submitText="'Update'">
+    <commons-dialog max-width="35%" v-model="experience_dialog" icon="mdi-school" :title="'Create Experience'"
+      @submit="create_experience" :subtitle="'For position Qualification Standards'" :submitText="'Submit'">
       <v-card-text>
-        <v-row dense>
-          <v-col cols="4"> <v-combobox v-model="selected_qs.position" label="Position" hide-details
-              :items="$position" /></v-col>
-          <v-col cols="4"> <v-select v-model="selected_qs.education_level" label="Level of Education" hide-details
-              :items="$education_level" /></v-col>
-
-          <v-col cols="4"> <v-combobox v-model.number="selected_qs.salary_grade" label="Salary Grade"
-              :items="$salary_items" hide-details type="number" /></v-col>
-
-          <v-col cols="6"> <v-textarea rows="3" v-model="selected_qs.education" label="Education" hide-details /></v-col>
-          <v-col cols="6"> <v-textarea rows="3" v-model="selected_qs.experience" label="Experience"
-              hide-details /></v-col>
-          <v-col cols="6"> <v-textarea rows="3" v-model="selected_qs.training" label="Training" hide-details /></v-col>
-          <v-col cols="6"> <v-textarea rows="3" v-model="selected_qs.eligibility" label="Eligibility"
-              hide-details /></v-col>
-          <v-col cols="6"> <v-textarea rows="3" v-model="selected_qs.performance_rating" label="Performance Rating"
-              hide-details /></v-col>
-        </v-row>
+        <v-text-field v-model="experience.number_of_years" label="Year/s Required" />
+        <v-text-field v-model="experience.position" label="Position Title" />
+        <v-checkbox v-model="experience.is_ma_equivalent" label="Check if with M.A. Equivalent" />
+        <v-text-field v-if="experience.is_ma_equivalent" v-model="experience.master_arts" label="Specify M.A. Degree" />
       </v-card-text>
     </commons-dialog>
-    <div class="text-center ma-2">
-      <v-snackbar v-model="snackbar" variant="tonal" color="success" :timeout="2000">
-        <strong> {{ text }} </strong>
-        <template v-slot:actions>
-          <v-btn color="pink" variant="text" @click="snackbar = false">
-            Close
-          </v-btn>
-        </template>
-      </v-snackbar>
-    </div>
+    <commons-dialog max-width="35%" v-model="rating_dialog" icon="mdi-school" :title="'Performance Rating Form'"
+      @submit="create_rating" :subtitle="'Create performance rating for position Qualification Standards'"
+      :submitText="'Submit'">
+      <v-card-text>
+        <v-text-field v-model="performance_rating.number_of_years" label="Year Required" />
+        <v-select v-model="performance_rating.rating" label="Rating Required"
+          :items="['Satisfactory', 'Very Satisfactory']" />
+      </v-card-text>
+    </commons-dialog>
+    <commons-dialog max-width="30%" v-model="salary_grade_dialog" icon="mdi-school" :title="'Salary Grade Form'"
+      @submit="create_sg" :subtitle="'Create salary grade for position Qualification Standards'" :submitText="'Submit'">
+      <v-card-text>
+        <v-text-field v-model="sg.salary_grade" label="Salary Grade" />
+        <v-text-field v-model="sg.equivalent" label="Equivalent" />
+      </v-card-text>
+    </commons-dialog>
+    <commons-dialog max-width="30%" v-model="position_dialog" icon="mdi-school" :title="'Position  Form'"
+      @submit="create_position" :subtitle="'Create position and modify Qualification Standards'" :submitText="'Submit'">
+      <v-card-text>
+        <v-text-field v-model="position.title" label="Position" />
+        <v-select v-model="position.education" :items="education_data" item-value="_id" label="Education" multiple />
+        <v-select v-model="position.education_level" :items="['Elementary', 'Secondary']" label="Education Level" />
+        <v-select v-model="position.experience" item-value="_id" :items="experienceItems" label="Experience" multiple />
+        <v-text-field v-model="position.training_hours" label="Training Number of Hours Required" />
+        <v-select v-model="position.rating" :items="ratingItems" label="Performance Rating Required" multiple
+          item-value="_id" />
+        <v-select v-model="position.sg" :items="sgItems" label="Salary Grade" item-value="_id" type="number" />
+        {{ sgItems }}
+
+        {{ position.education }}
+        {{ position.experience }}
+        {{ position.rating }}
+        {{ position.sg }}
+      </v-card-text>
+    </commons-dialog>
   </v-sheet>
 </template>
 
 <script setup lang="ts">
-const { $rest, $position, $salary_items, $education_level } = useNuxtApp();
-
+import { ref } from 'vue';
+const { $rest } = useNuxtApp();
 import swal from 'sweetalert';
 definePageMeta({ layout: "std-applicant" })
 
+
+function get_text(experience: any) {
+  console.log(experience)
+}
 onBeforeMount(() => {
-  get_qs()
+  Promise.all(
+    [
+      get_education(),
+      get_experience(),
+      get_rating(),
+      get_sg(),
+      get_position()
+    ]
+  ).catch(() => swal({
+    title: "Error",
+    text: "Something went wrong while fetching data",
+    icon: "error",
+    buttons: { ok: false, cancel: false }
+  }))
 })
 
+const tab = ref(null);
+// dialog
+const education_dialog = ref(false);
+const experience_dialog = ref(false);
+const rating_dialog = ref(false);
+const salary_grade_dialog = ref(false);
+const position_dialog = ref(false);
 
-// Table headers
-const maintenance_headers = ref([
-  { title: "Position Title", key: "position" },
-  { title: "Education Level", key: "education_level" },
-  { title: "Salary Grade", key: "salary_grade" },
-  { title: "Education", key: "education" },
-  { title: "Experience", key: "experience" },
-  { title: "Training", key: "training" },
-  { title: "Performance Rating", key: "performance_rating" },
-  { title: "Actions", key: "actions" }
-]);
 
-interface Qs {
-  position: string,
-  education_level?: string,
-  salary_grade?: number,
-  education: string,
-  experience?: string,
-  training?: string,
-  eligibility?: string,
-  performance_rating?: string,
+const position_data = ref([]);
 
-}
+// EDUCATION
+const education = ref({
+  title: '',
+  date_created: new Date(),
+});
 
-const qs = ref({} as Qs)
-
-const qs_dialog = ref({ dialog: false, title: 'Create Qualification Standard', subtitle: '', })
-const update_dialog = ref({ dialog: false, title: 'Update Qualification Standard', subtitle: '', })
-const snackbar = ref(false);
-const text = ref('');
-async function create_qs() {
-  const { data, error } = await $rest('erf-maintenance/create-qs', {
+async function create_education() {
+  const { data, error } = await $rest('sms-education/create-education', {
     method: "POST",
-    body: qs.value
+    body: { ...education.value }
+
   })
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 }
-
-// update
-const selected_qs = ref({})
-function show_update_dialog(item: any) {
-  selected_qs.value = item.raw
-  update_dialog.value.dialog = true;
-
-}
-
-// QS
-const qs_data = ref([])
-async function get_qs() {
-  const { data, error } = await $rest('erf-maintenance/get-qs', {
-    method: "GET"
+// containers
+const education_data = ref([]);
+const oid = ref("");
+const eds = ref([]);
+async function get_education() {
+  const { data, error } = await $rest('sms-education/get-education', {
+    method: "GET",
   })
-  qs_data.value = data
+  education_data.value = data
 }
 
-async function update_qs() {
-  const { data, error } = await $rest('erf-maintenance/update-qs', {
-    method: "PUT",
-    body: {
-      _id: selected_qs.value._id,
-      qs: selected_qs.value
+
+// EXPERIENCE
+interface Experience {
+  number_of_years: number;
+  position: string;
+  is_ma_equivalent?: boolean;
+  master_arts?: string
+}
+
+const experience = ref({} as Experience);
+async function create_experience() {
+  const { data, error } = await $rest('sms-experience/create-experience', {
+    method: "POST",
+    body: { ...experience.value }
+  })
+
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+}
+/**
+ * EXPERIENCE
+ */
+const experience_data = ref([]);
+async function get_experience() {
+  const { data, error } = await $rest('sms-experience/get-experience', {
+    method: "GET",
+  })
+  experience_data.value = data
+}
+const experienceItems = computed(() => {
+  return experience_data.value.map((v: any) => {
+    return {
+      ...v,
+      title: `${v.number_of_years} years at ${v.position}`
     }
   })
-  if (!error) return swal({ title: data, icon: "success" })
-  return swal({ title: data, icon: "error" })
+});
+
+
+// PERFORMANCE RATING
+interface Performance {
+  number_of_years: number,
+  rating: string
+}
+const performance_rating = ref({} as Performance);
+async function create_rating() {
+  const { data, error } = await $rest('sms-rating/create-rating', {
+    method: "POST",
+    body: { ...performance_rating.value }
+
+  })
+
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+}
+
+const ratingItems = computed(() => {
+  return rating_data.value.map((v: any) => {
+    return {
+      ...v,
+      title: `At least ${v.number_of_years} years consecutive ${v.rating}`
+    }
+  })
+});
+const rating_data = ref([]);
+
+async function get_rating() {
+  const { data, error } = await $rest('sms-rating/get-rating', {
+    method: "GET",
+  })
+  rating_data.value = data
 
 }
 
 
+// SALARY GRADE
+const sg = ref({
+  salary_grade: 0,
+  equivalent: 0
+});
+async function create_sg() {
+  const { data, error } = await $rest('sms-salary-grade/create-sg', {
+    method: "POST",
+    body: { ...sg.value }
+
+  })
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+}
+/**
+ * HANDLES FETCHING SALARY GRADE
+ */
+const sg_data = ref([]);
+async function get_sg() {
+  const { data, error } = await $rest('sms-salary-grade/get-sg', {
+    method: "GET",
+  })
+
+  sg_data.value = data
+}
+
+const sgItems = computed(() => {
+  return sg_data.value.map((v: number) => {
+    return {
+      ...v,
+      title: Number(v.salary_grade)
+    }
+  })
+});
+
+
+
+// QS/POSITION
+interface Position {
+  title: string;
+  education: string[];
+  education_level?: string;
+  experience: string[];
+  training_hours?: number;
+  rating?: array;
+  sg?: string
+
+};
+const position = ref({} as Position);
+async function create_position() {
+  const { data, error } = await $rest('sms-position/create-position', {
+    method: "POST",
+    body: { ...position.value }
+
+  })
+  console.log(data);
+  console.log(error)
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+}
+
+async function get_position() {
+  const { data, error } = await $rest('sms-position/get-position', {
+    method: "GET",
+  })
+  position_data.value = data
+}
 
 </script>

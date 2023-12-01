@@ -1,18 +1,18 @@
 interface Qualifications {
     position: string;
     educ_level: string;
-    education: string;
-    experience: string;
-    training: string;
-    eligibility: string;
-    per_rating: string
+    education?: array;
+    experience?: array;
+    training?: number;
+    eligibility?: string;
+    per_rating?: string
 }
 interface Per_info {
     lastname: string;
     firstname: string;
-    middlename: string;
+    middlename?: string;
     email: string;
-    birthday: string;
+    birthday: Date;
     gender: string
 }
 interface Designation {
@@ -20,31 +20,42 @@ interface Designation {
     employee_no: string;
     plantilla_no: string;
     division: string;
-    district: string;
+    district?: string;
     item_no: string;
     school: string;
     school_address: string;
-    ipcrf_rating: number
+    ipcrf_rating?: string
 }
 interface Educ_attainment {
-    date: string;
     degree: string;
     institution: string;
-    year_received: string;
+    year_received: number;
     board_exam: string;
-    rating: string;
-
+    rating: number;
+    date: Date;
 }
+// interface Equivalent_unit {
+//     public_years_teaching?: number;
+//     yt_equivalent?: number;
+//     present_degree?: number;
+//     pd_equvalent?: number;
+//     private_years_teaching?: number;
+//     // attachment
+//     attached_permit_to_study?: string;
+//     attached_omnibus?: string;
+// }
+
 interface Transcipt {
-    transcipt_record: string;
+    transcipt_record?: string;
     registrar_name: string;
     registrar_email: string;
-    registrar_no: string;
+    registrar_no: number;
 }
 interface Service_record {
+
     designation: string;
-    from: string;
-    to: string;
+    from: Date;
+    to: Date;
 }
 interface Prof_study {
     sy: string;
