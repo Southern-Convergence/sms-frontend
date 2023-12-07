@@ -177,25 +177,6 @@ onBeforeMount(() => {
 const tab = ref(0);
 const count = ref(10);
 
-interface User {
-    username?: string;
-    password?: string;
-    firstname: string;
-    middlename?: string;
-    lastname: string;
-    email: string;
-    contact_number: number;
-    type: string;
-    role: string;
-}
-interface School {
-    division?: string;
-    school_name?: string;
-    principal?: string;
-    address?: string;
-    school_email?: string;
-}
-
 
 const user = ref({
     date: new Date(),

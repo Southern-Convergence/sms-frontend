@@ -1,45 +1,40 @@
 <template>
-    <div>
-        <v-row dense>
-            <v-col cols="12" class="font-weight-bold text-subtitle-2 my-1">{{ props.title }}</v-col>
-            <v-tooltip :text="props.tooltip" location="top">
-                <template v-slot:activator="{ props }">
-                    <v-btn v-bind="props" @click="handleButtonClick" variant="tonal" color="primary" density="compact">View
-                        Attachment</v-btn>
-                </template>
-            </v-tooltip>
-
-        </v-row>
-        <v-row dense>
-            <v-col cols="auto" class="mt-3 text-subtitle-2 font-weight-bold">Evaluation :</v-col>
-            <v-col cols="auto">
-                <v-checkbox v-model="props.valid" label="Valid" color="success" hide-details />
-            </v-col>
-            <v-col cols="auto">
-                <v-checkbox v-model="props.invalid" label="Invalid" color="red" hide-details />
-            </v-col>
-            <v-col cols="12">
-                <v-text-field v-model="props.reason" label="Specify reason" hide-details variant="solo" />
-            </v-col>
-        </v-row>
-    </div>
+  <v-dialog v-model="props.dialog">
+    <v-row no-gutters class="d-flex justify-center">
+      <v-col cols="12" sm="12" lg="10" xl="8">
+        <v-card>
+          <v-card-title class="d-flex align-center justify-space-between">
+            <span class="d-flex align-center text-overline">
+              <v-icon class="mr-2">mdi-record</v-icon>
+              <span>{{ props.title }}</span>
+            </span>
+            <v-icon @click="emit('close')">mdi-close</v-icon>
+          </v-card-title>
+          <v-divider />
+          <v-card-text class="pa-1 ma-0">
+            <v-sheet border height="80vh">
+              <iframe v-for="item, index in src" :key="index" :src="`${CDN}${item}`" class="w-100 h-100" />
+            </v-sheet>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
-import { defineProps, ref } from 'vue';
 
 interface Props {
-    title: string;
-    valid: boolean;
-    invalid: boolean;
-    reason?: string;
-    tooltip?: string
+  dialog: boolean;
+  src: string[] | string;
+  title: string;
 }
 
-const props = defineProps<Props>();
+const cfg = useRuntimeConfig();
+const { CDN_ENDPOINT, DEV_CDN_ENDPOINT } = cfg.public;
+const CDN = cfg.public.NODE_ENV === "development" ? DEV_CDN_ENDPOINT : CDN_ENDPOINT;
 
+const props = withDefaults(defineProps<Props>(), { dialog: false, src: "", title: "" })
+const emit = defineEmits(["click", "close"]);
 
-const handleButtonClick = () => {
-    // dipak mram HAHA
-}
 </script>

@@ -1,13 +1,27 @@
+
+interface Applicant {
+    qualification: Qualifications;
+    personal_information: PersonalInformation;
+    designation: Designation;
+    educational_attainment: EducationalAttainment[];
+    equivalent_unit?: EquivalentUnit;
+    transcript: Transcript;
+    service_record: ServiceRecord[];
+    professional_study: ProfessionalStudy[];
+    attachments?: { [key: string]: File[] };
+    status: string;
+}
 interface Qualifications {
-    position: string;
+    position?: string;
     educ_level: string;
-    education?: array;
-    experience?: array;
+    education?: string[];
+    experience?: any[];
     training?: number;
     eligibility?: string;
     per_rating?: string
 }
-interface Per_info {
+
+interface PersonalInformation {
     lastname: string;
     firstname: string;
     middlename?: string;
@@ -15,6 +29,7 @@ interface Per_info {
     birthday: Date;
     gender: string
 }
+
 interface Designation {
     current_position: string;
     employee_no: string;
@@ -26,7 +41,8 @@ interface Designation {
     school_address: string;
     ipcrf_rating?: string
 }
-interface Educ_attainment {
+
+interface EducationalAttainment {
     degree: string;
     institution: string;
     year_received: number;
@@ -34,31 +50,31 @@ interface Educ_attainment {
     rating: number;
     date: Date;
 }
-// interface Equivalent_unit {
-//     public_years_teaching?: number;
-//     yt_equivalent?: number;
-//     present_degree?: number;
-//     pd_equvalent?: number;
-//     private_years_teaching?: number;
-//     // attachment
-//     attached_permit_to_study?: string;
-//     attached_omnibus?: string;
-// }
+
+interface EquivalentUnit {
+    public_years_teaching?: number;
+    yt_equivalent?: number;
+    present_degree?: number;
+    pd_equivalent?: number;
+    private_years_teaching?: number;
+}
 
 interface Transcipt {
-    transcipt_record?: string;
     registrar_name: string;
     registrar_email: string;
     registrar_no: number;
 }
-interface Service_record {
 
+interface ServiceRecord {
     designation: string;
     from: Date;
     to: Date;
 }
-interface Prof_study {
-    sy: string;
+interface ProfessionalStudy {
+    sy: number;
     unit_no: string;
     description: string;
 }
+
+
+

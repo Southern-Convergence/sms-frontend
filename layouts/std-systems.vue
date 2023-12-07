@@ -7,7 +7,7 @@
     </layout-std-appbar>
 
     <v-navigation-drawer v-model="drawer" :rail="$vuetify.display.smAndDown" clipped>
-      <v-sheet border>
+      <v-sheet>
         <v-img class="ma-2" src="/deped.svg" cover />
       </v-sheet>
 

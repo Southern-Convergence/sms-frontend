@@ -7,8 +7,7 @@
 					<v-card-subtitle> A brief overview of a reclassification request.</v-card-subtitle>
 				</v-card-title>
 				<v-spacer></v-spacer>
-				<v-text-field prepend-inner-icon="mdi-magnify" hide-details bg-color="indigo-lighten-5" density="compact"
-					dense />
+				<v-text-field prepend-inner-icon="mdi-magnify" hide-details bg-color="indigo-lighten-5" density="compact" dense />
 				<v-btn icon>
 					<v-icon>mdi-settings</v-icon>
 				</v-btn>
@@ -29,8 +28,7 @@
 				<v-window-item value="pending">
 					<v-card-text class="overflow-y-auto" style="height: 75vh">
 						<v-row dense>
-							<v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12" v-for="(a, index) in get_pending"
-								:key="index">
+							<v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12" v-for="(a, index) in get_pending" :key="index">
 								<v-card class="mx-auto" color="indigo" elevation="2" variant="tonal">
 									<v-card-item>
 										<div class="d-flex">
@@ -70,8 +68,7 @@
 				<v-window-item value="approved">
 					<v-card-text class="overflow-y-auto" style="height: 75vh">
 						<v-row dense>
-							<v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12" v-for="(a, index) in get_approved"
-								:key="index">
+							<v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12" v-for="(a, index) in get_approved" :key="index">
 								<v-card class="mx-auto" color="indigo" elevation="2" variant="tonal">
 
 									<v-card-item>
@@ -96,8 +93,8 @@
 										</div>
 									</v-card-item>
 									<v-card-actions>
-										<v-btn @click="show_others(a)" density="compact" color="primary"
-											variant="tonal">View Application</v-btn>
+										<v-btn @click="show_others(a)" density="compact" color="primary" variant="tonal">View
+											Application</v-btn>
 										<v-spacer />
 										<span> Status : <v-chip color="success" class="font-weight-bold"> {{ a.status
 										}}</v-chip></span>
@@ -112,8 +109,7 @@
 				<v-window-item value="disapproved">
 					<v-card-text class="overflow-y-auto" style="height: 75vh">
 						<v-row>
-							<v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12" v-for="(a, index) in get_dissapproved"
-								:key="index">
+							<v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12" v-for="(a, index) in get_dissapproved" :key="index">
 								<v-card class="mx-auto" color="indigo" elevation="2" variant="tonal">
 									<v-card-item>
 										<div class="d-flex">
@@ -177,9 +173,8 @@
 							</b>
 						</v-col>
 
-						<v-col cols="6" class="font-weight-bold"> CONTROL NUMBER : <v-chip class="font-weight-bold"
-								color="primary">{{
-									selected_application.control_no }}</v-chip></v-col>
+						<v-col cols="6" class="font-weight-bold"> CONTROL NUMBER : <v-chip class="font-weight-bold" color="primary">{{
+							selected_application.control_no }}</v-chip></v-col>
 						<v-col cols="6">
 							Current Position: <b class="text-grey">{{ selected_application.current_position }}</b>
 						</v-col>
@@ -202,25 +197,22 @@
 							Reclass Position : <v-chip color="primary" class="font-weight-bold"> Teacher II</v-chip>
 						</v-col>
 						<v-col cols="6" v-if="selected_application.education"> Education:
-							<v-textarea rows="3" bg-color="grey-lighten-4" :model-value="selected_application.education"
-								variant="solo" readonly />
+							<v-textarea rows="3" bg-color="grey-lighten-4" :model-value="selected_application.education" variant="solo"
+								readonly />
 						</v-col>
 
 						<v-col cols="6" v-if="selected_application.experience"> Experience:<v-textarea rows="3"
-								bg-color="grey-lighten-4" :model-value="selected_application.experience" variant="solo"
-								readonly />
+								bg-color="grey-lighten-4" :model-value="selected_application.experience" variant="solo" readonly />
 						</v-col>
-						<v-col cols="6" v-if="selected_application.training"> Training:<v-textarea rows="3"
-								bg-color="grey-lighten-4" :model-value="selected_application.training" variant="solo"
-								readonly />
+						<v-col cols="6" v-if="selected_application.training"> Training:<v-textarea rows="3" bg-color="grey-lighten-4"
+								:model-value="selected_application.training" variant="solo" readonly />
 						</v-col>
 						<v-col cols="6" v-if="selected_application.eligibility"> Eligibility:<v-textarea rows="3"
-								bg-color="grey-lighten-4" :model-value="selected_application.eligibility" variant="solo"
-								readonly />
+								bg-color="grey-lighten-4" :model-value="selected_application.eligibility" variant="solo" readonly />
 						</v-col>
-						<v-col cols="6" v-if="selected_application.performance_rating"> Performance Rating:<v-textarea
-								rows="3" bg-color="grey-lighten-4" :model-value="selected_application.performance_rating"
-								variant="solo" readonly />
+						<v-col cols="6" v-if="selected_application.performance_rating"> Performance Rating:<v-textarea rows="3"
+								bg-color="grey-lighten-4" :model-value="selected_application.performance_rating" variant="solo"
+								readonly />
 						</v-col>
 						<!-- <v-col cols="12">
 							<v-list lines="auto" density="compact">
@@ -257,8 +249,7 @@
 				<v-card-actions>
 					<v-row dense justify="center">
 						<v-col cols="4">
-							<v-btn @click="disapproved_dialog = true" variant="tonal" color="error"
-								block>Disapproved</v-btn>
+							<v-btn @click="disapproved_dialog = true" variant="tonal" color="error" block>Disapproved</v-btn>
 						</v-col>
 						<v-col cols="4">
 							<v-btn @click="approved_dialog = true" variant="tonal" color="success" block>
@@ -282,8 +273,7 @@
 							<v-btn @click="disapproved_dialog = false" variant="tonal" color="error" block>Cancel</v-btn>
 						</v-col>
 						<v-col cols="4">
-							<v-btn @click="disapproved_applicant(selected_application)" variant="tonal" color="success"
-								block>
+							<v-btn @click="disapproved_applicant(selected_application)" variant="tonal" color="success" block>
 								Disapproved
 							</v-btn>
 						</v-col>

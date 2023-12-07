@@ -7,46 +7,47 @@
             <v-toolbar class="py-1" color="indigo" border>
               <v-list-item class="pl-2" density="compact">
                 <v-list-item-title class="text-h5"> Application Form </v-list-item-title>
-                <v-list-item-subtitle> Position Requirements and Criteria</v-list-item-subtitle>
+                <v-list-item-subtitle> Position Requirements and Criteria </v-list-item-subtitle>
               </v-list-item>
             </v-toolbar>
             <v-card-title class="text-h5 text-primary"> WELCOME to
               <strong>Reclassification System</strong>
             </v-card-title>
-            <v-card-subtitle>Elevate Your Career: A Guide to the Reclassification System</v-card-subtitle>
+            <v-card-subtitle>Elevate Your Career: A Guide to the Reclassification System </v-card-subtitle>
             <v-row dense>
               <v-col cols="7">
+
                 <v-card-text>
                   <v-row dense>
                     <v-col cols="12"> <v-icon class="mr-2 pb-2" size="26" color="primary">mdi-seal</v-icon>
-                      Individual Qualification</v-col>
+                      Individual Qualification </v-col>
                     <v-col cols="6" class="px-1">
-                      <v-select :items="position_item" v-model="applicant.position" class="w-100 pt-2"
+                      <v-select :items="position_data" v-model="applicant.qualification.position" class="w-100 pt-2"
                         label="Select Position" hide-details item-value="_id" />
                     </v-col>
                     <v-col cols="6" class="px-1">
-                      <v-select v-model="applicant.educ_level" :items="['Elementary', 'Secondary']" class="w-100 pt-2"
-                        label="Education Level" hide-details />
+                      <v-select v-model="applicant.qualification.educ_level" :items="['Elementary', 'Secondary']"
+                        class="w-100 pt-2" label="Education Level" hide-details />
                     </v-col>
                   </v-row>
                   <v-row dense>
                     <v-col cols="6" class="px-1">
-                      <v-select v-model="applicant.education" :items="education_data" rows="2" class="w-100"
+                      <v-select v-model="applicant.qualification.education" :items="education_data" rows="2" class="w-100"
                         label="Education" hide-details multiple item-value="_id" />
                     </v-col>
                     <v-col cols="6" class="px-1">
-                      <v-select v-model="applicant.experience" :items="experience_item" class="w-100" label="Experience"
-                        hide-details multiple item-value="_id" />
+                      <v-select v-model="applicant.qualification.experience" :items="experience_data" class="w-100"
+                        label="Experience" hide-details multiple item-value="_id" />
                     </v-col>
                     <v-col cols="6" class="px-1">
 
-                      <v-text-field v-model="applicant.training" class="w-100" label="Enter total training hours"
-                        hide-details type="number" item-value="_id" />
+                      <v-text-field v-model="applicant.qualification.training" class="w-100"
+                        label="Enter total training hours" hide-details type="number" item-value="_id" />
                     </v-col>
 
                     <v-col cols="6" class="px-1">
 
-                      <v-select v-model="applicant.per_rating" :items="rating_item" class="w-100"
+                      <v-select v-model="applicant.qualification.per_rating" :items="rating_data" class="w-100"
                         label="Performance Rating" hide-details item-value="_id" />
                     </v-col>
                   </v-row>
@@ -96,22 +97,25 @@
                 Personal
                 Information </v-col>
               <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                <v-text-field v-model="applicant.lastname" label="Surname" hide-details />
+                <v-text-field v-model="applicant.personal_information.lastname" label="Surname" hide-details />
               </v-col>
               <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                <v-text-field v-model="applicant.firstname" label="Given Name" hide-details />
+                <v-text-field v-model="applicant.personal_information.firstname" label="Given Name" hide-details />
               </v-col>
               <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                <v-text-field v-model="applicant.middlename" label="Middle Name" hide-details />
+                <v-text-field v-model="applicant.personal_information.middlename" label="Middle Name" hide-details />
               </v-col>
               <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                <v-text-field v-model="applicant.email" :rules="email_rules" label="Email" hide-details />
+                <v-text-field v-model="applicant.personal_information.email" :rules="email_rules" label="Email"
+                  hide-details />
               </v-col>
               <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                <v-text-field v-model="applicant.birthday" label="Birthday" type="date" hide-details />
+                <v-text-field v-model="applicant.personal_information.birthday" label="Birthday" type="date"
+                  hide-details />
               </v-col>
               <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                <v-select v-model="applicant.gender" label="Gender" :items="['Female', 'Male']" hide-details />
+                <v-select v-model="applicant.personal_information.gender" label="Gender" :items="['Female', 'Male']"
+                  hide-details />
               </v-col>
             </v-row>
           </v-card-text>
@@ -120,28 +124,29 @@
               <v-col cols="12"> <v-icon class="mr-2 pb-2" size="26" color="primary">mdi-briefcase-account</v-icon>
                 Designation and Employment Information</v-col>
               <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                <v-text-field v-model="applicant.current_position" label="Current Position" hide-details />
+                <v-text-field v-model="applicant.designation.current_position" label="Current Position" hide-details />
               </v-col>
               <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                <v-text-field v-model="applicant.employee_no" label="Employee No" hide-details />
+                <v-text-field v-model="applicant.designation.employee_no" label="Employee No" hide-details />
               </v-col>
               <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                <v-text-field v-model="applicant.plantilla_no" label="Plantilla No" hide-details />
+                <v-text-field v-model="applicant.designation.plantilla_no" label="Plantilla No" hide-details />
               </v-col>
               <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                <v-text-field v-model="applicant.item_no" label="Item No" hide-details />
+                <v-text-field v-model="applicant.designation.item_no" label="Item No" hide-details />
               </v-col>
               <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                <v-select v-model="applicant.division" label="Division" :items="['Manila', 'Pasig']" hide-details />
+                <v-select v-model="applicant.designation.division" label="Division" :items="['Manila', 'Pasig']"
+                  hide-details />
               </v-col>
               <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                <v-text-field v-model="applicant.school" label="School" hide-details />
+                <v-text-field v-model="applicant.designation.school" label="School" hide-details />
               </v-col>
               <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                <v-text-field v-model="applicant.school_address" label="School Address" hide-details />
+                <v-text-field v-model="applicant.designation.school_address" label="School Address" hide-details />
               </v-col>
               <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                <v-text-field v-model="applicant.ipcrf_rating" label="IPCRF rating" hide-details />
+                <v-text-field v-model="applicant.designation.ipcrf_rating" label="IPCRF rating" hide-details />
               </v-col>
             </v-row>
           </v-card-text>
@@ -152,20 +157,21 @@
                 color="success" />
             </v-card-title>
             <v-sheet border class="mx-4 mb-4">
-              <v-data-table :headers="education_attainment_headers" :items="applicant.education_attainment">
+              <v-data-table :headers="education_attainment_headers" :items="applicant.educational_attainment">
                 <template #bottom v-if="!show_footer" /> </v-data-table>
             </v-sheet>
             <v-row dense>
               <v-col cols="6">
                 <v-file-input label="Attach Authenticated copy of Transcript of Record" hide-details density="compact"
-                  variant="underlined" clearable />
+                  variant="underlined" clearable multiple accept="application/pdf"
+                  v-model="applicant.attachments.educational_attainment" />
               </v-col>
               <v-col cols="4">
-                <v-text-field v-model="applicant.registrar_name" placeholder="Enter Register Complete Name"
+                <v-text-field v-model="applicant.transcript.registrar_name" placeholder="Enter Register Complete Name"
                   density="compact" hide-details="auto" variant="underlined" />
-                <v-text-field v-model="applicant.registrar_email" :rules="email_rules" placeholder="Email Address"
-                  density="compact" hide-details="auto" variant="underlined" />
-                <v-text-field v-model="applicant.registrar_no" placeholder="+63 0 000 000 000" prefix="+63"
+                <v-text-field v-model="applicant.transcript.registrar_email" :rules="email_rules"
+                  placeholder="Email Address" density="compact" hide-details="auto" variant="underlined" />
+                <v-text-field v-model="applicant.transcript.registrar_no" placeholder="+63 0 000 000 000" prefix="+63"
                   mask="0 000 000 000" maxlength="10" density="compact" hide-details="auto" variant="underlined"
                   hint="Registrar Number is required" type="tel" />
               </v-col>
@@ -179,15 +185,17 @@
               <v-btn @click="service_record_dialog = true" density="compact" icon="mdi-plus" color="success" />
             </v-card-title>
             <v-row dense>
+
               <v-col cols="8">
                 <v-sheet border>
                   <v-data-table :headers="service_record_headers" :items="applicant.service_record" density="compact">
-                    <template #bottom v-if="!show_footer" /> </v-data-table>
+                    <template v-slot:bottom v-if="!show_footer"></template>
+                  </v-data-table>
                 </v-sheet>
               </v-col>
               <v-col cols="4">
-                <v-file-input label="Attach Service Record" hide-details density="compact" variant="underlined"
-                  clearable />
+                <v-file-input label="Attach Service Record" hide-details density="compact" variant="underlined" clearable
+                  multiple accept="application/pdf" v-model="applicant.attachments.service_record" />
               </v-col>
             </v-row>
           </v-card-text>
@@ -201,10 +209,12 @@
                   <v-row dense>
                     <v-col cols="12" class="text-caption text-grey-darken-1"> A. Total Number of Years
                       Teaching</v-col>
-                    <v-col cols="5"> <v-text-field label="Public Only" hide-details density="compact"
-                        type="number" /></v-col>
-                    <v-col cols="5"> <v-text-field label="Equivalent" hide-details density="compact"
-                        type="number" /></v-col>
+
+                    <v-col cols="5"> <v-text-field label="Public Only" hide-details density="compact" type="number"
+                        readonly /></v-col>
+                    <v-col cols="5"> <v-text-field label="Equivalent" hide-details density="compact" type="number"
+                        readonly />
+                    </v-col>
                   </v-row>
                 </v-col>
                 <v-col cols="6">
@@ -212,10 +222,10 @@
                     <v-col cols="12" class="text-caption text-grey-darken-1">
                       B. Degree to Equivalent
                     </v-col>
-                    <v-col cols="5"> <v-text-field v-model="applicant.present_degree" label="Public Schools" hide-details
-                        density="compact" type="number" /></v-col>
-                    <v-col cols="5"> <v-text-field v-model="applicant.pd_equvalent" label="Private Schools" hide-details
-                        density="compact" type="number" /></v-col>
+                    <v-col cols="5"> <v-text-field label="Public Schools" hide-details density="compact"
+                        type="number" /></v-col>
+                    <v-col cols="5"> <v-text-field label="Private Schools" hide-details density="compact"
+                        type="number" /></v-col>
                   </v-row>
                 </v-col>
                 <v-col cols="12" class="text-caption text-grey-darken-1 mt-2">
@@ -247,10 +257,11 @@
                   Attach the following:
                 </v-col>
                 <v-col cols="12" xl="4" lg="4" md="4" sm="12" class="px-2 ml-5">
-                  <v-file-input v-model="applicant.attached_permit_to_study" label="Attach Permit to Study" hide-details
-                    type="number" /></v-col>
-                <v-col cols="12" xl="4" lg="4" md="4" sm="12" class="px-2"> <v-file-input
-                    v-model="applicant.attached_omnibus" label="Attach Omnibus" type="number" /></v-col>
+                  <v-file-input label="Attach Permit to Study" hide-details accept="application/pdf"
+                    v-model="applicant.attachments.permit_to_study" /></v-col>
+                <v-col cols="12" xl="4" lg="4" md="4" sm="12" class="px-2">
+                  <v-file-input label="Attach Omnibus" accept="application/pdf"
+                    v-model="applicant.attachments.omnibus" /></v-col>
               </v-row>
             </v-card-text>
           </v-card-text>
@@ -295,8 +306,8 @@
               label="Name of Institution" hide-details /></v-col>
           <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field
               v-model="education_attainment.year_received" label="Year Received" hide-details type="number" /></v-col>
-          <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field
-              v-model="education_attainment.board_examination" label="Board Examination" hide-details /></v-col>
+          <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field v-model="education_attainment.board_exam"
+              label="Board Examination" hide-details /></v-col>
           <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field v-model="education_attainment.rating"
               label="Rating" hide-details type="number" /></v-col>
         </v-row>
@@ -310,19 +321,22 @@
         <v-row dense>
           <v-col cols="12"> <v-text-field v-model="professional_study.sy" label="School Year" type="number"
               hide-details /></v-col>
-          <v-col cols="6"> <v-text-field v-model="professional_study.unit_no" label="Unit Number" hide-details
-              type="date" /></v-col>
-          <v-col cols="6"> <v-text-field v-model="professional_study.description" label="Description" hide-details
-              type="date" /></v-col>
+          <v-col cols="6"> <v-text-field v-model="professional_study.unit_no" label="Unit Number" hide-details /></v-col>
+          <v-col cols="6"> <v-text-field v-model="professional_study.description" label="Description"
+              hide-details /></v-col>
         </v-row>
       </v-card-text>
     </commons-dialog>
   </v-container>
 </template>
 <script setup lang="ts">
-definePageMeta({ layout: "std-systems" })
 import swal from 'sweetalert';
 const { $rest } = useNuxtApp();
+
+//viewing attachment
+const cfg = useRuntimeConfig();
+const { CDN_ENDPOINT, DEV_CDN_ENDPOINT } = cfg.public;
+const CDN = cfg.public.NODE_ENV === "development" ? DEV_CDN_ENDPOINT : CDN_ENDPOINT;
 
 onBeforeMount(() => {
   Promise.all(
@@ -339,73 +353,145 @@ onBeforeMount(() => {
     buttons: { ok: false, cancel: false }
   }))
 })
+
+
 const step = ref(1)
 
 const applicant = ref({
-  created_date: new Date(),
-  ...{} as Qualifications,
-  ...{} as Per_info,
-  ...{} as Designation,
-  education_attainment: [],
+  qualification: {
+    position: "",
+    educ_level: "",
+    education: [],
+    experience: [],
+    training: 0,
+    eligibility: "",
+    per_rating: "",
+  },
+  personal_information: {
+    lastname: "",
+    firstname: "",
+    middlename: "",
+    email: "",
+    birthday: new Date,
+    gender: "",
+  },
+  designation: {
+    current_position: "",
+    employee_no: "",
+    plantilla_no: "",
+    division: "",
+    district: "",
+    item_no: "",
+    school: "",
+    school_address: "",
+    ipcrf_rating: "",
+  },
+  educational_attainment: [],
+  equivalent_unit: {
+    public_years_teaching: 0,
+    yt_equivalent: 0,
+    present_degree: 0,
+    pd_equivalent: 0,
+    private_years_teaching: 0,
+  },
+  transcript: {
+    registrar_name: "",
+    registrar_email: "",
+    registrar_no: 0
+  },
   service_record: [],
-  // ...{} as Equivalent_unit,
   professional_study: [],
-  ...{} as Transcipt,
-  status: 'Pending',
-});
+  attachments: {
+    service_record: [],
+    omnibus: [],
+    permit_to_study: [],
+    educational_attainment: [],
+  },
+  status: "For Signature"
 
+})
 
+const show_footer = ref(false)
 
-// service record
+/**
+ * START: SERVICE RECORD
+ */
 const service_record_headers = ref([
   { title: "Designation", key: "designation" },
   { title: "From", key: "from" },
   { title: "To", key: "to" }
 
 ]);
+
 const service_record_dialog = ref(false)
-const service_record = ref({} as Service_record)
+const service_record = ref<ServiceRecord>({
+  designation: "",
+  from: new Date(),
+  to: new Date(),
+})
+
 function add_service_record() {
-  if (!Array.isArray(applicant.value.service_record)) {
-    applicant.value.service_record = []
-  }
-  const new_service_record = {
+  const new_service_record: ServiceRecord = {
     designation: service_record.value.designation,
     from: service_record.value.from,
     to: service_record.value.to,
   }
   applicant.value.service_record.push(new_service_record);
-  service_record.value = { designation: '', from: '', to: '' };
+  service_record.value = { designation: "", from: new Date(), to: new Date() };
+
 }
 
-// EDUCATION ATTAINMENT
+/**
+ * END: SERVICE RECORD
+ */
+/**
+ * START: EDUCATIONAL ATTAINMENT
+ */
 const education_attainment_headers = ref([
   { title: "Titles, Dergree Highest Grade Attained", key: "degree" },
   { title: "Institution", key: "institution" },
   { title: "Year Received", key: "year_received" },
   { title: "Board Examination", key: "board_exam" },
   { title: "Rating", key: "rating" },
-  { title: "Date", key: "date" },
+  { title: "new Date", key: "date" },
 ])
+
 const education_attainment_dialog = ref(false)
-const education_attainment = ref({} as Educ_attainment)
+const education_attainment = ref<EducationalAttainment>({
+  degree: '',
+  institution: '',
+  year_received: 0,
+  board_exam: '',
+  rating: 0,
+  date: new Date()
+});
 function add_education_attainment() {
-  if (!Array.isArray(applicant.value.education_attainment)) {
-    applicant.value.education_attainment = []
-  }
-  const new_educ = {
+  const new_educ: EducationalAttainment = {
     degree: education_attainment.value.degree,
     institution: education_attainment.value.institution,
     year_received: education_attainment.value.year_received,
     board_exam: education_attainment.value.board_exam,
     rating: education_attainment.value.rating,
-    date: education_attainment.value.date,
-  }
-  applicant.value.education_attainment.push(new_educ);
-  education_attainment.value = { degree: '', institution: '', year_received: 0, board_exam: '', rating: '', date: '' };
+    date: education_attainment.value.date
+  };
+  applicant.value.educational_attainment.push(new_educ);
+  education_attainment.value = {
+    degree: "",
+    institution: "",
+    year_received: 0,
+    board_exam: "",
+    rating: 0,
+    date: new Date(),
+  };
 }
+/**)
+ * END: EDUCATIONAL ATTAINMENT
+ */
 
-// PROFESSIONAL STUDY
+/**
+ * start: PROFESSIONAL STUDY
+ */
+
 const professional_study_headers = ref([
   { title: "Designation", key: "sy" },
   { title: "Unit Number", key: "unit_no" },
@@ -413,35 +499,44 @@ const professional_study_headers = ref([
 ])
 const professional_study_dialog = ref(false)
 
-const professional_study = ref({} as Prof_study)
-function add_professional_study() {
-  if (!Array.isArray(applicant.value.professional_study)) {
-    applicant.value.professional_study = []
-  }
-  console.log(professional_study);
 
-  const new_professional_study = {
+
+const professional_study = ref<ProfessionalStudy>(
+  {
+    sy: parseInt(new Date().getFullYear().toString()),
+    unit_no: "",
+    description: "",
+  }
+)
+function add_professional_study() {
+  const new_professional_study: ProfessionalStudy = {
     sy: professional_study.value.sy,
     unit_no: professional_study.value.unit_no,
     description: professional_study.value.description,
   }
   applicant.value.professional_study.push(new_professional_study);
-  console.log(new_professional_study);
-
-  professional_study.value = { sy: '', unit_no: '', description: '' };
+  professional_study.value = {
+    sy: 0, unit_no: "", description: ""
+  };
 }
+/**
+ * END: PROFESSIONAL STUDY
+ */
+
 
 // POSITION
 const position_data = ref([])
 async function get_position() {
-  const { data, error } = await $rest('sms-position/get-position', {
+  const { data, error } = await $rest('new-applicant/get-application-qs', {
     method: "GET",
   })
   position_data.value = data
 }
-const position_item = computed(() => {
-  return position_data.value.filter((i) => i.title);
-})
+// const position_titles = computed(() => {
+//   return position_data.value
+//     .filter((i) => i.title !== undefined);
+// });
+
 
 // Education data
 const education_data = ref([])
@@ -459,14 +554,7 @@ async function get_experience() {
   })
   experience_data.value = data
 }
-const experience_item = computed(() => {
-  return experience_data.value.map((v: any) => {
-    return {
-      ...v,
-      title: `${v.number_of_years} years at ${v.position}`
-    }
-  })
-});
+
 // PERFORMANCE RATING
 const rating_data = ref([]);
 async function get_rating() {
@@ -476,41 +564,21 @@ async function get_rating() {
   rating_data.value = data
 
 }
-const rating_item = computed(() => {
-  return rating_data.value.map((v: any) => {
-    return {
-      ...v,
-      title: `At least ${v.number_of_years} years consecutive ${v.rating}`
-    }
-  })
-});
-const get_position_items = computed(() => {
-  const selected_position = applicant.value.position;
-  if (selected_position) {
-    const item = position_data.value.find((item) => item.position === selected_position);
-    if (item) {
-      return [item];
-    }
-  }
-  return [];
-});
-
 
 
 /**
  * MATCHING
  */
 function next_window() {
-  const selected_position = position_item.value.filter((v: string) => v._id == applicant.value.position)[0];
+  const selected_position = position_data.value.filter((v: string) => v._id == applicant.value.qualification.position)[0];
   if (!selected_position) return swal({ title: "Oops!", text: "Select position", icon: "info" });
-
-  const applicant_education = applicant.value.education;
+  const applicant_education = applicant.value.qualification.education;
   if (!applicant_education) return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
-  const applicant_experience = applicant.value.experience;
+  const applicant_experience = applicant.value.qualification.experience;
   if (!applicant_experience) return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
-  const applicant_rating = applicant.value.per_rating;
+  const applicant_rating = applicant.value.qualification.per_rating;
   if (!applicant_rating) return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
-  const applicant_training = applicant.value.training;
+  const applicant_training = applicant.value.qualification.training;
 
 
 
@@ -521,8 +589,6 @@ function next_window() {
   is_yes.push(rating_matching(applicant_rating, selected_position.rating));
   is_yes.push(training_matching(applicant_training, selected_position.training_hours));
 
-
-  console.log(is_yes)
   if (is_yes.includes(false)) return swal({ title: "ALERT", text: "alert" })
   step.value++
 }
@@ -554,11 +620,39 @@ function training_matching(applicant_training: number, required_training: number
 // CREATE 
 const form = ref(true)
 async function create_application() {
+
+  const { attachments } = applicant.value;
+  const temp = new FormData();
+  if (attachments.educational_attainment.length) {
+    attachments.educational_attainment.forEach((v: any) => {
+      temp.append(`tor-${v.name}`, v)
+    })
+  }
+  if (attachments.service_record.length) {
+    attachments.service_record.forEach((v: any) => {
+      temp.append(`service_record-${v.name}`, v)
+    })
+  }
+  if (attachments.permit_to_study.length) {
+    attachments.permit_to_study.forEach((v: any) => {
+      temp.append(`permit_study-${v.name}`, v)
+    })
+  }
+  if (attachments.omnibus.length) {
+    attachments.omnibus.forEach((v: any) => {
+      temp.append(`omnibus-${v.name}`, v)
+    })
+  }
+  const temp2 = Object.assign({}, applicant.value);
+  delete temp2.attachments;
+
+  temp.append("form", JSON.stringify(temp2));
+
   const { data, error } = await $rest('new-applicant/create-application', {
     method: "POST",
-    body: { ...applicant.value }
-
+    body: temp
   })
+
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 }
@@ -566,10 +660,113 @@ const is_email_valid = (email: string) => {
   const email_pattern = /\S+@\S+\.\S+/; //
   return email_pattern.test(email);
 };
-const email_rules = computed(() => [
+const email_rules = computed((v: any) => [
   v => !!v || 'Email is required',
   v => is_email_valid(v) || 'Email must be valid'
 ]);
+
+// const public_yt = computed(() => {
+//   return applicant.value.service_record.map(item => {
+//     const start_date = new Date(item.from);
+//     const end_date = new Date(item.to);
+//     const time_differ = end_date - start_date;
+//     const years = Math.floor(time_differ / (365.25 * 24 * 60 * 60 * 1000));
+//     const remaining_time = time_differ % (365.25 * 24 * 60 * 60 * 1000);
+//     const months = Math.floor(remaining_time / (30.44 * 24 * 60 * 60 * 1000));
+//     const remaining_days = Math.floor((remaining_time % (30.44 * 24 * 60 * 60 * 1000)) / (24 * 60 * 60 * 1000));
+//     const total_days = years * 365.25 + months * 30.44 + remaining_days;
+//     const adjusted_months = months % 12;
+//     const adjusted_years = Math.floor(months / 12);
+//     return {
+//       ...item,
+//       total_years: years + adjusted_years,
+//       total_months: adjusted_months,
+//       total_days: total_days
+//     };
+//   }).map(item => {
+
+//     const start_date = new Date(item.from);
+//     const end_date = new Date(item.to);
+//     const time_differ = end_date - start_date;
+//     const years = Math.floor(time_differ / (365.25 * 24 * 60 * 60 * 1000));
+//     const remaining_time = time_differ % (365.25 * 24 * 60 * 60 * 1000);
+//     const months = Math.floor(remaining_time / (30.44 * 24 * 60 * 60 * 1000));
+//     const remaining_days = Math.floor((remaining_time % (30.44 * 24 * 60 * 60 * 1000)) / (24 * 60 * 60 * 1000));
+//     const total_days = years * 365.25 + months * 30.44 + remaining_days;
+
+//     return {
+//       ...item,
+//       total_years: years + adjusted_years,
+//       total_months: adjusted_months,
+//       total_days: total_days
+//     };
+//   });
+// });
+
+// const years_teaching = computed(() => {
+//   const total = public_yt.value.reduce((acc, item) => {
+//     acc.total_years += item.total_years;
+//     acc.total_months += item.total_months;
+//     acc.total_days += item.total_days;
+//     return acc;
+//   }, { total_years: 0, total_months: 0, total_days: 0 });
+
+//   const yt_equivalent = total.total_years / 5;
+//   applicant.value.equivalent_unit.public_years_teaching = total.total_years;
+//   applicant.value.equivalent_unit.yt_equivalent = yt_equivalent;
+
+//   return {
+//     total_years: total.total_years,
+//     total_years_divided_by_5: yt_equivalent
+//   };
+// });
+
+// const public_yt = computed(() => {
+//   return applicant.value.service_record.map(item => {
+//     console.log(service_record);
+//     const start_date = new Date(item.from);
+//     const end_date = new Date(item.to);
+//     const time_differ = end_date - start_date;
+//     const total_days = time_differ / (24 * 60 * 60 * 1000);
+
+//     const years = Math.floor(total_days / 365.25);
+//     const remaining_days = total_days % 365.25;
+//     const months = Math.floor(remaining_days / 30.44);
+
+//     const adjusted_months = months % 12;
+//     const adjusted_years = Math.floor(months / 12);
+
+//     return {
+//       ...item,
+//       total_years: years + adjusted_years,
+//       total_months: adjusted_months,
+//       total_days: total_days
+//     };
+//   });
+// });
+
+// const years_teaching = computed(() => {
+//   const total = public_yt.value.reduce((acc, item) => {
+//     acc.total_years += item.total_years;
+//     acc.total_months += item.total_months;
+//     acc.total_days += item.total_days;
+//     return acc;
+//   }, { total_years: 0, total_months: 0, total_days: 0 });
+
+//   const yt_equivalent = total.total_years / 5;
+//   applicant.value.equivalent_unit.public_years_teaching = total.total_years;
+//   applicant.value.equivalent_unit.yt_equivalent = yt_equivalent;
+
+//   return {
+//     total_years: total.total_years,
+//     total_years_divided_by_5: yt_equivalent
+//   };
+// });
+
+// Display the output
+
+
+
 
 </script>
 
