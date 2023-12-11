@@ -355,7 +355,7 @@ onBeforeMount(() => {
 })
 
 
-const step = ref(1)
+const step = ref(3)
 
 const applicant = ref({
   qualification: {
@@ -416,6 +416,21 @@ const show_footer = ref(false)
 /**
  * START: SERVICE RECORD
  */
+
+function format_date(date: Date | string): string {
+  if (typeof date === 'string') {
+    date = new Date(date);
+  }
+  if (date instanceof Date && !isNaN(date.getTime())) {
+    return date.toLocaleDateString('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+    });
+  }
+
+  return 'Invalid Date';
+}
 const service_record_headers = ref([
   { title: "Designation", key: "designation" },
   { title: "From", key: "from" },
@@ -433,8 +448,8 @@ const service_record = ref<ServiceRecord>({
 function add_service_record() {
   const new_service_record: ServiceRecord = {
     designation: service_record.value.designation,
-    from: service_record.value.from,
-    to: service_record.value.to,
+    from: format_date(service_record.value.from),
+    to: format_date(service_record.value.to),
   }
   applicant.value.service_record.push(new_service_record);
   service_record.value = { designation: "", from: new Date(), to: new Date() };
@@ -522,8 +537,6 @@ function add_professional_study() {
 /**
  * END: PROFESSIONAL STUDY
  */
-
-
 // POSITION
 const position_data = ref([])
 async function get_position() {
@@ -532,10 +545,6 @@ async function get_position() {
   })
   position_data.value = data
 }
-// const position_titles = computed(() => {
-//   return position_data.value
-//     .filter((i) => i.title !== undefined);
-// });
 
 
 // Education data

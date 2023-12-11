@@ -67,9 +67,10 @@ interface Transcipt {
 
 interface ServiceRecord {
     designation: string;
-    from: Date;
-    to: Date;
+    from: Date | string;
+    to: Date | string;
 }
+
 interface ProfessionalStudy {
     sy: number;
     unit_no: string;

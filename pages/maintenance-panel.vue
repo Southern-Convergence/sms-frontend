@@ -3,7 +3,7 @@
     <v-card height="90vh">
       <v-sheet class="pa-6" height="auto" color="grey-lighten-4">
         <v-row no-gutters>
-          <v-col cols="12" class="text-h6 font-weight-bold text-indigo">MODIFIED QUALIFICATION STANDARDS </v-col>
+          <v-col cols="12" class="text-h6 font-weight-bold text-indigo">QUALIFICATION STANDARDS </v-col>
           <v-col cols="12" class="text-grey">Provides customized eligibility criteria, promoting fairness and
             inclusivity. </v-col>
         </v-row>
@@ -24,8 +24,8 @@
               Education
             </v-btn>
             <v-row dense>
-              <v-col cols="12" xxl="4" xl="3" lg="3" md="6" sm="12" v-for="educ in education_data" :key="educ">
-                <v-card class="mx-auto" color="indigo" variant="tonal">
+              <v-col cols="12" xl="6" lg="6" md="6" sm="12" v-for="educ, index in education_data" :key="index">
+                <v-card class="mx-auto" color="indigo" variant="tonal" @click="show_update_dialog(educ)">
                   <v-card-item>
                     <span> {{ educ.title }}</span>
                   </v-card-item>
@@ -37,8 +37,8 @@
             <v-btn class="my-2" @click="experience_dialog = true" color="indigo"> Create Experience </v-btn>
             <v-row dense>
 
-              <v-col cols="12" xxl="4" xl="3" lg="3" md="6" sm="12" v-for="ex, index in experience_data" :key="index">
-                <v-card class="mx-auto" color="indigo" variant="tonal" flat>
+              <v-col cols="12" xxl="4" xl="3" lg="6" md="6" sm="12" v-for="ex, index in experience_data" :key="index">
+                <v-card class="mx-auto" color="indigo" variant="tonal" flat @click="experience_update_dialog(ex)">
                   <v-card-item>
                     <span> {{ ex.title }}</span>
                   </v-card-item>
@@ -50,8 +50,8 @@
             <v-btn class="my-2" @click="rating_dialog = true" color="indigo"> Create
               Rating </v-btn>
             <v-row dense>
-              <v-col cols="12" xxl="4" xl="3" lg="3" md="6" sm="12" v-for="rate in rating_data" :key="rate">
-                <v-card class="mx-auto" color="indigo" variant="tonal" flat>
+              <v-col cols="12" xxl="4" xl="3" lg="3" md="6" sm="12" v-for="rate, index in rating_data" :key="index">
+                <v-card class="mx-auto" color="indigo" variant="tonal" flat @click="rating_update_dialog(rate)">
                   <v-card-item>
                     <span> {{ rate.title }}
                     </span>
@@ -61,11 +61,12 @@
             </v-row>
           </v-window-item>
           <v-window-item :value="4">
-            <v-btn class="my-2" @click="salary_grade_dialog = true" color="indigo"> Create Salary Grade </v-btn>
+            <v-btn class="my-2" @click="sg_dialog = true" color="indigo"> Create Salary Grade </v-btn>
             <v-row dense>
-              <v-col cols="12" xxl="4" xl="3" lg="3" md="6" sm="12" v-for="sg in sg_data" :key="sg">
+              <v-col cols="12" xxl="4" xl="3" lg="3" md="6" sm="12" v-for="sg, index in sg_data" :key="index">
                 <v-card class="mx-auto" color="indigo" variant="tonal" flat>
                   <v-card-item>
+                    {{ sg }}
                     <div> Salary Grade : <b> {{ sg.salary_grade }} </b></div>
                     <div> Equivalent : <b> {{ sg.equivalent }} </b></div>
                   </v-card-item>
@@ -99,7 +100,7 @@
                       <span class="text-caption text-grey"> {{ p.training_hours }} </span>
                     </div>
                     <div class="text-caption" v-if="p.rating">Performance Rating :
-                      <div class="text-caption text-grey" v-for="rate, index in p.rating" :key="rate">
+                      <div class="text-caption text-grey" v-for="rate, index in p.rating" :key="index">
                         {{ rate.title }}
                         <br />
                       </div>
@@ -127,35 +128,43 @@
         </v-window>
       </v-card-text>
     </v-card>
-    <commons-dialog max-width="35%" v-model="education_dialog" icon="mdi-school" :title="'Create Education Qualification'"
-      @submit="create_education" :subtitle="'Create education for position Qualification Standards'"
-      :submitText="'Submit'">
+    <commons-dialog max-width="35%" v-model="education_dialog" icon="mdi-school"
+      :title="status === 'create' ? 'Create Education Qualification' : 'Update Education Qualification'"
+      @submit="submit_education" :subtitle="'Enter or modify details for the education qualification.'"
+      :submitText="status === 'create' ? 'Submit' : 'Update'">
       <v-card-text>
-        <v-text-field v-model="education.title" label="Enter Education Title" />
+        <v-textarea v-model="education.title" rows="3" label="Enter Education Title" />
+        <!-- <v-text-field label="Master Arts Degree Units" v-model="education.units" /> -->
       </v-card-text>
     </commons-dialog>
-    <commons-dialog max-width="35%" v-model="experience_dialog" icon="mdi-school" :title="'Create Experience'"
-      @submit="create_experience" :subtitle="'For position Qualification Standards'" :submitText="'Submit'">
+    <commons-dialog max-width="35%" v-model="experience_dialog" icon="mdi-school"
+      :title="status === 'create' ? 'Create experience Qualification' : 'Update experience Qualification'"
+      @submit="submit_experience" :subtitle="'Enter or modify details for the experience qualification.'"
+      :submitText="status === 'create' ? 'Submit' : 'Update'">
       <v-card-text>
-        <v-textarea v-model="experience.title" label="Experience Title" />
-        <v-checkbox v-model="experience.is_ma_equivalent" label="Check if with M.A. Equivalent" />
-        <v-text-field v-if="experience.is_ma_equivalent" v-model="experience.master_arts" label="Specify M.A. Degree" />
+        <v-textarea v-model="experience.title" rows="3" label="Enter experience Title" />
       </v-card-text>
     </commons-dialog>
-    <commons-dialog max-width="35%" v-model="rating_dialog" icon="mdi-school" :title="'Performance Rating Form'"
-      @submit="create_rating" :subtitle="'Create performance rating for position Qualification Standards'"
-      :submitText="'Submit'">
+
+    <commons-dialog max-width="35%" v-model="rating_dialog" icon="mdi-school"
+      :title="status === 'create' ? 'Create Performance  Rating' : 'Update Performance  Rating'" @submit="submit_rating"
+      :subtitle="'Enter or modify details for the rating qualification.'"
+      :submitText="status === 'create' ? 'Submit' : 'Update'">
       <v-card-text>
-        <v-text-field v-model="performance_rating.title" label="Performance Rating" />
+        <v-textarea v-model="performance_rating.title" rows="3" label="Enter rating Title" />
       </v-card-text>
     </commons-dialog>
-    <commons-dialog max-width="30%" v-model="salary_grade_dialog" icon="mdi-school" :title="'Salary Grade Form'"
-      @submit="create_sg" :subtitle="'Create salary grade for position Qualification Standards'" :submitText="'Submit'">
+
+    <commons-dialog max-width="35%" v-model="sg_dialog" icon="mdi-school" :title="'Create Salary Grade'"
+      @submit="create_sg" :subtitle="'Enter or modify details for the rating qualification.'" :submitText="'SUBMIT'">
       <v-card-text>
         <v-text-field v-model="sg.salary_grade" label="Salary Grade" />
         <v-text-field v-model="sg.equivalent" label="Equivalent" />
       </v-card-text>
     </commons-dialog>
+
+
+
     <commons-dialog max-width="30%" v-model="position_dialog" icon="mdi-school" :title="'Position  Form'"
       @submit="create_position" :subtitle="'Create position and modify Qualification Standards'" :submitText="'Submit'">
       <v-card-text>
@@ -169,6 +178,8 @@
         <v-select v-model="position.sg" :items="sg_item" label="Salary Grade" item-value="_id" />
       </v-card-text>
     </commons-dialog>
+
+
   </v-sheet>
 </template>
 
@@ -195,21 +206,18 @@ onBeforeMount(() => {
   }))
 })
 
+
 const tab = ref(null);
+
 // dialog
-const education_dialog = ref(false);
-const experience_dialog = ref(false);
-const rating_dialog = ref(false);
-const salary_grade_dialog = ref(false);
+
 const position_dialog = ref(false);
 
-const position_data = ref([]);
 
-// EDUCATION
-const education = ref({
-  title: '',
-});
-
+// CREATE EDUCATION
+const education = ref<Education>({
+  title: "",
+})
 async function create_education() {
   const { data, error } = await $rest('sms-education/create-education', {
     method: "POST",
@@ -219,20 +227,48 @@ async function create_education() {
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 }
-// containers
-const education_data = ref([]);
-const oid = ref("");
-const eds = ref([]);
+// GET EDUCATION
+const education_data = ref<Education[]>([]);
 async function get_education() {
   const { data, error } = await $rest('sms-education/get-education', {
     method: "GET",
   })
-
   education_data.value = data
+}
+// UPDATE EDUCATION
+const status = ref('create');
+const education_dialog = ref(false);
+async function submit_education() {
+  if (status.value === 'create') {
+    return create_education();
+  } else if (status.value === 'update') {
+    return update_education();
+  }
+}
+function experience_update_dialog(educ: Education) {
+  education.value = { ...educ };
+  status.value = 'update';
+  education_dialog.value = true;
+}
+async function update_education() {
+  const { data, error } = await $rest('sms-education/update-education', {
+    method: "PUT",
+    body: {
+      _id: education.value._id,
+      title: education.value.title
+    }
+  });
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+
 }
 
 
-const experience = ref({} as Experience);
+const experience = ref<Experience>({
+  title: "",
+  // is_ma_equivalent: false,
+  // master_arts: ""
+})
 async function create_experience() {
   const { data, error } = await $rest('sms-experience/create-experience', {
     method: "POST",
@@ -245,17 +281,41 @@ async function create_experience() {
 /**
  * EXPERIENCE
  */
-const experience_data = ref([]);
+const experience_data = ref<Experience[]>([]);
 async function get_experience() {
   const { data, error } = await $rest('sms-experience/get-experience', {
     method: "GET",
   })
-
-  console.log(experience_data)
   experience_data.value = data
 }
+const experience_dialog = ref(false);
+async function submit_experience() {
+  if (status.value === 'create') {
+    return create_experience();
+  } else if (status.value === 'update') {
+    return update_experience();
+  }
+}
+function show_update_dialog(ex: Experience) {
+  experience.value = { ...ex };
+  status.value = 'update';
+  experience_dialog.value = true;
+}
+async function update_experience() {
+  const { data, error } = await $rest('sms-experience/update-experience', {
+    method: "PUT",
+    body: {
+      _id: experience.value._id,
+      title: experience.value.title
+    }
+  });
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 
-const performance_rating = ref({
+}
+
+
+const performance_rating = ref<PerformanceRating>({
   title: '',
 });
 async function create_rating() {
@@ -267,9 +327,10 @@ async function create_rating() {
 
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+
 }
 
-const rating_data = ref([]);
+const rating_data = ref<PerformanceRating[]>([]);
 
 async function get_rating() {
   const { data, error } = await $rest('sms-rating/get-rating', {
@@ -277,10 +338,36 @@ async function get_rating() {
   })
   rating_data.value = data
 }
+// UPDATE PERFORMANCE RATING
+const rating_dialog = ref(false);
+async function submit_rating() {
+  if (status.value === 'create') {
+    return create_rating();
+  } else if (status.value === 'update') {
+    return update_rating();
+  }
+}
+function rating_update_dialog(rate: PerformanceRating) {
+  performance_rating.value = { ...rate };
+  status.value = 'update';
+  rating_dialog.value = true;
+}
+async function update_rating() {
+  const { data, error } = await $rest('sms-rating/update-rating', {
+    method: "PUT",
+    body: {
+      _id: performance_rating.value._id,
+      title: performance_rating.value.title
+    }
+  });
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+
+}
 
 
 // SALARY GRADE
-const sg = ref({
+const sg = ref<SalaryGrade>({
   salary_grade: 0,
   equivalent: 0
 });
@@ -296,7 +383,9 @@ async function create_sg() {
 /**
  * HANDLES FETCHING SALARY GRADE
  */
-const sg_data = ref([]);
+const sg_dialog = ref(false);
+
+const sg_data = ref<SalaryGrade[]>([]);
 async function get_sg() {
   const { data, error } = await $rest('sms-salary-grade/get-sg', {
     method: "GET",
@@ -305,17 +394,34 @@ async function get_sg() {
   sg_data.value = data
 }
 
+
+
+// Define your commons-dialog and v-window-item components here
+
+// Make sure to include the proper import for swal or use an alternative way to display alerts
+
+
 const sg_item = computed(() => {
-  return sg_data.value.map((v: number) => {
+  return sg_data.value.map((v: SalaryGrade) => {
     return {
       ...v,
       title: Number(v.salary_grade)
-    }
-  })
+    };
+  });
 });
 
 
-const position = ref({} as Position);
+const position_data = ref<Position[]>([]);
+const position = ref<Position>({
+  title: "",
+  education: [],
+  education_level: " ",
+  experience: [],
+  training_hours: 0,
+  rating: [],
+  sg: ""
+});
+
 async function create_position() {
   const { data, error } = await $rest('sms-position/create-position', {
     method: "POST",
@@ -333,5 +439,9 @@ async function get_position() {
   })
   position_data.value = data
 }
+
+
+
+
 
 </script>

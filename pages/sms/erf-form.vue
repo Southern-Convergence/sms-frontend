@@ -41,7 +41,12 @@
                 <v-col cols="6" class="text-capitalize">Name : <b> {{ applicant_details?.personal_information?.firstname
                 }} {{ applicant_details?.personal_information?.lastname }} </b>
                 </v-col>
-                <v-col cols="6">Date of Birth : <b> {{ applicant_details?.personal_information?.birthday }}
+                <v-col cols="6">Date of Birth : <b> {{ new
+                  Date(applicant_details?.personal_information?.birthday).toLocaleDateString('en-US', {
+                    month:
+                      '2-digit', day: '2-digit', year: 'numeric'
+                  }) }}
+
                   </b>
                 </v-col>
                 <v-col cols="6">Employee Number : <b> {{ applicant_details?.designation?.employee_no }}</b> </v-col>
