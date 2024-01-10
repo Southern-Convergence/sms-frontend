@@ -52,8 +52,6 @@ const GLOBAL_NAVS: NavMap = {
 
   systems_navs: [
     new NavTree("Dashboards", "dashboard", "mdi-view-dashboard"),
-    new NavTree("School", "school-invite-school", "mdi-school"),
-    new NavTree("Application Form", "sms-new-applicant-form", "mdi-note-edit-outline"),
     new NavTree("Reclassification", "sms-reclassification", "mdi-list-box-outline"),
 
 

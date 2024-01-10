@@ -13,7 +13,7 @@
           <v-divider />
           <v-card-text class="pa-1 ma-0">
             <v-sheet border height="80vh">
-              <iframe v-for="item, index in src" :key="index" :src="`${CDN}${item}`" class="w-100 h-100" />
+              <iframe v-for="item, index in src.link" :key="index" :src="`${CDN}${item}`" class="w-100 h-100" />
             </v-sheet>
           </v-card-text>
         </v-card>
@@ -26,7 +26,7 @@
 
 interface Props {
   dialog: boolean;
-  src: string[] | string;
+  src: Att;
   title: string;
 }
 

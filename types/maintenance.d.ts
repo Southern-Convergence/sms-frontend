@@ -1,10 +1,4 @@
-interface School {
-  division?: string;
-  school_name?: string;
-  principal?: string;
-  address?: string;
-  school_email?: string;
-}
+
 
 
 interface Experience {
@@ -28,6 +22,7 @@ interface SalaryGrade {
 }
 
 interface Position {
+
   title: string;
   education: string[];
   education_level?: string;

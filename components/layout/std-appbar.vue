@@ -39,23 +39,27 @@
             </v-list>
 
             <v-list class="pt-0 pb-2 ma-4">
+              <v-list-item title="Maintenance Panel" color="primary"
+                :to="{ name: `sms-maintenance`, params: account_params }">
+                <template v-slot:prepend>
+                  <v-icon class="mr-1" icon="mdi-tools" />
+                </template>
+              </v-list-item>
+
               <v-list-item title="User Management" color="primary"
                 :to="{ name: `user-management`, params: account_params }">
                 <template v-slot:prepend>
                   <v-icon class="mr-1" icon="mdi-account" />
                 </template>
               </v-list-item>
-
-              <v-list-item title="Invite School" color="primary"
-                :to="{ name: `school-invite-school`, params: account_params }">
+              <v-list-item title="SDO Panel" color="primary" :to="{ name: `sdo`, params: account_params }">
                 <template v-slot:prepend>
-                  <v-icon class="mr-1" icon="mdi-school" />
+                  <v-icon class="mr-1" icon="mdi-key-chain" />
                 </template>
               </v-list-item>
-              <v-list-item title="Maintenance Panel" color="primary"
-                :to="{ name: `maintenance-panel`, params: account_params }">
+              <v-list-item title="School Panel" color="primary" :to="{ name: `school`, params: account_params }">
                 <template v-slot:prepend>
-                  <v-icon class="mr-1" icon="mdi-tools" />
+                  <v-icon class="mr-1" icon="mdi-key-chain" />
                 </template>
               </v-list-item>
             </v-list>

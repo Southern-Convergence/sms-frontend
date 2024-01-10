@@ -31,6 +31,7 @@ import { ref } from 'vue';
 const props = defineProps({
     name: String,
     position: String,
+
 });
 
 const clear = () => {

@@ -1,104 +1,94 @@
 
 <template>
-    <v-container class="h-100">
-        <v-card>
-            <v-toolbar color="indigo" border>
-                <v-list-item class="pl-2" density="compact">
-                    <template v-slot:prepend>
-                        <v-avatar class="mr-1" variant="text">
-                            <v-icon icon="mdi-account" dark />
-                        </v-avatar>
-                    </template>
-                    <v-list-item-title> User Management</v-list-item-title>
-                    <v-list-item-subtitle>A brief overview of school users.</v-list-item-subtitle>
-                </v-list-item>
-                <v-spacer></v-spacer>
-                <v-btn @click="user_invite_dialog = true" variant="outlined">
-                    <v-icon>mdi-plus</v-icon> Invite User</v-btn>
-            </v-toolbar>
-            <v-tabs density="compact" v-model="tab" color="primary">
-
-                <v-tab class="mx-2" :value="sdo">
-                    School Division Office
-                </v-tab>
-                <v-tab class="mx-2" :value="ro">
-                    Regional Office
-                </v-tab>
-            </v-tabs>
-            <v-window v-model="tab">
-                <v-window-item value="sdo">
-                    <v-card-text>
-                        <v-row dense>
-                            <v-col cols="6" v-for="sdo in get_sdo" :key="sdo">
-                                <v-card class="mx-auto" color="indigo" elevation="2" variant="tonal">
-                                    <v-card-item>
-                                        <div>
-                                            <div class="d-flex text-body-1 mb-1">
-                                                <div> Name : <b class="text-uppercase">{{ sdo.lastname }} , {{ sdo.firstname
-                                                }}</b>
-                                                </div>
-                                                <v-spacer />
-                                                <div> <v-chip>{{
-                                                    sdo.status }}</v-chip></div>
-
+    <v-sheet width="85%" class="mx-auto ma-5">
+        <v-card height="90vh">
+            <v-sheet class="pa-6" height="auto" color="grey-lighten-4">
+                <v-row no-gutters>
+                    <v-col cols="12" class="text-h6 font-weight-bold text-indigo">USER MANAGEMENT </v-col>
+                    <v-col cols="12" class="text-grey"> A brief overview of users. </v-col>
+                </v-row>
+            </v-sheet>
+            <v-card-text>
+                <v-row dense>
+                    <v-col cols="8">
+                        <v-btn prepend-icon="mdi-pencil-plus" @click="user_invite_dialog = true" color="indigo">
+                            Invite
+                            User</v-btn>
+                        <v-sheet class="overflow-y-auto d-flex flex-wrap ga-3 ">
+                            <v-sheet class="pa-1 pt-2" width="50%" variant="tonal" v-for="user, index in users_data"
+                                :key="index" @click="route_to_sdo(user.division._id)">
+                                <v-alert rounded="0" class="my-1 user-item space-around" border="start"
+                                    border-color="indigo">
+                                    <div>
+                                        <div class="d-flex mb-1">
+                                            <div class="text-uppercase  text-indigo text-body-1"> {{ user.firstname
+                                            }}
+                                                {{
+                                                    user.lastname }}
                                             </div>
-                                            <div class="text-body-2"> Email : {{ sdo.email }}</div>
-                                            <div class="text-body-2"> Contact Number : {{ sdo.contact_number }}</div>
-                                            <div class="text-body-2 mt-4">{{ sdo.type }}</div>
-                                            <div class="text-body-2">{{ sdo.role }}</div>
+                                            <v-spacer />
+                                            <div> <v-chip density="compact" class="text-uppercase text-overline"
+                                                    color="success">{{
+                                                        user.status }}</v-chip></div>
                                         </div>
-                                    </v-card-item>
-                                    <v-card-actions>
-                                        <v-btn @click="user_invite_dialog.dialog = true" color="indigo" variant="tonal">
-                                            View Information
-                                        </v-btn>
-                                    </v-card-actions>
-                                </v-card>
-                            </v-col>
-                        </v-row>
-                    </v-card-text>
-                </v-window-item>
-                <v-window-item value="ro">
-                    <v-card-text>
-                        <v-row dense>
-                            <v-col cols="6" v-for="ro in get_ro" :key="ro">
-                                <v-card class="mx-auto" color="indigo" elevation="2" variant="tonal">
-                                    <v-card-item>
-                                        <div>
-                                            <div class="d-flex text-body-1 mb-1">
-                                                <div> Name : <b class="text-uppercase">{{ ro.lastname }} , {{ ro.firstname
+                                        <!-- <div class="text-body-2">{{ sdo.type }}</div> -->
+                                        <div class="text-body-2"><b> {{ user.role }}</b> <b v-if="user.division"> of
+                                                {{
+                                                    user.division.title
                                                 }}</b>
-                                                </div>
-                                                <v-spacer />
-                                                <div> <v-chip>{{
-                                                    ro.status }}</v-chip></div>
-
-
-
-                                            </div>
-                                            <div class="text-body-2"> Email : {{ ro.email }}</div>
-                                            <div class="text-body-2"> Contact Number : {{ ro.contact_number }}</div>
-                                            <div class="text-body-2 mt-4">{{ ro.type }}</div>
-                                            <div class="text-body-2">{{ ro.role }}</div>
                                         </div>
-                                    </v-card-item>
-                                    <v-card-actions>
-                                        <v-btn @click="user_invite_dialog.dialog = true" color="indigo" variant="tonal">
-                                            View Information
-                                        </v-btn>
-                                    </v-card-actions>
-                                </v-card>
-                            </v-col>
-                        </v-row>
+                                        <div class="text-caption font-weight-bold mb-2">{{ user.type }}</div>
 
-                    </v-card-text>
-                </v-window-item>
-            </v-window>
+                                        <div class="text-caption"> <v-icon color="red"> mdi-email</v-icon> <u
+                                                class="text-blue">{{ user.email }}</u>
+                                        </div>
+                                        <div class="text-caption"> <v-icon color="success"> mdi-phone</v-icon> {{
+                                            user.contact_number }}</div>
+                                    </div>
+                                </v-alert>
+                            </v-sheet>
+
+                        </v-sheet>
+
+                    </v-col>
+                    <v-col cols="4">
+                        <v-sheet class="pl-2 w-100">
+                            <v-btn @click="create_sdo_dialog = true" prepend-icon="mdi-pencil-plus" color="success"
+                                class="mr-0 mb-3"> Create
+                                School Division Office </v-btn>
+
+                            <v-sheet height="70vh" class="overflow-auto">
+
+                                <v-sheet variant="tonal" v-for="(sdo, index) in sdo_data" :key="index" class="pb-2 mr-2">
+                                    <v-alert border="start" border-color="success" color="green-ligthen-5" rounded="0">
+                                        <div class="font-weight-bold text-uppercase text-subtitle-1
+">
+                                            {{ sdo.title }}
+                                        </div>
+                                        <div>
+                                            <v-icon color="blue"> mdi-map-marker</v-icon> {{ sdo.address }}
+                                        </div>
+                                        <div class="text-blue font-italic text-decoration-underline">
+                                            <v-icon color="red"> mdi-email</v-icon> {{ sdo.email }}
+                                        </div>
+                                        <div>
+                                            <v-icon color="success"> mdi-phone</v-icon> {{ sdo.telephone }}
+                                        </div>
+                                    </v-alert>
+                                </v-sheet>
+                            </v-sheet>
+                        </v-sheet>
+
+                    </v-col>
+                </v-row>
+            </v-card-text>
+
+
         </v-card>
 
         <!-- Dialog -->
         <v-dialog v-model="user_invite_dialog" max-width="40%">
-            <v-card>
+            <v-sheet>
                 <v-toolbar color="indigo" border>
                     <v-list-item class="pl-2" density="compact">
                         <template v-slot:prepend>
@@ -106,98 +96,139 @@
                                 <v-icon icon="mdi-account" dark />
                             </v-avatar>
                         </template>
-                        <v-list-item-title> User Information</v-list-item-title>
-                        <v-list-item-subtitle> Invite user form</v-list-item-subtitle>
+                        <v-list-item-title> USER INVITE FORM</v-list-item-title>
+                        <v-list-item-subtitle> Enter User Information</v-list-item-subtitle>
                     </v-list-item>
                     <v-spacer />
                     <v-btn @click="user_invite_dialog = false" class="mr-0" rounded="0" icon="mdi-close" />
                 </v-toolbar>
                 <v-card-text>
                     <v-row dense>
-                        <v-col cols="5"><v-text-field v-model="user.lastname" label="Lastname" hide-details /></v-col>
-                        <v-col cols="5"><v-text-field v-model="user.firstname" label="Firstname" hide-details /></v-col>
-                        <v-col cols="2"><v-text-field v-model="user.middlename" label="MI" hide-details /></v-col>
-
-                        <v-col cols="6"><v-text-field v-model="user.email" label="Email Address" hide-details /></v-col>
-                        <v-col cols="6"><v-text-field v-model="user.contact_number" label="Contact Number"
-                                hide-details /></v-col>
-
-                        <v-col cols="6"><v-select v-model="user.type" label="Type" :items="$user_type"
-                                hide-details /></v-col>
-                        <v-col cols="6"><v-text-field v-model="user.role" label="Role" hide-details /></v-col>
+                        <v-col cols="12"><v-text-field v-model="user.email" density="compact" hide-details
+                                label="Email address" prepend-inner-icon="mdi-email-outline" variant="outlined" /></v-col>
+                        <v-col cols="4"><v-text-field v-model="user.firstname" density="compact" hide-details
+                                label="Firstname" variant="outlined" /></v-col>
+                        <v-col cols="4"><v-text-field v-model="user.middlename" density="compact" hide-details
+                                label="Middlename" variant="outlined" /></v-col>
+                        <v-col cols="4"><v-text-field v-model="user.lastname" density="compact" hide-details
+                                label="Lastname" variant="outlined" /></v-col>
+                        <v-col cols="4"><v-text-field v-model="user.contact_number" density="compact" hide-details
+                                label="Contact Number" variant="outlined" /></v-col>
+                        <v-col cols="12"> Roles and Designation </v-col>
+                        <v-col cols="6"><v-select v-model="user.type" label="Type"
+                                :items="['School Division Office', 'Regional Office']" hide-details /></v-col>
+                        <v-col cols="6" v-if="user.type !== 'Regional Office'">
+                            <v-select v-model="user.designation_information.division" :items="sdo_data" label="Division"
+                                item-value="_id" hide-details /></v-col>
+                        <!-- <v-col cols="6">
+                            <v-select v-model="user.school_name" :items="school_data" label="Select School"
+                                hide-details /></v-col> -->
+                        <v-col cols="6">
+                            <v-select v-model="user.role" :items="roles" item-title="name" item-value="_id" label="Role"
+                                hide-details />
+                        </v-col>
                     </v-row>
-
-                    <v-row dense v-if="user.type === 'School'">
-                        <v-col cols="6"><v-text-field v-model="user.school.division" label="Division"
-                                hide-details /></v-col>
-                        <v-col cols="6"><v-text-field v-model="user.school.school_name" label="School Name"
-                                hide-details /></v-col>
-                        <v-col cols="6"><v-text-field v-model="user.school.principal" label="Principal Name"
-                                hide-details /></v-col>
-                        <v-col cols="6"><v-text-field v-model="user.school.address" label="School Address"
-                                hide-details /></v-col>
-                        <v-col cols="6"><v-text-field v-model="user.school.school_email" label="Email"
-                                hide-details /></v-col>
-
-                    </v-row>
+                    <!-- <v-sheet class="mx-auto" v-if="user.type === 'School' && user.role === 'School Admin'">
+                        <div class="mt-2 text-subtitle-1 text-medium-emphasis pl-2">School Credentials</div>
+                        <v-text-field v-model="user.school_name" density="compact" hide-details label="School Name"
+                            prepend-inner-icon="mdi-home" variant="outlined" />
+                        <v-textarea class="mt-2" v-model="user.school_address" density="compact" rows="3" hide-details
+                            label="School Address" prepend-inner-icon="mdi-map-marker" variant="outlined"></v-textarea>
+                    </v-sheet> -->
 
                 </v-card-text>
                 <v-divider />
                 <v-card-actions>
                     <v-row dense justify="center">
                         <v-col cols="4">
-                            <v-btn @click="user_invite_dialog = false" variant="tonal" color="error" block>Cancel</v-btn>
-                        </v-col>
-                        <v-col cols="4">
-                            <v-btn @click="create_user" variant="tonal" color="success" block>
-                                Submit
+                            <v-btn @click="create_user" variant="tonal" color="indigo" block>
+                                <v-icon class="pr-2" size="28"> mdi-message-text-fast</v-icon> Send Invite
                             </v-btn>
                         </v-col>
                     </v-row>
                 </v-card-actions>
-            </v-card>
+            </v-sheet>
         </v-dialog>
-    </v-container>
+
+        <commons-dialog v-model="create_sdo_dialog" max-width="35%" icon="mdi-school" title="Create School Division Office"
+            @submit="create_sdo" submitText="Submit">
+            <v-card-text>
+                <v-text-field v-model="sdo.title" label=" Division" hide-details />
+                <v-textarea class="mt-2" v-model="sdo.address" rows="3" label="Division Address" hide-details
+                    prepend-inner-icon="mdi-map-marker" />
+                <v-text-field class="mt-2" v-model="sdo.email" label="Email Address" hide-details
+                    prepend-inner-icon="mdi-email-outline" />
+                <v-text-field class="mt-2" v-model="sdo.telephone" label="Telephone Number" hide-details
+                    prepend-inner-icon="mdi-phone" />
+            </v-card-text>
+        </commons-dialog>
+    </v-sheet>
 </template>
 
 <script setup lang="ts">
+const router = useRouter();
 import { ref } from 'vue';
-const { $rest } = useNuxtApp();
 import swal from 'sweetalert';
 
-definePageMeta({
-    layout: "barren"
-});
-const { $user_type } = useNuxtApp();
+import useAuth from "~/store/auth";
+
+definePageMeta({ layout: "std-applicant" })
+
 
 onBeforeMount(() => {
-    get_users()
+    Promise.all([
+        get_users(),
+        get_sdo(),
+        get_apts()
+    ])
 })
+
+const auth = useAuth().user;
+
+const { $rest, $user_type, $ro_roles, $sdo_roles } = useNuxtApp();
 
 const tab = ref(0);
 const count = ref(10);
 
+const is_hovered = ref(false);
 
-const user = ref({
-    date: new Date(),
-    ...{} as User,
-    status: 'Pending',
-    school: ref({} as School)
+
+
+const user = ref<SmsUser>({
+    username: "",
+    password: "",
+    admin: false,
+    email: "",
+    lastname: "",
+    middlename: "",
+    firstname: "",
+    contact_number: "",
+    type: "",
+    role: "",
+    designation_information: {
+        division: "",
+        school: "",
+    },
+    status: "pending",
 });
 
 
-const items = ref([
-    'School Division Office Users', 'Regional Office Users',
-]);
+/**
+ * 
+ */
 
-const onUserTypeChange = () => {
-    // Additional logic if needed
-    if (user.type === 'School') {
-        user.school = { division: '', school_name: '', principal: '', address: '', school_email: '' };
-    } else {
-        user.school = null; // or any other appropriate value
-    }
-};
+const roles = ref([]);
+const get_apts = async () => {
+
+    const domain = auth.access[0].domain_id;
+    if (!domain) return swal({ title: "Fuck" })
+    const { data, error } = await $rest("admin/policy-authority/get-apts", { method: "GET", query: { domain_id: domain } });
+
+    const apts = data.filter((v: any) => v.internal === false);
+    roles.value = apts;
+}
+
+
 
 const user_invite_dialog = ref(false);
 
@@ -207,28 +238,65 @@ async function create_user() {
         body: { ...user.value }
 
     })
-    console.log(data);
-    console.log(error);
-
-
     if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+    get_users()
     return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 }
-
-const users_data = ref([])
+const users_data = ref<SmsUser[]>([])
 async function get_users() {
     const { data, error } = await $rest('user/get-users', {
         method: "GET",
-    })
-    users_data.value = data
+    });
 
+    users_data.value = data.filter((v) => !!v.role && v.role !== 'School Admin');
 }
 
-const get_ro = computed(() => {
-    return users_data.value.filter((i) => i.type == 'Regional Office');
+
+const sdo = ref<Sdo>({
+    title: "",
+    address: "",
+    email: "",
+    telephone: "",
 })
 
-const get_sdo = computed(() => {
-    return users_data.value.filter((i) => i.type == 'School Division Office' || i.type == 'School');
-})
+/**
+ * SDO 
+ */
+const create_sdo_dialog = ref(false)
+async function create_sdo() {
+    const { data, error } = await $rest('sms-sdo/create-sdo', {
+        method: "POST",
+        body: { ...sdo.value }
+    });
+
+    if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+    get_sdo();
+    create_sdo_dialog.value = false;
+    return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+}
+const route_to_sdo = (id: string) => {
+    router.push({
+        name: 'sdo',
+        query: {
+            id: id
+        }
+    });
+}
+const sdo_data = ref<Sdo[]>([]);
+async function get_sdo() {
+    const { data, error } = await $rest('sms-sdo/get-sdo', {
+        method: "GET",
+    })
+    sdo_data.value = data
+}
+
 </script>
+<style scoped>
+.user-item {
+    transition: background-color 0.3s ease-in-out;
+}
+
+.user-item:hover {
+    background-color: #E8EAF6;
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <v-sheet width="85%" class="mx-auto ma-5">
+  <v-sheet width="98%" class="mx-auto ma-5">
     <v-card height="90vh">
       <v-sheet class="pa-6" height="auto" color="grey-lighten-4">
         <v-row no-gutters>
@@ -8,14 +8,16 @@
             inclusivity. </v-col>
         </v-row>
       </v-sheet>
-      <!-- <v-card-text>
+      <v-card-text>
         <v-row no-gutters>
           <v-col cols="2">
-            <v-btn> Set Up Position</v-btn>
-            <v-sheet class="mr-2" variant="tonal" color="success" v-for=" position, index  in  position_data "
-              :key="index">
+            <v-btn @click="position_dialog = true" color="success"> Set Up Position</v-btn>
+            <v-text-field class="mt-2 mr-2" label="Search Position" variant="underlined" hide-details
+              append-inner-icon="mdi-magnify" />
+            <v-sheet class="mr-2 mt-2 maintenance-item" :class="{ 'elevation-4': is_hovered }" variant="tonal"
+              color="success" v-for=" position, index  in  position_data " :key="index">
               <v-alert class="my-1" border="start" border-color="success">
-
+                <div class="text-uppercase font-weight-bold text-success">{{ position.title }}</div>
                 <div v-for=" educ, index  in  position.education " :key="index" class="text-caption">
                   {{ educ.text }} <br />
                 </div>
@@ -62,7 +64,8 @@
                 </v-tooltip>
               </v-toolbar>
               <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" educ, index  in  education_data " :key="index">
-                <v-alert @click="education_update_dialog(educ)" class="my-1" border="start" border-color="indigo">
+                <v-alert @click="education_update_dialog(educ)" class="my-1 maintenance-item"
+                  :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
                   {{ educ.title }}
                 </v-alert>
               </v-sheet>
@@ -82,7 +85,8 @@
               </v-toolbar>
               <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" experience, index  in  experience_data "
                 :key="index">
-                <v-alert @click="experience_update_dialog(experience)" class="my-1" border="start" border-color="indigo">
+                <v-alert @click="experience_update_dialog(experience)" class="my-1 maintenance-item"
+                  :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
                   {{ experience.title }}
                 </v-alert>
               </v-sheet>
@@ -101,7 +105,8 @@
                 </v-tooltip>
               </v-toolbar>
               <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" rating, index  in  rating_data " :key="index">
-                <v-alert @click="rating_update_dialog(rating)" class="my-1" border="start" border-color="indigo">
+                <v-alert @click="rating_update_dialog(rating)" class="my-1 maintenance-item"
+                  :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
                   {{ rating.title }}
                 </v-alert>
               </v-sheet>
@@ -120,7 +125,8 @@
                 </v-tooltip>
               </v-toolbar>
               <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" sg, index  in  sg_data " :key="index">
-                <v-alert @click="update_salary_grade(sg)" class="my-1" border="start" border-color="indigo">
+                <v-alert @click="update_salary_grade(sg)" class="my-1 maintenance-item"
+                  :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
                   <div> Salary Grade : <b> {{ sg.salary_grade }} </b></div>
                   <div> Equivalent : <b> {{ sg.equivalent }} </b></div>
                 </v-alert>
@@ -139,7 +145,8 @@
                 </v-tooltip>
               </v-toolbar>
               <v-sheet class="mr-2" variant="tonal" color="indigo">
-                <v-alert class="my-1" border="start" border-color="indigo">
+                <v-alert class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" border="start"
+                  border-color="indigo">
                   Eligibility
                 </v-alert>
               </v-sheet>
@@ -197,127 +204,11 @@
                 </v-alert>
               </v-sheet>
             </v-sheet>
-          </v-col> 
+          </v-col>
         </v-row>
-      </v-card-text> -->
-
-
-      <v-tabs v-model="tab" color="primary">
-        <v-tab :value="1">Education </v-tab>
-        <v-tab :value="2">Experience</v-tab>
-        <v-tab :value="3">Performance Rating</v-tab>
-        <v-tab :value="4">Salary Grade</v-tab>
-        <v-tab :value="5">Position</v-tab>
-      </v-tabs>
-      <v-divider />
-      <v-card-text>
-        <v-window v-model="tab">
-          <v-window-item :value="1">
-            <v-btn class="my-2" @click="education_dialog = true" color="indigo" elevation="2"> Create
-              Education
-            </v-btn>
-            <v-row dense>
-              <v-col cols="12" xl="6" lg="6" md="6" sm="12" v-for=" educ, index  in  education_data " :key="index">
-                <v-card class="mx-auto" color="indigo" variant="tonal" @click="education_update_dialog(educ)">
-                  <v-card-item>
-                    <span> {{ educ.title }}</span>
-                  </v-card-item>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-window-item>
-          <v-window-item :value="2">
-            <v-btn class="my-2" @click="experience_dialog = true" color="indigo"> Create Experience </v-btn>
-            <v-row dense>
-
-              <v-col cols="12" xxl="4" xl="3" lg="6" md="6" sm="12" v-for=" experience, index  in  experience_data "
-                :key="index">
-                <v-card class="mx-auto" color="indigo" variant="tonal" flat @click="experience_update_dialog(experience)">
-                  <v-card-item>
-                    <span> {{ experience.title }}</span>
-                  </v-card-item>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-window-item>
-          <v-window-item :value="3">
-            <v-btn class="my-2" @click="rating_dialog = true" color="indigo"> Create
-              Rating </v-btn>
-            <v-row dense>
-              <v-col cols="12" l="6" lg="6" md="6" sm="12" v-for=" rate, index  in  rating_data " :key="index">
-                <v-card class="mx-auto" color="indigo" variant="tonal" flat @click="rating_update_dialog(rate)">
-                  <v-card-item>
-                    <span> {{ rate.title }}
-                    </span>
-                  </v-card-item>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-window-item>
-          <v-window-item :value="4">
-            <v-btn class="my-2" @click="sg_dialog = true" color="indigo"> Create Salary Grade </v-btn>
-            <v-row dense>
-              <v-col cols="12" xxl="4" xl="3" lg="3" md="6" sm="12" v-for=" sg, index  in  sg_data " :key="index">
-                <v-card class="mx-auto" color="indigo" variant="tonal" @click="update_salary_grade(sg)" flat>
-                  <v-card-item>
-                    <div> Salary Grade : <b> {{ sg.salary_grade }} </b></div>
-                    <div> Equivalent : <b> {{ sg.equivalent }} </b></div>
-                  </v-card-item>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-window-item>
-          <v-window-item :value="5">
-            <v-btn class="my-2" @click="position_dialog = true" color="indigo"> Create
-              Position </v-btn>
-            <v-row dense>
-              <v-col cols="12" xxl="4" xl="3" lg="4" md="6" sm="12" v-for=" position, index  in  position_data "
-                :key="index">
-                <v-card :title="position.title" class="mx-auto" color="indigo" variant="tonal"
-                  @click="update_selected_position(position)">
-                  <v-card-text>
-                    <div class="text-caption">Education :</div>
-                    <div v-for=" educ, index  in  position.education " :key="index" class="text-caption text-grey">
-                      {{ educ.text }} <br />
-
-                    </div>
-                    <div class="text-caption" v-if="position.education_level">
-                      Education Level :
-                      <span class="text-caption text-grey"> {{ position.education_level }} </span>
-                    </div>
-                    <div class="text-caption" v-if="position.experience">Experience :</div>
-                    <div v-for=" exp, index  in  position.experience " :key="index" class="text-caption text-grey">
-                      {{ exp.text }} <br />
-
-                    </div>
-                    <div class="text-caption" v-if="position.training_hours">
-                      Training Hours :
-                      <span class="text-caption text-grey"> {{ position.training_hours }} </span>
-                    </div>
-                    <div class="text-caption" v-if="position.rating">Performance Rating :
-                      <div class="text-caption text-grey" v-for=" rate, index  in  position.rating " :key="index">
-                        {{ rate.title }}
-                        <br />
-                      </div>
-                    </div>
-                    <div class="d-flex">
-                      <div class="text-caption w-50" v-if="position.sg">
-                        Salary Grade :
-                        <span class="text-caption text-grey"> {{ position.sg.salary_grade }} </span>
-                      </div>
-                      <div class="text-caption" v-if="position.sg">
-                        Equivalent :
-                        <span class="text-caption text-grey"> {{ position.sg.equivalent }} </span>
-                      </div>
-                    </div>
-                  </v-card-text>
-
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-window-item>
-        </v-window>
       </v-card-text>
+
+
     </v-card>
     <commons-dialog max-width="35%" v-model="education_dialog" icon="mdi-school"
       :title="status === 'create' ? 'Create Education Qualification' : 'Update Education Qualification'"
@@ -420,7 +311,7 @@ onBeforeMount(() => {
 
 
 const tab = ref(null);
-
+const is_hovered = ref(false)
 // dialog
 
 const position_dialog = ref(false);
@@ -486,6 +377,7 @@ async function update_education() {
 
 
 const experience = ref<Experience>({
+
   title: "",
   // is_ma_equivalent: false,
   // master_arts: ""
@@ -497,6 +389,8 @@ async function create_experience() {
   })
 
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  experience_dialog.value = ref(false)
+  get_experience()
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 }
 /**
@@ -550,6 +444,8 @@ async function create_rating() {
   })
 
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  rating_dialog.value = ref(false)
+  get_rating()
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 
 }
@@ -594,6 +490,7 @@ async function update_rating() {
 
 // SALARY GRADE
 const sg = ref<SalaryGrade>({
+
   salary_grade: 0,
   equivalent: 0
 });
@@ -604,6 +501,8 @@ async function create_sg() {
 
   })
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  sg_dialog.value = ref(false)
+  get_sg()
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 }
 /**
@@ -677,6 +576,8 @@ async function create_position() {
   })
 
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  position_dialog.value = ref(false)
+  get_qs()
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 }
 
@@ -718,3 +619,12 @@ async function update_position() {
 
 
 </script>
+<style scoped>
+.maintenance-item {
+  transition: background-color 0.3s ease-in-out;
+}
+
+.maintenance-item:hover {
+  background-color: #E8EAF6;
+}
+</style>

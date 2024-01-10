@@ -1,5 +1,6 @@
 
 interface Applicant {
+    created_date: String;
     qualification: Qualifications;
     personal_information: PersonalInformation;
     designation: Designation;
@@ -8,9 +9,27 @@ interface Applicant {
     transcript: Transcript;
     service_record: ServiceRecord[];
     professional_study: ProfessionalStudy[];
-    attachments?: { [key: string]: File[] };
+    attachments?: { [key: string]: Att };
     status: string;
+    signatories: Signatory[];
+    control_number: String
 }
+
+interface Att {
+    link: string[];
+    valid: null;
+    remarks: string;
+    signatory: Signatory;
+}
+
+interface Signatory {
+    _id?: string;
+    name: string;
+    signature: string;
+    role: string;
+    date: Date;
+}
+
 interface Qualifications {
     position?: string;
     educ_level: string;
@@ -41,6 +60,7 @@ interface Designation {
     school_address: string;
     ipcrf_rating?: string
 }
+
 
 interface EducationalAttainment {
     degree: string;
