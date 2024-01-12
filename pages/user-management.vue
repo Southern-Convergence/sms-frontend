@@ -16,9 +16,8 @@
                             User</v-btn>
                         <v-sheet class="overflow-y-auto d-flex flex-wrap ga-3 ">
                             <v-sheet class="pa-1 pt-2" width="50%" variant="tonal" v-for="user, index in users_data"
-                                :key="index" @click="route_to_sdo(user.division._id)">
-                                <v-alert rounded="0" class="my-1 user-item space-around" border="start"
-                                    border-color="indigo">
+                                :key="index">
+                                <v-alert rounded="0" class="my-1  space-around" border="start" border-color="indigo">
                                     <div>
                                         <div class="d-flex mb-1">
                                             <div class="text-uppercase  text-indigo text-body-1"> {{ user.firstname
@@ -56,11 +55,10 @@
                             <v-btn @click="create_sdo_dialog = true" prepend-icon="mdi-pencil-plus" color="success"
                                 class="mr-0 mb-3"> Create
                                 School Division Office </v-btn>
-
                             <v-sheet height="70vh" class="overflow-auto">
-
                                 <v-sheet variant="tonal" v-for="(sdo, index) in sdo_data" :key="index" class="pb-2 mr-2">
-                                    <v-alert border="start" border-color="success" color="green-ligthen-5" rounded="0">
+                                    <v-alert class="user-item" @click="route_to_sdo(sdo._id)" border="start"
+                                        border-color="success" color="green-ligthen-5" rounded="0">
                                         <div class="font-weight-bold text-uppercase text-subtitle-1
 ">
                                             {{ sdo.title }}
@@ -103,39 +101,33 @@
                     <v-btn @click="user_invite_dialog = false" class="mr-0" rounded="0" icon="mdi-close" />
                 </v-toolbar>
                 <v-card-text>
-                    <v-row dense>
-                        <v-col cols="12"><v-text-field v-model="user.email" density="compact" hide-details
-                                label="Email address" prepend-inner-icon="mdi-email-outline" variant="outlined" /></v-col>
-                        <v-col cols="4"><v-text-field v-model="user.firstname" density="compact" hide-details
-                                label="Firstname" variant="outlined" /></v-col>
-                        <v-col cols="4"><v-text-field v-model="user.middlename" density="compact" hide-details
-                                label="Middlename" variant="outlined" /></v-col>
-                        <v-col cols="4"><v-text-field v-model="user.lastname" density="compact" hide-details
-                                label="Lastname" variant="outlined" /></v-col>
-                        <v-col cols="4"><v-text-field v-model="user.contact_number" density="compact" hide-details
-                                label="Contact Number" variant="outlined" /></v-col>
-                        <v-col cols="12"> Roles and Designation </v-col>
-                        <v-col cols="6"><v-select v-model="user.type" label="Type"
-                                :items="['School Division Office', 'Regional Office']" hide-details /></v-col>
-                        <v-col cols="6" v-if="user.type !== 'Regional Office'">
-                            <v-select v-model="user.designation_information.division" :items="sdo_data" label="Division"
-                                item-value="_id" hide-details /></v-col>
-                        <!-- <v-col cols="6">
-                            <v-select v-model="user.school_name" :items="school_data" label="Select School"
-                                hide-details /></v-col> -->
-                        <v-col cols="6">
-                            <v-select v-model="user.role" :items="roles" item-title="name" item-value="_id" label="Role"
-                                hide-details />
-                        </v-col>
-                    </v-row>
-                    <!-- <v-sheet class="mx-auto" v-if="user.type === 'School' && user.role === 'School Admin'">
-                        <div class="mt-2 text-subtitle-1 text-medium-emphasis pl-2">School Credentials</div>
-                        <v-text-field v-model="user.school_name" density="compact" hide-details label="School Name"
-                            prepend-inner-icon="mdi-home" variant="outlined" />
-                        <v-textarea class="mt-2" v-model="user.school_address" density="compact" rows="3" hide-details
-                            label="School Address" prepend-inner-icon="mdi-map-marker" variant="outlined"></v-textarea>
-                    </v-sheet> -->
-
+                    <v-form ref="user_form">
+                        <v-row dense>
+                            <v-col cols="12"><v-text-field v-model="user.email" density="compact" label="Email address"
+                                    prepend-inner-icon="mdi-email-outline" required
+                                    :rules="[(v) => /.+@.+/.test(v) || 'Invalid Email address']" /></v-col>
+                            <v-col cols="4"><v-text-field v-model="user.firstname" density="compact" hide-details="auto"
+                                    label="Firstname" required :rules="[v => !!v || 'Firstname is required']" /></v-col>
+                            <v-col cols="4"><v-text-field v-model="user.middlename" density="compact" hide-details="auto"
+                                    label="Middlename" /></v-col>
+                            <v-col cols="4"><v-text-field v-model="user.lastname" density="compact" hide-details="auto"
+                                    label="Lastname" required :rules="[v => !!v || 'Lastname is required']" /></v-col>
+                            <v-col cols="4"><v-text-field v-model="user.contact_number" density="compact"
+                                    hide-details="auto" label="Contact Number" type="tel"
+                                    :rules="[v => !!v || 'Contact Number is required']" /></v-col>
+                            <v-col cols="12"> Roles and Designation </v-col>
+                            <v-col cols="6"><v-select v-model="user.type" label="Type"
+                                    :items="['School Division Office', 'Regional Office']" hide-details="auto" required
+                                    :rules="[v => !!v || 'Type is required']" /></v-col>
+                            <v-col cols="6" v-if="user.type !== 'Regional Office'">
+                                <v-select v-model="user.designation_information.division" :items="sdo_data" label="Division"
+                                    item-value="_id" hide-details="auto" /></v-col>
+                            <v-col cols="6">
+                                <v-select v-model="user.role" :items="roles" item-title="name" item-value="_id" label="Role"
+                                    hide-details="auto" :rules="[v => !!v || 'Role is required']" />
+                            </v-col>
+                        </v-row>
+                    </v-form>
                 </v-card-text>
                 <v-divider />
                 <v-card-actions>
@@ -153,13 +145,17 @@
         <commons-dialog v-model="create_sdo_dialog" max-width="35%" icon="mdi-school" title="Create School Division Office"
             @submit="create_sdo" submitText="Submit">
             <v-card-text>
-                <v-text-field v-model="sdo.title" label=" Division" hide-details />
-                <v-textarea class="mt-2" v-model="sdo.address" rows="3" label="Division Address" hide-details
-                    prepend-inner-icon="mdi-map-marker" />
-                <v-text-field class="mt-2" v-model="sdo.email" label="Email Address" hide-details
-                    prepend-inner-icon="mdi-email-outline" />
-                <v-text-field class="mt-2" v-model="sdo.telephone" label="Telephone Number" hide-details
-                    prepend-inner-icon="mdi-phone" />
+                <v-form ref="create_sdo_form">
+                    <v-text-field v-model="sdo.title" label=" Division" hide-details="auto" required
+                        :rules="[v => !!v || 'Division is required']" />
+                    <v-textarea class="mt-2" v-model="sdo.address" rows="3" label="Division Address" hide-details="auto"
+                        prepend-inner-icon="mdi-map-marker" required :rules="[v => !!v || 'Address is required']" />
+                    <v-text-field class="mt-2" v-model="sdo.email" label="Email Address" hide-details="auto"
+                        prepend-inner-icon="mdi-email-outline" required
+                        :rules="[(v) => /.+@.+/.test(v) || 'Invalid Email address']" />
+                    <v-text-field class="mt-2" v-model="sdo.telephone" type="tel" label="Telephone Number"
+                        hide-details="auto" prepend-inner-icon="mdi-phone" />
+                </v-form>
             </v-card-text>
         </commons-dialog>
     </v-sheet>
@@ -187,8 +183,6 @@ const auth = useAuth().user;
 
 const { $rest, $user_type, $ro_roles, $sdo_roles } = useNuxtApp();
 
-const tab = ref(0);
-const count = ref(10);
 
 const is_hovered = ref(false);
 
@@ -231,8 +225,13 @@ const get_apts = async () => {
 
 
 const user_invite_dialog = ref(false);
+const user_form = ref();
 
 async function create_user() {
+    if (!user_form.value.isValid) {
+        return swal({ title: "Invalid Email" })
+    }
+    swal({ title: "User sucessfully invited!" })
     const { data, error } = await $rest('user/create-user', {
         method: "POST",
         body: { ...user.value }
@@ -263,7 +262,12 @@ const sdo = ref<Sdo>({
  * SDO 
  */
 const create_sdo_dialog = ref(false)
+const create_sdo_form = ref();
+
 async function create_sdo() {
+    if (!create_sdo_form.value.isValid) {
+        return swal({ title: "Completed required field!" })
+    }
     const { data, error } = await $rest('sms-sdo/create-sdo', {
         method: "POST",
         body: { ...sdo.value }

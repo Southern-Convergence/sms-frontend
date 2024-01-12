@@ -40,11 +40,7 @@
                             </div>
                         </v-alert>
                     </v-sheet>
-
                 </v-sheet>
-
-
-
             </v-sheet>
 
         </v-card-text>
@@ -79,16 +75,9 @@
                             <v-select v-model="school_user.role" :items="roles" item-title="name" item-value="_id"
                                 label="Role" hide-details /></v-col>
 
-
                     </v-row>
 
-                    <v-sheet class="mx-auto" v-if="user.type === 'School'">
-                        <div class="mt-2 text-subtitle-1 text-medium-emphasis pl-2">School Credentials</div>
-                        <v-text-field v-model="user.school_name" density="compact" hide-details label="School Name"
-                            prepend-inner-icon="mdi-home" variant="outlined" />
-                        <v-textarea class="mt-2" v-model="user.school_address" density="compact" rows="3" hide-details
-                            label="School Address" prepend-inner-icon="mdi-map-marker" variant="outlined"></v-textarea>
-                    </v-sheet>
+
 
                 </v-card-text>
                 <v-divider />
@@ -124,8 +113,6 @@ onBeforeMount(() => {
 
 const auth = useAuth().user;
 
-
-
 const school_user = ref<SmsUser>({
     username: "",
     password: "",
@@ -144,37 +131,9 @@ const school_user = ref<SmsUser>({
     status: "pending",
 });
 
-const route_to_school = (id: string) => {
-    router.push({
-        name: 'school',
-        query: {
-            id: id
-        }
-    });
-}
-const { $rest, $user_type, } = useNuxtApp();
 
-const tab = ref(0);
-const count = ref(10);
-const button_items = ref([
-    { title: 'Edit Profile' },
-    { title: 'Suspend' },
-
-]);
+const { $rest } = useNuxtApp();
 const is_hovered = ref(false);
-
-const user = ref({
-    date: new Date(),
-    ...{} as SmsUser,
-    status: "Pending",
-
-});
-
-
-
-/**
- * 
- */
 
 const roles = ref([]);
 const get_apts = async () => {
@@ -187,12 +146,6 @@ const get_apts = async () => {
     roles.value = apts;
 }
 
-
-const items = ref([
-    'School Division Office Users', 'Regional Office Users',
-]);
-
-
 const user_invite_dialog = ref(false);
 async function create_user() {
     const { data, error } = await $rest('sms-school/create-school-user', {
@@ -202,6 +155,7 @@ async function create_user() {
     })
 
     if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+    user_invite_dialog.value = ref(false)
     get_users()
     return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 }

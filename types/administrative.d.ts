@@ -1,6 +1,9 @@
 interface School {
-  title: String,
-
+  title: String;
+  address: string;
+  email: string;
+  telephone: string;
+  division: string
 }
 interface Roles {
   title: String,

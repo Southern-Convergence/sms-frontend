@@ -21,6 +21,7 @@
         <v-window-item v-for=" status  in  tabItems " :key="status.value" :value="status.value">
           <v-card-text class="overflow-y-auto">
             <v-row dense>
+
               <v-col cols="12" xxl="4" xl="4" lg="4" v-for=" pending  in  get_applicant_by_status(status.value) "
                 :key="pending">
                 <v-tooltip text="Click card to view more details" location="top">
@@ -104,7 +105,6 @@ const load_erf_form = (id) => {
 }
 
 const load_request = async () => {
-
   const { data, error } = await $rest("new-applicant/get-requests", { method: "GET" });
   console.log(data);
 }

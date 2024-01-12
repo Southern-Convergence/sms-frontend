@@ -57,7 +57,6 @@ interface Designation {
     district?: string;
     item_no: string;
     school: string;
-    school_address: string;
     ipcrf_rating?: string
 }
 
@@ -89,6 +88,7 @@ interface ServiceRecord {
     designation: string;
     from: Date | string;
     to: Date | string;
+
 }
 
 interface ProfessionalStudy {

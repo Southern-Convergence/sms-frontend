@@ -21,6 +21,7 @@
                     <v-row dense>
                       <v-col cols="12"> <v-icon class="mr-2 pb-2" size="26" color="primary">mdi-seal</v-icon>
                         Individual Qualification </v-col>
+
                       <v-col cols="6" class="px-1">
                         <v-select :items="position_data" v-model="applicant.qualification.position" class="w-100 pt-2"
                           label="Select Position" hide-details item-value="_id" />
@@ -94,9 +95,11 @@
           <v-window-item :value="2">
             <v-card-text>
               <v-row dense>
+
                 <v-col cols="12"> <v-icon class="mr-2 pb-2 " size="26" color="primary">mdi-account</v-icon>
                   Personal
                   Information </v-col>
+
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
                   <v-text-field v-model="applicant.personal_information.lastname" label="Surname" hide-details />
                 </v-col>
@@ -133,19 +136,20 @@
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
                   <v-text-field v-model="applicant.designation.plantilla_no" label="Plantilla No" hide-details />
                 </v-col>
+
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
                   <v-text-field v-model="applicant.designation.item_no" label="Item No" hide-details />
                 </v-col>
 
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                  <v-select v-model="applicant.designation.division" label="Division" :items="sdo_data" hide-details />
+                  <v-select v-model="applicant.designation.division" label="Division" item-value="_id" :items="sdo_data"
+                    hide-details />
                 </v-col>
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                  <v-select v-model="applicant.designation.school" label="School" hide-details />
+                  <v-select v-model="applicant.designation.school" :items="get_sdo_school(applicant.designation.division)"
+                    label="School" hide-details item-value="_id" />
                 </v-col>
-                <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                  <v-text-field v-model="applicant.designation.school_address" label="School Address" hide-details />
-                </v-col>
+
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
                   <v-text-field v-model="applicant.designation.ipcrf_rating" label="IPCRF rating" hide-details />
                 </v-col>
@@ -211,10 +215,10 @@
                       <v-col cols="12" class="text-caption text-grey-darken-1"> A. Total Number of Years
                         Teaching</v-col>
 
-                      <v-col cols="5"> <v-text-field label="Public Only" hide-details density="compact" type="number"
-                          readonly /></v-col>
-                      <v-col cols="5"> <v-text-field label="Equivalent" hide-details density="compact" type="number"
-                          readonly />
+                      <v-col cols="5"> <v-text-field v-model="applicant.equivalent_unit.public_years_teaching"
+                          label="Public Only" hide-details density="compact" type="number" readonly /></v-col>
+                      <v-col cols="5"> <v-text-field label="Equivalent" v-model="applicant.equivalent_unit.yt_equivalent"
+                          hide-details density="compact" type="number" readonly />
                       </v-col>
                     </v-row>
                   </v-col>
@@ -223,8 +227,8 @@
                       <v-col cols="12" class="text-caption text-grey-darken-1">
                         B. Degree to Equivalent
                       </v-col>
-                      <v-col cols="5"> <v-text-field label="Public Schools" hide-details density="compact"
-                          type="number" /></v-col>
+                      <v-col cols="5"> <v-text-field label="Public Schools" hide-details density="compact" type="number"
+                          readonly /></v-col>
                       <v-col cols="5"> <v-text-field label="Private Schools" hide-details density="compact"
                           type="number" /></v-col>
                     </v-row>
@@ -251,7 +255,8 @@
 
                   </v-col>
                   <v-col cols="12" xl="4" lg="4" md="4" sm="12" class="px-2 ml-5">
-                    <v-text-field label="Public Schools" hide-details type="number" readonly /></v-col>
+                    <v-text-field label="Public Schools" v-model="applicant.equivalent_unit.public_years_teaching"
+                      hide-details type="number" readonly /></v-col>
                   <v-col cols="12" xl="4" lg="4" md="4" sm="12" class="px-2"> <v-text-field label="Private School"
                       type="number" /></v-col>
                   <v-col cols="12" class="text-caption text-grey-darken-1 pl-5 my-2">
@@ -281,16 +286,22 @@
         </v-card-actions>
 
       </v-sheet>
+
       <commons-dialog max-width="35%" v-model="service_record_dialog" :icon="'mdi-face-agent'"
         :title="'Service Record Form'" :subtitle="'Employment History'" @submit="add_service_record" :submitText="'Add'">
         <v-card-text class="my-2">
-          <v-row dense>
-            <v-col cols="12"> <v-text-field v-model="service_record.designation" label="Position/Designation"
-                hide-details /></v-col>
-            <v-col cols="6"> <v-text-field v-model="service_record.from" label="From" hide-details type="date" /></v-col>
-            <v-col cols="6"> <v-text-field v-model="service_record.to" label="To" hide-details type="date" /></v-col>
-          </v-row>
+          <v-form ref="service_record_form">
+            <v-row dense>
+              <v-col cols="12"> <v-text-field v-model="service_record.designation" label="Position/Designation"
+                  hide-details /></v-col>
+              <v-col cols="6"> <v-text-field v-model="service_record.from" label="From" hide-details
+                  type="date" /></v-col>
+              <v-col cols="6"> <v-text-field v-model="service_record.to" label="To" hide-details type="date" /></v-col>
+
+            </v-row>
+          </v-form>
         </v-card-text>
+
       </commons-dialog>
 
       <commons-dialog max-width="40%" v-model="education_attainment_dialog" icon="'mdi-school'"
@@ -334,10 +345,11 @@
 </template>
 <script setup lang="ts">
 import swal from 'sweetalert';
-const { $rest } = useNuxtApp();
 
-//viewing attachment
 const cfg = useRuntimeConfig();
+const { $rest } = useNuxtApp();
+const step = ref(1)
+
 const { CDN_ENDPOINT, DEV_CDN_ENDPOINT } = cfg.public;
 const CDN = cfg.public.NODE_ENV === "development" ? DEV_CDN_ENDPOINT : CDN_ENDPOINT;
 
@@ -348,8 +360,8 @@ onBeforeMount(() => {
       get_education(),
       get_experience(),
       get_rating(),
-      get_setup(),
       get_sdo(),
+      get_school()
       // get_qs(),
 
     ]
@@ -360,9 +372,6 @@ onBeforeMount(() => {
     buttons: { ok: false, cancel: false }
   }))
 })
-
-
-const step = ref(1)
 
 const applicant = ref({
   qualification: {
@@ -390,7 +399,6 @@ const applicant = ref({
     district: "",
     item_no: "",
     school: "",
-    school_address: "",
     ipcrf_rating: "",
   },
   educational_attainment: [],
@@ -421,7 +429,8 @@ const applicant = ref({
     signature: "WARAY PA",
     date: new Date(new Date())
   },
-  status: "For Signature"
+  status: "For Signature",
+  created_date: new Date(new Date())
 
 })
 
@@ -452,12 +461,18 @@ const service_record_headers = ref([
 
 ]);
 
-const service_record_dialog = ref(false)
 const service_record = ref<ServiceRecord>({
   designation: "",
   from: new Date(),
   to: new Date(),
 })
+
+const service_record_dialog = ref(false)
+
+const service_records = ref<ServiceRecord[]>([]);
+const service_record_form = ref();
+const total_service_years = ref(0);
+
 
 function add_service_record() {
   const new_service_record: ServiceRecord = {
@@ -466,10 +481,29 @@ function add_service_record() {
     to: format_date(service_record.value.to),
   }
   applicant.value.service_record.push(new_service_record);
-  service_record.value = { designation: "", from: new Date(), to: new Date() };
+
+  service_records.value.push(service_record.value);
+  service_record_form.value.reset();
+
+  service_record_dialog.value = false;
+  const result = applicant.value.service_record.map((v: ServiceRecord) => {
+    const d1 = new Date(v.from);
+    const d2 = new Date(v.to);
+
+    const MONTHS = 12;
+    const FACTOR = 1000 * 60 * 60 * 24 * 30;
+    const diff = Date.parse(d2) - Date.parse(d1);
+    return parseInt(diff / FACTOR / MONTHS);
+
+  });
+
+  const total_years = result.length ? result.reduce((a, b) => a + b) : 0;
+  applicant.value.equivalent_unit.public_years_teaching = total_years;
+
+  const total_year_equivalent = total_years / 5;
+  applicant.value.equivalent_unit.yt_equivalent = total_year_equivalent;
 
 }
-
 /**
  * END: SERVICE RECORD
  */
@@ -700,128 +734,37 @@ const selected_qs = computed(() => {
   }
 });
 
-// const public_yt = computed(() => {
-//   return applicant.value.service_record.map(item => {
-//     const start_date = new Date(item.from);
-//     const end_date = new Date(item.to);
-//     const time_differ = end_date - start_date;
-//     const years = Math.floor(time_differ / (365.25 * 24 * 60 * 60 * 1000));
-//     const remaining_time = time_differ % (365.25 * 24 * 60 * 60 * 1000);
-//     const months = Math.floor(remaining_time / (30.44 * 24 * 60 * 60 * 1000));
-//     const remaining_days = Math.floor((remaining_time % (30.44 * 24 * 60 * 60 * 1000)) / (24 * 60 * 60 * 1000));
-//     const total_days = years * 365.25 + months * 30.44 + remaining_days;
-//     const adjusted_months = months % 12;
-//     const adjusted_years = Math.floor(months / 12);
-//     return {
-//       ...item,
-//       total_years: years + adjusted_years,
-//       total_months: adjusted_months,
-//       total_days: total_days
-//     };
-//   }).map(item => {
 
-//     const start_date = new Date(item.from);
-//     const end_date = new Date(item.to);
-//     const time_differ = end_date - start_date;
-//     const years = Math.floor(time_differ / (365.25 * 24 * 60 * 60 * 1000));
-//     const remaining_time = time_differ % (365.25 * 24 * 60 * 60 * 1000);
-//     const months = Math.floor(remaining_time / (30.44 * 24 * 60 * 60 * 1000));
-//     const remaining_days = Math.floor((remaining_time % (30.44 * 24 * 60 * 60 * 1000)) / (24 * 60 * 60 * 1000));
-//     const total_days = years * 365.25 + months * 30.44 + remaining_days;
-
-//     return {
-//       ...item,
-//       total_years: years + adjusted_years,
-//       total_months: adjusted_months,
-//       total_days: total_days
-//     };
-//   });
-// });
-
-// const years_teaching = computed(() => {
-//   const total = public_yt.value.reduce((acc, item) => {
-//     acc.total_years += item.total_years;
-//     acc.total_months += item.total_months;
-//     acc.total_days += item.total_days;
-//     return acc;
-//   }, { total_years: 0, total_months: 0, total_days: 0 });
-
-//   const yt_equivalent = total.total_years / 5;
-//   applicant.value.equivalent_unit.public_years_teaching = total.total_years;
-//   applicant.value.equivalent_unit.yt_equivalent = yt_equivalent;
-
-//   return {
-//     total_years: total.total_years,
-//     total_years_divided_by_5: yt_equivalent
-//   };
-// });
-
-// const public_yt = computed(() => {
-//   return applicant.value.service_record.map(item => {
-//     console.log(service_record);
-//     const start_date = new Date(item.from);
-//     const end_date = new Date(item.to);
-//     const time_differ = end_date - start_date;
-//     const total_days = time_differ / (24 * 60 * 60 * 1000);
-
-//     const years = Math.floor(total_days / 365.25);
-//     const remaining_days = total_days % 365.25;
-//     const months = Math.floor(remaining_days / 30.44);
-
-//     const adjusted_months = months % 12;
-//     const adjusted_years = Math.floor(months / 12);
-
-//     return {
-//       ...item,
-//       total_years: years + adjusted_years,
-//       total_months: adjusted_months,
-//       total_days: total_days
-//     };
-//   });
-// });
-
-// const years_teaching = computed(() => {
-//   const total = public_yt.value.reduce((acc, item) => {
-//     acc.total_years += item.total_years;
-//     acc.total_months += item.total_months;
-//     acc.total_days += item.total_days;
-//     return acc;
-//   }, { total_years: 0, total_months: 0, total_days: 0 });
-
-//   const yt_equivalent = total.total_years / 5;
-//   applicant.value.equivalent_unit.public_years_teaching = total.total_years;
-//   applicant.value.equivalent_unit.yt_equivalent = yt_equivalent;
-
-//   return {
-//     total_years: total.total_years,
-//     total_years_divided_by_5: yt_equivalent
-//   };
-// });
-
-// Display the output
-
-
-const setup_division_data = ref<Setup[]>([]);
-async function get_setup() {
-  const { data, error } = await $rest('setup-division/get-setup', {
-    method: "GET",
-  })
-  setup_division_data.value = data
-}
-function get_division() {
-  const divisions = Array.isArray(setup_division_data.value)
-    ? setup_division_data.value.map((i) => i.division)
-    : [];
-
-  return divisions;
-}
 
 const sdo_data = ref<Sdo[]>([]);
+
 async function get_sdo() {
   const { data, error } = await $rest('sms-sdo/get-sdo', {
     method: "GET",
-  })
-  sdo_data.value = data
+  });
+
+  sdo_data.value = data;
+
+}
+
+const school_data = ref<School[]>([]);
+
+async function get_school() {
+
+  const { data, error } = await $rest('sms-school/get-school', {
+    method: "GET",
+  });
+
+
+  school_data.value = data
+}
+
+function get_sdo_school(division) {
+
+  if (!division || !school_data.value || school_data.value.length === 0) {
+    return [];
+  }
+  return school_data.value.filter(school => school.division === division);
 }
 
 </script>

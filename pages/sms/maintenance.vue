@@ -152,59 +152,7 @@
               </v-sheet>
             </v-sheet>
           </v-col>
-          <v-col cols="2">
-            <v-sheet class="pl-2" border>
-              <v-toolbar color="white">
-                Position
-                <v-spacer />
-                <v-tooltip text="Click to add Position" location="top">
-                  <template v-slot:activator="{ props }">
-                    <v-btn @click="position_dialog = true" v-bind="props" color="success" class="mr-0" rounded="0"
-                      icon="mdi-plus" />
-                  </template>
-                </v-tooltip>
-              </v-toolbar>
-              <v-sheet class="mr-2" variant="tonal" color="success" v-for=" position, index  in  position_data "
-                :key="index">
-                <v-alert @click="update_selected(position)" class="my-1" border="start" border-color="success">
-                  <div class="text-caption">Education :</div>
-                  <div v-for=" educ, index  in  position.education " :key="index" class="text-caption text-grey">
-                    {{ educ.text }} <br />
 
-                  </div>
-                  <div class="text-caption" v-if="position.education_level">
-                    Education Level :
-                    <span class="text-caption text-grey"> {{ position.education_level }} </span>
-                  </div>
-                  <div class="text-caption" v-if="position.experience">Experience :</div>
-                  <div v-for=" exp, index  in  position.experience " :key="index" class="text-caption text-grey">
-                    {{ exp.text }} <br />
-
-                  </div>
-                  <div class="text-caption" v-if="position.training_hours">
-                    Training Hours :
-                    <span class="text-caption text-grey"> {{ position.training_hours }} </span>
-                  </div>
-                  <div class="text-caption" v-if="position.rating">Performance Rating :
-                    <div class="text-caption text-grey" v-for=" rate, index  in  position.rating " :key="index">
-                      {{ rate.title }}
-                      <br />
-                    </div>
-                  </div>
-                  <div class="d-flex">
-                    <div class="text-caption w-50" v-if="position.sg">
-                      Salary Grade :
-                      <span class="text-caption text-grey"> {{ position.sg.salary_grade }} </span>
-                    </div>
-                    <div class="text-caption" v-if="position.sg">
-                      Equivalent :
-                      <span class="text-caption text-grey"> {{ position.sg.equivalent }} </span>
-                    </div>
-                  </div>
-                </v-alert>
-              </v-sheet>
-            </v-sheet>
-          </v-col>
         </v-row>
       </v-card-text>
 

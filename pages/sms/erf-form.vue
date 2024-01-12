@@ -6,7 +6,6 @@
       </v-col>
       <v-col cols="10" xxl="8" xl="8" lg="10">
         <v-row no-gutters>
-
           <v-col cols="5" class="text-subtitle-2 font-weight-bold"> TO : REGINAL DIRECTOR
             <p class="pl-7 font-weight-regular">Regional Director/DepEd - NCR
             </p>
@@ -16,7 +15,7 @@
             </v-chip></v-col>
         </v-row>
         <v-row no-gutters> <v-col cols="5" class="text-subtitle-2 font-weight-bold"> DIVISION : {{
-          applicant_details?.designation?.division }} </v-col>
+          applicant_details?.division }} </v-col>
           <v-col cols="auto"> Control No. : <v-chip class="font-weight-bold" color="orange" density="compact"> {{
             applicant_details?.control_number }}
             </v-chip></v-col>
@@ -80,9 +79,11 @@
                 </span>
                 <v-sheet width="70%">
                   <v-row dense class="pa-2">
-                    <v-col cols="6"> Public Schools : <span class="pl-2"></span>
+                    <v-col cols="6"> Public Schools : <span class="pl-2"> {{
+                      applicant_details?.equivalent_unit?.public_years_teaching }}</span>
                     </v-col>
-                    <v-col cols="6"> Private Schools : <span class="pl-2">
+                    <v-col cols="6"> Private Schools : <span class="pl-2"> {{
+                      applicant_details?.equivalent_unit?.yt_equivalent }}
                       </span>
                     </v-col>
                   </v-row>
@@ -115,7 +116,8 @@
                 </span>
                 <v-sheet class="ml-15" width="70%">
                   <v-row dense class="pa-2">
-                    <v-col cols="6"> Public Schools : <b class="pl-2"></b>
+                    <v-col cols="6"> Public Schools : <b class="pl-2"> {{
+                      applicant_details?.equivalent_unit?.public_years_teaching }}</b>
                     </v-col>
                     <v-col cols="6"> Private Schools : <b class="pl-2"></b>
                     </v-col>

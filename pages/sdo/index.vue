@@ -15,12 +15,11 @@
               Invite
               User</v-btn>
             <v-sheet class="overflow-y-auto d-flex flex-wrap ga-3 ">
-              <v-sheet class="pa-1 pt-2" width="50%" variant="tonal" v-for="user, index in users_data" :key="index"
-                @click="route_to_school(user.school_id)">
-                <v-alert rounded="0" class="my-1 user-item space-around" border="start" border-color="indigo">
+              <!--  @click="user.school_id && route_to_school(user.school_id)" I put it on the school -->
+              <v-sheet class="pa-1 pt-2" width="50%" variant="tonal" v-for="user, index in users_data" :key="index">
+                <v-alert rounded="0" class="my-1 space-around" border="start" border-color="indigo">
                   <div>
                     <div class="d-flex mb-1">
-
                       <div class="text-uppercase  text-indigo text-body-1"> {{ user.firstname
                       }}
                         {{
@@ -47,9 +46,8 @@
               </v-sheet>
 
             </v-sheet>
-
           </v-col>
-          <v-col cols="4">
+          <v-col cols="4" color="red">
             <v-sheet class="pl-2 w-100">
               <v-btn @click="create_school_dialog = true" prepend-icon="mdi-pencil-plus" color="success"
                 class="mr-0 mb-3">
@@ -57,13 +55,14 @@
                 School </v-btn>
 
               <v-sheet height="70vh" class="overflow-auto">
-
-                <v-sheet variant="tonal" v-for="(school, index) in school_data" :key="index" class="pb-2 mr-2">
-                  <v-alert border="start" border-color="success" color="green-ligthen-5" rounded="0">
+                <v-sheet v-for="(school, index) in school_data" :key="school" variant="tonal" class="pb-2 mr-2">
+                  <v-alert rounded="0" class="my-1 user-item  space-around" border="start" border-color="success"
+                    @click="route_to_school(school._id)">
                     <div class="font-weight-bold text-uppercase text-subtitle-1">
-                      {{ school.title }} </div>
+                      {{ school.title }}
+                    </div>
                     <div>
-                      <v-icon color=" blue"> mdi-map-marker</v-icon> {{ school.address }}
+                      <v-icon color="blue"> mdi-map-marker</v-icon> {{ school.address }}
                     </div>
                     <div class="text-blue font-italic text-decoration-underline">
                       <v-icon color="red"> mdi-email</v-icon> {{ school.email }}
@@ -75,8 +74,6 @@
                 </v-sheet>
               </v-sheet>
             </v-sheet>
-
-
           </v-col>
         </v-row>
       </v-card-text>
@@ -101,30 +98,32 @@
           <v-btn @click="user_invite_dialog = false" class="mr-0" rounded="0" icon="mdi-close" />
         </v-toolbar>
         <v-card-text>
-          <v-row dense>
-            <v-col cols="12"><v-text-field v-model="sdo_user.email" density="compact" hide-details label="Email address"
-                prepend-inner-icon="mdi-email-outline" variant="outlined" /></v-col>
-            <v-col cols="4"><v-text-field v-model="sdo_user.firstname" density="compact" hide-details label="Firstname"
-                variant="outlined" /></v-col>
-            <v-col cols="4"><v-text-field v-model="sdo_user.middlename" density="compact" hide-details label="Middlename"
-                variant="outlined" /></v-col>
-            <v-col cols="4"><v-text-field v-model="sdo_user.lastname" density="compact" hide-details label="Lastname"
-                variant="outlined" /></v-col>
-            <v-col cols="4"><v-text-field v-model="sdo_user.contact_number" density="compact" hide-details
-                label="Contact Number" variant="outlined" /></v-col>
-            <v-col cols="12"> Roles and Designation </v-col>
-            <v-col cols="6"><v-select v-model="sdo_user.type" label="Type" :items="['School Division Office', 'School']"
-                hide-details /></v-col>
+          <v-form ref="sdo_user_form">
+            <v-row dense>
+              <v-col cols="12"><v-text-field v-model="sdo_user.email" density="compact" label="Email address"
+                  prepend-inner-icon="mdi-email-outline" required
+                  :rules="[(v) => /.+@.+/.test(v) || 'Invalid Email address']" /></v-col>
+              <v-col cols="4"><v-text-field v-model="sdo_user.firstname" density="compact" hide-details="auto"
+                  label="Firstname" required :rules="[v => !!v || 'Firstname is required']" /></v-col>
+              <v-col cols="4"><v-text-field v-model="sdo_user.middlename" density="compact" hide-details
+                  label="Middlename" /></v-col>
+              <v-col cols="4"><v-text-field v-model="sdo_user.lastname" density="compact" hide-details
+                  label="Lastname" /></v-col>
+              <v-col cols="4"><v-text-field v-model="sdo_user.contact_number" density="compact" hide-details
+                  label="Contact Number" /></v-col>
+              <v-col cols="12"> Roles and Designation </v-col>
+              <v-col cols="6"><v-select v-model="sdo_user.type" label="Type" :items="['School Division Office', 'School']"
+                  hide-details /></v-col>
 
 
-            <v-col cols="6">
-              <v-select v-model="sdo_user.role" :items="roles" item-title="name" item-value="_id" label="Role"
-                hide-details />
-            </v-col>
-            <v-col cols="6" v-if="sdo_user.type == 'School'">
-              <v-select v-model="sdo_user.designation_information.school" label="School" :items="school_data"
-                item-value="_id" hide-details /></v-col>
-          </v-row>
+              <v-col cols="6">
+                <v-select v-model="sdo_user.role" :items="roles" item-title="name" item-value="_id" label="Role"
+                  hide-details />
+              </v-col>
+              <v-col cols="6" v-if="sdo_user.type == 'School'">
+                <v-select v-model="sdo_user.designation_information.school" label="School" :items="school_data"
+                  item-value="_id" hide-details /></v-col>
+            </v-row> </v-form>
 
 
         </v-card-text>
@@ -163,11 +162,9 @@ const route = useRoute();
 
 import { ref } from 'vue';
 import swal from 'sweetalert';
-
 import useAuth from "~/store/auth";
 
 definePageMeta({ layout: "std-applicant" })
-
 
 onBeforeMount(() => {
   Promise.all([
@@ -178,16 +175,8 @@ onBeforeMount(() => {
 })
 
 const auth = useAuth().user;
-
 const { $rest } = useNuxtApp();
 
-const tab = ref(0);
-const count = ref(10);
-const button_items = ref([
-  { title: 'Edit Profile' },
-  { title: 'Suspend' },
-
-]);
 const is_hovered = ref(false);
 
 const sdo_user = ref<SmsUser>({
@@ -232,20 +221,18 @@ const get_apts = async () => {
 }
 
 
-const items = ref([
-  'School Division Office Users', 'Regional Office Users',
-]);
 
 
 const user_invite_dialog = ref(false);
-
+const sdo_user_form = ref()
 async function create_user() {
   const { data, error } = await $rest('sms-sdo/create-sdo-user', {
     method: "POST",
     body: { ...sdo_user.value }
   });
-
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  user_invite_dialog.value = ref(false)
+  get_users()
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 }
 const users_data = ref<SmsUser[]>([])
@@ -253,21 +240,11 @@ async function get_users() {
   const { data, error } = await $rest('sms-sdo/get-sdo-users', {
     method: "GET",
     query: { id: route.query.id }
-
-
   });
-  console.log(route.query.id);
   users_data.value = data;
 
 }
 
-interface School {
-  title: String;
-  address: string;
-  email: string;
-  telephone: string;
-  division: string
-}
 const school = ref<School>({
   title: "",
   address: "",
@@ -291,6 +268,7 @@ async function create_school() {
 }
 const school_data = ref<School[]>([]);
 async function get_school() {
+  const division_id = route.query.id;
   const { data, error } = await $rest('sms-school/get-school', {
     method: "GET",
   })
@@ -301,7 +279,8 @@ async function get_school() {
     buttons: { ok: false, cancel: false }
   })
 
-  school_data.value = data
+  school_data.value = data.filter(school => school.division === division_id);
+
 }
 
 
