@@ -10,6 +10,7 @@
             <p class="pl-7 font-weight-regular">Regional Director/DepEd - NCR
             </p>
           </v-col>
+
           <v-col cols="auto"> Application Date : <v-chip color="primary" density="compact">
               {{ applicant_details.created_date }}
             </v-chip></v-col>
@@ -138,6 +139,20 @@
               </v-row>
             </v-card>
           </v-card-text>
+
+          <v-card-text>
+            <v-divider />
+            <v-list lines="two">
+
+              <v-list-item>
+                <v-list-item-title class="font-weight-bold text-uppercase"> ACTION REQUIRED : </v-list-item-title>
+                <v-list-item-title>1. Authenticated copy of Transcript of Records in the masteral course signed by the
+                  School
+                  Registra</v-list-item-title>
+                <v-list-item-subtitle> <span class="text-red">REASON</span> : Tampered Attachment</v-list-item-subtitle>
+              </v-list-item>
+            </v-list>
+          </v-card-text>
         </v-card>
         <v-card class="mx-auto" flat>
           <v-card-actions>
@@ -164,7 +179,7 @@
                 {{ value.description }}
               </h6>
               <v-btn size="small" color="primary" class="d-flex align-center" variant="tonal"
-                @click="open_attachment_dialog(Attachment[key.toString().toUpperCase()])">
+                @click="open_attachment_dialog(key)">
                 <v-icon class="mr-2">mdi-attachment</v-icon>
                 <span>View Attachment</span>
               </v-btn>
@@ -275,25 +290,10 @@ const route = useRoute();
 onBeforeMount(() => {
   get_applicant_details()
 })
-/**
- * START: ATTACHMENT VIEWING
- */
-const enum Attachment {
-  EDUCATIONAL_ATTAINMENT = 'educational_attainment',
-  SERVICE_RECORD = 'service_record',
-  OMNIBUS = 'omnibus',
-  PERMIT_TO_STUDY = 'permit_to_study'
-}
-// const evaluate_attachment = (key: string) => {
-//   const attachment = applicant_details.value.attachments[key];
-//   attachment.valid = !attachment.valid;
-//   console.log(attachment.valid);
-// }
+
 const evaluate_attachment = (key: string, value: boolean) => {
-  const attachment = applicant_details.value.attachments[key];
-  attachment.valid = value;
-  console.log(attachment.valid);
-};
+  applicant_details.value.attachments[key].valid = value;
+}
 
 const getCheckboxValue = (key: string, expectedValue: boolean) => {
   const attachment = applicant_details.value.attachments[key];
@@ -314,27 +314,7 @@ const toggleInvalid = (key: string) => {
 const attach = ref({ dialog: false, title: "", src: "" })
 const open_attachment_dialog = (attachment: string) => {
   const attachments = applicant_details.value.attachments;
-
-  switch (attachment) {
-    case Attachment.EDUCATIONAL_ATTAINMENT:
-      attach.value = { dialog: true, src: attachments?.educational_attainment, title: "Transcript of Record" };
-      break;
-
-    case Attachment.PERMIT_TO_STUDY:
-      attach.value = { dialog: true, src: attachments?.permit_to_study, title: "Permit to Study" };
-      break;
-
-    case Attachment.SERVICE_RECORD:
-      attach.value = { dialog: true, src: attachments?.service_record, title: "Service Record Attachment" };
-      break;
-
-    case Attachment.OMNIBUS:
-      attach.value = { dialog: true, src: attachments?.omnibus, title: "Omnibus" };
-      break;
-
-    default:
-      break;
-  }
+  attach.value = { dialog: true, src: attachments[attachment], title: attachment };
 }
 
 const button_display = (status: string) => {

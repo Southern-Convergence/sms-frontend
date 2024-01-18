@@ -14,6 +14,7 @@
               <v-card-title class="text-h5 text-primary"> WELCOME to
                 <strong>Reclassification System</strong>
               </v-card-title>
+
               <v-card-subtitle>Elevate Your Career: A Guide to the Reclassification System </v-card-subtitle>
               <v-row dense>
                 <v-col cols="7">
@@ -32,6 +33,7 @@
                       </v-col>
                     </v-row>
                     <v-row dense>
+
                       <v-col cols="6" class="px-1">
                         <v-select v-model="applicant.qualification.education" :items="education_data" rows="2"
                           class="w-100" label="Education" hide-details multiple item-value="_id" />
@@ -53,41 +55,43 @@
                     </v-row>
                   </v-card-text> </v-col>
                 <v-col cols="5">
-                  <!-- <v-card-text>
-                  <v-sheet border>
-                    <v-list-item class="pl-2" density="compact">
-                      <v-list-item-title class="text-h6"> Qualifications Standard
-                      </v-list-item-title>
-                      <v-list-item-subtitle class="text-grey"> Selected Position Qualificationswill be
-                        display here.</v-list-item-subtitle>
-                    </v-list-item>
-                    <v-divider />
-                    <v-list v-for="qs in selected_qs" :key="qs._id">
-                      <v-list-subheader class="text-subtitle-1">
-                        <span>{{ qs.title }} </span>
-                      </v-list-subheader>
-                      <v-list-item v-if="qs.education && qs.education.length" v-for="educ, index in qs.education"
-                        :key="index" title="Education:">
-                        <span class="text-grey">{{ educ.text }}</span>
-                      </v-list-item>
+                  {{ selected_qs }}
+                  <v-card-text>
+                    <v-sheet border>
 
-                      <v-list-item v-if="qs.experience && qs.experience.length" title="Experience:"
-                        v-for="exp, index in qs.experience" :key="index">
-                        <span class="text-grey">{{ exp.text }}</span>
+                      <v-list-item class="pl-2" density="compact">
+                        <v-list-item-title class="text-h6"> Qualifications Standard
+                        </v-list-item-title>
+                        <v-list-item-subtitle class="text-grey"> Selected Position Qualificationswill be
+                          display here.</v-list-item-subtitle>
                       </v-list-item>
+                      <v-divider />
+                      <v-list v-if="selected_qs">
+                        <v-list-subheader class="text-subtitle-1">
+                          <span>{{ selected_qs.title }} </span>
+                        </v-list-subheader>
+                        <v-list-item v-if="selected_qs.education" v-for="educ, index in selected_qs.education"
+                          :key="index" title="Education:">
+                          <span class="text-grey">{{ educ.text }}</span>
+                        </v-list-item>
 
-                      <v-list-item v-if="qs.training_hours" title="Training:">
-                        <span class="text-grey">{{ qs.training_hours }}</span>
-                      </v-list-item>
+                        <!--  <v-list-item v-if="selected_qs.experience && selected_qs.experience.length" title="Experience:"
+                          v-for="exp, index in selected_qs.experience" :key="index">
+                          <span class="text-grey">{{ exp.text }}</span>
+                        </v-list-item>
 
-                      <v-list-item v-if="qs.rating && qs.rating.length" title="Performance Rating:"
-                        v-for="rate, index in qs.rating" :key="index">
-                        <span class="text-grey">{{ rate.title }}</span>
-                      </v-list-item>
-                    </v-list>
-                  </v-sheet>
+                        <v-list-item v-if="selected_qs.training_hours" title="Training:">
+                          <span class="text-grey">{{ selected_qs.training_hours }}</span>
+                        </v-list-item>
 
-                </v-card-text> -->
+                        <v-list-item v-if="selected_qs.rating && selected_qs.rating.length" title="Performance Rating:"
+                          v-for="rate, index in qs.rating" :key="index">
+                          <span class="text-grey">{{ rate.title }}</span>
+                        </v-list-item> -->
+                      </v-list>
+                    </v-sheet>
+
+                  </v-card-text>
                 </v-col>
               </v-row>
             </v-sheet>
@@ -125,10 +129,12 @@
             </v-card-text>
             <v-card-text>
               <v-row dense>
+
                 <v-col cols="12"> <v-icon class="mr-2 pb-2" size="26" color="primary">mdi-briefcase-account</v-icon>
                   Designation and Employment Information</v-col>
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                  <v-text-field v-model="applicant.designation.current_position" label="Current Position" hide-details />
+                  <v-select v-model="applicant.designation.current_position" label="Current Position"
+                    :items="school_position_data" hide-details item-value="_id" />
                 </v-col>
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
                   <v-text-field v-model="applicant.designation.employee_no" label="Employee No" hide-details />
@@ -166,11 +172,7 @@
                   <template #bottom v-if="!show_footer" /> </v-data-table>
               </v-sheet>
               <v-row dense>
-                <v-col cols="6">
-                  <v-file-input label="Attach Authenticated copy of Transcript of Record" hide-details density="compact"
-                    variant="underlined" clearable multiple accept="application/pdf"
-                    v-model="applicant.attachments.educational_attainment" />
-                </v-col>
+
                 <v-col cols="4">
                   <v-text-field v-model="applicant.transcript.registrar_name" placeholder="Enter Register Complete Name"
                     density="compact" hide-details="auto" variant="underlined" />
@@ -198,10 +200,7 @@
                     </v-data-table>
                   </v-sheet>
                 </v-col>
-                <v-col cols="4">
-                  <v-file-input label="Attach Service Record" hide-details density="compact" variant="underlined"
-                    clearable multiple accept="application/pdf" v-model="applicant.attachments.service_record" />
-                </v-col>
+
               </v-row>
             </v-card-text>
             <v-card-text>
@@ -259,16 +258,14 @@
                       hide-details type="number" readonly /></v-col>
                   <v-col cols="12" xl="4" lg="4" md="4" sm="12" class="px-2"> <v-text-field label="Private School"
                       type="number" /></v-col>
-                  <v-col cols="12" class="text-caption text-grey-darken-1 pl-5 my-2">
-                    Attach the following:
-                  </v-col>
-                  <v-col cols="12" xl="4" lg="4" md="4" sm="12" class="px-2 ml-5">
-                    <v-file-input label="Attach Permit to Study" hide-details accept="application/pdf"
-                      v-model="applicant.attachments.permit_to_study" /></v-col>
-                  <v-col cols="12" xl="4" lg="4" md="4" sm="12" class="px-2">
-                    <v-file-input label="Attach Omnibus" accept="application/pdf"
-                      v-model="applicant.attachments.omnibus" /></v-col>
+
                 </v-row>
+              </v-card-text>
+
+              <!-- delete this shit -->
+              <v-card-text>
+                <v-file-input v-for="(attachment_title, index)  in selected_qs?.attachment" :label="attachment_title"
+                  :key="index" @update:model-value="shet_so_hard($event, attachment_title)" />
               </v-card-text>
             </v-card-text>
           </v-window-item>
@@ -353,6 +350,11 @@ const step = ref(1)
 const { CDN_ENDPOINT, DEV_CDN_ENDPOINT } = cfg.public;
 const CDN = cfg.public.NODE_ENV === "development" ? DEV_CDN_ENDPOINT : CDN_ENDPOINT;
 
+
+const shet_so_hard = (data: any, title: string) => {
+  applicant.value.attachments[title] = data
+  console.log(applicant.value.attachments)
+}
 onBeforeMount(() => {
   Promise.all(
     [
@@ -361,7 +363,8 @@ onBeforeMount(() => {
       get_experience(),
       get_rating(),
       get_sdo(),
-      get_school()
+      get_school(),
+      get_school_position()
       // get_qs(),
 
     ]
@@ -417,10 +420,6 @@ const applicant = ref({
   service_record: [],
   professional_study: [],
   attachments: {
-    service_record: [],
-    omnibus: [],
-    permit_to_study: [],
-    educational_attainment: [],
   },
   signatory: {
     name: "Marianne Mae Paclian",
@@ -468,12 +467,9 @@ const service_record = ref<ServiceRecord>({
 })
 
 const service_record_dialog = ref(false)
-
 const service_records = ref<ServiceRecord[]>([]);
 const service_record_form = ref();
 const total_service_years = ref(0);
-
-
 function add_service_record() {
   const new_service_record: ServiceRecord = {
     designation: service_record.value.designation,
@@ -562,8 +558,6 @@ const professional_study_headers = ref([
 ])
 const professional_study_dialog = ref(false)
 
-
-
 const professional_study = ref<ProfessionalStudy>(
   {
     sy: parseInt(new Date().getFullYear().toString()),
@@ -591,6 +585,7 @@ async function get_position() {
   const { data, error } = await $rest('new-applicant/get-application-qs', {
     method: "GET",
   })
+
   position_data.value = data
 }
 
@@ -619,18 +614,23 @@ async function get_rating() {
   })
   rating_data.value = data
 }
+
+
 /**
  * MATCHING
  */
 function next_window() {
-  const selected_position: { _id: string; education: string[] } | undefined = position_data.value.filter((v: string) => v._id == applicant.value.qualification.position)[0];
+  const selected_position: { _id: string; education: string[] } | undefined = position_data.value.filter((v: any) => v._id == applicant.value.qualification.position)[0];
+
   if (!selected_position) return swal({ title: "Oops!", text: "Select position", icon: "info" });
   const applicant_education = applicant.value.qualification.education;
   if (!applicant_education) return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
   const applicant_experience = applicant.value.qualification.experience;
   if (!applicant_experience) return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
+
   const applicant_rating = applicant.value.qualification.per_rating;
-  if (!applicant_rating) return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
+  if (position_data.value.rating?.length && !applicant_rating) return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
+
   const applicant_training = applicant.value.qualification.training;
 
   const is_yes: boolean[] = [];
@@ -638,10 +638,10 @@ function next_window() {
   is_yes.push(experience_matching(applicant_experience, selected_position.experience));
   is_yes.push(rating_matching(applicant_rating, selected_position.rating));
   is_yes.push(training_matching(applicant_training, selected_position.training_hours));
-  if (is_yes.includes(false)) return swal({ title: "ALERT", text: "alert" })
+  if (is_yes.includes(false)) return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" })
   step.value++
-
 }
+
 function education_matching(applicant_education: any, required_education: any) {
   if (!required_education) {
     return false;
@@ -656,15 +656,19 @@ function experience_matching(applicant_experience: any, required_experience: any
   const [result] = required_experience.map((v: string) => applicant_experience.includes(v));
   return result;
 }
-function rating_matching(applicant_rating: any, required_rating: any) {
-  if (!required_rating) {
-    return false;
-  }
+
+function rating_matching(applicant_rating: string, required_rating: string) {
+  if (!required_rating) return false;
   return applicant_rating == required_rating;
-}
+};
+
+function rn(applicant_rating: string, required_rating: string) {
+  return applicant_rating === required_rating;
+};
+
 function training_matching(applicant_training: number, required_training: number) {
-  applicant_training = parseFloat(applicant_training);
-  required_training = parseFloat(required_training);
+  applicant_training = parseFloat(applicant_training.toString());
+  required_training = parseFloat(required_training.toString());
   return applicant_training >= required_training;
 }
 // CREATE 
@@ -672,26 +676,14 @@ const form = ref(true)
 async function create_application() {
   const { attachments } = applicant.value;
   const temp = new FormData();
-  if (attachments.educational_attainment.length) {
-    attachments.educational_attainment.forEach((v: any) => {
-      temp.append(`tor-${v.name}`, v)
-    })
-  }
-  if (attachments.service_record.length) {
-    attachments.service_record.forEach((v: any) => {
-      temp.append(`service_record-${v.name}`, v)
-    })
-  }
-  if (attachments.permit_to_study.length) {
-    attachments.permit_to_study.forEach((v: any) => {
-      temp.append(`permit_study-${v.name}`, v)
-    })
-  }
-  if (attachments.omnibus.length) {
-    attachments.omnibus.forEach((v: any) => {
-      temp.append(`omnibus-${v.name}`, v)
-    })
-  }
+
+  Object.entries(attachments).forEach(([title, file]) => {
+    file.forEach((v: any) => {
+      const key = `${title}-${v.name}`
+      temp.append(key, v)
+    });
+  })
+
   const temp2 = Object.assign({}, applicant.value);
   delete temp2.attachments;
 
@@ -724,14 +716,8 @@ const email_rules = computed((v: any) => [
 
 // QS
 const selected_qs = computed(() => {
-  const position_id = applicant.value.qualification.position;
-  const selected_qs_data = position_data.value.find((p) => p._id === position_id);
-  if (selected_qs_data) {
-    const position_name = selected_qs_data.name;
-    return qs_data.value.filter((qs) => qs.name === position_name);
-  } else {
-    return [];
-  }
+  const selectedPosition = position_data.value.find((pos) => pos._id === applicant.value.qualification.position);
+  return selectedPosition || null;
 });
 
 
@@ -760,12 +746,23 @@ async function get_school() {
 }
 
 function get_sdo_school(division) {
-
   if (!division || !school_data.value || school_data.value.length === 0) {
     return [];
   }
   return school_data.value.filter(school => school.division === division);
 }
+
+
+const school_position_data = ref<[Position]>([]);
+async function get_school_position() {
+  const { data, error } = await $rest('sms-position/get-school-position', {
+    method: "GET",
+  })
+
+  school_position_data.value = data.map(item => item.title)
+}
+
+
 
 </script>
 

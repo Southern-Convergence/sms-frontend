@@ -14,10 +14,9 @@
                         <v-btn prepend-icon="mdi-pencil-plus" @click="user_invite_dialog = true" color="indigo">
                             Invite
                             User</v-btn>
-                        <v-sheet class="overflow-y-auto d-flex flex-wrap ga-3 ">
-                            <v-sheet class="pa-1 pt-2" width="50%" variant="tonal" v-for="user, index in users_data"
-                                :key="index">
-                                <v-alert rounded="0" class="my-1  space-around" border="start" border-color="indigo">
+                        <v-sheet class="overflow-y-auto d-flex flex-wrap ga-3 mt-3">
+                            <v-sheet width="50%" variant="tonal" v-for="user, index in users_data" :key="index" border>
+                                <v-alert rounded="0" border-color="indigo" color="white">
                                     <div>
                                         <div class="d-flex mb-1">
                                             <div class="text-uppercase  text-indigo text-body-1"> {{ user.firstname
@@ -52,19 +51,20 @@
                     </v-col>
                     <v-col cols="4">
                         <v-sheet class="pl-2 w-100">
-                            <v-btn @click="create_sdo_dialog = true" prepend-icon="mdi-pencil-plus" color="success"
+                            <v-btn @click="create_sdo_dialog = true" prepend-icon="mdi-pencil-plus" color="indigo"
                                 class="mr-0 mb-3"> Create
                                 School Division Office </v-btn>
                             <v-sheet height="70vh" class="overflow-auto">
                                 <v-sheet variant="tonal" v-for="(sdo, index) in sdo_data" :key="index" class="pb-2 mr-2">
                                     <v-alert class="user-item" @click="route_to_sdo(sdo._id)" border="start"
-                                        border-color="success" color="green-ligthen-5" rounded="0">
+                                        border-color="indigo" color="green-ligthen-5" rounded="0">
                                         <div class="font-weight-bold text-uppercase text-subtitle-1
 ">
                                             {{ sdo.title }}
                                         </div>
                                         <div>
-                                            <v-icon color="blue"> mdi-map-marker</v-icon> {{ sdo.address }}
+                                            <v-icon color="blue-lighten-2"> mdi-map-marker</v-icon> {{
+                                                sdo.address }}
                                         </div>
                                         <div class="text-blue font-italic text-decoration-underline">
                                             <v-icon color="red"> mdi-email</v-icon> {{ sdo.email }}
@@ -80,8 +80,6 @@
                     </v-col>
                 </v-row>
             </v-card-text>
-
-
         </v-card>
 
         <!-- Dialog -->
