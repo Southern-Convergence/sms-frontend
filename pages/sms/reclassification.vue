@@ -22,6 +22,7 @@
           <v-card-text class="overflow-y-auto">
             <v-row dense>
 
+
               <v-col cols="12" xxl="4" xl="4" lg="4" v-for=" pending  in  get_applicant_by_status(status.value) "
                 :key="pending">
                 <v-tooltip text="Click card to view more details" location="top">
@@ -67,7 +68,6 @@ definePageMeta({ layout: "std-systems" });
 const { $rest } = useNuxtApp();
 onBeforeMount(() => {
   get_application();
-  load_request();
 });
 const tab = ref(null);
 const is_hovered = ref(false);
@@ -88,11 +88,13 @@ async function get_application() {
   const { data, error } = await $rest('new-applicant/get-application', {
     method: "GET"
   });
+
+  console.log(data);
   application_data.value = data;
 }
 
 const get_applicant_by_status = (status) => {
-  return application_data.value.filter((i) => i.status === status);
+  return application_data.value
 }
 
 const load_erf_form = (id) => {
@@ -104,10 +106,6 @@ const load_erf_form = (id) => {
   });
 }
 
-const load_request = async () => {
-  const { data, error } = await $rest("new-applicant/get-requests", { method: "GET" });
-  console.log(data);
-}
 </script>
 
 <style scoped>

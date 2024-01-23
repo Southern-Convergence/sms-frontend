@@ -1,5 +1,5 @@
 <template>
-  <v-sheet id="item-container" class="h-100" color="transparent" rounded="lg" border>
+  <v-sheet id="item-container" class="h-100" color="transparent" rounded="0" border>
     <v-toolbar class="d-block border-b" extension-height="64" :extended="Boolean($attrs.extended)">
 
       <v-toolbar-title>
@@ -13,7 +13,7 @@
 
       <template v-if="$attrs.extended === ''" v-slot:extension>
         <v-divider />
-        <v-sheet class="pa-1" min-height="64">
+        <v-sheet class="pa-1" min-height="64" rounded="0">
           <slot name="extension" />
         </v-sheet>
       </template>
@@ -22,7 +22,8 @@
         <v-btn-toggle v-model="display_mode" style="align-self: center" dense mandatory>
           <v-tooltip v-for="display_type, i in display_types" :key="i" location="bottom">
             <template v-slot:activator="{ props }">
-              <v-btn v-bind="props" variant="text" color="primary" :icon="`mdi-${display_type_props[display_type]}`" />
+              <v-btn rounded="0" v-bind="props" variant="text" color="primary"
+                :icon="`mdi-${display_type_props[display_type]}`" />
             </template>
             <span class="text-capitalize">{{ display_type }}</span>
           </v-tooltip>
@@ -32,7 +33,8 @@
 
     <slot name="prepend-body" />
 
-    <v-sheet class="rounded-b-lg" :height="Number($attrs.height)" :max-height="Number($attrs['max-height'])" style="overflow-y : auto">
+    <v-sheet class="rounded-b-lg" :height="Number($attrs.height)" :max-height="Number($attrs['max-height'])"
+      style="overflow-y : auto">
       <v-card-text>
         <v-row v-if="!items.length && $attrs['display-type'] !== 'table'" justify="center" align="center" dense>
           No Item Found
@@ -53,7 +55,7 @@
 
             </v-skeleton-loader>
 
-            <slot name="item" :value="item" :index="i" :display="display_type" v-else/>
+            <slot name="item" :value="item" :index="i" :display="display_type" v-else />
           </v-col>
         </v-row>
       </v-card-text>
@@ -65,27 +67,27 @@
 
 <script lang="ts">
 export default {
-  props : {
-    title : {
-      type : String,
-      required : false,
-      default : ""
+  props: {
+    title: {
+      type: String,
+      required: false,
+      default: ""
     },
-    subtitle : {
-      type : String,
-      required : false,
-      default : ""
+    subtitle: {
+      type: String,
+      required: false,
+      default: ""
     },
-    items : {
-      type     : Array,
-      required : false,
-      default  : []
+    items: {
+      type: Array,
+      required: false,
+      default: []
     },
 
-    loading : {
-      type     : Boolean,
-      required : false,
-      default  : false
+    loading: {
+      type: Boolean,
+      required: false,
+      default: false
     },
 
     display: {
@@ -107,17 +109,17 @@ export default {
   data() {
     return {
       display_mode: 0,
-      display_type_props : {
+      display_type_props: {
         "table": "table",
-        "grid" : "view-grid",
-        "list" : "view-list",
+        "grid": "view-grid",
+        "list": "view-list",
       },
 
-      selected : []
+      selected: []
     }
   },
 
-  computed : {
+  computed: {
     display_type() {
       return this.display_types[this.display_mode];
     },
@@ -135,8 +137,8 @@ export default {
       const grid = this.display_type === "grid";
       return {
         default: grid ? 12 : 12,
-        xl: grid ? 4 : 12,
-        lg: grid ? 4 : 12,
+        xl: grid ? 6 : 12,
+        lg: grid ? 6 : 12,
         md: grid ? 6 : 12,
         sm: grid ? 12 : 12,
       };

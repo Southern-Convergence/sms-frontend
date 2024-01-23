@@ -1,5 +1,5 @@
 <template>
-    <v-sheet width="85%" class="mx-auto ma-5">
+    <v-sheet width="85%" class="mx-auto ma-5 elevation-2">
         <v-sheet class="pa-6" height="auto" color="grey-lighten-4">
             <v-row no-gutters>
                 <v-col cols="12" class="text-h6 font-weight-bold text-indigo">School Users </v-col>
@@ -18,10 +18,10 @@
                                 border-color="indigo">
                                 <div>
                                     <div class="d-flex mb-1">
-                                        <div class="text-uppercase  text-indigo text-body-1"> {{ user.firstname
+                                        <div class="text-uppercase  text-indigo text-body-1"> {{ user.first_name
                                         }}
                                             {{
-                                                user.lastname }}
+                                                user.last_name }}
                                         </div>
                                         <v-spacer />
                                         <div> <v-chip density="compact" class="text-uppercase text-overline"
@@ -63,7 +63,7 @@
                                     </v-tooltip>
                                 </v-toolbar>
                                 <v-divider />
-                                <v-card-text variant="tonal">
+                                <v-card-text variant="tonal" class="">
                                     <v-list>
                                         <v-list-item value="notifications" v-for=" sg, index  in  sg_data " :key="index">
                                             <v-list-item-title> Salary Grade: {{ sg.salary_grade }}</v-list-item-title>
@@ -207,9 +207,9 @@ const school_user = ref<SmsUser>({
     password: "",
     admin: false,
     email: "",
-    lastname: "",
-    middlename: "",
-    firstname: "",
+    last_name: "",
+    middle_name: "",
+    first_name: "",
     contact_number: "",
     type: "School",
     role: "",

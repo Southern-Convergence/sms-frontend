@@ -12,7 +12,7 @@
           </v-col>
 
           <v-col cols="auto"> Application Date : <v-chip color="primary" density="compact">
-              {{ applicant_details.created_date }}
+              {{ new Date(applicant_details.created_date).toLocaleString() }}
             </v-chip></v-col>
         </v-row>
         <v-row no-gutters> <v-col cols="5" class="text-subtitle-2 font-weight-bold"> DIVISION : {{
@@ -158,14 +158,41 @@
           <v-card-actions>
             <v-row dense justify="center">
               <v-col cols="4">
-                <v-btn disabled="remarks.length" @click="disapproved_dialog = true" variant="plain" color="error"
-                  block>Dissapproved</v-btn>
+                <v-btn @click="disapproved_dialog = true" variant="plain" color="error" block>Dissapproved</v-btn>
               </v-col>
               <v-col cols="4">
-                <v-btn v-if="button_display(applicant_details.status)" @click="submit_applicant(applicant_details)" block
+                <v-btn v-if="button_display(applicant_details.status)" @click="handle_application(true)" block
                   variant="tonal" color="success">
                   SUBMIT
                 </v-btn>
+              </v-col>
+              <v-col cols="4" v-if="user.role === 'Administrative Officer IV'">
+                <v-dialog width="500" v-model="evaluator_dialog">
+                  <template v-slot:activator="{ props }">
+                    <v-btn block variant="tonal" v-bind="props" text="Assign to Evaluator"
+                      @click="evaluator_dialog = true">
+                    </v-btn>
+                  </template>
+                  <template v-slot:default="{ isActive }">
+                    <v-card title="Select an Evaluator">
+                      <v-card-text>
+                        <v-select :items="evaluators" item-value="_id" item-title="title" v-model="selected_evaluator" />
+                      </v-card-text>
+                      <v-card-actions class="align-center">
+                        <v-row dense justify="center">
+                          <v-col cols="5">
+                            <v-btn @click="isActive.value = false" variant="tonal" color="error" block>CANCEL</v-btn>
+                          </v-col>
+                          <v-col cols="5">
+                            <v-btn variant="tonal" color="success" block @click="assign_evaluator_applicant">
+                              SUBMIT
+                            </v-btn>
+                          </v-col>
+                        </v-row>
+                      </v-card-actions>
+                    </v-card>
+                  </template>
+                </v-dialog>
               </v-col>
             </v-row>
           </v-card-actions>
@@ -283,23 +310,27 @@
 <script lang="ts" setup>
 const router = useRouter();
 import swal from 'sweetalert';
+import useAuth from "~/store/auth";
+
 const { $rest } = useNuxtApp()
 const route = useRoute();
 
+const user = useAuth().user;
 
 onBeforeMount(() => {
   get_applicant_details()
+  get_evaluators()
 })
+
+// EVALUATES ATTACHMENT
 
 const evaluate_attachment = (key: string, value: boolean) => {
   applicant_details.value.attachments[key].valid = value;
 }
-
 const getCheckboxValue = (key: string, expectedValue: boolean) => {
   const attachment = applicant_details.value.attachments[key];
   return attachment.valid === expectedValue;
 };
-
 const remarks = ref("");
 const remarks_attachment = (key: string) => {
   applicant_details.value.attachments[key].remarks = remarks.value
@@ -308,7 +339,110 @@ const showRemarks = ref({});
 const toggleInvalid = (key: string) => {
   showRemarks[key] = !showRemarks[key];
 };
+/**
+ * start: evaluator
+ */
+const evaluator_dialog = ref(false)
+const selected_evaluator = ref("");
+const evaluators = ref([]);
+const get_evaluators = async () => {
+  const role = user.role;
+  if (role !== "Administrative Officer IV") return;
 
+  const { data, error } = await $rest("new-applicant/get-evaluators", { method: "GET", query: { division_id: user.division } });
+  if (error) return swal({ title: "Error", error: error, icon: "error", buttons: { ok: false, cancel: false } });
+  evaluators.value = data;
+}
+async function assign_evaluator_applicant() {
+  const payload = {
+    app_id: route.query.id,
+    evaluator: selected_evaluator.value
+  }
+  const { data, error } = await $rest('new-applicant/assign-evaluator-application', {
+    method: "PUT",
+    body: payload
+  });
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+}
+/**
+ * end : evaluator
+ */
+
+
+const handle_application = async (status: boolean) => {
+  const role = user.role;
+
+  const payload = {
+    status,
+    app_id: route.query.id
+  };
+  switch (role) {
+    case "Principal":
+      handle_principal(payload);
+      break;
+    case "Administrative Officer IV":
+      handle_admin4(payload);
+      break;
+    case "Evaluator":
+      handle_evaluator(payload);
+      break;
+
+    case "Verifier":
+      handle_verifier(payload);
+      break;
+
+    case "Recommending Approver":
+      handle_recommending_approver(payload);
+      break;
+
+    case "Approver":
+      handle_approver(payload);
+      break;
+
+    default:
+      break;
+  }
+}
+/**
+ * APPROVAL PROCCESS
+ */
+const handle_principal = async (payload: any) => {
+  const { data, error } = await $rest('new-applicant/handle-principal', { method: "PUT", body: payload })
+  if (error) return swal({ title: "Erro", text: error, icon: "error", buttons: { ok: false, cancel: false } });
+  swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+}
+
+const handle_admin4 = async (payload: any) => {
+  const { data, error } = await $rest('new-applicant/handle-admin4', { method: "PUT", body: payload })
+  if (error) return swal({ title: "Erro", text: error, icon: "error", buttons: { ok: false, cancel: false } });
+  swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+}
+
+const handle_evaluator = async (payload: any) => {
+  const { data, error } = await $rest('new-applicant/handle-evaluator', { method: "PUT", body: payload })
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
+  swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+}
+
+
+const handle_verifier = async (payload: any) => {
+  const { data, error } = await $rest('new-applicant/handle-verifier', { method: "PUT", body: payload })
+  if (error) return swal({ title: "Erro", text: error, icon: "error", buttons: { ok: false, cancel: false } });
+  swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+}
+
+const handle_recommending_approver = async (payload: any) => {
+  const { data, error } = await $rest('new-applicant/handle-recommending-approver', { method: "PUT", body: payload })
+  if (error) return swal({ title: "Erro", text: error, icon: "error", buttons: { ok: false, cancel: false } });
+  swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+}
+
+const handle_approver = async (payload: any) => {
+  const { data, error } = await $rest('new-applicant/handle-approver', { method: "PUT", body: payload })
+  if (error) return swal({ title: "Erro", text: error, icon: "error", buttons: { ok: false, cancel: false } });
+  swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+}
 
 
 const attach = ref({ dialog: false, title: "", src: "" })
@@ -325,32 +459,8 @@ const button_display = (status: string) => {
     'For Checking',
     'For Verifying',
     'Recommending for Approval',
+    'For Approval'
   ].includes(status);
-};
-
-const submit_applicant = (applicant_details) => {
-  switch (applicant_details.status) {
-    case 'For Signature':
-      pending_applicant(applicant_details);
-      break;
-    case 'Pending':
-      assign_evaluator_applicant(applicant_details);
-      break;
-    case 'For Evaluation':
-      checking_applicant(applicant_details);
-      break;
-    case 'For Checking':
-      verifying_applicant(applicant_details);
-      break;
-    case 'For Verifying':
-      recommending_approval_applicant(applicant_details);
-      break;
-    case 'Recommending for Approval':
-      approval_applicant(applicant_details);
-      break;
-    default:
-      break;
-  }
 };
 
 
@@ -367,9 +477,7 @@ async function get_applicant_details() {
 }
 const erf_history = ref({ dialog: false, title: 'ERF Application History' })
 
-
-
-
+// Table headers start
 const attainment_headers = [
   { title: 'Degree', key: 'degree' },
   { title: 'Institution', key: 'institution' },
@@ -378,13 +486,11 @@ const attainment_headers = [
   { title: 'Rating', key: 'rating' },
   { title: 'Date', key: 'date' },
 ];
-
 const service_record_headers = [
   { title: 'Designation', key: 'designation' },
   { title: 'From', key: 'from' },
   { title: 'To', key: 'to' }
 ];
-
 const years_teaching_headers =
   [
     { title: 'Publics Schools', key: 'yt_public_schools' },
@@ -403,7 +509,7 @@ const professional_study_headers =
     { title: 'Number of Units', key: 'unit_no' },
     { title: 'Description', key: 'description' }
   ];
-
+// Table headers end
 
 
 const disapproved_dialog = ref(false);
@@ -421,75 +527,64 @@ async function disapproved_applicant(item: any) {
   if (!error) return swal({ title: "Successfully Dissapproved!", icon: "success" })
   return swal({ title: data, icon: "error" })
 }
-async function pending_applicant(item: any,) {
+// async function pending_applicant(item: any,) {
+//   const { data, error } = await $rest('new-applicant/pending-application', {
+//     method: "POST",
+//     body: {
+//       applicants_data: { ...item },
+//     },
+//   })
+//   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+//   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 
-  const { data, error } = await $rest('new-applicant/pending-application', {
-    method: "POST",
-    body: {
-      applicants_data: { ...item },
-    },
-  })
-  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+// }
 
-}
-async function assign_evaluator_applicant(item: any,) {
-  const { data, error } = await $rest('new-applicant/assign-evaluator-application', {
-    method: "POST",
-    body: {
-      applicants_data: { ...item },
-    },
-  })
-  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+// async function checking_applicant(item: any,) {
+//   const { data, error } = await $rest('new-applicant/checking-application', {
+//     method: "POST",
+//     body: {
+//       applicants_data: { ...item },
+//     },
+//   })
+//   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+//   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 
-}
-async function checking_applicant(item: any,) {
-  const { data, error } = await $rest('new-applicant/checking-application', {
-    method: "POST",
-    body: {
-      applicants_data: { ...item },
-    },
-  })
-  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+// }
+// async function verifying_applicant(item: any,) {
+//   const { data, error } = await $rest('new-applicant/verifying-application', {
+//     method: "POST",
+//     body: {
+//       applicants_data: { ...item },
+//     },
+//   })
+//   console.log(error);
 
-}
-async function verifying_applicant(item: any,) {
-  const { data, error } = await $rest('new-applicant/verifying-application', {
-    method: "POST",
-    body: {
-      applicants_data: { ...item },
-    },
-  })
-  console.log(error);
+//   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+//   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 
-  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+// }
+// async function recommending_approval_applicant(item: any,) {
+//   const { data, error } = await $rest('new-applicant/handle-recommending-approver', {
+//     method: "POST",
+//     body: {
+//       applicants_data: { ...item },
+//     },
+//   })
+//   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+//   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 
-}
-async function recommending_approval_applicant(item: any,) {
-  const { data, error } = await $rest('new-applicant/recommending-approval-application', {
-    method: "POST",
-    body: {
-      applicants_data: { ...item },
-    },
-  })
-  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+// }
+// async function approval_applicant(item: any,) {
+//   const { data, error } = await $rest('new-applicant/approval-application', {
+//     method: "POST",
+//     body: {
+//       applicants_data: { ...item },
+//     },
+//   })
+//   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+//   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 
-}
-async function approval_applicant(item: any,) {
-  const { data, error } = await $rest('new-applicant/approval-application', {
-    method: "POST",
-    body: {
-      applicants_data: { ...item },
-    },
-  })
-  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
-
-}
+// }
 
 const applicant_history = (id) => {
   router.push({

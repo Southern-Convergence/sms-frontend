@@ -105,13 +105,13 @@
                   Information </v-col>
 
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                  <v-text-field v-model="applicant.personal_information.lastname" label="Surname" hide-details />
+                  <v-text-field v-model="applicant.personal_information.last_name" label="Surname" hide-details />
                 </v-col>
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                  <v-text-field v-model="applicant.personal_information.firstname" label="Given Name" hide-details />
+                  <v-text-field v-model="applicant.personal_information.first_name" label="Given Name" hide-details />
                 </v-col>
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                  <v-text-field v-model="applicant.personal_information.middlename" label="Middle Name" hide-details />
+                  <v-text-field v-model="applicant.personal_information.middle_name" label="Middle Name" hide-details />
                 </v-col>
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
                   <v-text-field v-model="applicant.personal_information.email" :rules="email_rules" label="Email"
@@ -171,17 +171,20 @@
                 <v-data-table :headers="education_attainment_headers" :items="applicant.educational_attainment">
                   <template #bottom v-if="!show_footer" /> </v-data-table>
               </v-sheet>
-              <v-row dense>
-
+              <v-row dense class="mx-4">
+                <v-col cols="12"> Rergistrar details for Transcript of Records : </v-col>
                 <v-col cols="4">
-                  <v-text-field v-model="applicant.transcript.registrar_name" placeholder="Enter Register Complete Name"
-                    density="compact" hide-details="auto" variant="underlined" />
-                  <v-text-field v-model="applicant.transcript.registrar_email" :rules="email_rules"
-                    placeholder="Email Address" density="compact" hide-details="auto" variant="underlined" />
-                  <v-text-field v-model="applicant.transcript.registrar_no" placeholder="+63 0 000 000 000" prefix="+63"
-                    mask="0 000 000 000" maxlength="10" density="compact" hide-details="auto" variant="underlined"
-                    hint="Registrar Number is required" type="tel" />
+                  <v-text-field v-model="applicant.transcript.registrar_name" label="Enter Register Complete Name"
+                    density="compact" hide-details="auto" />
+
                 </v-col>
+                <v-col cols="4"> <v-text-field v-model="applicant.transcript.registrar_email" :rules="email_rules"
+                    label="Email Address" density="compact" hide-details="auto" />
+                </v-col>
+                <v-col cols="4">
+                  <v-text-field v-model="applicant.transcript.registrar_no" label="Contact Number" prefix="+63"
+                    mask="0 000 000 000" maxlength="10" density="compact" hide-details="auto"
+                    hint="Registrar Number is required" type="tel" /></v-col>
               </v-row>
             </v-card-text>
           </v-window-item>
@@ -387,9 +390,9 @@ const applicant = ref({
     per_rating: "",
   },
   personal_information: {
-    lastname: "",
-    firstname: "",
-    middlename: "",
+    last_name: "",
+    first_name: "",
+    middle_name: "",
     email: "",
     birthday: new Date,
     gender: "",

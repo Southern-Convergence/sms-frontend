@@ -1,35 +1,62 @@
 
 <template>
-    <v-sheet width="85%" class="mx-auto ma-5">
-        <v-card height="90vh">
-            <v-sheet class="pa-6" height="auto" color="grey-lighten-4">
+    <v-sheet>
+        <!-- <v-sheet class="pa-6" height="auto" color="grey-lighten-4">
                 <v-row no-gutters>
                     <v-col cols="12" class="text-h6 font-weight-bold text-indigo">USER MANAGEMENT </v-col>
                     <v-col cols="12" class="text-grey"> A brief overview of users. </v-col>
                 </v-row>
-            </v-sheet>
-            <v-card-text>
-                <v-row dense>
-                    <v-col cols="8">
-                        <v-btn prepend-icon="mdi-pencil-plus" @click="user_invite_dialog = true" color="indigo">
-                            Invite
-                            User</v-btn>
-                        <v-sheet class="overflow-y-auto d-flex flex-wrap ga-3 mt-3">
+            </v-sheet> -->
+        <v-row no-gutters>
+            <v-col cols="8">
+                <v-btn prepend-icon="mdi-pencil-plus" @click="user_invite_dialog = true" color="indigo" rounded="0">
+                    Invite
+                    User</v-btn>
+                <commons-item-container class="ma-1" title="USER MANAGEMENT" subtitle="A brief overview of users."
+                    :items="users_data" :display_types="['grid', 'list', 'table']">
+                    <template v-slot:item="{ value, index, display }">
+                        <v-sheet :key="index" border class="pa-2">
+                            <div class="d-flex mb-1">
+                                <div class="text-uppercase  text-indigo text-body-1"> {{ value.first_name
+                                }}
+                                    {{
+                                        value.last_name }}
+                                </div>
+                                <v-spacer />
+                                <div> <v-chip density="compact" class="text-uppercase text-overline" color="success">{{
+                                    value.status }}</v-chip></div>
+                            </div>
+                            <div> {{ value.role }} <span v-if="value.division"> of
+                                    {{
+                                        value.division.title
+                                    }}</span>
+                            </div>
+                            <div class="text-caption text-capitalize mb-2">{{ value.side }}</div>
+                            <div class="text-caption"> <v-icon color="red-lighten-3"> mdi-email</v-icon> <u
+                                    class="text-blue">{{
+                                        value.email }}</u>
+                            </div>
+                            <div class="text-caption"> <v-icon color="green-lighten-3"> mdi-phone</v-icon> {{
+                                value.contact_number }}</div>
+                        </v-sheet>
+                    </template>
+                </commons-item-container>
+                <!-- <v-sheet  class="overflow-y-auto d-flex flex-wrap mt-3" height="67vh">
                             <v-sheet width="50%" variant="tonal" v-for="user, index in users_data" :key="index" border>
                                 <v-alert rounded="0" border-color="indigo" color="white">
                                     <div>
                                         <div class="d-flex mb-1">
-                                            <div class="text-uppercase  text-indigo text-body-1"> {{ user.firstname
+                                            <div class="text-uppercase  text-indigo text-body-1"> {{ user.first_name
                                             }}
                                                 {{
-                                                    user.lastname }}
+                                                    user.last_name }}
                                             </div>
                                             <v-spacer />
                                             <div> <v-chip density="compact" class="text-uppercase text-overline"
                                                     color="success">{{
                                                         user.status }}</v-chip></div>
                                         </div>
-                                        <!-- <div class="text-body-2">{{ sdo.type }}</div> -->
+
                                         <div class="text-body-2"><b> {{ user.role }}</b> <b v-if="user.division"> of
                                                 {{
                                                     user.division.title
@@ -45,42 +72,73 @@
                                     </div>
                                 </v-alert>
                             </v-sheet>
+                        </v-sheet> -->
 
-                        </v-sheet>
+            </v-col>
 
-                    </v-col>
-                    <v-col cols="4">
-                        <v-sheet class="pl-2 w-100">
-                            <v-btn @click="create_sdo_dialog = true" prepend-icon="mdi-pencil-plus" color="indigo"
-                                class="mr-0 mb-3"> Create
-                                School Division Office </v-btn>
-                            <v-sheet height="70vh" class="overflow-auto">
-                                <v-sheet variant="tonal" v-for="(sdo, index) in sdo_data" :key="index" class="pb-2 mr-2">
-                                    <v-alert class="user-item" @click="route_to_sdo(sdo._id)" border="start"
-                                        border-color="indigo" color="green-ligthen-5" rounded="0">
-                                        <div class="font-weight-bold text-uppercase text-subtitle-1
+            <v-col cols="4" class="mt-10 ">
+                <v-sheet height="100vh" border>
+                    <v-toolbar>
+                        <span class="ml-2"> School Division Office</span>
+                        <v-spacer />
+                        <v-tooltip text="Click to add Education" location="top">
+                            <template v-slot:activator="{ props }">
+                                <v-btn prepend-icon="mdi-pencil-plus" @click="create_sdo_dialog = true" v-bind="props"
+                                    color="indigo" class="mr-0" rounded="0">Add SDO</v-btn>
+                            </template>
+                        </v-tooltip>
+                    </v-toolbar>
+                    <v-divider />
+                    <v-sheet class="ma-3" variant="tonal" color="indigo" v-for="(sdo, index) in sdo_data" :key="index">
+                        <v-alert class="my-1 maintenance-item" @click="route_to_sdo(sdo._id)"
+                            :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
+                            <div class="font-weight-bold text-uppercase 
+">{{ sdo.title }}
+                            </div>
+                            <div>
+                                <v-icon color="blue-lighten-2"> mdi-map-marker</v-icon> {{
+                                    sdo.address }}
+                            </div>
+                            <div class="text-blue font-italic text-decoration-underline">
+                                <v-icon color="red"> mdi-email</v-icon> {{ sdo.email }}
+                            </div>
+                            <div>
+                                <v-icon color="success"> mdi-phone</v-icon> {{ sdo.telephone }}
+                            </div>
+                        </v-alert>
+                    </v-sheet>
+                </v-sheet>
+                <!-- <v-sheet class="pl-2 w-100">
+                    <v-btn @click="create_sdo_dialog = true" prepend-icon="mdi-pencil-plus" color="indigo"
+                        class="mr-0 mb-3"> Create
+                        School Division Office </v-btn>
+                    <v-sheet height="70vh" class="overflow-auto">
+                        <v-sheet variant="tonal" v-for="(sdo, index) in sdo_data" :key="index" class="pb-2 mr-2">
+                            <v-alert class="user-item" @click="route_to_sdo(sdo._id)" border="start" border-color="indigo"
+                                color="green-ligthen-5" rounded="0">
+                                <div class="font-weight-bold text-uppercase text-subtitle-1
 ">
-                                            {{ sdo.title }}
-                                        </div>
-                                        <div>
-                                            <v-icon color="blue-lighten-2"> mdi-map-marker</v-icon> {{
-                                                sdo.address }}
-                                        </div>
-                                        <div class="text-blue font-italic text-decoration-underline">
-                                            <v-icon color="red"> mdi-email</v-icon> {{ sdo.email }}
-                                        </div>
-                                        <div>
-                                            <v-icon color="success"> mdi-phone</v-icon> {{ sdo.telephone }}
-                                        </div>
-                                    </v-alert>
-                                </v-sheet>
-                            </v-sheet>
+                                    {{ sdo.title }}
+                                </div>
+                                <div>
+                                    <v-icon color="blue-lighten-2"> mdi-map-marker</v-icon> {{
+                                        sdo.address }}
+                                </div>
+                                <div class="text-blue font-italic text-decoration-underline">
+                                    <v-icon color="red"> mdi-email</v-icon> {{ sdo.email }}
+                                </div>
+                                <div>
+                                    <v-icon color="success"> mdi-phone</v-icon> {{ sdo.telephone }}
+                                </div>
+                            </v-alert>
                         </v-sheet>
+                    </v-sheet>
+                </v-sheet> -->
 
-                    </v-col>
-                </v-row>
-            </v-card-text>
-        </v-card>
+            </v-col>
+        </v-row>
+
+
 
         <!-- Dialog -->
         <v-dialog v-model="user_invite_dialog" max-width="40%">
@@ -104,17 +162,17 @@
                             <v-col cols="12"><v-text-field v-model="user.email" density="compact" label="Email address"
                                     prepend-inner-icon="mdi-email-outline" required
                                     :rules="[(v) => /.+@.+/.test(v) || 'Invalid Email address']" /></v-col>
-                            <v-col cols="4"><v-text-field v-model="user.firstname" density="compact" hide-details="auto"
+                            <v-col cols="4"><v-text-field v-model="user.first_name" density="compact" hide-details="auto"
                                     label="Firstname" required :rules="[v => !!v || 'Firstname is required']" /></v-col>
-                            <v-col cols="4"><v-text-field v-model="user.middlename" density="compact" hide-details="auto"
+                            <v-col cols="4"><v-text-field v-model="user.middle_name" density="compact" hide-details="auto"
                                     label="Middlename" /></v-col>
-                            <v-col cols="4"><v-text-field v-model="user.lastname" density="compact" hide-details="auto"
-                                    label="Lastname" required :rules="[v => !!v || 'Lastname is required']" /></v-col>
+                            <v-col cols="4"><v-text-field v-model="user.last_name" density="compact" hide-details="auto"
+                                    label="_" required :rules="[v => !!v || 'Lastname is required']" /></v-col>
                             <v-col cols="4"><v-text-field v-model="user.contact_number" density="compact"
                                     hide-details="auto" label="Contact Number" type="tel"
                                     :rules="[v => !!v || 'Contact Number is required']" /></v-col>
                             <v-col cols="12"> Roles and Designation </v-col>
-                            <v-col cols="6"><v-select v-model="user.type" label="Type"
+                            <v-col cols="6"><v-select v-model="user.side" label="Type"
                                     :items="['School Division Office', 'Regional Office']" hide-details="auto" required
                                     :rules="[v => !!v || 'Type is required']" /></v-col>
                             <v-col cols="6" v-if="user.type !== 'Regional Office'">
@@ -166,7 +224,7 @@ import swal from 'sweetalert';
 
 import useAuth from "~/store/auth";
 
-definePageMeta({ layout: "std-applicant" })
+definePageMeta({ layout: "barren" })
 
 
 onBeforeMount(() => {
@@ -191,11 +249,11 @@ const user = ref<SmsUser>({
     password: "",
     admin: false,
     email: "",
-    lastname: "",
-    middlename: "",
-    firstname: "",
+    last_name: "",
+    middle_name: "",
+    first_name: "",
     contact_number: "",
-    type: "",
+    side: "",
     role: "",
     designation_information: {
         division: "",
@@ -204,7 +262,7 @@ const user = ref<SmsUser>({
     status: "pending",
 });
 
-
+const headers = ref([""])
 /**
  * 
  */
@@ -294,6 +352,10 @@ async function get_sdo() {
 
 </script>
 <style scoped>
+* {
+    font-size: 12px
+}
+
 .user-item {
     transition: background-color 0.3s ease-in-out;
 }
