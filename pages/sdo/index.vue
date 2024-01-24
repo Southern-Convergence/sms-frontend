@@ -29,12 +29,12 @@
                 <div> <v-chip density="compact" class="text-uppercase text-overline" color="success">{{
                   value.status }}</v-chip></div>
               </div>
-              <div> {{ value.role }} <span v-if="value.division"> of
+              <div> {{ value.role }} <span v-if="value.division">
                   {{
                     value.division.title
                   }}</span>
               </div>
-              <div class="text-caption text-capitalize mb-2">{{ value.side }}</div>
+              <div class="text-caption text-capitalize mb-2">{{ value?.side }}</div>
               <div class="text-caption"> <v-icon color="red-lighten-3"> mdi-email</v-icon> <u class="text-blue">{{
                 value.email }}</u>
               </div>
@@ -181,7 +181,7 @@
                 <v-select v-model="sdo_user.role" :items="roles" item-title="name" item-value="_id" label="Role"
                   hide-details />
               </v-col>
-              <v-col cols="6" v-if="sdo_user.type == 'School'">
+              <v-col cols="6" v-if="sdo_user.side == 'School'">
                 <v-select v-model="sdo_user.designation_information.school" label="School" :items="school_data"
                   item-value="_id" hide-details /></v-col>
             </v-row> </v-form>

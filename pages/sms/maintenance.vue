@@ -10,78 +10,209 @@
       </v-sheet> -->
 
 
-    <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="start">
-      <v-tab :value="1">Set Up Form</v-tab>
-      <v-tab :value="2">Qualification Standards</v-tab>
+    <v-card-text>
+      <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="start">
+        <v-tab :value="1">Set Up Form</v-tab>
+        <v-tab :value="2">Qualification Standards</v-tab>
+      </v-tabs>
+      <v-window v-model="tab">
+        <v-window-item :value="1">
+          <v-container fluid> <v-row no-gutters> <v-col cols="2">
+                <v-sheet class="pl-2" border height="76vh">
+                  <v-toolbar color="white">
+                    Education
+                    <v-spacer />
+                    <v-tooltip text="Click to add Education" location="top">
+                      <template v-slot:activator="{ props }">
+                        <v-btn @click="education_dialog = true" v-bind="props" color="indigo" icon="mdi-plus"></v-btn>
+                      </template>
+                    </v-tooltip>
+                  </v-toolbar>
+                  <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" educ, index  in  education_data "
+                    :key="index">
+                    <v-alert @click="education_update_dialog(educ)" class="my-1 maintenance-item"
+                      :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
+                      {{ educ.title }}
+                    </v-alert>
+                  </v-sheet>
+                </v-sheet>
+              </v-col>
+              <v-col cols="2">
+                <v-sheet class="pl-2" border height="76vh">
+                  <v-toolbar color="white">
+                    Experience
+                    <v-spacer />
+                    <v-tooltip text="Click to add Experience" location="top">
+                      <template v-slot:activator="{ props }">
+                        <v-btn @click="experience_dialog = true" v-bind="props" color="indigo" icon="mdi-plus"></v-btn>
+                      </template>
+                    </v-tooltip>
+                  </v-toolbar>
+                  <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" experience, index  in  experience_data "
+                    :key="index">
+                    <v-alert @click="experience_update_dialog(experience)" class="my-1 maintenance-item"
+                      :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
+                      {{ experience.title }}
+                    </v-alert>
+                  </v-sheet>
+                </v-sheet>
+              </v-col>
+              <v-col cols="2">
+                <v-sheet class="pl-2" border height="76vh">
+                  <v-toolbar color="white">
+                    Performance Rating
+                    <v-spacer />
+                    <v-tooltip text="Click to add Performance Rating" location="top">
+                      <template v-slot:activator="{ props }">
+                        <v-btn @click="rating_dialog = true" v-bind="props" color="indigo" icon="mdi-plus"></v-btn>
+                      </template>
+                    </v-tooltip>
+                  </v-toolbar>
+                  <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" rating, index  in  rating_data "
+                    :key="index">
+                    <v-alert @click="rating_update_dialog(rating)" class="my-1 maintenance-item"
+                      :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
+                      {{ rating.title }}
+                    </v-alert>
+                  </v-sheet>
+                </v-sheet>
+              </v-col>
+              <v-col cols="2">
+                <v-sheet class="pl-2" border height="76vh">
+                  <v-toolbar color="white">
+                    Salary Grade
+                    <v-spacer />
+                    <v-tooltip text="Click to add Salary Grade" location="top">
+                      <template v-slot:activator="{ props }">
+                        <v-btn @click="sg_dialog = true" v-bind="props" color="indigo" icon="mdi-plus"></v-btn>
+                      </template>
+                    </v-tooltip>
+                  </v-toolbar>
+                  <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" sg, index  in  sg_data " :key="index">
+                    <v-alert @click="update_salary_grade(sg)" class="my-1 maintenance-item"
+                      :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
+                      <div> Salary Grade : <b> {{ sg.salary_grade }} </b></div>
+                      <div> Equivalent : <b> {{ sg.equivalent }} </b></div>
+                    </v-alert>
+                  </v-sheet>
+                </v-sheet>
+              </v-col>
+              <v-col cols="2">
+                <v-sheet class="pl-2" border height="76vh">
+                  <v-toolbar color="white">
+                    Eligibility
+                    <v-spacer />
+                    <v-tooltip text="Click to add Eligibility" location="top">
+                      <template v-slot:activator="{ props }">
+                        <v-btn @click="eligibility_dialog = true" v-bind="props" color="indigo" icon="mdi-plus"></v-btn>
+                      </template>
+                    </v-tooltip>
+                  </v-toolbar>
+                  <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" eligibility, index  in  eligibility_data "
+                    :key="index">
+                    <v-alert class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" border="start"
+                      border-color="indigo">
+                      {{ eligibility.title }}
+                    </v-alert>
+                  </v-sheet>
+                </v-sheet>
+              </v-col>
+              <v-col cols="2">
+                <v-sheet class="pl-2" border height="76vh">
+                  <v-toolbar color="white">
+                    Attachments
+                    <v-spacer />
+                    <v-tooltip text="Click to add Attachment" location="top">
+                      <template v-slot:activator="{ props }">
+                        <v-btn @click="attachment_dialog = true" v-bind="props" color="indigo" icon="mdi-plus"></v-btn>
+                      </template>
+                    </v-tooltip>
+                  </v-toolbar>
+                  <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" attachment, index  in  attachment_data "
+                    :key="index">
+                    <v-alert class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" border="start"
+                      border-color="indigo">
+                      {{ attachment.title }}
+                    </v-alert>
+                  </v-sheet>
+                </v-sheet>
+              </v-col></v-row> </v-container>
+        </v-window-item>
+        <v-window-item :value="2">
+          <v-card-text>
+            <v-btn @click="position_dialog = true" color="indigo"> Set Up Position</v-btn>
+            <commons-item-container class="mt-2" title="Qualification Standards"
+              subtitle="A brief overview of qualification standards." :items="position_data"
+              :display_types="['grid', 'list', 'table']">
+              <template v-slot:item="{ value, index, display }">
+                <v-sheet class="pa-3" border>
+                  <div class="text-uppercase text-subtitle-1 font-weight-bold text-indigo">{{ value.title }}</div>
+                  <v-divider class="my-2" />
+                  <v-row no-gutters justify="end" v-if="value.education">
+                    <v-col cols="3"> Education</v-col>
+                    <v-col cols="9" v-for=" educ, index  in  value.education " :key="index">
+                      : {{ educ.text }} <br />
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters justify="end" v-if="value.education_level">
+                    <v-col cols="3">Education Level </v-col>
+                    <v-col cols="9"> : {{ value.education_level }}</v-col>
+                  </v-row>
+                  <v-row no-gutters justify="end">
+                    <v-col cols="3"> </v-col>
+                    <v-col cols="9"> </v-col>
+                  </v-row>
+                  <v-row no-gutters justify="end" v-if="value.experience">
+                    <v-col cols="3"> Experience </v-col>
+                    <v-col cols="9" v-for=" exp, index  in  value.experience " :key="index"> : {{ exp.text }}
+                      <br /></v-col>
+                  </v-row>
+                  <v-row no-gutters justify="end" v-if="value.training_hours">
+                    <v-col cols="3"> Training Hours </v-col>
+                    <v-col cols="9"> : {{
+                      value.training_hours }}
+                      <br /></v-col>
+                  </v-row>
+                  <v-row no-gutters justify="end" v-if="value.sg.salary_grade">
+                    <v-col cols="3"> Salary Grade </v-col>
+                    <v-col cols="9"> : {{ value.sg.salary_grade }}
+                      <br /></v-col>
+                  </v-row>
+                  <v-row no-gutters justify="end" v-if="value.sg.equivalent">
+                    <v-col cols="3"> Salary Equivalent </v-col>
+                    <v-col cols="9"> : {{ value.sg.equivalent }}
+                      <br />
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters justify="end" v-if="value.eligibility">
+                    <v-col cols="3"> Eligibility </v-col>
+                    <v-col cols="9"> : {{ value.eligibility }}
+                      <br />
+                    </v-col>
+                  </v-row>
 
-    </v-tabs>
-    <v-window v-model="tab">
-      <v-window-item :value="2">
-        <v-card-text>
-          <v-btn @click="position_dialog = true" color="indigo"> Set Up Position</v-btn>
-          <commons-item-container class="mt-2" title="USER MANAGEMENT" subtitle="A brief overview of users."
-            :items="position_data" :display_types="['grid', 'list', 'table']">
-            <template v-slot:item="{ value, index, display }">
-              <v-sheet color="indigo" class="pa-2 elevation-2">
-                <div class="text-uppercase text-subtitle-1 font-weight-bold ">{{ value.title }}</div>
-                <v-divider class="my-2" />
-                <v-row no-gutters justify="end" v-if="value.education">
-                  <v-col cols="3"> Education</v-col>
-                  <v-col cols="9" v-for=" educ, index  in  value.education " :key="index">
-                    : {{ educ.text }} <br />
-                  </v-col>
-                </v-row>
-                <v-row no-gutters justify="end" v-if="value.education_level">
-                  <v-col cols="3">Education Level </v-col>
-                  <v-col cols="9"> : {{ value.education_level }}</v-col>
-                </v-row>
-                <v-row no-gutters justify="end">
-                  <v-col cols="3"> </v-col>
-                  <v-col cols="9"> </v-col>
-                </v-row>
-                <v-row no-gutters justify="end" v-if="value.experience">
-                  <v-col cols="3"> Experience </v-col>
-                  <v-col cols="9" v-for=" exp, index  in  value.experience " :key="index"> : {{ exp.text }}
-                    <br /></v-col>
-                </v-row>
-                <v-row no-gutters justify="end" v-if="value.training_hours">
-                  <v-col cols="3"> Training Hours </v-col>
-                  <v-col cols="9"> : {{
-                    value.training_hours }}
-                    <br /></v-col>
-                </v-row>
-                <v-row no-gutters justify="end" v-if="value.sg.salary_grade">
-                  <v-col cols="3"> Salary Grade </v-col>
-                  <v-col cols="9"> : {{ value.sg.salary_grade }}
-                    <br /></v-col>
-                </v-row>
-                <v-row no-gutters justify="end" v-if="value.sg.equivalent">
-                  <v-col cols="3"> Salary Equivalent </v-col>
-                  <v-col cols="9"> : {{ value.sg.equivalent }}
-                    <br />
-                  </v-col>
-                </v-row>
-                <v-row no-gutters justify="end" v-if="value.eligibility">
-                  <v-col cols="3"> Eligibility </v-col>
-                  <v-col cols="9"> : {{ value.eligibility }}
-                    <br />
-                  </v-col>
-                </v-row>
+                  <v-row no-gutters justify="end" v-if="value.attachment">
+                    <v-col cols="3"> Attachment
+                      Require</v-col>
+                    <v-col cols="9" v-for=" attach, index  in  value.attachment " :key="index"> : {{ attach.title
+                    }}
+                      <br />
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters justify="end" v-if="value.sdo_attachment">
+                    <v-col cols="3"> SDO Attachment
+                      Required</v-col>
+                    <v-col cols="9" v-for=" attach, index  in  value.attachment " :key="index"> : {{ attach.title
+                    }}
+                      <br />
+                    </v-col>
+                  </v-row>
+                </v-sheet>
 
-                <v-row no-gutters justify="end" v-if="value.attachment">
-                  <v-col cols="3"> Attachment
-                    Require</v-col>
-                  <v-col cols="9" v-for=" attach, index  in  value.attachment " :key="index"> : {{ attach.title
-                  }}
-                    <br />
-                  </v-col>
-                </v-row>
-              </v-sheet>
+              </template>
+            </commons-item-container>
 
-            </template>
-          </commons-item-container>
-
-          <!-- <v-row dense>
+            <!-- <v-row dense>
                 <v-col cols="4" class="mt-2" v-for=" position, index  in  position_data " :key="index">
                   <v-sheet class="maintenance-item elevation-2" :class="{ 'elevation-4': is_hovered }" border>
                     <v-alert color="white" rounded="0">
@@ -177,137 +308,11 @@
             </v-col>
             </v-row> -->
 
-        </v-card-text>
-      </v-window-item>
-      <v-window-item :value="1">
-        <v-container fluid> <v-row no-gutters> <v-col cols="2">
-              <v-sheet class="pl-2" border height="70vh">
-                <v-toolbar color="white">
-                  Education
-                  <v-spacer />
-                  <v-tooltip text="Click to add Education" location="top">
-                    <template v-slot:activator="{ props }">
-                      <v-btn @click="education_dialog = true" v-bind="props" color="indigo"
-                        prepend-icon="mdi-pencil-plus">Add</v-btn>
-                    </template>
-                  </v-tooltip>
-                </v-toolbar>
-                <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" educ, index  in  education_data "
-                  :key="index">
-                  <v-alert @click="education_update_dialog(educ)" class="my-1 maintenance-item"
-                    :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
-                    {{ educ.title }}
-                  </v-alert>
-                </v-sheet>
-              </v-sheet>
-            </v-col>
-            <v-col cols="2">
-              <v-sheet class="pl-2" border height="76vh">
-                <v-toolbar color="white">
-                  Experience
-                  <v-spacer />
-                  <v-tooltip text="Click to add Experience" location="top">
-                    <template v-slot:activator="{ props }">
-                      <v-btn @click="experience_dialog = true" v-bind="props" color="indigo"
-                        prepend-icon="mdi-pencil-plus">Add</v-btn>
-                    </template>
-                  </v-tooltip>
-                </v-toolbar>
-                <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" experience, index  in  experience_data "
-                  :key="index">
-                  <v-alert @click="experience_update_dialog(experience)" class="my-1 maintenance-item"
-                    :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
-                    {{ experience.title }}
-                  </v-alert>
-                </v-sheet>
-              </v-sheet>
-            </v-col>
-            <v-col cols="2">
-              <v-sheet class="pl-2" border height="76vh">
-                <v-toolbar color="white">
-                  Performance Rating
-                  <v-spacer />
-                  <v-tooltip text="Click to add Performance Rating" location="top">
-                    <template v-slot:activator="{ props }">
-                      <v-btn @click="rating_dialog = true" v-bind="props" color="indigo"
-                        prepend-icon="mdi-pencil-plus">Add</v-btn>
-                    </template>
-                  </v-tooltip>
-                </v-toolbar>
-                <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" rating, index  in  rating_data "
-                  :key="index">
-                  <v-alert @click="rating_update_dialog(rating)" class="my-1 maintenance-item"
-                    :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
-                    {{ rating.title }}
-                  </v-alert>
-                </v-sheet>
-              </v-sheet>
-            </v-col>
-            <v-col cols="2">
-              <v-sheet class="pl-2" border height="76vh">
-                <v-toolbar color="white">
-                  Salary Grade
-                  <v-spacer />
-                  <v-tooltip text="Click to add Salary Grade" location="top">
-                    <template v-slot:activator="{ props }">
-                      <v-btn @click="sg_dialog = true" v-bind="props" color="indigo"
-                        prepend-icon="mdi-pencil-plus">Add</v-btn>
-                    </template>
-                  </v-tooltip>
-                </v-toolbar>
-                <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" sg, index  in  sg_data " :key="index">
-                  <v-alert @click="update_salary_grade(sg)" class="my-1 maintenance-item"
-                    :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
-                    <div> Salary Grade : <b> {{ sg.salary_grade }} </b></div>
-                    <div> Equivalent : <b> {{ sg.equivalent }} </b></div>
-                  </v-alert>
-                </v-sheet>
-              </v-sheet>
-            </v-col>
-            <v-col cols="2">
-              <v-sheet class="pl-2" border height="76vh">
-                <v-toolbar color="white">
-                  Eligibility
-                  <v-spacer />
-                  <v-tooltip text="Click to add Eligibility" location="top">
-                    <template v-slot:activator="{ props }">
-                      <v-btn @click="eligibility_dialog = true" v-bind="props" color="indigo"
-                        prepend-icon="mdi-pencil-plus">Add</v-btn>
-                    </template>
-                  </v-tooltip>
-                </v-toolbar>
-                <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" eligibility, index  in  eligibility_data "
-                  :key="index">
-                  <v-alert class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" border="start"
-                    border-color="indigo">
-                    {{ eligibility.title }}
-                  </v-alert>
-                </v-sheet>
-              </v-sheet>
-            </v-col>
-            <v-col cols="2">
-              <v-sheet class="pl-2" border height="76vh">
-                <v-toolbar color="white">
-                  Attachments
-                  <v-spacer />
-                  <v-tooltip text="Click to add Attachment" location="top">
-                    <template v-slot:activator="{ props }">
-                      <v-btn @click="attachment_dialog = true" v-bind="props" color="indigo"
-                        prepend-icon="mdi-pencil-plus">Add</v-btn>
-                    </template>
-                  </v-tooltip>
-                </v-toolbar>
-                <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" attachment, index  in  attachment_data "
-                  :key="index">
-                  <v-alert class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" border="start"
-                    border-color="indigo">
-                    {{ attachment.title }}
-                  </v-alert>
-                </v-sheet>
-              </v-sheet>
-            </v-col></v-row> </v-container>
-      </v-window-item>
-    </v-window>
+          </v-card-text>
+        </v-window-item>
+
+      </v-window>
+    </v-card-text>
 
 
 
@@ -370,7 +375,10 @@
           item-value="_id" />
         <v-select v-model="position.sg" :items="sg_item" label="Salary Grade" item-value="_id" />
         <v-select v-model="position.eligibility" :items="eligibility_data" label="Eligibility" item-value="_id" />
-        <v-select v-model="position.attachment" :items="attachment_data" label="Attachements" item-value="_id" multiple />
+        <v-select v-model="position.attachment" :items="attachment_data" label="Applicant Attachements" item-value="_id"
+          multiple />
+        <v-select v-model="position.sdo_attachment" :items="attachment_data" label="SDO Attachements" item-value="_id"
+          multiple />
       </v-card-text>
     </commons-dialog>
     <commons-dialog max-width="30%" v-model="update_position_dialog" icon="mdi-school" :title="'Update Position'"
@@ -392,7 +400,7 @@
     <commons-dialog max-width="35%" v-model="eligibility_dialog" icon="mdi-school" title="Create Eligibility"
       @submit="create_eligibility" submitText="Submit">
       <v-card-text>
-        <v-textarea v-model="eligibility.title" rows="3" label="Enter rating Title" />
+        <v-textarea v-model="eligibility.title" rows="3" label="Enter Eligibility Title" />
       </v-card-text>
     </commons-dialog>
 
@@ -687,7 +695,10 @@ const position = ref<Position>({
   experience: [],
   training_hours: 0,
   rating: [],
-  sg: ""
+  sg: "",
+  eligibility: [],
+  attachment: [],
+  sdo_attachment: []
 });
 
 async function create_position() {

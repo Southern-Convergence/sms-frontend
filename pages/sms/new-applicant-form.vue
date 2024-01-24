@@ -56,7 +56,7 @@
                   </v-card-text> </v-col>
                 <v-col cols="5">
                   {{ selected_qs }}
-                  <v-card-text>
+                  <!-- <v-card-text>
                     <v-sheet border>
 
                       <v-list-item class="pl-2" density="compact">
@@ -75,23 +75,11 @@
                           <span class="text-grey">{{ educ.text }}</span>
                         </v-list-item>
 
-                        <!--  <v-list-item v-if="selected_qs.experience && selected_qs.experience.length" title="Experience:"
-                          v-for="exp, index in selected_qs.experience" :key="index">
-                          <span class="text-grey">{{ exp.text }}</span>
-                        </v-list-item>
-
-                        <v-list-item v-if="selected_qs.training_hours" title="Training:">
-                          <span class="text-grey">{{ selected_qs.training_hours }}</span>
-                        </v-list-item>
-
-                        <v-list-item v-if="selected_qs.rating && selected_qs.rating.length" title="Performance Rating:"
-                          v-for="rate, index in qs.rating" :key="index">
-                          <span class="text-grey">{{ rate.title }}</span>
-                        </v-list-item> -->
+                    
                       </v-list>
                     </v-sheet>
 
-                  </v-card-text>
+                  </v-card-text> -->
                 </v-col>
               </v-row>
             </v-sheet>
@@ -262,25 +250,48 @@
                   <v-col cols="12" xl="4" lg="4" md="4" sm="12" class="px-2"> <v-text-field label="Private School"
                       type="number" /></v-col>
 
+
+
                 </v-row>
+
+
               </v-card-text>
 
-              <!-- delete this shit -->
-              <v-card-text>
-                <v-file-input v-for="(attachment_title, index)  in selected_qs?.attachment" :label="attachment_title"
-                  :key="index" @update:model-value="shet_so_hard($event, attachment_title)" />
-              </v-card-text>
+
             </v-card-text>
+          </v-window-item>
+          <v-window-item :value="4">
+            <v-sheet min-height="50vh">
+              <v-card-text>
+                <v-card-title class="text-subtitle-2">
+                  III. Attachements
+
+                </v-card-title>
+                <v-alert class="mx-5" density="compact" type="warning" closable variant="tonal" border="start"
+                  text="Ensure  that all uploaded documents adhere to the prescribed standards and are
+                  valid for processing. Your attention to document accuracy is crucial for a smooth application process."></v-alert>
+                <v-card-text>
+                  <v-row no-gutters> <v-col cols="12" xl="6" lg="6" md="6" sm="12"
+                      v-for="(attachment_title, index)  in selected_qs?.attachment"> <v-file-input variant="underlined"
+                        :label="attachment_title" :key="index"
+                        @update:model-value="shet_so_hard($event, attachment_title)" />
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+
+              </v-card-text>
+            </v-sheet>
+
           </v-window-item>
         </v-window>
         <v-divider></v-divider>
         <v-card-actions>
           <v-btn v-if="step > 1" variant="text" @click="step--"> Back </v-btn>
           <v-spacer></v-spacer>
-          <v-btn v-if="step < 3" color="primary" variant="flat" @click="next_window">
+          <v-btn v-if="step < 4" color="primary" variant="flat" @click="next_window">
             Next
           </v-btn>
-          <v-btn @click="create_application" v-if="step === 3" color="success" variant="flat">
+          <v-btn @click="create_application" v-if="step === 4" color="success" variant="flat">
             SUBMIT
           </v-btn>
         </v-card-actions>

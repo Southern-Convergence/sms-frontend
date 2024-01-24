@@ -167,7 +167,7 @@
                             <v-col cols="4"><v-text-field v-model="user.middle_name" density="compact" hide-details="auto"
                                     label="Middlename" /></v-col>
                             <v-col cols="4"><v-text-field v-model="user.last_name" density="compact" hide-details="auto"
-                                    label="_" required :rules="[v => !!v || 'Lastname is required']" /></v-col>
+                                    label="Lastname" required :rules="[v => !!v || 'Lastname is required']" /></v-col>
                             <v-col cols="4"><v-text-field v-model="user.contact_number" density="compact"
                                     hide-details="auto" label="Contact Number" type="tel"
                                     :rules="[v => !!v || 'Contact Number is required']" /></v-col>

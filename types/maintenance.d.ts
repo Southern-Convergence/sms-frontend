@@ -18,7 +18,6 @@ interface SalaryGrade {
   salary_grade: number;
   equivalent: number
 
-
 }
 
 interface Position {
@@ -29,5 +28,7 @@ interface Position {
   experience: string[];
   training_hours?: number;
   rating?: array;
-  sg?: string
+  sg?: string;
+  attachment?: array;
+  sdo_attachment?: array;
 };

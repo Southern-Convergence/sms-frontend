@@ -9,20 +9,19 @@
           <v-icon>mdi-settings</v-icon>
         </v-btn>
 
-        <template v-slot:extension>
+        <!-- <template v-slot:extension>
           <v-tabs color="indigo-accent-1" v-model="tab" fixed-tabs>
             <v-tab v-for=" status  in  tabItems " :key="status.value" :value="status.value">
               {{ status.label }}
             </v-tab>
           </v-tabs>
-        </template>
+        </template> -->
       </v-toolbar>
       <v-window v-model="tab">
         <v-window-item v-for=" status  in  tabItems " :key="status.value" :value="status.value">
           <v-card-text class="overflow-y-auto">
-            <v-row dense>
-
-
+            <v-row dense
+              v-if="get_applicant_by_status(status.value).some(applicant => Object.keys(applicant).length > 0)">
               <v-col cols="12" xxl="4" xl="4" lg="4" v-for=" pending  in  get_applicant_by_status(status.value) "
                 :key="pending">
                 <v-tooltip text="Click card to view more details" location="top">
@@ -35,7 +34,7 @@
                           <div class="pr-3"><v-img :width="80" aspect-ratio="4/3" cover src="/yanyan.jpg"></v-img></div>
                           <div>
                             <div class="text-body-1 font-weight-bold">
-                              {{ pending.full_name }}
+                              {{ pending.first_name }} {{ pending.last_name }}
                             </div>
                             <div class="mb-1 text-body-2 text-grey"> {{ pending.position }}
                             </div>
@@ -54,6 +53,16 @@
                   </template>
                 </v-tooltip>
               </v-col>
+            </v-row>
+            <v-row dense justify="center" v-else>
+              <v-sheet height="70vh" class="d-flex align-center justify-center ">
+                <v-alert class=" align-center justify-center">
+                  <center><v-avatar size="80">
+                      <v-icon color="info" size="70">mdi-information-slab-circle-outline</v-icon></v-avatar>
+                    <h4> No pending application requests at the moment.</h4>
+                  </center>
+                </v-alert>
+              </v-sheet>
             </v-row>
           </v-card-text>
         </v-window-item>
@@ -79,7 +88,7 @@ const tabItems = ref([
   { label: 'Verifying', value: 'For Verifying' },
   { label: 'Recommending for Approval', value: 'Recommending for Approval' },
   { label: 'For Approval', value: 'For Approval' },
-  { label: 'Approved', value: 'Approved' },
+  { label: 'Completed', value: 'Completed' },
   { label: 'Disapproved', value: 'Dissapproved' },
 ]);
 

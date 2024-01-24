@@ -24,11 +24,14 @@
       </v-col>
       <v-col cols="10" xxl="5" xl="5" lg="6" md="6" sm="10">
         <v-card class="mx-auto" border>
+
           <v-card-title class="d-flex align-center font-weight-bold">
-            1. EQUIVALENT RECORD FORM <v-spacer /><span class="pr-2"> <v-btn @click="applicant_history()"
-                class="font-weight-bold" prepend-icon="mdi-history" color="primary" block density="compact">View
+            1. EQUIVALENT RECORD FORM <v-spacer /><span class="pr-2"> <v-btn
+                @click="applicant_history(applicant_details._id)" class="font-weight-bold" prepend-icon="mdi-history"
+                color="primary" block density="compact">View
                 HISTORY</v-btn></span>
-            <span> <v-btn class="font-weight-bold" prepend-icon="mdi-printer" color="primary" block density="compact">
+            <span> <v-btn @click="applicant_erf(applicant_details._id)" class="font-weight-bold"
+                prepend-icon="mdi-printer" color="primary" block density="compact">
                 Print
                 ERF</v-btn></span>
           </v-card-title>
@@ -160,13 +163,8 @@
               <v-col cols="4">
                 <v-btn @click="disapproved_dialog = true" variant="plain" color="error" block>Dissapproved</v-btn>
               </v-col>
-              <v-col cols="4">
-                <v-btn v-if="button_display(applicant_details.status)" @click="handle_application(true)" block
-                  variant="tonal" color="success">
-                  SUBMIT
-                </v-btn>
-              </v-col>
-              <v-col cols="4" v-if="user.role === 'Administrative Officer IV'">
+
+              <v-col cols="4" v-if="user.role === 'Administrative Officer IV' && applicant_details.status === 'Pending'">
                 <v-dialog width="500" v-model="evaluator_dialog">
                   <template v-slot:activator="{ props }">
                     <v-btn block variant="tonal" v-bind="props" text="Assign to Evaluator"
@@ -193,6 +191,12 @@
                     </v-card>
                   </template>
                 </v-dialog>
+              </v-col>
+              <v-col cols="4" v-else>
+                <v-btn v-if="button_display(applicant_details.status)" @click="handle_application(true)" block
+                  variant="tonal" color="success">
+                  SUBMIT
+                </v-btn>
               </v-col>
             </v-row>
           </v-card-actions>
@@ -444,7 +448,6 @@ const handle_approver = async (payload: any) => {
   swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 }
 
-
 const attach = ref({ dialog: false, title: "", src: "" })
 const open_attachment_dialog = (attachment: string) => {
   const attachments = applicant_details.value.attachments;
@@ -589,6 +592,14 @@ async function disapproved_applicant(item: any) {
 const applicant_history = (id) => {
   router.push({
     name: 'sms-applicant-history',
+    query: {
+      id: id
+    }
+  });
+}
+const applicant_erf = (id) => {
+  router.push({
+    name: 'printable-new-erf',
     query: {
       id: id
     }

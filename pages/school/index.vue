@@ -93,7 +93,7 @@
                                     </v-tooltip>
                                 </v-toolbar>
                                 <v-divider />
-                                <v-card-text variant="tonal">
+                                <v-card-text>
                                     <v-list>
                                         <v-list-item value="notifications" v-for=" position, index  in  position_data "
                                             :key="index">
@@ -138,11 +138,11 @@
                     <v-row dense>
                         <v-col cols="12"><v-text-field v-model="school_user.email" density="compact" hide-details
                                 label="Email address" prepend-inner-icon="mdi-email-outline" variant="outlined" /></v-col>
-                        <v-col cols="4"><v-text-field v-model="school_user.firstname" density="compact" hide-details
+                        <v-col cols="4"><v-text-field v-model="school_user.first_name" density="compact" hide-details
                                 label="Firstname" variant="outlined" /></v-col>
-                        <v-col cols="4"><v-text-field v-model="school_user.middlename" density="compact" hide-details
+                        <v-col cols="4"><v-text-field v-model="school_user.middle_name" density="compact" hide-details
                                 label="Middlename" variant="outlined" /></v-col>
-                        <v-col cols="4"><v-text-field v-model="school_user.lastname" density="compact" hide-details
+                        <v-col cols="4"><v-text-field v-model="school_user.last_name" density="compact" hide-details
                                 label="Lastname" variant="outlined" /></v-col>
                         <v-col cols="4"><v-text-field v-model="school_user.contact_number" density="compact" hide-details
                                 label="Contact Number" variant="outlined" /></v-col>
@@ -211,7 +211,7 @@ const school_user = ref<SmsUser>({
     middle_name: "",
     first_name: "",
     contact_number: "",
-    type: "School",
+    side: "School",
     role: "",
     designation_information: {
         division: "",
@@ -317,6 +317,7 @@ async function create_position() {
     })
     if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
     position_dialog.value = false
+    get_school_position()
     return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 }
 /**
