@@ -38,8 +38,8 @@
           <v-card-text class="pa-1 ma-0">
             <v-card flat>
               <v-row no-gutters class="ma-2">
-                <v-col cols="6" class="text-capitalize">Name : <b> {{ applicant_details?.personal_information?.firstname
-                }} {{ applicant_details?.personal_information?.lastname }} </b>
+                <v-col cols="6" class="text-capitalize">Name : <b> {{ applicant_details?.personal_information?.first_name
+                }} {{ applicant_details?.personal_information?.last_name }} </b>
                 </v-col>
                 <v-col cols="6">Date of Birth : <b> {{
                   applicant_details?.personal_information?.birthday }}
@@ -240,6 +240,20 @@
                   applicant_details?.transcript?.registrar_no }}</i></h6>
               </v-sheet>
             </v-sheet>
+          </v-sheet>
+        </v-sheet>
+        <v-sheet border class="pa-1" color="#ECEFF1">
+          <v-sheet border>
+            <h5 class="pa-2 font-weight-bold text-subtitle-1"> School Division Office</h5>
+            <v-divider />
+            <v-card-text>
+              <v-alert density="compact" variant="tonal" type="info" closable>The SDO representative needs to provide
+                attachments.</v-alert>
+              <v-file-input class="pb-2" variant="underlined" density="compact" hide-details label="Service Record"
+                :key="index" />
+
+            </v-card-text>
+
           </v-sheet>
         </v-sheet>
       </v-col>
