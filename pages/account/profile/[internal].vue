@@ -1,4 +1,18 @@
 <template>
+  <!-- <v-sheet height="80vh" class="d-flex align-center justify-center ">
+    <v-sheet class="h-100 w-100 d-flex align-center justify-center">
+
+
+      <h1 class="text-center font-weight-bold">
+        WELCOME to Staffing Modification System
+      </h1>
+
+
+
+
+
+    </v-sheet>
+  </v-sheet> -->
   <v-row no-gutters>
     <v-col cols="6" class="mx-auto">
       <v-card height="auto" color="indigo">

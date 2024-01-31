@@ -57,10 +57,10 @@
             <v-row dense justify="center" v-else>
               <v-sheet height="70vh" class="d-flex align-center justify-center ">
                 <v-alert class=" align-center justify-center">
-                  <center><v-avatar size="80">
-                      <v-icon color="info" size="70">mdi-information-slab-circle-outline</v-icon></v-avatar>
-                    <h4> No pending application requests at the moment.</h4>
-                  </center>
+                  <v-avatar size="80">
+                    <v-icon color="info" size="70">mdi-information-slab-circle-outline</v-icon></v-avatar>
+                  <h4> No pending application requests at the moment.</h4>
+
                 </v-alert>
               </v-sheet>
             </v-row>
@@ -97,8 +97,6 @@ async function get_application() {
   const { data, error } = await $rest('new-applicant/get-application', {
     method: "GET"
   });
-
-  console.log(data);
   application_data.value = data;
 }
 

@@ -1,10 +1,11 @@
 <template>
   <v-sheet>
+    <!-- cols="10" xxl="8" xl="8" lg="10" -->
     <v-row dense justify="center">
-      <v-col cols="10" xxl="8" xl="8" lg="10" class="font-weight-bold text-h6">
+      <v-col cols="12" class="font-weight-bold text-h6">
         EVALUATION / LIST OF REQUIREMENTS FORM
       </v-col>
-      <v-col cols="10" xxl="8" xl="8" lg="10">
+      <v-col cols="12">
         <v-row no-gutters>
           <v-col cols="5" class="text-subtitle-2 font-weight-bold"> TO : REGINAL DIRECTOR
             <p class="pl-7 font-weight-regular">Regional Director/DepEd - NCR
@@ -20,12 +21,19 @@
           <v-col cols="auto"> Control No. : <v-chip class="font-weight-bold" color="orange" density="compact"> {{
             applicant_details?.control_number }}
             </v-chip></v-col>
+          <v-spacer />
+          <v-col cols="auto" v-if="user.role === 'Approver'"> <span> <v-btn
+                @click="applicant_endorsement(applicant_details._id)" color="amber" block density="compact"> View
+                Generated Endorsement Letter
+              </v-btn></span></v-col>
+
         </v-row>
       </v-col>
-      <v-col cols="10" xxl="5" xl="5" lg="6" md="6" sm="10">
+      <!-- xxl="5" xl="5" lg="6" md="6" sm="10" -->
+      <v-col cols="8" xl="8" lg="8" md="12" sm="12" xs="12">
         <v-card class="mx-auto" border>
 
-          <v-card-title class="d-flex align-center font-weight-bold">
+          <v-card-title class="d-flex  font-weight-bold">
             1. EQUIVALENT RECORD FORM <v-spacer /><span class="pr-2"> <v-btn
                 @click="applicant_history(applicant_details._id)" class="font-weight-bold" prepend-icon="mdi-history"
                 color="primary" block density="compact">View
@@ -34,6 +42,7 @@
                 prepend-icon="mdi-printer" color="primary" block density="compact">
                 Print
                 ERF</v-btn></span>
+
           </v-card-title>
           <v-card-text class="pa-1 ma-0">
             <v-card flat>
@@ -130,90 +139,79 @@
                 </v-sheet>
               </v-sheet>
               <v-row dense class="ml-15 mt-1">
-                LATEST IPCRF RATING : <b> </b>
+                LATEST IPCRF RATING : <div class="px-5 font-weight-bold" style="border-bottom: 1px solid black"> {{
+                  applicant_details.designation?.ipcrf_rating }}</div>
               </v-row>
-              <v-row dense justify="center">
-                <v-col cols="5">
-                  <pamphlets-attach-signature name="Marianne Mae Paclian" position="Principal" />
+              <v-row justify="center">
+                <v-divider />
+                <v-col cols="6">
+                  <v-btn block variant="tonal" color="red">
+                    CLOSE
+                  </v-btn>
                 </v-col>
+                <v-col cols="6"
+                  v-if="user.role === 'Administrative Officer IV' && applicant_details.status === 'Pending'">
+                  <v-dialog width="500" v-model="evaluator_dialog">
+                    <template v-slot:activator="{ props }">
+                      <v-btn block variant="tonal" v-bind="props" text="Assign to Evaluator"
+                        @click="evaluator_dialog = true">
+                      </v-btn>
+                    </template>
+                    <template v-slot:default="{ isActive }">
+                      <v-card title="Select an Evaluator">
+                        <v-card-text>
+                          <v-select :items="evaluators" item-value="_id" item-title="title"
+                            v-model="selected_evaluator" />
+                        </v-card-text>
+                        <v-card-actions class="">
+                          <v-row dense justify="center">
+                            <v-col cols="5">
+                              <v-btn @click="isActive.value = false" variant="tonal" color="error" block>CANCEL</v-btn>
+                            </v-col>
+                            <v-col cols="5">
+                              <v-btn variant="tonal" color="success" block @click="assign_evaluator_applicant">
+                                SUBMIT
+                              </v-btn>
+                            </v-col>
+                          </v-row>
+                        </v-card-actions>
+                      </v-card>
+                    </template>
+                  </v-dialog>
+                </v-col>
+                <v-col cols="6" v-else>
+                  <v-btn @click="handle_application" block variant="tonal" color="success">
+                    SUBMIT
+                  </v-btn>
+                </v-col>
+              </v-row>
+              <!-- <v-row dense justify="center">
+
                 <v-col cols="5">
                   <pamphlets-attach-signature name="Marianne Mae Paclian" position="Teacher" />
                 </v-col>
-              </v-row>
+              </v-row> -->
             </v-card>
           </v-card-text>
 
-          <v-card-text>
-            <v-divider />
-            <v-list lines="two">
 
-              <v-list-item>
-                <v-list-item-title class="font-weight-bold text-uppercase"> ACTION REQUIRED : </v-list-item-title>
-                <v-list-item-title>1. Authenticated copy of Transcript of Records in the masteral course signed by the
-                  School
-                  Registra</v-list-item-title>
-                <v-list-item-subtitle> <span class="text-red">REASON</span> : Tampered Attachment</v-list-item-subtitle>
-              </v-list-item>
-            </v-list>
-          </v-card-text>
         </v-card>
-        <v-card class="mx-auto" flat>
-          <v-card-actions>
-            <v-row dense justify="center">
-              <v-col cols="4">
-                <v-btn @click="disapproved_dialog = true" variant="plain" color="error" block>Dissapproved</v-btn>
-              </v-col>
 
-              <v-col cols="4" v-if="user.role === 'Administrative Officer IV' && applicant_details.status === 'Pending'">
-                <v-dialog width="500" v-model="evaluator_dialog">
-                  <template v-slot:activator="{ props }">
-                    <v-btn block variant="tonal" v-bind="props" text="Assign to Evaluator"
-                      @click="evaluator_dialog = true">
-                    </v-btn>
-                  </template>
-                  <template v-slot:default="{ isActive }">
-                    <v-card title="Select an Evaluator">
-                      <v-card-text>
-                        <v-select :items="evaluators" item-value="_id" item-title="title" v-model="selected_evaluator" />
-                      </v-card-text>
-                      <v-card-actions class="align-center">
-                        <v-row dense justify="center">
-                          <v-col cols="5">
-                            <v-btn @click="isActive.value = false" variant="tonal" color="error" block>CANCEL</v-btn>
-                          </v-col>
-                          <v-col cols="5">
-                            <v-btn variant="tonal" color="success" block @click="assign_evaluator_applicant">
-                              SUBMIT
-                            </v-btn>
-                          </v-col>
-                        </v-row>
-                      </v-card-actions>
-                    </v-card>
-                  </template>
-                </v-dialog>
-              </v-col>
-              <v-col cols="4" v-else>
-                <v-btn v-if="button_display(applicant_details.status)" @click="handle_application(true)" block
-                  variant="tonal" color="success">
-                  SUBMIT
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-card-actions>
-        </v-card>
       </v-col>
-      <v-col cols="10" xxl="3" xl="3" lg="4" md="6" sm="10">
+
+      <!-- xxl="3" xl="3" lg="4" md="6" sm="10" -->
+      <v-col cols="4" xl="4" lg="4" md="12" sm="12" xs="12">
         <v-sheet border class="pa-1" v-if="Object.keys(applicant_details).length">
           <v-sheet border v-for=" [key, value], index  in  Object.entries(applicant_details.attachments) ">
             <v-sheet border class="pa-4">
               <h6> {{ index + 1 }}.
                 {{ value.description }}
               </h6>
-              <v-btn size="small" color="primary" class="d-flex align-center" variant="tonal"
-                @click="open_attachment_dialog(key)">
+              <v-btn size="small" color="primary" class="d-flex " variant="tonal" @click="open_attachment_dialog(key)">
                 <v-icon class="mr-2">mdi-attachment</v-icon>
                 <span>View Attachment</span>
               </v-btn>
+
               <v-row dense>
                 <v-col cols="auto" class="mt-3 font-weight-bold text-grey "> Evaluation :</v-col>
                 <v-col cols="auto">
@@ -230,6 +228,7 @@
                     :model-value="applicant_details.attachments[key].remarks" bg-color="#E8EAF6" />
                 </v-col>
               </v-row>
+
               <v-sheet v-if="value.registrar">
                 <h6 class="font-weight-regular mt-2"> Registrar Complete Name : <b> {{
                   applicant_details?.transcript?.registrar_name }}</b>
@@ -239,9 +238,30 @@
                 <h6 class="font-weight-regular"> Registrar Email : <i class="font-weight-bold text-blue">{{
                   applicant_details?.transcript?.registrar_no }}</i></h6>
               </v-sheet>
+
+
             </v-sheet>
           </v-sheet>
         </v-sheet>
+        <v-sheet border class="pa-1">
+          <v-sheet border class="pa-4"><v-list lines="auto" color="error">
+              <h5 class=" font-weight-bold text-uppercase text-subtitle-2 text-red"> ACTION REQUIRED: </h5>
+              <v-list-item v-for="(attachment, key) in invalid_attachments" :key="key">
+                <v-list-title> ATTACHMENT : <b>{{ attachment.description }}</b></v-list-title>
+                <v-list-item-subtitle>
+                  <span class="text-red">REASON</span> : {{ attachment.remarks }}
+                </v-list-item-subtitle>
+              </v-list-item>
+            </v-list>
+            <!-- <v-list lines="one">
+            <v-list-item-title class="font-weight-bold text-uppercase"> ACTION REQUIRED: </v-list-item-title>
+            <v-list-item class="text-caption" v-for="(attachment, key) in    invalid_attachments   " :key="key"
+              :title="' Attachment :  ' + attachment.description"
+              :subtitle="'REMARKS: ' + attachment.remarks"></v-list-item>
+          </v-list> -->
+          </v-sheet>
+        </v-sheet>
+
         <v-sheet border class="pa-1" color="#ECEFF1">
           <v-sheet border>
             <h5 class="pa-2 font-weight-bold text-subtitle-1"> School Division Office</h5>
@@ -249,8 +269,7 @@
             <v-card-text>
               <v-alert density="compact" variant="tonal" type="info" closable>The SDO representative needs to provide
                 attachments.</v-alert>
-              <v-file-input class="pb-2" variant="underlined" density="compact" hide-details label="Service Record"
-                :key="index" />
+              <v-file-input class="py-2" variant="underlined" density="compact" hide-details label="Service Record" />
 
             </v-card-text>
 
@@ -280,52 +299,12 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-
-    <commons-dialog width="auto" v-model="erf_history.dialog" icon="mdi-history" :title="erf_history.title" persistent>
-      <v-card-text class="ma-5">
-        <v-timeline side="end" align="start">
-
-          <v-timeline-item dot-color="green-lighten-4">
-            <template v-slot:icon>
-              <v-icon color="success">mdi-check</v-icon>
-            </template>
-            <template v-slot:opposite>
-              <v-chip color="success"> 07/15/1998 9:00:08 AM </v-chip>
-            </template>
-            <div>
-              <div class="text-subtitle-1">MARIANNE MAE PACLIAN</div>
-              <v-divider />
-              <div>Position here</div>
-              <div class="text-green font-weight-bold">APPROVED</div>
-            </div>
-          </v-timeline-item>
-          <v-timeline-item dot-color="red-lighten-4">
-            <template v-slot:icon>
-              <v-icon color="error">mdi-alpha-x</v-icon>
-            </template>
-            <template v-slot:opposite>
-              <v-chip color="error"> 07/15/1998 9:00:08 AM </v-chip>
-            </template>
-            <div>
-              <div class="text-subtitle-1 ">MARIANNE MAE PACLIAN</div>
-              <v-divider />
-              <div>Position here</div>
-              <div class="text-red font-weight-bold">RETURNED</div>
-              <div>Remarks : <span class="text-red "> Wrong Attachment</span> </div>
-            </div>
-
-          </v-timeline-item>
-        </v-timeline>
-      </v-card-text>
-    </commons-dialog>
-
-
     <pamphlets-evaluate-attachement :dialog="attach.dialog" :src="attach.src" :title="attach.title"
       @close="attach.dialog = false" />
   </v-sheet>
 </template>
 <script lang="ts" setup>
+definePageMeta({ layout: "barren" })
 const router = useRouter();
 import swal from 'sweetalert';
 import useAuth from "~/store/auth";
@@ -335,19 +314,24 @@ const route = useRoute();
 
 const user = useAuth().user;
 
+
 onBeforeMount(() => {
-  get_applicant_details()
-  get_evaluators()
+  Promise.all([
+    get_applicant_details(),
+    get_evaluators()
+  ])
 })
+
+
 
 // EVALUATES ATTACHMENT
 
 const evaluate_attachment = (key: string, value: boolean) => {
   applicant_details.value.attachments[key].valid = value;
 }
-const getCheckboxValue = (key: string, expectedValue: boolean) => {
+const getCheckboxValue = (key: string, expected_value: boolean) => {
   const attachment = applicant_details.value.attachments[key];
-  return attachment.valid === expectedValue;
+  return attachment.valid === expected_value;
 };
 const remarks = ref("");
 const remarks_attachment = (key: string) => {
@@ -372,29 +356,59 @@ const get_evaluators = async () => {
   evaluators.value = data;
 }
 async function assign_evaluator_applicant() {
+  const is_attachment_valid = Object.values(applicant_details.value.attachments).every(attachment => typeof attachment.valid === 'boolean');
+  if (!is_attachment_valid) {
+    return swal({
+      title: "Evaluate Attachments",
+      text: "Please evaluate all attachments before submitting.",
+      icon: "warning",
+      buttons: {
+        confirm: {
+          text: "OK",
+          className: "success",
+        },
+      },
+    });
+  }
   const payload = {
     app_id: route.query.id,
     evaluator: selected_evaluator.value
   }
+
   const { data, error } = await $rest('new-applicant/assign-evaluator-application', {
     method: "PUT",
     body: payload
   });
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } },
+    router.push({ name: 'sms-reclassification' }))
 }
 /**
  * end : evaluator
  */
 
-
-const handle_application = async (status: boolean) => {
+const handle_application = async () => {
   const role = user.role;
-
+  const attachment = applicant_details.value.attachments;
+  const is_attachment_valid = Object.values(applicant_details.value.attachments).every(attachment => typeof attachment.valid === 'boolean');
+  if (!is_attachment_valid) {
+    return swal({
+      title: "Evaluate Attachments",
+      text: "Please evaluate all attachments before submitting.",
+      icon: "warning",
+      buttons: {
+        confirm: {
+          text: "OK",
+          className: "success",
+        },
+      },
+    });
+  }
   const payload = {
-    status,
+    attachment,
     app_id: route.query.id
   };
+
   switch (role) {
     case "Principal":
       handle_principal(payload);
@@ -422,25 +436,51 @@ const handle_application = async (status: boolean) => {
       break;
   }
 }
+
+const invalid_attachments = computed(() => {
+  if (!applicant_details.value || !applicant_details.value.attachments) {
+    return {};
+  }
+  return Object.entries(applicant_details.value.attachments)
+    .filter(([key, attachment]) => attachment.valid === false)
+    .reduce((result, [key, attachment]) => {
+      result[key] = attachment;
+      return result;
+    }, {});
+});
 /**
  * APPROVAL PROCCESS
  */
+
+const clear_attachments = () => {
+  for (const key in applicant_details.value.attachments) {
+    applicant_details.value.attachments[key].valid = null;
+  }
+};
+
+// };
 const handle_principal = async (payload: any) => {
   const { data, error } = await $rest('new-applicant/handle-principal', { method: "PUT", body: payload })
   if (error) return swal({ title: "Erro", text: error, icon: "error", buttons: { ok: false, cancel: false } });
   swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
-}
+  clear_attachments();
+  router.push({ name: 'sms-reclassification' });
 
+}
 const handle_admin4 = async (payload: any) => {
   const { data, error } = await $rest('new-applicant/handle-admin4', { method: "PUT", body: payload })
   if (error) return swal({ title: "Erro", text: error, icon: "error", buttons: { ok: false, cancel: false } });
   swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+  clear_attachments();
+  router.push({ name: 'sms-reclassification' });
 }
 
 const handle_evaluator = async (payload: any) => {
   const { data, error } = await $rest('new-applicant/handle-evaluator', { method: "PUT", body: payload })
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
   swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+  clear_attachments();
+  router.push({ name: 'sms-reclassification' });
 }
 
 
@@ -448,18 +488,24 @@ const handle_verifier = async (payload: any) => {
   const { data, error } = await $rest('new-applicant/handle-verifier', { method: "PUT", body: payload })
   if (error) return swal({ title: "Erro", text: error, icon: "error", buttons: { ok: false, cancel: false } });
   swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+  clear_attachments();
+  router.push({ name: 'sms-reclassification' });
 }
 
 const handle_recommending_approver = async (payload: any) => {
   const { data, error } = await $rest('new-applicant/handle-recommending-approver', { method: "PUT", body: payload })
-  if (error) return swal({ title: "Erro", text: error, icon: "error", buttons: { ok: false, cancel: false } });
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
   swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+  clear_attachments();
+  router.push({ name: 'sms-reclassification' });
 }
 
 const handle_approver = async (payload: any) => {
   const { data, error } = await $rest('new-applicant/handle-approver', { method: "PUT", body: payload })
   if (error) return swal({ title: "Erro", text: error, icon: "error", buttons: { ok: false, cancel: false } });
   swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+  clear_attachments();
+  router.push({ name: 'sms-reclassification' });
 }
 
 const attach = ref({ dialog: false, title: "", src: "" })
@@ -468,17 +514,17 @@ const open_attachment_dialog = (attachment: string) => {
   attach.value = { dialog: true, src: attachments[attachment], title: attachment };
 }
 
-const button_display = (status: string) => {
-  return [
-    'For Signature',
-    'Pending',
-    'For Evaluation',
-    'For Checking',
-    'For Verifying',
-    'Recommending for Approval',
-    'For Approval'
-  ].includes(status);
-};
+// const button_display = (status: string) => {
+//   return [
+//     'For Signature',
+//     'Pending',
+//     'For Evaluation',
+//     'For Checking',
+//     'For Verifying',
+//     'Recommending for Approval',
+//     'For Approval'
+//   ].includes(status);
+// };
 
 
 const show_footer = ref(false);
@@ -492,7 +538,7 @@ async function get_applicant_details() {
   })
   applicant_details.value = data
 }
-const erf_history = ref({ dialog: false, title: 'ERF Application History' })
+
 
 // Table headers start
 const attainment_headers = [
@@ -544,64 +590,6 @@ async function disapproved_applicant(item: any) {
   if (!error) return swal({ title: "Successfully Dissapproved!", icon: "success" })
   return swal({ title: data, icon: "error" })
 }
-// async function pending_applicant(item: any,) {
-//   const { data, error } = await $rest('new-applicant/pending-application', {
-//     method: "POST",
-//     body: {
-//       applicants_data: { ...item },
-//     },
-//   })
-//   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-//   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
-
-// }
-
-// async function checking_applicant(item: any,) {
-//   const { data, error } = await $rest('new-applicant/checking-application', {
-//     method: "POST",
-//     body: {
-//       applicants_data: { ...item },
-//     },
-//   })
-//   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-//   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
-
-// }
-// async function verifying_applicant(item: any,) {
-//   const { data, error } = await $rest('new-applicant/verifying-application', {
-//     method: "POST",
-//     body: {
-//       applicants_data: { ...item },
-//     },
-//   })
-//   console.log(error);
-
-//   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-//   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
-
-// }
-// async function recommending_approval_applicant(item: any,) {
-//   const { data, error } = await $rest('new-applicant/handle-recommending-approver', {
-//     method: "POST",
-//     body: {
-//       applicants_data: { ...item },
-//     },
-//   })
-//   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-//   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
-
-// }
-// async function approval_applicant(item: any,) {
-//   const { data, error } = await $rest('new-applicant/approval-application', {
-//     method: "POST",
-//     body: {
-//       applicants_data: { ...item },
-//     },
-//   })
-//   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-//   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
-
-// }
 
 const applicant_history = (id) => {
   router.push({
@@ -619,11 +607,20 @@ const applicant_erf = (id) => {
     }
   });
 }
+const applicant_endorsement = (id) => {
+  router.push({
+    name: 'printable-endorsement-letter',
+    query: {
+      id: id
+    }
+  });
+}
+
 
 
 </script>
 <style scoped>
 * {
-  font-size: 12px
+  font-size: 13px
 }
 </style>

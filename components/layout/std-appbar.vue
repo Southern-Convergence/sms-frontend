@@ -7,7 +7,7 @@
         <v-img src="/logo.svg" @click="$router.push({ name: 'home' })" style="cursor : pointer" />
       </v-avatar> -->
       <v-app-bar-title class="pt-1 text-indigo" @click="$router.push({ name: 'home' })" style="cursor : pointer">
-        <!-- {{ $props.appbar_title }} --> Prime Reclassification System
+        <!-- {{ $props.appbar_title }} -->Reclassification System
       </v-app-bar-title>
       <!-- <dev-display-debugger id="floater" /> -->
       <v-spacer />
