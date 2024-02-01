@@ -93,7 +93,7 @@ export default {
     display: {
       type: Number,
       required: false,
-      default: 1
+      default: 0
     },
     display_types: {
       type: Array<String>,

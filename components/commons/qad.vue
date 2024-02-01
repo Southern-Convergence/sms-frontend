@@ -1,13 +1,15 @@
 <template>
   <v-sheet id="item-container" class="h-100" color="transparent" rounded="0" border>
-    <v-toolbar class="d-block border-b" extension-height="64" color="white" :extended="Boolean($attrs.extended)">
+    <v-toolbar class="d-block border-b" extension-height="64" color="grey-lighten-4" :extended="Boolean($attrs.extended)">
       <v-toolbar-title>
+
         <v-list-item class="pl-0" :title="title" :subtitle="subtitle">
           <template v-if="$attrs.icon || $attrs.img" v-slot:prepend>
             <v-avatar class="mr-3" v-if="$attrs.icon" rounded="0" size="28" :icon="$attrs.icon" />
             <img class="pr-3" v-else-if="Boolean($attrs.img)" height="28" :src="String($attrs.img)" />
           </template>
         </v-list-item>
+
       </v-toolbar-title>
 
       <template v-if="$attrs.extended === ''" v-slot:extension>
@@ -91,7 +93,7 @@ export default {
     display: {
       type: Number,
       required: false,
-      default: 1
+      default: 0
     },
     display_types: {
       type: Array<String>,
@@ -106,7 +108,7 @@ export default {
 
   data() {
     return {
-      display_mode: 0,
+      display_mode: 2,
       display_type_props: {
         "table": "table",
         "grid": "view-grid",

@@ -1,5 +1,5 @@
 <template>
-  <v-sheet height="98vh" color="#E8EAF6">
+  <v-sheet color="#E8EAF6">
     <!-- <v-card height="90vh">
       <v-sheet class="pa-6" height="auto" color="grey-lighten-4">
         <v-row no-gutters>
@@ -8,8 +8,6 @@
             inclusivity. </v-col>
         </v-row>
       </v-sheet> -->
-
-
     <v-card-text>
       <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="start">
         <v-tab :value="1">Set Up Form</v-tab>
@@ -17,126 +15,136 @@
       </v-tabs>
       <v-window v-model="tab">
         <v-window-item :value="1">
-          <v-container fluid> <v-row no-gutters> <v-col cols="2">
-                <v-sheet class="pl-2" border height="76vh">
-                  <v-toolbar color="white">
+          <v-sheet fluid border>
+            <v-row no-gutters>
+              <v-col cols="4">
+                <v-sheet height="40vh" class="d-flex flex-column pa-1">
+                  <v-toolbar color="indigo" class="pl-3 text-subtitle-1">
                     Education
                     <v-spacer />
                     <v-tooltip text="Click to add Education" location="top">
                       <template v-slot:activator="{ props }">
-                        <v-btn @click="education_dialog = true" v-bind="props" color="indigo" icon="mdi-plus"></v-btn>
+                        <v-btn @click="education_dialog = true" v-bind="props" color="indigo-lighten-4"
+                          icon="mdi-plus"></v-btn>
                       </template>
                     </v-tooltip>
                   </v-toolbar>
-                  <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" educ, index  in  education_data "
-                    :key="index">
-                    <v-alert @click="education_update_dialog(educ)" class="my-1 maintenance-item"
-                      :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
+                  <v-sheet height="35vh" class="overflow-y-auto pa-2">
+                    <v-alert v-for="educ in education_data" :key="educ.title" @click="education_update_dialog(educ)"
+                      class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" border="start" rounded="0"
+                      border-color="indigo">
                       {{ educ.title }}
                     </v-alert>
                   </v-sheet>
+
                 </v-sheet>
               </v-col>
-              <v-col cols="2">
-                <v-sheet class="pl-2" border height="76vh">
-                  <v-toolbar color="white">
+              <v-col cols="4">
+                <v-sheet height="40vh" class="d-flex flex-column pa-1">
+                  <v-toolbar color="indigo" class="pl-3 text-subtitle-1">
                     Experience
                     <v-spacer />
                     <v-tooltip text="Click to add Experience" location="top">
                       <template v-slot:activator="{ props }">
-                        <v-btn @click="experience_dialog = true" v-bind="props" color="indigo" icon="mdi-plus"></v-btn>
+                        <v-btn @click="experience_dialog = true" v-bind="props" color="indigo-lighten-4"
+                          icon="mdi-plus"></v-btn>
                       </template>
                     </v-tooltip>
                   </v-toolbar>
-                  <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" experience, index  in  experience_data "
-                    :key="index">
-                    <v-alert @click="experience_update_dialog(experience)" class="my-1 maintenance-item"
-                      :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
+                  <v-sheet height="35vh" class="overflow-y-auto pa-2">
+                    <v-alert v-for=" experience, index  in  experience_data " :key="index"
+                      @click="experience_update_dialog(experience)" class="my-1 maintenance-item"
+                      :class="{ 'elevation-4': is_hovered }" border="start" rounded="0" border-color="indigo">
                       {{ experience.title }}
                     </v-alert>
                   </v-sheet>
                 </v-sheet>
               </v-col>
-              <v-col cols="2">
-                <v-sheet class="pl-2" border height="76vh">
-                  <v-toolbar color="white">
+              <v-col cols="4">
+                <v-sheet height="40vh" class="d-flex flex-column pa-1">
+                  <v-toolbar color="indigo" class="pl-3 text-subtitle-1">
                     Performance Rating
                     <v-spacer />
-                    <v-tooltip text="Click to add Performance Rating" location="top">
+                    <v-tooltip text="Click to add  Performance Rating" location="top">
                       <template v-slot:activator="{ props }">
-                        <v-btn @click="rating_dialog = true" v-bind="props" color="indigo" icon="mdi-plus"></v-btn>
+                        <v-btn @click="rating_dialog = true" v-bind="props" color="indigo-lighten-4"
+                          icon="mdi-plus"></v-btn>
                       </template>
                     </v-tooltip>
                   </v-toolbar>
-                  <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" rating, index  in  rating_data "
-                    :key="index">
-                    <v-alert @click="rating_update_dialog(rating)" class="my-1 maintenance-item"
-                      :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
+                  <v-sheet height="35vh" class="overflow-y-auto pa-2">
+                    <v-alert v-for=" rating, index  in  rating_data " :key="index" @click="rating_update_dialog(rating)"
+                      class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" border="start" rounded="0"
+                      border-color="indigo">
                       {{ rating.title }}
                     </v-alert>
                   </v-sheet>
                 </v-sheet>
               </v-col>
-              <v-col cols="2">
-                <v-sheet class="pl-2" border height="76vh">
-                  <v-toolbar color="white">
+              <v-col cols="4">
+                <v-sheet height="40vh" class="d-flex flex-column pa-1">
+                  <v-toolbar color="indigo" class="pl-3 text-subtitle-1">
                     Salary Grade
                     <v-spacer />
-                    <v-tooltip text="Click to add Salary Grade" location="top">
+                    <v-tooltip text="Click to add     Salary Grade" location="top">
                       <template v-slot:activator="{ props }">
-                        <v-btn @click="sg_dialog = true" v-bind="props" color="indigo" icon="mdi-plus"></v-btn>
+                        <v-btn @click="sg_dialog = true" v-bind="props" color="indigo-lighten-4" icon="mdi-plus"></v-btn>
                       </template>
                     </v-tooltip>
                   </v-toolbar>
-                  <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" sg, index  in  sg_data " :key="index">
-                    <v-alert @click="update_salary_grade(sg)" class="my-1 maintenance-item"
-                      :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
+                  <v-sheet height="35vh" class="overflow-y-auto pa-2">
+                    <v-alert v-for=" sg, index  in  sg_data " :key="index" @click="update_salary_grade(sg)"
+                      class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" border="start" rounded="0"
+                      border-color="indigo">
                       <div> Salary Grade : <b> {{ sg.salary_grade }} </b></div>
                       <div> Equivalent : <b> {{ sg.equivalent }} </b></div>
                     </v-alert>
                   </v-sheet>
                 </v-sheet>
               </v-col>
-              <v-col cols="2">
-                <v-sheet class="pl-2" border height="76vh">
-                  <v-toolbar color="white">
+              <v-col cols="4">
+                <v-sheet height="40vh" class="d-flex flex-column pa-1">
+                  <v-toolbar color="indigo" class="pl-3 text-subtitle-1">
                     Eligibility
                     <v-spacer />
-                    <v-tooltip text="Click to add Eligibility" location="top">
+                    <v-tooltip text="Click to add     Eligibility" location="top">
                       <template v-slot:activator="{ props }">
-                        <v-btn @click="eligibility_dialog = true" v-bind="props" color="indigo" icon="mdi-plus"></v-btn>
+                        <v-btn @click="eligibility_dialog = true" v-bind="props" color="indigo-lighten-4"
+                          icon="mdi-plus"></v-btn>
                       </template>
                     </v-tooltip>
                   </v-toolbar>
-                  <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" eligibility, index  in  eligibility_data "
-                    :key="index">
-                    <v-alert class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" border="start"
-                      border-color="indigo">
+                  <v-sheet height="35vh" class="overflow-y-auto pa-2">
+                    <v-alert v-for=" eligibility, index  in  eligibility_data " :key="index"
+                      @click="update_eligibility(eligibility)" class="my-1 maintenance-item"
+                      :class="{ 'elevation-4': is_hovered }" border="start" rounded="0" border-color="indigo">
                       {{ eligibility.title }}
                     </v-alert>
                   </v-sheet>
                 </v-sheet>
               </v-col>
-              <v-col cols="2">
-                <v-sheet class="pl-2" border height="76vh">
-                  <v-toolbar color="white">
+              <v-col cols="4">
+                <v-sheet height="40vh" class="d-flex flex-column pa-1">
+                  <v-toolbar color="indigo" class="pl-3 text-subtitle-1">
                     Attachments
                     <v-spacer />
-                    <v-tooltip text="Click to add Attachment" location="top">
+                    <v-tooltip text="Click to add             Attachments" location="top">
                       <template v-slot:activator="{ props }">
-                        <v-btn @click="attachment_dialog = true" v-bind="props" color="indigo" icon="mdi-plus"></v-btn>
+                        <v-btn @click="attachment_dialog = true" v-bind="props" color="indigo-lighten-4"
+                          icon="mdi-plus"></v-btn>
                       </template>
                     </v-tooltip>
                   </v-toolbar>
-                  <v-sheet class="mr-2" variant="tonal" color="indigo" v-for=" attachment, index  in  attachment_data "
-                    :key="index">
-                    <v-alert class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" border="start"
-                      border-color="indigo">
+                  <v-sheet height="35vh" class="overflow-y-auto pa-2">
+                    <v-alert v-for=" attachment, index  in  attachment_data " :key="index"
+                      @click="update_attachment(attachment)" class="my-1 maintenance-item"
+                      :class="{ 'elevation-4': is_hovered }" border="start" rounded="0" border-color="indigo">
                       {{ attachment.title }}
                     </v-alert>
                   </v-sheet>
                 </v-sheet>
-              </v-col></v-row> </v-container>
+              </v-col>
+            </v-row> </v-sheet>
         </v-window-item>
         <v-window-item :value="2">
           <v-card-text>
@@ -145,7 +153,7 @@
               subtitle="A brief overview of qualification standards." :items="position_data"
               :display_types="['grid', 'list', 'table']">
               <template v-slot:item="{ value, index, display }">
-                <v-sheet class="pa-3" border>
+                <v-sheet class="pa-3" border height="40vh">
                   <div class="text-uppercase text-subtitle-1 font-weight-bold text-indigo">{{ value.title }}</div>
                   <v-divider class="my-2" />
                   <v-row no-gutters justify="end" v-if="value.education">
@@ -313,9 +321,6 @@
 
       </v-window>
     </v-card-text>
-
-
-
 
 
     <!-- </v-card> -->
@@ -847,6 +852,8 @@ const formatted_equivalent = computed(() => {
     return "Invalid Number";
   }
 });
+
+
 
 </script>
 <style scoped>

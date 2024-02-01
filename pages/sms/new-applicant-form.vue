@@ -23,38 +23,40 @@
                       <v-col cols="12"> <v-icon class="mr-2 pb-2" size="26" color="primary">mdi-seal</v-icon>
                         Individual Qualification </v-col>
 
-                      <v-col cols="6" class="px-1">
-                        <v-select :items="position_data" v-model="applicant.qualification.position" class="w-100 pt-2"
+                      <v-col cols="6" class="pa-2">
+                        <v-select :items="position_data" v-model="applicant.qualification.position"
                           label="Select Position" hide-details item-value="_id" />
                       </v-col>
-                      <v-col cols="6" class="px-1">
+                      <v-col cols="6" class="pa-2">
                         <v-select v-model="applicant.qualification.educ_level" :items="['Elementary', 'Secondary']"
-                          class="w-100 pt-2" label="Education Level" hide-details />
+                          label="Education Level" hide-details />
                       </v-col>
-                    </v-row>
-                    <v-row dense>
+                      <v-col cols="6" class="pa-2">
+                        <v-select v-model="applicant.qualification.education" :items="education_data" label="Education"
+                          hide-details multiple item-value="_id" />
+                      </v-col>
+                      <v-col cols="6" class="pa-2" v-if="selected_qs && selected_qs.experience.length">
+                        <v-select v-model="applicant.qualification.experience" :items="experience_data" label="Experience"
+                          hide-details multiple item-value="_id" />
+                      </v-col>
+                      <v-col cols="6" class="pa-2" v-if="selected_qs && selected_qs.training_hours !== 0">
 
-                      <v-col cols="6" class="px-1">
-                        <v-select v-model="applicant.qualification.education" :items="education_data" rows="2"
-                          class="w-100" label="Education" hide-details multiple item-value="_id" />
+                        <v-text-field v-model="applicant.qualification.training" label="Enter total training hours"
+                          hide-details type="number" item-value="_id" />
                       </v-col>
-                      <v-col cols="6" class="px-1">
-                        <v-select v-model="applicant.qualification.experience" :items="experience_data" class="w-100"
-                          label="Experience" hide-details multiple item-value="_id" />
-                      </v-col>
-                      <v-col cols="6" class="px-1">
-
-                        <v-text-field v-model="applicant.qualification.training" class="w-100"
-                          label="Enter total training hours" hide-details type="number" item-value="_id" />
-                      </v-col>
-
-                      <v-col cols="6" class="px-1">
-                        <v-select v-model="applicant.qualification.per_rating" :items="rating_data" class="w-100"
+                      <v-col cols="6" class="pa-2" v-if="selected_qs && selected_qs.rating.length">
+                        <v-select v-model="applicant.qualification.per_rating" :items="rating_data"
                           label="Performance Rating" hide-details item-value="_id" />
+                      </v-col>
+                      <v-col cols="6" class="pa-2" v-if="selected_qs && selected_qs.eligibility.length">
+                        <v-select v-model="applicant.qualification.eligibility" :items="eligibility_data"
+                          label="Eligibility" hide-details item-value="_id" />
                       </v-col>
                     </v-row>
                   </v-card-text> </v-col>
                 <v-col cols="5">
+
+
                   {{ selected_qs }}
                   <!-- <v-card-text>
                     <v-sheet border>
@@ -120,10 +122,7 @@
 
                 <v-col cols="12"> <v-icon class="mr-2 pb-2" size="26" color="primary">mdi-briefcase-account</v-icon>
                   Designation and Employment Information</v-col>
-                <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                  <v-select v-model="applicant.designation.current_position" label="Current Position"
-                    :items="school_position_data" hide-details item-value="_id" />
-                </v-col>
+
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
                   <v-text-field v-model="applicant.designation.employee_no" label="Employee No" hide-details />
                 </v-col>
@@ -134,7 +133,10 @@
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
                   <v-text-field v-model="applicant.designation.item_no" label="Item No" hide-details />
                 </v-col>
-
+                <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
+                  <v-select v-model="applicant.designation.current_position" label="Current Position"
+                    :items="school_position_data" hide-details item-value="_id" />
+                </v-col>
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
                   <v-select v-model="applicant.designation.division" label="Division" item-value="_id" :items="sdo_data"
                     hide-details />
@@ -145,7 +147,8 @@
                 </v-col>
 
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                  <v-text-field v-model="applicant.designation.ipcrf_rating" label="IPCRF rating" hide-details />
+                  <v-select v-model="applicant.designation.ipcrf_rating" label="IPCRF rating" hide-details
+                    :items="['Satisfactory', 'Very Satisfactory', 'Outstanding', 'Unsatifactory', 'Poor']" />
                 </v-col>
               </v-row>
             </v-card-text>
@@ -272,8 +275,8 @@
                   valid for processing. Your attention to document accuracy is crucial for a smooth application process."></v-alert>
                 <v-card-text>
                   <v-row no-gutters> <v-col cols="12" xl="6" lg="6" md="6" sm="12"
-                      v-for="(attachment_title, index)  in selected_qs?.attachment"> <v-file-input variant="underlined"
-                        :label="attachment_title" :key="index"
+                      v-for="( attachment_title, index )  in  selected_qs?.attachment "> <v-file-input
+                        variant="underlined" :label="attachment_title" :key="index"
                         @update:model-value="shet_so_hard($event, attachment_title)" />
                     </v-col>
                   </v-row>
@@ -378,7 +381,8 @@ onBeforeMount(() => {
       get_rating(),
       get_sdo(),
       get_school(),
-      get_school_position()
+      get_school_position(),
+      get_eligibility()
       // get_qs(),
 
     ]
@@ -629,30 +633,41 @@ async function get_rating() {
   rating_data.value = data
 }
 
+// ELIGIBILITY
+const eligibility_data = ref([]);
+async function get_eligibility() {
+  const { data, error } = await $rest('sms-eligibility/get-eligibility', {
+    method: "GET",
+  })
+  eligibility_data.value = data
+}
+
 
 /**
  * MATCHING
  */
 function next_window() {
   const selected_position: { _id: string; education: string[] } | undefined = position_data.value.filter((v: any) => v._id == applicant.value.qualification.position)[0];
-
   if (!selected_position) return swal({ title: "Oops!", text: "Select position", icon: "info" });
   const applicant_education = applicant.value.qualification.education;
   if (!applicant_education) return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
   const applicant_experience = applicant.value.qualification.experience;
   if (!applicant_experience) return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
-
   const applicant_rating = applicant.value.qualification.per_rating;
   if (position_data.value.rating?.length && !applicant_rating) return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
-
   const applicant_training = applicant.value.qualification.training;
+  const applicant_educ_level = applicant.value.qualification.educ_level;
+
 
   const is_yes: boolean[] = [];
+  is_yes.push(educ_level_matching(applicant_educ_level, selected_position.education_level));
   is_yes.push(education_matching(applicant_education, selected_position.education));
   is_yes.push(experience_matching(applicant_experience, selected_position.experience));
   is_yes.push(rating_matching(applicant_rating, selected_position.rating));
   is_yes.push(training_matching(applicant_training, selected_position.training_hours));
   if (is_yes.includes(false)) return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" })
+  console.log(is_yes);
+
   step.value++
 }
 
@@ -676,15 +691,17 @@ function rating_matching(applicant_rating: string, required_rating: string) {
   return applicant_rating == required_rating;
 };
 
-function rn(applicant_rating: string, required_rating: string) {
-  return applicant_rating === required_rating;
-};
 
 function training_matching(applicant_training: number, required_training: number) {
   applicant_training = parseFloat(applicant_training.toString());
   required_training = parseFloat(required_training.toString());
   return applicant_training >= required_training;
 }
+
+function educ_level_matching(applicant_educ_level: string, required_educ_level: string) {
+  if (!required_educ_level) return true;
+  return applicant_educ_level == required_educ_level;
+};
 // CREATE 
 const form = ref(true)
 async function create_application() {
