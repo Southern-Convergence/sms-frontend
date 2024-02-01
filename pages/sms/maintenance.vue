@@ -363,22 +363,45 @@
 
 
 
-    <commons-dialog max-width="30%" v-model="position_dialog" icon="mdi-school" :title="'Position  Form'"
+    <commons-dialog max-width="40%" v-model="position_dialog" :icon="mdi - school" :title="'Position  Form'"
       @submit="create_position" :subtitle="'Create position and modify Qualification Standards'" :submitText="'Submit'">
       <v-card-text>
-        <v-text-field v-model="position.title" label="Position" />
-        <v-select v-model="position.education" :items="education_data" item-value="_id" label="Education" multiple />
-        <v-select v-model="position.education_level" :items="['Elementary', 'Secondary']" label="Education Level" />
-        <v-select v-model="position.experience" item-value="_id" :items="experience_data" label="Experience" multiple />
-        <v-text-field v-model="position.training_hours" label="Training Number of Hours Required" />
-        <v-select v-model="position.rating" :items="rating_data" label="Performance Rating Required" multiple
-          item-value="_id" />
-        <v-select v-model="position.sg" :items="sg_item" label="Salary Grade" item-value="_id" />
-        <v-select v-model="position.eligibility" :items="eligibility_data" label="Eligibility" item-value="_id" />
-        <v-select v-model="position.attachment" :items="attachment_data" label="Applicant Attachements" item-value="_id"
-          multiple />
-        <v-select v-model="position.sdo_attachment" :items="attachment_data" label="SDO Attachements" item-value="_id"
-          multiple />
+        <v-row no-gutters>
+          <v-col cols="6" class="pr-2"> <v-text-field v-model="position.title" label="Position" /></v-col>
+          <v-col cols="6"> <v-select v-model="position.education_level" :items="['Elementary', 'Secondary']"
+              label="Education Level" /></v-col>
+          <v-col cols="12"> <v-select v-model="position.education" :items="education_data" item-value="_id"
+              label="Education" multiple /></v-col>
+          <v-col cols="12"> <v-select v-model="position.experience" item-value="_id" :items="experience_data"
+              label="Experience" multiple /></v-col>
+        </v-row>
+        <v-row no-gutters>
+          <v-col cols="6" class="pr-2"> <v-text-field v-model="position.training_hours"
+              label="Training Number of Hours Required" /></v-col>
+          <v-col cols="6"> <v-select v-model="position.rating" :items="rating_data" label="Performance Rating Required"
+              multiple item-value="_id" /></v-col>
+        </v-row>
+        <v-row no-gutters>
+          <v-col cols="6" class="pr-2"> <v-select v-model="position.sg" :items="sg_item" label="Salary Grade"
+              item-value="_id" /></v-col>
+          <v-col cols="6"> <v-select v-model="position.eligibility" :items="eligibility_data" label="Eligibility"
+              item-value="_id" /></v-col>
+        </v-row>
+
+
+        <v-row no-gutters>
+          <v-col cols="12">
+            <v-list-subheader class="text-indigo"> <v-icon>mdi-paperclip</v-icon>Required attachments for
+              applicants.</v-list-subheader>
+            <v-select v-model="position.attachment" :items="attachment_data" label="Select Applicant Attachments"
+              item-value="_id" multiple clearable chips /> </v-col>
+
+          <v-col cols="12">
+            <v-list-subheader class="text-indigo"> <v-icon>mdi-paperclip</v-icon> Required attachments for
+              School Division Office.</v-list-subheader>
+            <v-select v-model="position.sdo_attachment" :items="attachment_data" label="SDO Attachments" item-value="_id"
+              multiple clearable chips /></v-col>
+        </v-row>
       </v-card-text>
     </commons-dialog>
     <commons-dialog max-width="30%" v-model="update_position_dialog" icon="mdi-school" :title="'Update Position'"

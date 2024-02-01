@@ -1,22 +1,28 @@
 <template>
   <div class="mx-auto">
+    <v-sheet class="pa-6" height="auto" color="grey-lighten-4">
+      <v-row no-gutters>
+        <v-col cols="12" class="text-h6 font-weight-bold text-indigo">List of Reclassification Application </v-col>
+        <v-col cols="12" class="text-grey"> A brief overview of reclassification applications. </v-col>
+      </v-row>
+    </v-sheet>
     <v-sheet>
-      <v-toolbar class="pt-2" color="indigo">
+      <!-- <v-toolbar class="pt-2">
         <v-toolbar-title>List of Reclassification Application</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-text-field prepend-inner-icon="mdi-magnify" hide-details variant="underlined" density="compact" dense />
+        <v-text-field prepend-inner-icon="mdi-magnify" hide-details variant="underlined"  dense />
         <v-btn icon>
           <v-icon>mdi-settings</v-icon>
-        </v-btn>
+        </v-btn> -->
 
-        <!-- <template v-slot:extension>
+      <!-- <template v-slot:extension>
           <v-tabs color="indigo-accent-1" v-model="tab" fixed-tabs>
             <v-tab v-for=" status  in  tabItems " :key="status.value" :value="status.value">
               {{ status.label }}
             </v-tab>
           </v-tabs>
         </template> -->
-      </v-toolbar>
+      <!-- </v-toolbar> -->
       <v-window v-model="tab">
         <v-window-item v-for=" status  in  tabItems " :key="status.value" :value="status.value">
           <v-card-text class="overflow-y-auto">
@@ -56,9 +62,8 @@
             </v-row>
             <v-row dense justify="center" v-else>
               <v-sheet height="70vh" class="d-flex align-center justify-center ">
-                <v-alert class=" align-center justify-center">
-                  <v-avatar size="80">
-                    <v-icon color="info" size="70">mdi-information-slab-circle-outline</v-icon></v-avatar>
+                <v-alert class="align-center justify-center">
+
                   <h4> No pending application requests at the moment.</h4>
 
                 </v-alert>

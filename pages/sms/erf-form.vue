@@ -243,7 +243,7 @@
             </v-sheet>
           </v-sheet>
         </v-sheet>
-        <v-sheet border class="pa-1">
+        <!-- <v-sheet border class="pa-1">
           <v-sheet border class="pa-4"><v-list lines="auto" color="error">
               <h5 class=" font-weight-bold text-uppercase text-subtitle-2 text-red"> ACTION REQUIRED: </h5>
               <v-list-item v-for="(attachment, key) in invalid_attachments" :key="key">
@@ -253,16 +253,9 @@
                 </v-list-item-subtitle>
               </v-list-item>
             </v-list>
-            <!-- <v-list lines="one">
-            <v-list-item-title class="font-weight-bold text-uppercase"> ACTION REQUIRED: </v-list-item-title>
-            <v-list-item class="text-caption" v-for="(attachment, key) in    invalid_attachments   " :key="key"
-              :title="' Attachment :  ' + attachment.description"
-              :subtitle="'REMARKS: ' + attachment.remarks"></v-list-item>
-          </v-list> -->
           </v-sheet>
-        </v-sheet>
-
-        <v-sheet border class="pa-1" color="#ECEFF1">
+        </v-sheet> -->
+        <v-sheet border class="pa-1" color="#ECEFF1" v-if="user.role === 'Evaluator'">
           <v-sheet border>
             <h5 class="pa-2 font-weight-bold text-subtitle-1"> School Division Office</h5>
             <v-divider />
@@ -270,7 +263,6 @@
               <v-alert density="compact" variant="tonal" type="info" closable>The SDO representative needs to provide
                 attachments.</v-alert>
               <v-file-input class="py-2" variant="underlined" density="compact" hide-details label="Service Record" />
-
             </v-card-text>
 
           </v-sheet>
