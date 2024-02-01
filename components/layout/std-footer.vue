@@ -1,10 +1,12 @@
 <template>
   <v-container>
     <v-footer class="d-flex" height="48" app border>
+      <span style="margin-right: 350px"> </span>
       <small class="text-caption">Developed by Southern Convergence</small>
       <v-spacer />
       <small class="text-caption text--secondary mr-1">EN (Phiippines)</small>
       <img src="/ph-flag.svg" height="20" />
+      <span style="margin-left: 350px"> </span>
 
       <commons-export-dialog name="Resources" v-if="export_dialog.data.length" :items="export_dialog.data"
         v-model="export_dialog.dialog" />

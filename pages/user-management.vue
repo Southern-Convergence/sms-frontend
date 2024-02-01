@@ -8,23 +8,24 @@
                 </v-row>
             </v-sheet> -->
         <v-row no-gutters>
-            <v-col cols="8">
-                <v-btn prepend-icon="mdi-pencil-plus" @click="user_invite_dialog = true" color="indigo" rounded="0">
+            <v-col cols="12">
+                <v-btn prepend-icon="mdi-pencil-plus" @click="user_invite_dialog = true" color="blue-darken-4" rounded="0">
                     Invite
                     User</v-btn>
-                <commons-item-container class="ma-1" title="USER MANAGEMENT" subtitle="A brief overview of users."
+                <commons-qad class="ma-1 mt-2" title="USER MANAGEMENT" subtitle="A brief overview of users."
                     :items="users_data" :display_types="['grid', 'list', 'table']">
                     <template v-slot:item="{ value, index, display }">
-                        <v-sheet :key="index" border class="pa-2">
+                        <v-sheet :key="index" border class="pa-2 ma-1 elevation-1" color="grey-lighten-5">
                             <div class="d-flex mb-1">
-                                <div class="text-uppercase  text-indigo text-body-1"> {{ value.first_name
+                                <div class="text-uppercase  text-body-1"> {{ value.first_name
                                 }}
                                     {{
                                         value.last_name }}
                                 </div>
                                 <v-spacer />
-                                <div> <v-chip density="compact" class="text-uppercase text-overline" color="success">{{
-                                    value.status }}</v-chip></div>
+                                <div> <v-chip density="compact" variant="outlined" class="text-uppercase text-overline"
+                                        color="success">{{
+                                            value.status }}</v-chip></div>
                             </div>
                             <div> {{ value.role }} <span v-if="value.division"> of
                                     {{
@@ -40,7 +41,7 @@
                                 value.contact_number }}</div>
                         </v-sheet>
                     </template>
-                </commons-item-container>
+                </commons-qad>
                 <!-- <v-sheet  class="overflow-y-auto d-flex flex-wrap mt-3" height="67vh">
                             <v-sheet width="50%" variant="tonal" v-for="user, index in users_data" :key="index" border>
                                 <v-alert rounded="0" border-color="indigo" color="white">
@@ -76,7 +77,7 @@
 
             </v-col>
 
-            <v-col cols="4" class="mt-10 ">
+            <!-- <v-col cols="4" class="mt-10 ">
                 <v-sheet height="100vh" border>
                     <v-toolbar>
                         <span class="ml-2"> School Division Office</span>
@@ -108,7 +109,7 @@
                         </v-alert>
                     </v-sheet>
                 </v-sheet>
-                <!-- <v-sheet class="pl-2 w-100">
+              <v-sheet class="pl-2 w-100">
                     <v-btn @click="create_sdo_dialog = true" prepend-icon="mdi-pencil-plus" color="indigo"
                         class="mr-0 mb-3"> Create
                         School Division Office </v-btn>
@@ -133,9 +134,9 @@
                             </v-alert>
                         </v-sheet>
                     </v-sheet>
-                </v-sheet> -->
+                </v-sheet> 
 
-            </v-col>
+            </v-col> -->
         </v-row>
 
 
@@ -229,7 +230,7 @@ definePageMeta({ layout: "barren" })
 
 onBeforeMount(() => {
     Promise.all([
-        get_users(),
+
         get_sdo(),
         get_apts()
     ])
@@ -297,14 +298,117 @@ async function create_user() {
     get_users()
     return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 }
-const users_data = ref<SmsUser[]>([])
-async function get_users() {
-    const { data, error } = await $rest('user/get-users', {
-        method: "GET",
-    });
+// const users_data = ref<SmsUser[]>([])
+// async function get_users() {
+//     const { data, error } = await $rest('user/get-users', {
+//         method: "GET",
+//     });
 
-    users_data.value = data.filter((v) => !!v.role && v.role !== 'School Admin');
-}
+//     users_data.value = data.filter((v) => !!v.role && v.role !== 'School Admin');
+// }
+const users_data = ref([
+    {
+        first_name: "John",
+        last_name: "Doe",
+        status: "Active",
+        role: "Admin",
+        division: { title: "IT" },
+        side: "Frontend",
+        email: "john.doe@example.com",
+        contact_number: "+1234567890"
+    },
+    {
+        first_name: "Jane",
+        last_name: "Smith",
+        status: "Inactive",
+        role: "Manager",
+        division: { title: "HR" },
+        side: "Backend",
+        email: "jane.smith@example.com",
+        contact_number: "+9876543210"
+    },
+    {
+        first_name: "Alice",
+        last_name: "Johnson",
+        status: "Active",
+        role: "Developer",
+        division: { title: "Marketing" },
+        side: "Fullstack",
+        email: "alice.johnson@example.com",
+        contact_number: "+5551234567"
+    },
+    {
+        first_name: "Bob",
+        last_name: "Williams",
+        status: "Active",
+        role: "Analyst",
+        division: { title: "Finance" },
+        side: "Frontend",
+        email: "bob.williams@example.com",
+        contact_number: "+7890123456"
+    },
+    {
+        first_name: "Eva",
+        last_name: "Brown",
+        status: "Inactive",
+        role: "Designer",
+        division: { title: "Creative" },
+        side: "UI/UX",
+        email: "eva.brown@example.com",
+        contact_number: "+1239876543"
+    },
+    {
+        first_name: "Sam",
+        last_name: "Taylor",
+        status: "Active",
+        role: "Tester",
+        division: { title: "QA" },
+        side: "Backend",
+        email: "sam.taylor@example.com",
+        contact_number: "+1112223333"
+    },
+    {
+        first_name: "Olivia",
+        last_name: "Jones",
+        status: "Active",
+        role: "Coordinator",
+        division: { title: "Operations" },
+        side: "General",
+        email: "olivia.jones@example.com",
+        contact_number: "+4445556666"
+    },
+    {
+        first_name: "Tom",
+        last_name: "Clark",
+        status: "Inactive",
+        role: "Engineer",
+        division: { title: "R&D" },
+        side: "Fullstack",
+        email: "tom.clark@example.com",
+        contact_number: "+7778889999"
+    },
+    {
+        first_name: "Grace",
+        last_name: "Miller",
+        status: "Active",
+        role: "Supervisor",
+        division: { title: "Management" },
+        side: "General",
+        email: "grace.miller@example.com",
+        contact_number: "+9998887777"
+    },
+    {
+        first_name: "Chris",
+        last_name: "Anderson",
+        status: "Active",
+        role: "Consultant",
+        division: { title: "Consulting" },
+        side: "Specialist",
+        email: "chris.anderson@example.com",
+        contact_number: "+1234567890"
+    }
+])
+
 
 
 const sdo = ref<Sdo>({

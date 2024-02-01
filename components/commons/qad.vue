@@ -1,6 +1,6 @@
 <template>
   <v-sheet id="item-container" class="h-100" color="transparent" rounded="0" border>
-    <v-toolbar class="d-block border-b" extension-height="64" color="white" :extended="Boolean($attrs.extended)">
+    <v-toolbar class="d-block border-b" extension-height="64" color="grey-lighten-4" :extended="Boolean($attrs.extended)">
       <v-toolbar-title>
         <v-list-item class="pl-0" :title="title" :subtitle="subtitle">
           <template v-if="$attrs.icon || $attrs.img" v-slot:prepend>

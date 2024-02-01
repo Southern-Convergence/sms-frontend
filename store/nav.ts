@@ -52,7 +52,8 @@ const GLOBAL_NAVS: NavMap = {
 
   systems_navs: [
     new NavTree("Dashboards", "dashboard", "mdi-view-dashboard"),
-    new NavTree("Reclassification", "sms-reclassification", "mdi-list-box-outline"),
+    new NavTree("Permits", "qadpro", "mdi-list-box-outline"),
+    new NavTree("Permits", "qadpro", "mdi-list-box-outline"),
 
 
   ],

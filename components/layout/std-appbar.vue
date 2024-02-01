@@ -7,7 +7,7 @@
         <v-img src="/logo.svg" @click="$router.push({ name: 'home' })" style="cursor : pointer" />
       </v-avatar> -->
       <v-app-bar-title class="pt-1 text-indigo" @click="$router.push({ name: 'home' })" style="cursor : pointer">
-        <!-- {{ $props.appbar_title }} -->Reclassification System
+        <!-- {{ $props.appbar_title }} --> Quadpro Regional Office
       </v-app-bar-title>
       <!-- <dev-display-debugger id="floater" /> -->
       <v-spacer />
@@ -113,7 +113,7 @@
 
               <v-divider />
 
-              <v-list-item :title="cfg.preferences.dark ? 'Dark Mode' : 'Light Mode'" color="primary" density="compact">
+              <!-- <v-list-item :title="cfg.preferences.dark ? 'Dark Mode' : 'Light Mode'" color="primary" density="compact">
                 <template v-slot:prepend>
                   <v-icon class="mr-1" v-if="cfg.preferences.dark" icon="mdi-weather-night" color="purple-accent-2" />
                   <v-icon class="mr-1" v-else icon="mdi-weather-sunny" color="orange-accent-4" />
@@ -122,7 +122,7 @@
                   <v-switch class="toggle-dark-mode" @click="toggle_dark_mode" :model-value="cfg.preferences.dark"
                     color="primary" hide-details />
                 </template>
-              </v-list-item>
+              </v-list-item> -->
               <v-divider />
             </v-list>
 

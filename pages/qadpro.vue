@@ -1,6 +1,6 @@
 
 <template>
-  <v-sheet class="">
+  <v-sheet class="pa-5">
 
     <v-row no-gutters justify="center">
       <v-col cols="12"> <v-row no-gutters justify="center">
@@ -15,7 +15,7 @@
         </v-row></v-col>
       <v-col cols="12">
         <v-sheet border>
-          <v-tabs v-model="tab" bg-color="blue-darken-4" color="blue" centered stacked>
+          <v-tabs v-model="tab" bg-color="amber" color="white" centered stacked>
             <v-tab v-for=" i  in  8 " :key="i" :value="'tab-' + i">
               <v-badge :color="getTextColor(i)" class="pb-4" :content="getNumberForTab(i)">
 
@@ -65,8 +65,7 @@
               </v-row> -->
 
 
-                          <v-row no-gutters class="mt-5"> <v-btn density="compact" @click="history = true"
-                              color="blue-darken-4">
+                          <v-row no-gutters class="mt-5"> <v-btn density="compact" @click="history = true" color="amber">
                               ACTION</v-btn></v-row>
                         </v-card>
                       </template>
@@ -167,7 +166,7 @@
 
     <v-dialog v-model="history" max-width="35%" submitText="Submit">
       <v-sheet border class="w-45">
-        <v-toolbar color="blue-darken-4" border>
+        <v-toolbar color="amber" border>
           <v-list-item class="pl-2" density="compact">
             <template v-slot:prepend>
               <v-avatar size="34" class="mr-1" variant="text">
