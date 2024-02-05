@@ -6,6 +6,7 @@
         EVALUATION / LIST OF REQUIREMENTS FORM
       </v-col>
       <v-col cols="12">
+        {{ applicant_details }}
         <v-row no-gutters>
           <v-col cols="5" class="text-subtitle-2 font-weight-bold"> TO : REGINAL DIRECTOR
             <p class="pl-7 font-weight-regular">Regional Director/DepEd - NCR
@@ -269,14 +270,12 @@
           </v-sheet>
         </v-sheet>
         <v-sheet border class="pa-1" v-if="Object.keys(applicant_details).length">
-          <h5 class="pa-2 font-weight-bold text-subtitle-1"> School Division Office Attachments</h5>
           <v-sheet border v-for=" [key, value], index  in  Object.entries(applicant_details.sdo_attachments) ">
             <v-sheet border class="pa-4">
               <h6> {{ index + 1 }}.
                 {{ value.description }}
               </h6>
-              <v-btn size="small" color="primary" class="d-flex " variant="tonal"
-                @click="open_sdo_attachment_dialog(key)">
+              <v-btn size="small" color="primary" class="d-flex " variant="tonal" @click="open_attachment_dialog(key)">
                 <v-icon class="mr-2">mdi-attachment</v-icon>
                 <span>View Attachment</span>
               </v-btn>
@@ -293,10 +292,11 @@
                 </v-col>
                 <v-col cols="12" v-if="applicant_details.sdo_attachments[key].valid == false">
                   <v-textarea label="Specify reason" v-model="remarks" rows="2" hide-details
-                    @update:model-value="remarks_attachment(key)"
-                    :model-value="applicant_details.attachments[key].remarks" bg-color="#E8EAF6" />
+                    @update:model-value="sdo_remarks_attachment(key)"
+                    :model-value="applicant_details.sdo_attachments[key].remarks" bg-color="#E8EAF6" />
                 </v-col>
               </v-row>
+
 
 
 
@@ -367,19 +367,19 @@ const remarks = ref("");
 const remarks_attachment = (key: string) => {
   applicant_details.value.attachments[key].remarks = remarks.value
 }
-
-// EVALUATES ATTACHMENT
+// SDO
 const evaluate_sdo_attachment = (key: string, value: boolean) => {
   applicant_details.value.sdo_attachments[key].valid = value;
 }
 const getsdoCheckboxValue = (key: string, expected_value: boolean) => {
-  const attachment = applicant_details.value.sdo_attachments[key];
-  return attachment.valid === expected_value;
+  const sdo_attachment = applicant_details.value.sdo_attachments[key];
+  return sdo_attachment.valid === expected_value;
 };
 
-const remarks_sdo_attachment = (key: string) => {
+const sdo_remarks_attachment = (key: string) => {
   applicant_details.value.sdo_attachments[key].remarks = remarks.value
 }
+
 const showRemarks = ref({});
 const toggleInvalid = (key: string) => {
   showRemarks[key] = !showRemarks[key];
@@ -581,10 +581,6 @@ const attach = ref({ dialog: false, title: "", src: "" })
 const open_attachment_dialog = (attachment: string) => {
   const attachments = applicant_details.value.attachments;
   attach.value = { dialog: true, src: attachments[attachment], title: attachment };
-}
-const open_sdo_attachment_dialog = (attachment: string) => {
-  const sdo_attachments = applicant_details.value.sdo_attachments;
-  attach.value = { dialog: true, src: sdo_attachments[attachment], title: attachment };
 }
 
 // const button_display = (status: string) => {
