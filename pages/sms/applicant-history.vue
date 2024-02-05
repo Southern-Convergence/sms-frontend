@@ -17,11 +17,11 @@
         </v-toolbar>
         <v-card-text>
           <v-sheet class="overflow-y-auto" height="80vh">
-            <v-sheet border variant="tonal" color="grey-lighten-4" class="elevation-2 pa-3 mx-auto">
+            <v-sheet border variant="tonal" color="indigo-lighten-5" class="elevation-2 pa-3 mx-auto">
               <v-card-title class="text-uppercase font-weight-bold"> {{ applicant_history.full_name }}
               </v-card-title>
               <v-card-subtitle>
-                Control Number : <b>{{ applicant_history.control_number }}</b>
+                Control Number : <b class="text-indigo">{{ applicant_history.control_number }}</b>
               </v-card-subtitle>
               <v-card-subtitle class="text-caption">Date Applied : <b> {{ new
                 Date(applicant_history.created_date).toLocaleString() }}</b></v-card-subtitle>

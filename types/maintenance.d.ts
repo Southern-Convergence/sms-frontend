@@ -29,6 +29,7 @@ interface Position {
   training_hours?: number;
   rating?: array;
   sg?: string;
+
   attachment?: array;
   sdo_attachment?: array;
 };

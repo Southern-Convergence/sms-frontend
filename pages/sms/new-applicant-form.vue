@@ -35,23 +35,23 @@
                         <v-select v-model="applicant.qualification.education" :items="education_data" label="Education"
                           hide-details multiple item-value="_id" />
                       </v-col>
-                      <v-col cols="6" class="pa-2" v-if="selected_qs && selected_qs.experience.length">
+                      <v-col cols="6" class="pa-2">
                         <v-select v-model="applicant.qualification.experience" :items="experience_data" label="Experience"
                           hide-details multiple item-value="_id" />
                       </v-col>
-                      <v-col cols="6" class="pa-2" v-if="selected_qs && selected_qs.training_hours !== 0">
+                      <v-col cols="6" class="pa-2">
 
                         <v-text-field v-model="applicant.qualification.training" label="Enter total training hours"
                           hide-details type="number" item-value="_id" />
                       </v-col>
-                      <v-col cols="6" class="pa-2" v-if="selected_qs && selected_qs.rating.length">
+                      <v-col cols="6" class="pa-2">
                         <v-select v-model="applicant.qualification.per_rating" :items="rating_data"
                           label="Performance Rating" hide-details item-value="_id" />
                       </v-col>
-                      <v-col cols="6" class="pa-2" v-if="selected_qs && selected_qs.eligibility.length">
+                      <!-- <v-col cols="6" class="pa-2" v-if="selected_qs && selected_qs.eligibility.length">
                         <v-select v-model="applicant.qualification.eligibility" :items="eligibility_data"
                           label="Eligibility" hide-details item-value="_id" />
-                      </v-col>
+                      </v-col> -->
                     </v-row>
                   </v-card-text> </v-col>
                 <v-col cols="5">
@@ -439,6 +439,7 @@ const applicant = ref({
   professional_study: [],
   attachments: {
   },
+  sdo_attachments: {},
   signatory: {
     name: "Marianne Mae Paclian",
     position: "Principal",
@@ -448,7 +449,6 @@ const applicant = ref({
   },
   status: "For Signature",
   created_date: new Date(new Date())
-
 })
 
 const show_footer = ref(false)
@@ -602,8 +602,10 @@ const position_data = ref([])
 async function get_position() {
   const { data, error } = await $rest('new-applicant/get-application-qs', {
     method: "GET",
-  })
+  });
 
+  const temp = data[0].sdo_attachment
+  if (temp) applicant.value.sdo_attachments = temp
   position_data.value = data
 }
 
@@ -656,11 +658,11 @@ function next_window() {
   const applicant_rating = applicant.value.qualification.per_rating;
   if (position_data.value.rating?.length && !applicant_rating) return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
   const applicant_training = applicant.value.qualification.training;
-  const applicant_educ_level = applicant.value.qualification.educ_level;
+
 
 
   const is_yes: boolean[] = [];
-  is_yes.push(educ_level_matching(applicant_educ_level, selected_position.education_level));
+
   is_yes.push(education_matching(applicant_education, selected_position.education));
   is_yes.push(experience_matching(applicant_experience, selected_position.experience));
   is_yes.push(rating_matching(applicant_rating, selected_position.rating));
@@ -687,7 +689,7 @@ function experience_matching(applicant_experience: any, required_experience: any
 }
 
 function rating_matching(applicant_rating: string, required_rating: string) {
-  if (!required_rating) return false;
+  if (!required_rating) return true;
   return applicant_rating == required_rating;
 };
 
@@ -698,10 +700,7 @@ function training_matching(applicant_training: number, required_training: number
   return applicant_training >= required_training;
 }
 
-function educ_level_matching(applicant_educ_level: string, required_educ_level: string) {
-  if (!required_educ_level) return true;
-  return applicant_educ_level == required_educ_level;
-};
+
 // CREATE 
 const form = ref(true)
 async function create_application() {

@@ -32,7 +32,7 @@
                   </v-row> -->
                 <v-row no-gutters>
                   <v-col cols="12">
-                    <commons-qad title="Application Summary" subtitle="A brief overview of new permit application."
+                    <commons-sms title="Application Summary" subtitle="A brief overview of new permit application."
                       icon="mdi-account" prepend-icon="mdi-account" :items="users_data"
                       :display_types="['grid', 'list', 'table']">
                       <template v-slot:item="{ value, index, display }">
@@ -75,7 +75,7 @@
                     </v-data-table>
 
                   </template> -->
-                    </commons-qad>
+                    </commons-sms>
                   </v-col>
                 </v-row>
 

@@ -10,16 +10,16 @@
                     class="text-subtitle-2 text-grey-lighten-2">A
                     brief overview of reclassification applications.</span>
                 </v-col>
-                <v-col cols="3" class="text-grey d-flex">
-                  <v-text-field prepend-inner-icon="mdi-magnify" label="Search Control Nmmber" density="compact"
+                <!-- <v-col cols="3" class="text-grey d-flex">
+                  <v-text-field prepend-inner-icon="mdi-magnify" label="Search Control Number" density="compact"
                     hide-details variant="solo" bg-color="grey-lighten-3" />
                   <v-btn icon="mdi-settings" class="ma-1" variant="plain">
                     <v-icon size="36" color="blue">mdi-settings</v-icon> </v-btn>
-                </v-col>
+                </v-col> -->
               </v-row>
             </v-sheet>
 
-            <commons-qad :title="`${status.value} Reclass Application`" icon="mdi-note-text-outline"
+            <commons-sms title="Reclass Application/s" icon="mdi-note-text-outline"
               :items="get_applicant_by_status(status.value)" :display_types="['grid', 'list', 'table']">
               <template v-slot:item="{ value, index, display }">
                 <v-sheet elevation="2" @click="load_erf_form(value._id)" v-bind="props" class="mx-auto reclass-item"
@@ -49,41 +49,8 @@
                 </v-sheet>
 
               </template>
-            </commons-qad>
-            <!-- <v-row dense
-              v-if="get_applicant_by_status(status.value).some(applicant => Object.keys(applicant).length > 0)">
-              <v-col cols="12" xxl="4" xl="4" lg="4" v-for=" pending  in  get_applicant_by_status(status.value) "
-                :key="pending">
-                <v-tooltip text="Click card to view more details" location="top">
-                  <template v-slot:activator="{ props }">
-                    <v-sheet elevation="2" @click="load_erf_form(pending._id)" v-bind="props" class="mx-auto reclass-item"
-                      :class="{ 'elevation-4': is_hovered }">
-                      <v-card-text>
+            </commons-sms>
 
-                        <div class="d-flex mt-1">
-                          <div class="pr-3"><v-img :width="80" aspect-ratio="4/3" cover src="/yanyan.jpg"></v-img></div>
-                          <div>
-                            <div class="text-body-1 font-weight-bold">
-                              {{ pending.first_name }} {{ pending.last_name }}
-                            </div>
-                            <div class="mb-1 text-body-2 text-grey"> {{ pending.position }}
-                            </div>
-                            <div class=" text-body-2"> School : {{ pending.school }}</div>
-                            <div class=" text-body-2"> Division : {{ pending.division }}</div>
-                          </div>
-                        </div>
-                        <div class="d-flex">
-                          <div class="text-overline d-flex ">
-                            Control Number : <b class="text-success">{{ pending.control_number }}</b>
-                          </div> <v-spacer /> <v-chip color="success">{{ pending.status
-                          }}</v-chip>
-                        </div>
-                      </v-card-text>
-                    </v-sheet>
-                  </template>
-                </v-tooltip>
-              </v-col>
-            </v-row> -->
             <!-- <v-row dense justify="center" v-else>
               <v-sheet height="70vh" class="d-flex align-center justify-center ">
                 <v-alert class="align-center justify-center">

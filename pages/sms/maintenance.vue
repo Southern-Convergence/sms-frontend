@@ -1,21 +1,14 @@
 <template>
-  <v-sheet color="#E8EAF6">
-    <!-- <v-card height="90vh">
-      <v-sheet class="pa-6" height="auto" color="grey-lighten-4">
-        <v-row no-gutters>
-          <v-col cols="12" class="text-h6 font-weight-bold text-indigo">MAINTENANCE PANEL </v-col>
-          <v-col cols="12" class="text-grey">Provides customized eligibility criteria, promoting fairness and
-            inclusivity. </v-col>
-        </v-row>
-      </v-sheet> -->
+  <v-sheet color="#E8EAF6" height="96vh">
+
     <v-card-text>
       <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="start">
         <v-tab :value="1">Set Up Form</v-tab>
         <v-tab :value="2">Qualification Standards</v-tab>
       </v-tabs>
       <v-window v-model="tab">
-        <v-window-item :value="1">
-          <v-sheet fluid border>
+        <v-window-item :value="1" height="80vh">
+          <v-sheet fluid border class="mt-2">
             <v-row no-gutters>
               <v-col cols="4">
                 <v-sheet height="40vh" class="d-flex flex-column pa-1">
@@ -148,77 +141,81 @@
         </v-window-item>
         <v-window-item :value="2">
           <v-card-text>
-            <v-btn @click="position_dialog = true" color="indigo"> Set Up Position</v-btn>
-            <commons-item-container class="mt-2" title="Qualification Standards"
+            <v-row no-gutters>
+              <v-col cols="auto" class="mt-3"> <v-btn @click="position_dialog = true" color="indigo"> Set
+                  Up Position</v-btn></v-col>
+              <v-spacer />
+              <v-col cols="3"><v-text-field prepend-inner-icon="mdi-magnify" label="Enter Position Title"
+                  density="compact" hide-details="auto" variant="solo" bg-color="grey-lighten-4" /></v-col>
+            </v-row>
+            <commons-sms class="mt-2" title="Qualification Standards"
               subtitle="A brief overview of qualification standards." :items="position_data"
               :display_types="['grid', 'list', 'table']">
               <template v-slot:item="{ value, index, display }">
-                <v-sheet class="pa-3" border height="40vh">
-                  <div class="text-uppercase text-subtitle-1 font-weight-bold text-indigo">{{ value.title }}</div>
-                  <v-divider class="my-2" />
-                  <v-row no-gutters justify="end" v-if="value.education">
-                    <v-col cols="3"> Education</v-col>
-                    <v-col cols="9" v-for=" educ, index  in  value.education " :key="index">
-                      : {{ educ.text }} <br />
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters justify="end" v-if="value.education_level">
-                    <v-col cols="3">Education Level </v-col>
-                    <v-col cols="9"> : {{ value.education_level }}</v-col>
-                  </v-row>
-                  <v-row no-gutters justify="end">
-                    <v-col cols="3"> </v-col>
-                    <v-col cols="9"> </v-col>
-                  </v-row>
-                  <v-row no-gutters justify="end" v-if="value.experience">
-                    <v-col cols="3"> Experience </v-col>
-                    <v-col cols="9" v-for=" exp, index  in  value.experience " :key="index"> : {{ exp.text }}
-                      <br /></v-col>
-                  </v-row>
-                  <v-row no-gutters justify="end" v-if="value.training_hours">
-                    <v-col cols="3"> Training Hours </v-col>
-                    <v-col cols="9"> : {{
-                      value.training_hours }}
-                      <br /></v-col>
-                  </v-row>
-                  <v-row no-gutters justify="end" v-if="value.sg.salary_grade">
-                    <v-col cols="3"> Salary Grade </v-col>
-                    <v-col cols="9"> : {{ value.sg.salary_grade }}
-                      <br /></v-col>
-                  </v-row>
-                  <v-row no-gutters justify="end" v-if="value.sg.equivalent">
-                    <v-col cols="3"> Salary Equivalent </v-col>
-                    <v-col cols="9"> : {{ value.sg.equivalent }}
-                      <br />
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters justify="end" v-if="value.eligibility">
-                    <v-col cols="3"> Eligibility </v-col>
-                    <v-col cols="9"> : {{ value.eligibility }}
-                      <br />
-                    </v-col>
-                  </v-row>
+                <v-sheet class="pa-1 ma-2 maintenance-item " border height="40vh">
+                  <v-card-title class="text-uppercase text-h5 font-weight-bold text-indigo ">{{ value.title
+                  }}</v-card-title>
+                  <v-card-text>
+                    <v-row no-gutters justify="end" v-if="value.education && value.education.length">
+                      <v-col cols="4"> Education</v-col>
+                      <v-col cols="8" v-for=" educ, index  in  value.education " :key="index">
+                        : {{ educ.text }} <br />
+                      </v-col>
+                    </v-row>
+                    <v-row no-gutters justify="end" v-if="value.education_level">
+                      <v-col cols="4">Education Level </v-col>
+                      <v-col cols="8"> : {{ value.education_level }}</v-col>
+                    </v-row>
 
-                  <v-row no-gutters justify="end" v-if="value.attachment">
-                    <v-col cols="3"> Attachment
-                      Require</v-col>
-                    <v-col cols="9" v-for=" attach, index  in  value.attachment " :key="index"> : {{ attach.title
-                    }}
-                      <br />
-                    </v-col>
-                  </v-row>
-                  <v-row no-gutters justify="end" v-if="value.sdo_attachment">
-                    <v-col cols="3"> SDO Attachment
-                      Required</v-col>
-                    <v-col cols="9" v-for=" attach, index  in  value.attachment " :key="index"> : {{ attach.title
-                    }}
-                      <br />
-                    </v-col>
-                  </v-row>
+                    <v-row no-gutters justify="end" v-if="value.experience && value.experience.length">
+                      <v-col cols="4"> Experience </v-col>
+                      <v-col cols="8" v-for=" exp, index  in  value.experience " :key="index"> : {{ exp.text }}
+                        <br /></v-col>
+                    </v-row>
+                    <v-row no-gutters justify="end" v-if="value.training_hours && value.training_hours.length">
+                      <v-col cols="4"> Training Hours </v-col>
+                      <v-col cols="8"> : {{
+                        value.training_hours }}
+                        <br /></v-col>
+                    </v-row>
+                    <v-row no-gutters justify="end" v-if="value.sg.salary_grade">
+                      <v-col cols="4"> Salary Grade </v-col>
+                      <v-col cols="8"> : {{ value.sg.salary_grade }}
+                        <br /></v-col>
+                    </v-row>
+                    <v-row no-gutters justify="end" v-if="value.sg.equivalent">
+                      <v-col cols="4"> Salary Equivalent </v-col>
+                      <v-col cols="8"> : {{ value.sg.equivalent }}
+                        <br />
+                      </v-col>
+                    </v-row>
+                    <v-row no-gutters justify="end" v-if="value.eligibility && value.eligibility.length">
+                      <v-col cols="4"> Eligibility </v-col>
+                      <v-col cols="8"> : {{ value.eligibility }}
+                        <br />
+                      </v-col>
+                    </v-row>
+
+                    <v-row no-gutters justify="end" v-if="value.attachment">
+                      <v-col cols="4"> Attachment
+                        Require</v-col>
+                      <v-col cols="8" v-for=" attach, index  in  value.attachment " :key="index"> : {{ attach.title
+                      }}
+                        <br />
+                      </v-col>
+                    </v-row>
+                    <v-row no-gutters justify="end" v-if="value.sdo_attachment">
+                      <v-col cols="4"> SDO Attachment
+                        Required</v-col>
+                      <v-col cols="8" v-for=" attach, index  in  value.attachment " :key="index"> : {{ attach.title
+                      }}
+                        <br />
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
                 </v-sheet>
-
               </template>
-            </commons-item-container>
+            </commons-sms>
 
             <!-- <v-row dense>
                 <v-col cols="4" class="mt-2" v-for=" position, index  in  position_data " :key="index">
@@ -719,12 +716,11 @@ const position_data = ref<Position[]>([]);
 const position = ref<Position>({
   title: "",
   education: [],
-  education_level: " ",
+  education_level: "",
   experience: [],
   training_hours: 0,
   rating: [],
   sg: "",
-  eligibility: [],
   attachment: [],
   sdo_attachment: []
 });
