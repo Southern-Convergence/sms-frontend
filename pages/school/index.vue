@@ -149,6 +149,8 @@
                         <v-col cols="4">
                             <v-select v-model="school_user.role" :items="roles" item-title="name" item-value="_id"
                                 label="Role" hide-details /></v-col>
+
+
                     </v-row>
                 </v-card-text>
                 <v-divider />

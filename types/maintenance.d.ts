@@ -21,7 +21,6 @@ interface SalaryGrade {
 }
 
 interface Position {
-
   title: string;
   education: string[];
   education_level?: string;
@@ -29,7 +28,6 @@ interface Position {
   training_hours?: number;
   rating?: array;
   sg?: string;
-
   attachment?: array;
   sdo_attachment?: array;
 };

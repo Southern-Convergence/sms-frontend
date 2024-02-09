@@ -1,90 +1,275 @@
 <template>
-  <v-sheet height="100vh" class="d-flex align-center justify-center ">
-    <v-sheet class="h-100 w-100 d-flex align-center justify-center" color="#ECEFF1">
-      <v-sheet width="70%">
+  <v-sheet height="100vh" class="d-flex align-center justify-center">
+    <v-sheet class="h-100 w-100 d-flex align-center justify-center">
+      <v-sheet width="75%" :border="step != 1">
         <v-window v-model="step">
           <v-window-item :value="1">
-            <v-sheet height="50vh">
-              <v-toolbar class="py-1" color="indigo" border>
-                <v-list-item class="pl-2" density="compact">
-                  <v-list-item-title class="text-h5"> Application Form </v-list-item-title>
-                  <v-list-item-subtitle> Position Requirements and Criteria </v-list-item-subtitle>
-                </v-list-item>
-              </v-toolbar>
-              <v-card-title class="text-h5 text-primary"> WELCOME to
-                <strong>Reclassification System</strong>
-              </v-card-title>
+            <v-card class="w-100 d-flex align-center justify-center " rounded="lg">
+              <v-card class="w-50 pa-10 gradient-background" height="70vh">
+                <v-card-title class="text-h5 mt-5 text-white"> WELCOME to
+                  DepEd NCR Reclassification System
+                </v-card-title>
+                <v-card-subtitle class="text-grey">Elevate Your Career: A Guide to the Reclassification System
+                </v-card-subtitle>
 
-              <v-card-subtitle>Elevate Your Career: A Guide to the Reclassification System </v-card-subtitle>
-              <v-row dense>
-                <v-col cols="7">
-                  <v-card-text>
-                    <v-row dense>
-                      <v-col cols="12"> <v-icon class="mr-2 pb-2" size="26" color="primary">mdi-seal</v-icon>
-                        Individual Qualification </v-col>
+                <v-card-text>
+                  <v-list-item class="pl-2" density="compact">
+                    <template v-slot:prepend>
+                      <v-avatar class="mr-1" variant="text">
+                        <v-icon color="amber"> mdi-seal </v-icon>
+                      </v-avatar>
+                    </template>
+                    <v-list-item-title class="text-white">Individual Qualification</v-list-item-title>
+                  </v-list-item>
+                  <v-row no-gutters>
 
-                      <v-col cols="6" class="pa-2">
-                        <v-select :items="position_data" v-model="applicant.qualification.position"
-                          label="Select Position" hide-details item-value="_id" />
-                      </v-col>
-                      <v-col cols="6" class="pa-2">
-                        <v-select v-model="applicant.qualification.educ_level" :items="['Elementary', 'Secondary']"
-                          label="Education Level" hide-details />
-                      </v-col>
-                      <v-col cols="6" class="pa-2">
-                        <v-select v-model="applicant.qualification.education" :items="education_data" label="Education"
-                          hide-details multiple item-value="_id" />
-                      </v-col>
-                      <v-col cols="6" class="pa-2">
-                        <v-select v-model="applicant.qualification.experience" :items="experience_data" label="Experience"
-                          hide-details multiple item-value="_id" />
-                      </v-col>
-                      <v-col cols="6" class="pa-2">
+                    <v-col cols="12" class="pa-2 ">
+                      <v-select :items="position_data" v-model="applicant.qualification.position" label="Select Position"
+                        variant="solo" hide-details item-value="_id" prepend-inner-icon="mdi-account-hard-hat" />
+                    </v-col>
+                    <v-col cols="12" class="pa-2" v-if="selected_qs?.education_level != ''">
+                      <v-select v-model="applicant.qualification.educ_level" :items="['Elementary', 'Secondary']"
+                        label="Education Level" variant="solo" hide-details prepend-inner-icon="mdi-book" />
+                    </v-col>
+                    <v-col cols="12" class="pa-2">
+                      <v-select v-model="applicant.qualification.education" :items="education_data" label="Education"
+                        variant="solo" hide-details multiple item-value="_id" prepend-inner-icon="mdi-school" />
+                    </v-col>
+                    <v-col cols="12" class="pa-2" v-if="selected_qs?.experience.length">
+                      <v-select v-model="applicant.qualification.experience" :items="experience_data" label="Experience"
+                        variant="solo" hide-details multiple item-value="_id" prepend-inner-icon="mdi-head-cog-outline" />
+                    </v-col>
+                    <v-col cols="12" class="pa-2" v-if="selected_qs?.training_hours != 0">
+                      <v-text-field v-model="applicant.qualification.training" label="Enter total training hours"
+                        variant="solo" hide-details type="number" item-value="_id"
+                        prepend-inner-icon="mdi-human-male-board" />
+                    </v-col>
+                    <v-col cols="12" class="pa-2" v-if="selected_qs?.rating.length">
+                      <v-select v-model="applicant.qualification.per_rating" :items="rating_data"
+                        label="Performance Rating" variant="solo" hide-details item-value="_id"
+                        prepend-inner-icon="mdi-star" />
+                    </v-col>
+                  </v-row>
+                  <v-row class="mt-15" no-gutters justify="center">
+                    <v-col cols="5" class="pa-3 "><v-btn block color="white" variant="outlined"
+                        rounded="xl">CLEAR</v-btn></v-col>
+                    <v-col cols="5" class="pa-3"><v-btn @click="next_window" block color="blue-darken-4"
+                        rounded="xl">SUBMIT</v-btn></v-col>
+                  </v-row>
+                </v-card-text>
 
-                        <v-text-field v-model="applicant.qualification.training" label="Enter total training hours"
-                          hide-details type="number" item-value="_id" />
-                      </v-col>
-                      <v-col cols="6" class="pa-2">
-                        <v-select v-model="applicant.qualification.per_rating" :items="rating_data"
-                          label="Performance Rating" hide-details item-value="_id" />
-                      </v-col>
-                      <!-- <v-col cols="6" class="pa-2" v-if="selected_qs && selected_qs.eligibility.length">
-                        <v-select v-model="applicant.qualification.eligibility" :items="eligibility_data"
-                          label="Eligibility" hide-details item-value="_id" />
-                      </v-col> -->
-                    </v-row>
-                  </v-card-text> </v-col>
-                <v-col cols="5">
 
+              </v-card>
+              <v-sheet class="w-50  d-flex align-center " height="70vh" color="#E3F2FD">
+                <div class="mx-auto w-100 px-10 ">
+                  <v-sheet v-if="selected_qs">
 
-                  {{ selected_qs }}
-                  <!-- <v-card-text>
-                    <v-sheet border>
+                    <v-list lines="one" bg-color="#E3F2FD">
+                      <v-list-item class="pl-2" density="compact" color="blue-darken-4">
+                        <template v-slot:prepend>
+                          <v-avatar class="mr-1" variant="text">
+                            <v-icon color="amber"> mdi-certificate </v-icon>
+                          </v-avatar>
+                        </template>
+                        <v-list-item-title>Qualification Standards</v-list-item-title>
 
-                      <v-list-item class="pl-2" density="compact">
-                        <v-list-item-title class="text-h6"> Qualifications Standard
-                        </v-list-item-title>
-                        <v-list-item-subtitle class="text-grey"> Selected Position Qualificationswill be
-                          display here.</v-list-item-subtitle>
                       </v-list-item>
-                      <v-divider />
-                      <v-list v-if="selected_qs">
-                        <v-list-subheader class="text-subtitle-1">
-                          <span>{{ selected_qs.title }} </span>
-                        </v-list-subheader>
-                        <v-list-item v-if="selected_qs.education" v-for="educ, index in selected_qs.education"
-                          :key="index" title="Education:">
-                          <span class="text-grey">{{ educ.text }}</span>
+                      <v-sheet class="overflow-y-auto" color="#E3F2FD">
+                        <v-list-item class="ma-2" color="white" variant="tonal" rounded="rounded">
+                          <template v-slot:prepend>
+                            <v-icon color="primary" icon="mdi-account-hard-hat"></v-icon>
+                          </template>
+                          <b>{{ selected_qs.title }} <span class="font-weight-thin"> ({{ selected_qs?.education_level
+                          }})</span></b>
                         </v-list-item>
 
-                    
-                      </v-list>
-                    </v-sheet>
+                        <v-list-item class="ma-2" color="white" variant="tonal" rounded="rounded"
+                          v-if="selected_qs.education.length">
+                          <template v-slot:prepend>
+                            <v-icon color="primary" icon="mdi-school"></v-icon>
+                          </template>
+                          <v-list-item-title>Education :</v-list-item-title>
+                          <v-list-item-subtitle v-for="(education, index) in selected_qs.education" :key="index">{{
+                            education.title }}</v-list-item-subtitle>
+                        </v-list-item>
 
-                  </v-card-text> -->
+                        <v-list-item class="ma-2" color="white" variant="tonal" rounded="rounded"
+                          v-if="selected_qs.experience.length">
+                          <template v-slot:prepend>
+                            <v-icon color="primary" icon="mdi-head-cog-outline"></v-icon>
+                          </template>
+                          <v-list-item-title>Experience :</v-list-item-title>
+                          <v-list-item-subtitle v-for="(experience, index) in selected_qs.experience" :key="index">{{
+                            experience.title }}</v-list-item-subtitle>
+                        </v-list-item>
+                        <v-list-item class="ma-2" color="white" variant="tonal" rounded="rounded"
+                          v-if="selected_qs.rating.length">
+                          <template v-slot:prepend>
+                            <v-icon color="primary" icon="mdi-human-male-board"></v-icon>
+                          </template>
+                          <v-list-item-title>Performance Rating :</v-list-item-title>
+                          <v-list-item-subtitle v-for="(rating, index) in selected_qs.rating" :key="index">{{
+                            rating.title }}</v-list-item-subtitle>
+                        </v-list-item>
+
+
+                        <v-list-item class="ma-2" color="white" variant="tonal" rounded="rounded" title=" Training Hours:"
+                          v-if="selected_qs.training_hours != 0">
+                          <template v-slot:prepend>
+                            <v-icon color="primary" icon="mdi-star"></v-icon>
+                          </template>
+                          <v-list-item-subtitle>{{ selected_qs.training_hours }} </v-list-item-subtitle>
+                        </v-list-item>
+                        <v-list-item class="ma-2" color="white" variant="tonal" rounded="rounded" v-if="selected_qs.sg"
+                          title="Salary Grade:">
+                          <template v-slot:prepend>
+                            <v-icon color="primary" icon="mdi-cash"></v-icon>
+                          </template>
+                          <v-list-item-subtitle>{{ selected_qs.sg.salary_grade }} </v-list-item-subtitle>
+                        </v-list-item>
+                      </v-sheet>
+                    </v-list>
+                  </v-sheet>
+
+                  <v-sheet v-else height="43vh" class="d-flex align-center justify-center" color="#E3F2FD">
+                    <v-row no-gutters justify="center">
+
+                      <v-col cols=" 12" class="text-center">
+                        <v-icon size="64" style="color: red;">mdi-alert-circle-outline</v-icon>
+                      </v-col>
+                      <v-col cols="12" class="text-center font-weight-bold">NO
+                        SELECTED POSITION</v-col>
+                    </v-row>
+                  </v-sheet>
+
+
+                </div>
+              </v-sheet>
+
+            </v-card>
+            <!-- <v-sheet height="70vh">
+              <v-toolbar class="py-1" color="primary" border>
+                <v-list-item class="pl-2" density="compact">
+                  <template v-slot:prepend>
+                    <v-avatar class="mr-1" variant="text">
+                      <v-icon dark>mdi-file-document</v-icon>
+                    </v-avatar>
+                  </template>
+                  <v-list-item-title class="text-h5"> Application Form </v-list-item-title>
+                  <v-list-item-subtitle class="text-caption"> Position Requirements and Criteria
+                  </v-list-item-subtitle>
+                </v-list-item>
+              </v-toolbar>
+              <v-card-text>
+                <v-card-title class="text-h5 text-primary mt-5"> WELCOME to
+                  <strong>DepEd NCR Reclassification System</strong>
+                </v-card-title>
+                <v-card-subtitle>Elevate Your Career: A Guide to the Reclassification System </v-card-subtitle>
+                <v-row dense>
+                  <v-col cols="12" xl="6" lg="6" md="12" sm="12" class="pa-4">
+                    <v-card>
+                      <v-toolbar color="grey-ligthen-4" border>
+                        <v-list-item class="pl-2" density="compact">
+                          <template v-slot:prepend>
+                            <v-avatar class="mr-1" variant="text">
+                              <v-icon color="primary"> mdi-seal </v-icon>
+                            </v-avatar>
+                          </template>
+                  
+            </v-list-item>
+            </v-toolbar>
+            <v-sheet height="43vh" class="overflow-y-auto pa-4">
+              <v-row no-gutters>
+                <v-col cols="12" class="pa-2 ">
+                  <v-select :items="position_data" v-model="applicant.qualification.position" label="Select Position"
+                    hide-details item-value="_id" prepend-inner-icon="mdi-account-hard-hat" />
                 </v-col>
+                <v-col cols="12" class="pa-2">
+                  <v-select v-model="applicant.qualification.educ_level" :items="['Elementary', 'Secondary']"
+                    label="Education Level" hide-details />
+                </v-col>
+                <v-col cols="12" class="pa-2">
+                  <v-select v-model="applicant.qualification.education" :items="education_data" label="Education"
+                    hide-details multiple item-value="_id" prepend-inner-icon="mdi-school" />
+                </v-col>
+                <v-col cols="12" class="pa-2">
+                  <v-select v-model="applicant.qualification.experience" :items="experience_data" label="Experience"
+                    hide-details multiple item-value="_id" prepend-inner-icon="mdi-head-cog-outline" />
+                </v-col>
+                <v-col cols="12" class="pa-2">
+
+                  <v-text-field v-model="applicant.qualification.training" label="Enter total training hours" hide-details
+                    type="number" item-value="_id" prepend-inner-icon="mdi-human-male-board" />
+                </v-col>
+                <v-col cols="12" class="pa-2">
+                  <v-select v-model="applicant.qualification.per_rating" :items="rating_data" label="Performance Rating"
+                    hide-details item-value="_id" prepend-inner-icon="mdi-school" />
+                </v-col>
+
               </v-row>
             </v-sheet>
+            </v-card>
+
+
+            </v-col>
+            <v-col cols="12" xl="6" lg="6" md="12" sm="12" class="pa-4">
+              <v-card>
+                <v-toolbar color="grey-ligthen-4" border>
+                  <v-list-item class="pl-2" density="compact">
+                    <template v-slot:prepend>
+                      <v-avatar class="mr-1" variant="text">
+                        <v-icon color="primary"> mdi-certificate </v-icon>
+                      </v-avatar>
+                    </template>
+                    <v-list-item-title>Qualification Standards</v-list-item-title>
+
+                  </v-list-item>
+                </v-toolbar>
+                <v-sheet height="43vh" class="overflow-y-auto" v-if="selected_qs">
+                  <v-list lines="one" density="compact">
+                    <v-list-item>
+                      Position : <b>{{ selected_qs.title }} </b>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-title>Education :</v-list-item-title>
+                      <v-list-item-subtitle v-for="(education, index) in selected_qs.education" :key="index">{{
+                        education.title }}</v-list-item-subtitle>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-title>Experience :</v-list-item-title>
+                      <v-list-item-subtitle v-for="(experience, index) in selected_qs.experience" :key="index">{{
+                        experience.title }}</v-list-item-subtitle>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-list-item-title>Performance Rating :</v-list-item-title>
+                      <v-list-item-subtitle v-for="(rating, index) in selected_qs.rating" :key="index">{{
+                        rating.title }}</v-list-item-subtitle>
+                    </v-list-item>
+                    <v-list-item title="Training Hours:">
+                      <v-list-item-subtitle>{{ selected_qs.training_hours }} </v-list-item-subtitle>
+                    </v-list-item>
+                    <v-list-item v-if="selected_qs.sg" title="Salary Grade:">
+                      <v-list-item-subtitle>{{ selected_qs.sg.salary_grade }} </v-list-item-subtitle>
+                    </v-list-item>
+                  </v-list>
+                </v-sheet>
+                <v-sheet v-else height="43vh" class="d-flex align-center justify-center">
+                  <v-row no-gutters>
+                    <v-col cols="12" class="text-center">
+                      <v-icon size="64" style="color: red;">mdi-alert-circle-outline</v-icon>
+                    </v-col>
+                    <v-col cols="12" class="text-center font-weight-bold">NO
+                      SELECTED POSITION</v-col>
+                  </v-row>
+                </v-sheet>
+
+
+              </v-card>
+
+            </v-col>
+            </v-row>
+            </v-card-text>
+      </v-sheet> -->
           </v-window-item>
           <v-window-item :value="2">
             <v-card-text>
@@ -133,10 +318,7 @@
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
                   <v-text-field v-model="applicant.designation.item_no" label="Item No" hide-details />
                 </v-col>
-                <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                  <v-select v-model="applicant.designation.current_position" label="Current Position"
-                    :items="school_position_data" hide-details item-value="_id" />
-                </v-col>
+
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
                   <v-select v-model="applicant.designation.division" label="Division" item-value="_id" :items="sdo_data"
                     hide-details />
@@ -144,6 +326,10 @@
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
                   <v-select v-model="applicant.designation.school" :items="get_sdo_school(applicant.designation.division)"
                     label="School" hide-details item-value="_id" />
+                </v-col>
+                <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
+                  <v-select v-model="applicant.designation.current_position" label="Current Position"
+                    :items="school_position_data" hide-details item-value="_id" />
                 </v-col>
 
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
@@ -274,7 +460,8 @@
                   text="Ensure  that all uploaded documents adhere to the prescribed standards and are
                   valid for processing. Your attention to document accuracy is crucial for a smooth application process."></v-alert>
                 <v-card-text>
-                  <v-row no-gutters> <v-col cols="12" xl="6" lg="6" md="6" sm="12"
+                  <v-row no-gutters>
+                    <v-col cols="12" xl="6" lg="6" md="6" sm="12"
                       v-for="( attachment_title, index )  in  selected_qs?.attachment "> <v-file-input
                         variant="underlined" :label="attachment_title" :key="index"
                         @update:model-value="shet_so_hard($event, attachment_title)" />
@@ -291,7 +478,7 @@
         <v-card-actions>
           <v-btn v-if="step > 1" variant="text" @click="step--"> Back </v-btn>
           <v-spacer></v-spacer>
-          <v-btn v-if="step < 4" color="primary" variant="flat" @click="next_window">
+          <v-btn v-if="step === 2 || step === 3" color="primary" variant="flat" @click="next_window">
             Next
           </v-btn>
           <v-btn @click="create_application" v-if="step === 4" color="success" variant="flat">
@@ -382,8 +569,8 @@ onBeforeMount(() => {
       get_sdo(),
       get_school(),
       get_school_position(),
-      get_eligibility()
-      // get_qs(),
+      get_eligibility(),
+      get_qs(),
 
     ]
   ).catch(() => swal({
@@ -609,6 +796,7 @@ async function get_position() {
   position_data.value = data
 }
 
+
 // Education data
 const education_data = ref([])
 async function get_education() {
@@ -736,19 +924,24 @@ const email_rules = computed((v: any) => [
   v => is_email_valid(v) || 'Email must be valid'
 ]);
 
-// const qs_data = ref([])
-// async function get_qs() {
-//   const { data, error } = await $rest('sms-position/get-qs', {
-//     method: "GET",
-//   })
-//   qs_data.value = data
-// }
+
 
 // QS
+const qs_data = ref([])
+async function get_qs() {
+  const { data, error } = await $rest('new-applicant/get-selected-qs', {
+    method: "GET",
+  });
+
+  qs_data.value = data
+}
+
 const selected_qs = computed(() => {
-  const selectedPosition = position_data.value.find((pos) => pos._id === applicant.value.qualification.position);
-  return selectedPosition || null;
+  const selected_position = position_data.value.find(pos => pos._id === applicant.value.qualification.position);
+  const qs_details = selected_position && qs_data.value.find(qs => qs._id === selected_position._id);
+  return qs_details || null;
 });
+
 
 
 
@@ -795,4 +988,15 @@ async function get_school_position() {
 
 
 </script>
+<style scoped>
+.gradient-background {
+  background: rgb(2, 0, 36);
+  background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(13, 13, 110, 1) 27%, rgba(22, 22, 166, 1) 56%, rgba(0, 212, 255, 1) 100%);
+}
 
+.bg-image {
+  background-image: url('/prime-logo.png');
+  background-size: cover;
+  background-position: center;
+}
+</style>

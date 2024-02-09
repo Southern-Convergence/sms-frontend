@@ -6,7 +6,6 @@
         EVALUATION / LIST OF REQUIREMENTS FORM
       </v-col>
       <v-col cols="12">
-        {{ applicant_details }}
         <v-row no-gutters>
           <v-col cols="5" class="text-subtitle-2 font-weight-bold"> TO : REGINAL DIRECTOR
             <p class="pl-7 font-weight-regular">Regional Director/DepEd - NCR
@@ -150,8 +149,7 @@
                     CLOSE
                   </v-btn>
                 </v-col>
-                <v-col cols="6"
-                  v-if="user.role === 'Administrative Officer IV' && applicant_details.status === 'Pending'">
+                <v-col cols="6" v-if="ROLES.ADMIN4 && applicant_details.status === 'Pending'">
                   <v-dialog width="500" v-model="evaluator_dialog">
                     <template v-slot:activator="{ props }">
                       <v-btn block variant="tonal" v-bind="props" text="Assign to Evaluator"
@@ -264,18 +262,21 @@
               <v-alert density="compact" variant="tonal" type="info" closable>The SDO representative needs to provide
                 attachments.
               </v-alert>
-              <v-file-input v-for="[name, value] in Object.entries(applicant_details.sdo_attachments)" :key="name"
-                :label="name" @update:model-value="shet_so_hard($event, name)" />
+              <v-file-input class="mt-2" v-for="[name, value] in Object.entries(applicant_details.sdo_attachments)"
+                :key="name" :label="name" @update:model-value="sdo_evaluator_attach($event, name)" />
             </v-card-text>
           </v-sheet>
         </v-sheet>
-        <v-sheet border class="pa-1" v-if="Object.keys(applicant_details).length">
-          <v-sheet border v-for=" [key, value], index  in  Object.entries(applicant_details.sdo_attachments) ">
+        <v-sheet border v-if="ROLES.PRINCIPAL" class="pa-1">
+          <h5 class="pa-2 font-weight-bold text-subtitle-1"> School Division Office</h5>
+          <v-sheet v-if="Object.entries(applicant_details).length" border
+            v-for=" [key, value], index  in  Object.entries(applicant_details?.sdo_attachments) ">
             <v-sheet border class="pa-4">
               <h6> {{ index + 1 }}.
-                {{ value.description }}
+                {{ value?.description }}
               </h6>
-              <v-btn size="small" color="primary" class="d-flex " variant="tonal" @click="open_attachment_dialog(key)">
+              <v-btn size="small" color="primary" class="d-flex " variant="tonal"
+                @click="open_sdo_attachment_dialog(key)">
                 <v-icon class="mr-2">mdi-attachment</v-icon>
                 <span>View Attachment</span>
               </v-btn>
@@ -290,16 +291,12 @@
                   <v-checkbox color="error" label="Invalid" @click="evaluate_sdo_attachment(key, false)" hide-details
                     density="compact" :model-value="getsdoCheckboxValue(key, false)" />
                 </v-col>
-                <v-col cols="12" v-if="applicant_details.sdo_attachments[key].valid == false">
+                <v-col cols="12" v-if="applicant_details?.sdo_attachments[key].valid == false">
                   <v-textarea label="Specify reason" v-model="remarks" rows="2" hide-details
                     @update:model-value="sdo_remarks_attachment(key)"
                     :model-value="applicant_details.sdo_attachments[key].remarks" bg-color="#E8EAF6" />
                 </v-col>
               </v-row>
-
-
-
-
             </v-sheet>
           </v-sheet>
         </v-sheet>
@@ -351,11 +348,17 @@ onBeforeMount(() => {
 
 
 const enum ROLES {
+  PRINCIPAL = "Principal",
+  ADMIN4 = "Administrative Officer IV",
   EVALUATOR = "Evaluator",
-  PRINCIPAL = "Principal"
+  VERIFIER = "Verifier",
+  RECOMMENDING = "Recommending Approver",
+  APPROVER = "Approver"
+
+
 }
 
-// EVALUATES ATTACHMENT
+// EVALUATES APPLICANT ATTACHMENT
 const evaluate_attachment = (key: string, value: boolean) => {
   applicant_details.value.attachments[key].valid = value;
 }
@@ -367,7 +370,7 @@ const remarks = ref("");
 const remarks_attachment = (key: string) => {
   applicant_details.value.attachments[key].remarks = remarks.value
 }
-// SDO
+// EVALUATES APPLICANT ATTACHMENT
 const evaluate_sdo_attachment = (key: string, value: boolean) => {
   applicant_details.value.sdo_attachments[key].valid = value;
 }
@@ -392,7 +395,7 @@ const selected_evaluator = ref("");
 const evaluators = ref([]);
 const get_evaluators = async () => {
   const role = user.role;
-  if (role !== "Administrative Officer IV") return;
+  if (role !== ROLES.ADMIN4) return;
 
   const { data, error } = await $rest("new-applicant/get-evaluators", { method: "GET", query: { division_id: user.division } });
   if (error) return swal({ title: "Error", error: error, icon: "error", buttons: { ok: false, cancel: false } });
@@ -433,8 +436,13 @@ async function assign_evaluator_applicant() {
 
 const handle_application = async () => {
   const role = user.role;
+
   const attachment = applicant_details.value.attachments;
   const is_attachment_valid = Object.values(applicant_details.value.attachments).every(attachment => typeof attachment.valid === 'boolean');
+
+  const sdo_attachment = applicant_details.value.sdo_attachments
+
+
   if (!is_attachment_valid) {
     return swal({
       title: "Evaluate Attachments",
@@ -447,9 +455,11 @@ const handle_application = async () => {
         },
       },
     });
-  }
+  };
+
   const payload = {
     attachment,
+    sdo_attachment,
     app_id: route.query.id,
   };
 
@@ -481,17 +491,14 @@ const handle_application = async () => {
   }
 }
 
-const invalid_attachments = computed(() => {
-  if (!applicant_details.value || !applicant_details.value.attachments) {
-    return {};
-  }
-  return Object.entries(applicant_details.value.attachments)
-    .filter(([key, attachment]) => attachment.valid === false)
-    .reduce((result, [key, attachment]) => {
-      result[key] = attachment;
-      return result;
-    }, {});
-});
+const invalid_attachments = computed(() =>
+  applicant_details.value?.attachments
+    ? Object.fromEntries(
+      Object.entries(applicant_details.value.attachments)
+        .filter(([key, attachment]) => !attachment.valid)
+    )
+    : {}
+);
 
 const clear_attachments = () => {
   for (const key in applicant_details.value.attachments) {
@@ -504,9 +511,8 @@ const is_render_sdo_attachment = computed(() => {
   return user.role === ROLES.EVALUATOR && sdo_attch;
 });
 
-const shet_so_hard = (data: any, title: string) => {
+const sdo_evaluator_attach = (data: any, title: string) => {
   applicant_details.value.sdo_attachments[title] = data
-  console.log(applicant_details.value.sdo_attachments)
 }
 /**
  * APPROVAL PROCCESS
@@ -581,6 +587,10 @@ const attach = ref({ dialog: false, title: "", src: "" })
 const open_attachment_dialog = (attachment: string) => {
   const attachments = applicant_details.value.attachments;
   attach.value = { dialog: true, src: attachments[attachment], title: attachment };
+}
+const open_sdo_attachment_dialog = (attachment: string) => {
+  const sdo_attachments = applicant_details.value.sdo_attachments;
+  attach.value = { dialog: true, src: sdo_attachments[attachment], title: attachment };
 }
 
 // const button_display = (status: string) => {

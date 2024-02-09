@@ -41,38 +41,6 @@
                         </v-sheet>
                     </template>
                 </commons-item-container>
-                <!-- <v-sheet  class="overflow-y-auto d-flex flex-wrap mt-3" height="67vh">
-                            <v-sheet width="50%" variant="tonal" v-for="user, index in users_data" :key="index" border>
-                                <v-alert rounded="0" border-color="indigo" color="white">
-                                    <div>
-                                        <div class="d-flex mb-1">
-                                            <div class="text-uppercase  text-indigo text-body-1"> {{ user.first_name
-                                            }}
-                                                {{
-                                                    user.last_name }}
-                                            </div>
-                                            <v-spacer />
-                                            <div> <v-chip density="compact" class="text-uppercase text-overline"
-                                                    color="success">{{
-                                                        user.status }}</v-chip></div>
-                                        </div>
-
-                                        <div class="text-body-2"><b> {{ user.role }}</b> <b v-if="user.division"> of
-                                                {{
-                                                    user.division.title
-                                                }}</b>
-                                        </div>
-                                        <div class="text-caption font-weight-bold mb-2">{{ user.type }}</div>
-
-                                        <div class="text-caption"> <v-icon color="red"> mdi-email</v-icon> <u
-                                                class="text-blue">{{ user.email }}</u>
-                                        </div>
-                                        <div class="text-caption"> <v-icon color="success"> mdi-phone</v-icon> {{
-                                            user.contact_number }}</div>
-                                    </div>
-                                </v-alert>
-                            </v-sheet>
-                        </v-sheet> -->
 
             </v-col>
 
@@ -108,32 +76,7 @@
                         </v-alert>
                     </v-sheet>
                 </v-sheet>
-                <!-- <v-sheet class="pl-2 w-100">
-                    <v-btn @click="create_sdo_dialog = true" prepend-icon="mdi-pencil-plus" color="indigo"
-                        class="mr-0 mb-3"> Create
-                        School Division Office </v-btn>
-                    <v-sheet height="70vh" class="overflow-auto">
-                        <v-sheet variant="tonal" v-for="(sdo, index) in sdo_data" :key="index" class="pb-2 mr-2">
-                            <v-alert class="user-item" @click="route_to_sdo(sdo._id)" border="start" border-color="indigo"
-                                color="green-ligthen-5" rounded="0">
-                                <div class="font-weight-bold text-uppercase text-subtitle-1
-">
-                                    {{ sdo.title }}
-                                </div>
-                                <div>
-                                    <v-icon color="blue-lighten-2"> mdi-map-marker</v-icon> {{
-                                        sdo.address }}
-                                </div>
-                                <div class="text-blue font-italic text-decoration-underline">
-                                    <v-icon color="red"> mdi-email</v-icon> {{ sdo.email }}
-                                </div>
-                                <div>
-                                    <v-icon color="success"> mdi-phone</v-icon> {{ sdo.telephone }}
-                                </div>
-                            </v-alert>
-                        </v-sheet>
-                    </v-sheet>
-                </v-sheet> -->
+
 
             </v-col>
         </v-row>
@@ -175,14 +118,29 @@
                             <v-col cols="6"><v-select v-model="user.side" label="Type"
                                     :items="['School Division Office', 'Regional Office']" hide-details="auto" required
                                     :rules="[v => !!v || 'Type is required']" /></v-col>
-                            <v-col cols="6" v-if="user.type !== 'Regional Office'">
+                            <!-- <v-col cols="6">
                                 <v-select v-model="user.designation_information.division" :items="sdo_data" label="Division"
-                                    item-value="_id" hide-details="auto" /></v-col>
+                                    item-value="_id" hide-details="auto" /></v-col> -->
                             <v-col cols="6">
                                 <v-select v-model="user.role" :items="roles" item-title="name" item-value="_id" label="Role"
                                     hide-details="auto" :rules="[v => !!v || 'Role is required']" />
                             </v-col>
+                            <v-col cols="12"> <v-row dense>
+                                    <v-col cols="12">
+                                        <v-alert color="info" icon="mdi-information" variant="tonal"> Input Regional
+                                            Director
+                                            Information</v-alert>
+                                    </v-col>
+                                    <v-col cols="4"> <v-text-field hide-details="auto" label="Firstname" /></v-col>
+                                    <v-col cols="4"> <v-text-field hide-details="auto" label="Middlename" /></v-col>
+                                    <v-col cols="4"> <v-text-field hide-details="auto" label="Lastname" /></v-col>
+                                    <v-col cols="12"> <v-textarea label="Regional Office" rows="2" /></v-col>
+                                </v-row>
+                            </v-col>
+
                         </v-row>
+
+
                     </v-form>
                 </v-card-text>
                 <v-divider />

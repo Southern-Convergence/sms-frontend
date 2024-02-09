@@ -8,7 +8,7 @@
 
     <v-navigation-drawer v-model="drawer" :rail="$vuetify.display.smAndDown" clipped>
       <v-sheet>
-        <v-img class="ma-2" src="/deped.svg" cover />
+        <v-img class="ma-2" src="/prime-logo.png" cover contain />
       </v-sheet>
 
       <v-sheet>

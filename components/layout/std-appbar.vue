@@ -7,7 +7,7 @@
         <v-img src="/logo.svg" @click="$router.push({ name: 'home' })" style="cursor : pointer" />
       </v-avatar> -->
       <v-app-bar-title class="pt-1 text-indigo" @click="$router.push({ name: 'home' })" style="cursor : pointer">
-        <!-- {{ $props.appbar_title }} -->Reclassification System
+        <!-- {{ $props.appbar_title }} -->RECLASSIFICATION SYSTEM
       </v-app-bar-title>
       <!-- <dev-display-debugger id="floater" /> -->
       <v-spacer />
@@ -147,7 +147,8 @@
               <NavItem :items="nav.std_header_navs" />
               <v-divider class="mb-2" />
               <v-list-item class="py-0">
-                <v-btn prepend-icon="mdi-logout-variant" variant="outlined" @click="logout" block>Sign-Out</v-btn>
+                <v-btn color="indigo" prepend-icon="mdi-logout-variant" variant="outlined" @click="logout"
+                  block>Sign-Out</v-btn>
               </v-list-item>
             </v-list>
           </v-card-text>

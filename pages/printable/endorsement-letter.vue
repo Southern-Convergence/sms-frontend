@@ -12,17 +12,17 @@
         </div>
 
         <div class="py-10" style="text-align: justify;    text-indent: 50px">
-          Respectfully transmitted to Ms. RUBY P. MURO, Regional Director,
-          Department of Budget and Management, National Capital Region, 2nd Floor
-          Arcache Building General Solano, Corner Nepomuceno St, San Miguel,
-          Manila, the herein request for reclassification of position of <span class="text-indigo">Ms. {{
+          Respectfully transmitted to Ms.<b class="text-red"> REGIONAL DIRECTOR NAME</b>, Regional Director,
+          Department of Budget and Management, National Capital Region,<b class="text-red"> REGIONAL OFFICE ADDRESS</b>,
+          the herein request for
+          reclassification of position of <span class="text-indigo">Ms. {{
             applicant_endorsement.full_name }}, from {{ applicant_endorsement.current_position }} to {{
     applicant_endorsement.applied_position }},
             {{ applicant_endorsement.school }} – {{ applicant_endorsement.division }}, </span> this Region,
           chargeable against the lumpsum appropriation for reclassification of
           positions for CY <span class="text-indigo"> 2023</span>.
         </div>
-        <div class="text-end font-weight-bold">WILFREDO E. CABRAL, CESO III
+        <div class="text-end font-weight-bold text-red">REGIONAL DIRECTOR NAME
         </div>
         <div class="text-end pr-15"> Regional Director</div>
 
@@ -37,7 +37,7 @@
         </div>
         <div class="py-5">
           <b>Copy furnished:</b>
-          <div class="pl-11 text-indigo"> Schools Division Superintendent</div>
+          <div class="pl-11 text-red font-weight-bold"> Schools Division Superintendent Name</div>
           <div class="pl-11 text-indigo">{{ applicant_endorsement.division }}</div>
         </div>
       </div>

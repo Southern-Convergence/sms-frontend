@@ -184,6 +184,19 @@
               <v-col cols="6" v-if="sdo_user.side == 'School'">
                 <v-select v-model="sdo_user.designation_information.school" label="School" :items="school_data"
                   item-value="_id" hide-details /></v-col>
+              <v-col cols="12">
+                <v-row dense>
+                  <v-col cols="12">
+                    <v-alert color="info" icon="mdi-information" variant="tonal"> Input Schools Division
+                      Superintendent
+                      Information</v-alert>
+                  </v-col>
+                  <v-col cols="4"> <v-text-field hide-details="auto" label="Firstname" /></v-col>
+                  <v-col cols="4"> <v-text-field hide-details="auto" label="Middlename" /></v-col>
+                  <v-col cols="4"> <v-text-field hide-details="auto" label="Lastname" /></v-col>
+                  <v-col cols="12"> <v-textarea label="Regional Office" rows="2" /></v-col>
+                </v-row>
+              </v-col>
             </v-row> </v-form>
 
 

@@ -2,7 +2,7 @@
 <template>
   <v-sheet height="100vh" class="d-flex align-center justify-center ">
     <v-sheet class="h-100 w-100 d-flex align-center justify-center" color="#ECEFF1">
-      <v-sheet border class="w-45">
+      <v-sheet border class="w-48">
         <v-toolbar color="indigo" border>
           <v-list-item class="pl-2" density="compact">
             <template v-slot:prepend>
@@ -16,7 +16,7 @@
           </v-spacer>
         </v-toolbar>
         <v-card-text>
-          <v-sheet class="overflow-y-auto" height="80vh">
+          <v-sheet>
             <v-sheet border variant="tonal" color="indigo-lighten-5" class="elevation-2 pa-3 mx-auto">
               <v-card-title class="text-uppercase font-weight-bold"> {{ applicant_history.full_name }}
               </v-card-title>
@@ -25,13 +25,12 @@
               </v-card-subtitle>
               <v-card-subtitle class="text-caption">Date Applied : <b> {{ new
                 Date(applicant_history.created_date).toLocaleString() }}</b></v-card-subtitle>
-
             </v-sheet>
-            <v-sheet width="auto" border>
+            <v-sheet width="auto" border class="overflow-y-auto" height="70vh">
               <v-timeline side="end">
                 <v-timeline-item v-for="signatory, index in filter_assignees" :key="signatory" icon="mdi-check"
                   dot-color="success">
-                  <v-sheet border class="elevation-2 pa-3 mr-3" width="430">
+                  <v-sheet border class="elevation-2 pa-3 mr-3" width="500">
                     <!-- <v-card-title class="text-orange"> {{ applicant_history.status }} </v-card-title> -->
                     <v-card-subtitle>
                       Your application has been approved by <b>{{ signatory.name }}</b>.

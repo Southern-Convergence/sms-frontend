@@ -51,8 +51,10 @@ const GLOBAL_NAVS: NavMap = {
   ],
 
   systems_navs: [
-    new NavTree("Dashboards", "dashboard", "mdi-view-dashboard"),
+    new NavTree("Homepage", "sms-homepage", "mdi-home"),
+    new NavTree("Dashboards", "sms-dashboard", "mdi-view-dashboard"),
     new NavTree("Reclassification", "sms-reclassification", "mdi-list-box-outline"),
+
 
 
   ],

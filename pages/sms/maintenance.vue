@@ -2,10 +2,15 @@
   <v-sheet color="#E8EAF6" height="96vh">
 
     <v-card-text>
-      <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="start">
-        <v-tab :value="1">Set Up Form</v-tab>
-        <v-tab :value="2">Qualification Standards</v-tab>
+      <v-tabs v-model="tab" color="blue-darken-4" align-tabs="start" centered stacked>
+        <v-tab :value="1">
+          <v-icon>mdi-cog</v-icon>
+          Set Up Form</v-tab>
+        <v-tab :value="2">
+          <v-icon>mdi-certificate</v-icon>
+          Qualification Standards</v-tab>
       </v-tabs>
+
       <v-window v-model="tab">
         <v-window-item :value="1" height="80vh">
           <v-sheet fluid border class="mt-2">
@@ -98,20 +103,18 @@
               <v-col cols="4">
                 <v-sheet height="40vh" class="d-flex flex-column pa-1">
                   <v-toolbar color="indigo" class="pl-3 text-subtitle-1">
-                    Eligibility
+                    NONE
                     <v-spacer />
                     <v-tooltip text="Click to add     Eligibility" location="top">
                       <template v-slot:activator="{ props }">
-                        <v-btn @click="eligibility_dialog = true" v-bind="props" color="indigo-lighten-4"
-                          icon="mdi-plus"></v-btn>
+                        <v-btn v-bind="props" color="indigo-lighten-4" icon="mdi-plus"></v-btn>
                       </template>
                     </v-tooltip>
                   </v-toolbar>
                   <v-sheet height="35vh" class="overflow-y-auto pa-2">
-                    <v-alert v-for=" eligibility, index  in  eligibility_data " :key="index"
-                      @click="update_eligibility(eligibility)" class="my-1 maintenance-item"
-                      :class="{ 'elevation-4': is_hovered }" border="start" rounded="0" border-color="indigo">
-                      {{ eligibility.title }}
+                    <v-alert class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" border="start"
+                      rounded="0" border-color="indigo">
+                      NONE
                     </v-alert>
                   </v-sheet>
                 </v-sheet>
@@ -152,7 +155,7 @@
               subtitle="A brief overview of qualification standards." :items="position_data"
               :display_types="['grid', 'list', 'table']">
               <template v-slot:item="{ value, index, display }">
-                <v-sheet class="pa-1 ma-2 maintenance-item " border height="40vh">
+                <v-card class="pa-1 ma-2 maintenance-item overflow-y-auto" border>
                   <v-card-title class="text-uppercase text-h5 font-weight-bold text-indigo ">{{ value.title
                   }}</v-card-title>
                   <v-card-text>
@@ -172,7 +175,7 @@
                       <v-col cols="8" v-for=" exp, index  in  value.experience " :key="index"> : {{ exp.text }}
                         <br /></v-col>
                     </v-row>
-                    <v-row no-gutters justify="end" v-if="value.training_hours && value.training_hours.length">
+                    <!-- <v-row no-gutters justify="end" v-if="value.training_hours && value.training_hours.length">
                       <v-col cols="4"> Training Hours </v-col>
                       <v-col cols="8"> : {{
                         value.training_hours }}
@@ -188,15 +191,10 @@
                       <v-col cols="8"> : {{ value.sg.equivalent }}
                         <br />
                       </v-col>
-                    </v-row>
-                    <v-row no-gutters justify="end" v-if="value.eligibility && value.eligibility.length">
-                      <v-col cols="4"> Eligibility </v-col>
-                      <v-col cols="8"> : {{ value.eligibility }}
-                        <br />
-                      </v-col>
-                    </v-row>
+                    </v-row> -->
 
-                    <v-row no-gutters justify="end" v-if="value.attachment">
+
+                    <!-- <v-row no-gutters justify="end" v-if="value.attachment">
                       <v-col cols="4"> Attachment
                         Require</v-col>
                       <v-col cols="8" v-for=" attach, index  in  value.attachment " :key="index"> : {{ attach.title
@@ -211,107 +209,16 @@
                       }}
                         <br />
                       </v-col>
-                    </v-row>
+                    </v-row> -->
                   </v-card-text>
-                </v-sheet>
+                  <v-card-actions>
+                    <v-btn variant="text" color="info" @click="reveal = true">
+                      More Details
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
               </template>
             </commons-sms>
-
-            <!-- <v-row dense>
-                <v-col cols="4" class="mt-2" v-for=" position, index  in  position_data " :key="index">
-                  <v-sheet class="maintenance-item elevation-2" :class="{ 'elevation-4': is_hovered }" border>
-                    <v-alert color="white" rounded="0">
-                      <div class="text-uppercase text-subtitle-1 font-weight-bold text-indigo">{{ position.title }}</div>
-                      <v-divider class="my-2" />
-                      <v-row no-gutters justify="end" v-if="position.education">
-                        <v-col cols="3"> Education</v-col>
-                        <v-col cols="9" v-for=" educ, index  in  position.education " :key="index">
-                          : {{ educ.text }} <br />
-                        </v-col>
-                      </v-row>
-                      <v-row no-gutters justify="end" v-if="position.education_level">
-                        <v-col cols="3">Education Level </v-col>
-                        <v-col cols="9"> : {{ position.education_level }}</v-col>
-                      </v-row>
-                      <v-row no-gutters justify="end">
-                        <v-col cols="3"> </v-col>
-                        <v-col cols="9"> </v-col>
-                      </v-row>
-                      <v-row no-gutters justify="end" v-if="position.experience">
-                        <v-col cols="3"> Experience </v-col>
-                        <v-col cols="9" v-for=" exp, index  in  position.experience " :key="index"> : {{ exp.text }}
-                          <br /></v-col>
-                      </v-row>
-                      <v-row no-gutters justify="end" v-if="position.training_hours">
-                        <v-col cols="3"> Training Hours </v-col>
-                        <v-col cols="9"> : {{
-                          position.training_hours }}
-                          <br /></v-col>
-                      </v-row>
-                      <v-row no-gutters justify="end" v-if="position.sg.salary_grade">
-                        <v-col cols="3"> Salary Grade </v-col>
-                        <v-col cols="9"> : {{ position.sg.salary_grade }}
-                          <br /></v-col>
-                      </v-row>
-                      <v-row no-gutters justify="end" v-if="position.sg.equivalent">
-                        <v-col cols="3"> Salary Equivalent </v-col>
-                        <v-col cols="9"> : {{ position.sg.equivalent }}
-                          <br />
-                        </v-col>
-                      </v-row>
-                      <v-row no-gutters justify="end" v-if="position.eligibility">
-                        <v-col cols="3"> Eligibility </v-col>
-                        <v-col cols="9"> : {{ position.eligibility }}
-                          <br />
-                        </v-col>
-                      </v-row>
-
-                      <v-row no-gutters justify="end" v-if="position.attachment">
-                        <v-col cols="3"> Attachment
-                          Require</v-col>
-                        <v-col cols="9" v-for=" attach, index  in  position.attachment " :key="index"> : {{ attach.title
-                        }}
-                          <br />
-                        </v-col>
-                      </v-row>
-
-                     
-                      <div class="text-caption mt-2 text-grey"> EDUCATION :</div>
-                      <div v-for=" educ, index  in  position.education " :key="index" class="text-caption ml-4">
-                        {{ educ.text }} <br />
-                      </div>
-                      <div class="text-caption" v-if="position.education_level">
-
-                        <span class="text-grey"> EDUCATION LEVEL : </span> {{ position.education_level }}
-                      </div>
-                      <div class="text-caption text-grey"> EXPERIENCE :</div>
-                      <div v-for=" exp, index  in  position.experience " :key="index" class="text-caption ml-4">
-                        {{ exp.text }} <br />
-
-                      </div>
-                      <div class="text-caption" v-if="position.training_hours">
-                        Training Hours :
-                        <span class="text-caption"> {{ position.training_hours }} </span>
-                      </div>
-                      <div class="text-caption text-grey"> PERFORMANCE RATING :</div>
-                      <div class="text-caption ml-4" v-for=" rate, index  in  position.rating " :key="index">
-                        {{ rate.title }}
-                        <br />
-                      </div>
-
-                      <div class="text-caption" v-if="position.sg">
-                        <span class="text-grey"> SALARY GRADE: </span>
-                        {{ position.sg.salary_grade }}
-                      </div>
-                      <div class="text-caption" v-if="position.sg">
-                        <span class="text-caption">EQUIVALENT :</span>
-                        {{ position.sg.equivalent }}
-                      </div> 
-
-              </v-alert>
-            </v-sheet>
-            </v-col>
-            </v-row> -->
 
           </v-card-text>
         </v-window-item>
@@ -386,8 +293,7 @@
         <v-row no-gutters>
           <v-col cols="6" class="pr-2"> <v-select v-model="position.sg" :items="sg_item" label="Salary Grade"
               item-value="_id" /></v-col>
-          <v-col cols="6"> <v-select v-model="position.eligibility" :items="eligibility_data" label="Eligibility"
-              item-value="_id" /></v-col>
+
         </v-row>
 
 
@@ -422,12 +328,7 @@
         <v-select v-model="selected_position[0].sg" :items="sg_item" label="Salary Grade" item-value="_id" />
       </v-card-text>
     </commons-dialog>
-    <commons-dialog max-width="35%" v-model="eligibility_dialog" icon="mdi-school" title="Create Eligibility"
-      @submit="create_eligibility" submitText="Submit">
-      <v-card-text>
-        <v-textarea v-model="eligibility.title" rows="3" label="Enter Eligibility Title" />
-      </v-card-text>
-    </commons-dialog>
+
 
     <commons-dialog max-width="35%" v-model="attachment_dialog" icon="mdi-school" title="Create Attachment"
       @submit="create_attachment" submitText="Submit">
@@ -453,7 +354,6 @@ onBeforeMount(() => {
       get_rating(),
       get_sg(),
       get_qs(),
-      get_eligibility(),
       get_attachment()
     ]
   ).catch(() => swal({
@@ -720,6 +620,7 @@ const position = ref<Position>({
   experience: [],
   training_hours: 0,
   rating: [],
+
   sg: "",
   attachment: [],
   sdo_attachment: []
@@ -772,38 +673,6 @@ async function update_position() {
 
 }
 
-// Eligibility
-const eligibility_dialog = ref(false);
-
-interface Eligibility {
-  title: String
-}
-
-const eligibility = ref<Eligibility>({
-  title: "",
-
-})
-async function create_eligibility() {
-  const { data, error } = await $rest('sms-eligibility/create-eligibility', {
-    method: "POST",
-    body: { ...eligibility.value }
-  })
-
-  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-  eligibility_dialog.value = false
-  get_eligibility()
-  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
-}
-/**
- * eligibility
- */
-const eligibility_data = ref<Eligibility[]>([]);
-async function get_eligibility() {
-  const { data, error } = await $rest('sms-eligibility/get-eligibility', {
-    method: "GET",
-  })
-  eligibility_data.value = data
-}
 
 
 // Attachment

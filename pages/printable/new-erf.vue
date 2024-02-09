@@ -38,7 +38,6 @@
 
                 </thead>
                 <tbody>
-
                   <tr v-for="educ, index in erf.educational_attainment" :key="index">
                     <td>{{ educ.degree }}</td>
                     <td>{{ educ.institution }}</td>
@@ -162,7 +161,7 @@
           </v-row>
           <div class="d-flex mt-4">
             <div class="w-50 text-center px-5">
-              <b>Marianne Mar Paclian</b>
+              <b>{{ erf }}</b>
               <v-divider />
               <center> School Principal </center>
 
