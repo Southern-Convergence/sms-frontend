@@ -1,23 +1,29 @@
 
 <template>
-  <v-sheet class="pa-5">
+  <v-sheet class="pa-5" color="#E3F2FD">
 
     <v-row no-gutters justify="center">
       <v-col cols="12"> <v-row no-gutters justify="center">
           <v-col cols="9">
             <v-row no-gutters>
-              <v-col cols="12" class="text-h4 font-weight-bold text-indigo">New Government Permit </v-col>
-              <v-col cols="12" class="text-grey "> A brief overview of new government permit. </v-col> </v-row>
+              <v-col cols="12">
+                <b class="text-h4 text " style="font-weight: 900;">New Government Permit </b>
+              </v-col>
+              <v-col cols=" 12" class="text-grey "> A brief overview of new government permit. </v-col> </v-row>
           </v-col>
           <v-spacer />
-          <v-col cols="auto" class="mt-3"><v-switch v-model="sample" label="Enable Application Submission" color="indigo"
-              :model-value="true" hide-details></v-switch></v-col>
+          <v-col cols="auto" class="mt-3">
+            <v-switch inset v-model="sample" label="Enable Application Submission" color="primary" :model-value="true"
+              hide-details></v-switch>
+          </v-col>
         </v-row></v-col>
       <v-col cols="12">
         <v-sheet border>
-          <v-tabs v-model="tab" bg-color="amber" color="white" centered stacked>
+          <v-tabs v-model="tab" :bg-color="!isTabActive ? 'yellow' : 'blue-darken-4'" color="amber" centered stacked>
+
             <v-tab v-for=" i  in  8 " :key="i" :value="'tab-' + i">
-              <v-badge :color="getTextColor(i)" class="pb-4" :content="getNumberForTab(i)">
+
+              <v-badge color="success" class="pb-4 " :content="getNumberForTab(i)">
 
               </v-badge>
               {{ getTabLabel(i) }}
@@ -39,7 +45,7 @@
                         <v-card :key="index" border class="pa-4 ma-1 elevation-2 user-item" variant="outlined"
                           color="blue">
                           <div class="d-flex mb-1">
-                            <div class=" font-weight-medium text-h6">{{ value.university }}</div>
+                            <div class=" text-h6  font-weight-bold">{{ value.university }}</div>
                             <v-spacer />
                             <div> <v-chip density="compact" variant="outlined"
                                 class="text-uppercase text-overline font-weight-bold" color="success">{{
@@ -65,7 +71,8 @@
               </v-row> -->
 
 
-                          <v-row no-gutters class="mt-5"> <v-btn density="compact" @click="history = true" color="amber">
+                          <v-row no-gutters class="mt-5"> <v-btn class="gradient-background rounded-xl elevation-4"
+                              density="compact" @click="history = true" color="blue-darken-4">
                               ACTION</v-btn></v-row>
                         </v-card>
                       </template>
@@ -166,7 +173,7 @@
 
     <v-dialog v-model="history" max-width="35%" submitText="Submit">
       <v-sheet border class="w-45">
-        <v-toolbar color="amber" border>
+        <v-toolbar color="blue-darken-4" border>
           <v-list-item class="pl-2" density="compact">
             <template v-slot:prepend>
               <v-avatar size="34" class="mr-1" variant="text">
@@ -294,17 +301,22 @@ const sample = ref();
 const history = ref(false);
 
 const tab = ref(null);
+
+const isTabActive = computed(() => {
+  // Adjust this condition based on your active tab logic
+  return tab.value === 'tab-1';
+});
 const text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
-const textColor = ref([
-  'success',
-  'success',
-  'success',
-  'success',
-  'success',
-  'success',
-  '#FF8A80',
-  'success',
-]);
+// const textColor = ref([
+//   'success',
+//   'success',
+//   'success',
+//   'success',
+//   'success',
+//   'success',
+//   '#FF8A80',
+//   'success',
+// ]);
 
 const getTabLabel = (index: number) => {
   const labels = [
@@ -336,9 +348,9 @@ const getNumberForTab = (index: number) => {
   return 1 + index;
 };
 
-const getTextColor = (index: number) => {
-  return textColor.value[index - 1] ?? 'black';
-};
+// const getTextColor = (index: number) => {
+//   return textColor.value[index - 1] ?? 'black';
+// };
 
 const user = ref<SmsUser>({
   username: "",
@@ -535,5 +547,43 @@ async function get_sdo() {
 
 .user-item:hover {
   background-color: #dde4ff;
+}
+
+.gradient-background {
+  background: rgb(2, 0, 36);
+  background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(13, 13, 110, 1) 27%, rgba(22, 22, 166, 1) 56%, rgba(0, 212, 255, 1) 100%);
+}
+
+.bg-image {
+  background-image: url('/prime-logo.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.gradient-background {
+  background: rgb(2, 0, 36);
+  background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(13, 13, 110, 1) 27%, rgba(22, 22, 166, 1) 56%, rgba(0, 212, 255, 1) 100%);
+}
+
+.bg-image {
+  background-image: url('/prime-logo.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.text {
+
+  background: #0D06CF;
+  background: linear-gradient(90deg, rgb(2, 1, 31) 0%, rgba(13, 13, 110, 1) 27%, rgba(22, 22, 166, 1) 56%, rgba(0, 212, 255, 1) 100%);
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  font-family: 'Garamond',
+    sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+
+
 }
 </style>
