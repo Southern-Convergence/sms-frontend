@@ -17,7 +17,7 @@
             <v-row no-gutters>
               <v-col cols="4">
                 <v-sheet height="40vh" class="d-flex flex-column pa-1">
-                  <v-toolbar color="indigo" class="pl-3 text-subtitle-1">
+                  <v-toolbar color="blue-darken-4" class="pl-3 text-subtitle-1">
                     Education
                     <v-spacer />
                     <v-tooltip text="Click to add Education" location="top">
@@ -29,8 +29,7 @@
                   </v-toolbar>
                   <v-sheet height="35vh" class="overflow-y-auto pa-2">
                     <v-alert v-for="educ in education_data" :key="educ.title" @click="education_update_dialog(educ)"
-                      class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" border="start" rounded="0"
-                      border-color="indigo">
+                      class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="0" icon="mdi-school">
                       {{ educ.title }}
                     </v-alert>
                   </v-sheet>
@@ -39,7 +38,7 @@
               </v-col>
               <v-col cols="4">
                 <v-sheet height="40vh" class="d-flex flex-column pa-1">
-                  <v-toolbar color="indigo" class="pl-3 text-subtitle-1">
+                  <v-toolbar color="blue-darken-4" class="pl-3 text-subtitle-1">
                     Experience
                     <v-spacer />
                     <v-tooltip text="Click to add Experience" location="top">
@@ -52,7 +51,7 @@
                   <v-sheet height="35vh" class="overflow-y-auto pa-2">
                     <v-alert v-for=" experience, index  in  experience_data " :key="index"
                       @click="experience_update_dialog(experience)" class="my-1 maintenance-item"
-                      :class="{ 'elevation-4': is_hovered }" border="start" rounded="0" border-color="indigo">
+                      :class="{ 'elevation-4': is_hovered }" rounded="0" icon="mdi-head-cog-outline">
                       {{ experience.title }}
                     </v-alert>
                   </v-sheet>
@@ -60,7 +59,7 @@
               </v-col>
               <v-col cols="4">
                 <v-sheet height="40vh" class="d-flex flex-column pa-1">
-                  <v-toolbar color="indigo" class="pl-3 text-subtitle-1">
+                  <v-toolbar color="blue-darken-4" class="pl-3 text-subtitle-1">
                     Performance Rating
                     <v-spacer />
                     <v-tooltip text="Click to add  Performance Rating" location="top">
@@ -72,8 +71,7 @@
                   </v-toolbar>
                   <v-sheet height="35vh" class="overflow-y-auto pa-2">
                     <v-alert v-for=" rating, index  in  rating_data " :key="index" @click="rating_update_dialog(rating)"
-                      class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" border="start" rounded="0"
-                      border-color="indigo">
+                      class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="0" icon="mdi-star">
                       {{ rating.title }}
                     </v-alert>
                   </v-sheet>
@@ -81,7 +79,7 @@
               </v-col>
               <v-col cols="4">
                 <v-sheet height="40vh" class="d-flex flex-column pa-1">
-                  <v-toolbar color="indigo" class="pl-3 text-subtitle-1">
+                  <v-toolbar color="blue-darken-4" class="pl-3 text-subtitle-1">
                     Salary Grade
                     <v-spacer />
                     <v-tooltip text="Click to add     Salary Grade" location="top">
@@ -92,8 +90,7 @@
                   </v-toolbar>
                   <v-sheet height="35vh" class="overflow-y-auto pa-2">
                     <v-alert v-for=" sg, index  in  sg_data " :key="index" @click="update_salary_grade(sg)"
-                      class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" border="start" rounded="0"
-                      border-color="indigo">
+                      class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="0" icon="mdi-cash">
                       <div> Salary Grade : <b> {{ sg.salary_grade }} </b></div>
                       <div> Equivalent : <b> {{ sg.equivalent }} </b></div>
                     </v-alert>
@@ -102,7 +99,7 @@
               </v-col>
               <v-col cols="4">
                 <v-sheet height="40vh" class="d-flex flex-column pa-1">
-                  <v-toolbar color="indigo" class="pl-3 text-subtitle-1">
+                  <v-toolbar color="blue-darken-4" class="pl-3 text-subtitle-1">
                     NONE
                     <v-spacer />
                     <v-tooltip text="Click to add     Eligibility" location="top">
@@ -113,7 +110,7 @@
                   </v-toolbar>
                   <v-sheet height="35vh" class="overflow-y-auto pa-2">
                     <v-alert class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" border="start"
-                      rounded="0" border-color="indigo">
+                      rounded="0" border-color="blue-darken-4">
                       NONE
                     </v-alert>
                   </v-sheet>
@@ -121,7 +118,7 @@
               </v-col>
               <v-col cols="4">
                 <v-sheet height="40vh" class="d-flex flex-column pa-1">
-                  <v-toolbar color="indigo" class="pl-3 text-subtitle-1">
+                  <v-toolbar color="blue-darken-4" class="pl-3 text-subtitle-1">
                     Attachments
                     <v-spacer />
                     <v-tooltip text="Click to add             Attachments" location="top">
@@ -134,7 +131,7 @@
                   <v-sheet height="35vh" class="overflow-y-auto pa-2">
                     <v-alert v-for=" attachment, index  in  attachment_data " :key="index"
                       @click="update_attachment(attachment)" class="my-1 maintenance-item"
-                      :class="{ 'elevation-4': is_hovered }" border="start" rounded="0" border-color="indigo">
+                      :class="{ 'elevation-4': is_hovered }" rounded="0" icon="mdi-paperclip">
                       {{ attachment.title }}
                     </v-alert>
                   </v-sheet>
@@ -145,80 +142,24 @@
         <v-window-item :value="2">
           <v-card-text>
             <v-row no-gutters>
-              <v-col cols="auto" class="mt-3"> <v-btn @click="position_dialog = true" color="indigo"> Set
+              <v-col cols="auto" class="mt-3"> <v-btn @click="position_dialog = true" color="blue-darken-4"> Set
                   Up Position</v-btn></v-col>
               <v-spacer />
               <v-col cols="3"><v-text-field prepend-inner-icon="mdi-magnify" label="Enter Position Title"
                   density="compact" hide-details="auto" variant="solo" bg-color="grey-lighten-4" /></v-col>
             </v-row>
-            <commons-sms class="mt-2" title="Qualification Standards"
+            <commons-item-container class="mt-2" title="Qualification Standards"
               subtitle="A brief overview of qualification standards." :items="position_data"
               :display_types="['grid', 'list', 'table']">
               <template v-slot:item="{ value, index, display }">
-                <v-card class="pa-1 ma-2 maintenance-item overflow-y-auto" border>
-                  <v-card-title class="text-uppercase text-h5 font-weight-bold text-indigo ">{{ value.title
-                  }}</v-card-title>
-                  <v-card-text>
-                    <v-row no-gutters justify="end" v-if="value.education && value.education.length">
-                      <v-col cols="4"> Education</v-col>
-                      <v-col cols="8" v-for=" educ, index  in  value.education " :key="index">
-                        : {{ educ.text }} <br />
-                      </v-col>
-                    </v-row>
-                    <v-row no-gutters justify="end" v-if="value.education_level">
-                      <v-col cols="4">Education Level </v-col>
-                      <v-col cols="8"> : {{ value.education_level }}</v-col>
-                    </v-row>
+                <v-alert class="maintenance-item" color="blue-darken-4" theme="dark" icon="mdi-account-hard-hat" border
+                  @click="view_pos(value)">
+                  {{ value.title
+                  }}
+                </v-alert>
 
-                    <v-row no-gutters justify="end" v-if="value.experience && value.experience.length">
-                      <v-col cols="4"> Experience </v-col>
-                      <v-col cols="8" v-for=" exp, index  in  value.experience " :key="index"> : {{ exp.text }}
-                        <br /></v-col>
-                    </v-row>
-                    <!-- <v-row no-gutters justify="end" v-if="value.training_hours && value.training_hours.length">
-                      <v-col cols="4"> Training Hours </v-col>
-                      <v-col cols="8"> : {{
-                        value.training_hours }}
-                        <br /></v-col>
-                    </v-row>
-                    <v-row no-gutters justify="end" v-if="value.sg.salary_grade">
-                      <v-col cols="4"> Salary Grade </v-col>
-                      <v-col cols="8"> : {{ value.sg.salary_grade }}
-                        <br /></v-col>
-                    </v-row>
-                    <v-row no-gutters justify="end" v-if="value.sg.equivalent">
-                      <v-col cols="4"> Salary Equivalent </v-col>
-                      <v-col cols="8"> : {{ value.sg.equivalent }}
-                        <br />
-                      </v-col>
-                    </v-row> -->
-
-
-                    <!-- <v-row no-gutters justify="end" v-if="value.attachment">
-                      <v-col cols="4"> Attachment
-                        Require</v-col>
-                      <v-col cols="8" v-for=" attach, index  in  value.attachment " :key="index"> : {{ attach.title
-                      }}
-                        <br />
-                      </v-col>
-                    </v-row>
-                    <v-row no-gutters justify="end" v-if="value.sdo_attachment">
-                      <v-col cols="4"> SDO Attachment
-                        Required</v-col>
-                      <v-col cols="8" v-for=" attach, index  in  value.attachment " :key="index"> : {{ attach.title
-                      }}
-                        <br />
-                      </v-col>
-                    </v-row> -->
-                  </v-card-text>
-                  <v-card-actions>
-                    <v-btn variant="text" color="info" @click="reveal = true">
-                      More Details
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
               </template>
-            </commons-sms>
+            </commons-item-container>
 
           </v-card-text>
         </v-window-item>
@@ -269,6 +210,8 @@
         <v-text-field v-model="selected_sg.equivalent" label="Equivalent" />
       </v-card-text>
     </commons-dialog>
+
+
 
 
 
@@ -337,6 +280,65 @@
       </v-card-text>
     </commons-dialog>
 
+
+    <v-dialog max-width="50%" v-model="view_position_dialog" icon="mdi-school"
+      :subtitle="'Modify details for the salary grade.'">
+      <v-card>
+        <v-card-text>
+          <v-row no-gutters justify="end">
+            <v-col cols="12"> REQUIREMENTS FOR EVALUATION FOR {{ selected_position?.title }}</v-col>
+            <v-col cols="4"> Education</v-col>
+            <v-col cols="8" v-for=" educ, index  in  selected_position.education " :key="index">
+              : {{ educ.text }} <br />
+            </v-col>
+          </v-row>
+          <v-row no-gutters justify="end" v-if="selected_position.education_level">
+            <v-col cols="4">Education Level </v-col>
+            <v-col cols="8"> : {{ selected_position.education_level }}</v-col>
+          </v-row>
+
+          <v-row no-gutters justify="end" v-if="selected_position.experience && selected_position.experience.length">
+            <v-col cols="4"> Experience </v-col>
+            <v-col cols="8" v-for=" exp, index  in  selected_position.experience " :key="index"> : {{ exp.text }}
+              <br /></v-col>
+          </v-row>
+          <v-row no-gutters justify="end"
+            v-if="selected_position.training_hours && selected_position.training_hours.length">
+            <v-col cols="4"> Training Hours </v-col>
+            <v-col cols="8"> : {{
+              selected_position.training_hours }}
+              <br /></v-col>
+          </v-row>
+          <v-row no-gutters justify="end" v-if="selected_position.sg.salary_grade">
+            <v-col cols="4"> Salary Grade </v-col>
+            <v-col cols="8"> : {{ selected_position.sg.salary_grade }}
+              <br /></v-col>
+          </v-row>
+          <v-row no-gutters justify="end" v-if="selected_position.sg.equivalent">
+            <v-col cols="4"> Salary Equivalent </v-col>
+            <v-col cols="8"> : {{ selected_position.sg.equivalent }}
+              <br />
+            </v-col>
+          </v-row>
+          <v-row no-gutters justify="end" v-if="selected_position.attachment">
+            <v-col cols="4"> Attachment
+              Require</v-col>
+            <v-col cols="8" v-for=" attach, index  in  selected_position.attachment " :key="index"> : {{ attach.title
+            }}
+              <br />
+            </v-col>
+          </v-row>
+          <v-row no-gutters justify="end" v-if="selected_position.sdo_attachment">
+            <v-col cols="4"> SDO Attachment
+              Required</v-col>
+            <v-col cols="8" v-for=" attach, index  in  selected_position.attachment " :key="index"> : {{ attach.title
+            }}
+              <br />
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-sheet>
 </template>
 
@@ -371,6 +373,7 @@ const is_hovered = ref(false)
 
 const position_dialog = ref(false);
 
+const view_position_dialog = ref(false)
 
 // CREATE EDUCATION
 const education = ref<Education>({
@@ -653,6 +656,13 @@ function update_selected_position(position: Position) {
   update_position_dialog.value = true;
 }
 
+const view_position = ref<Position[]>([]);
+
+function view_pos(position: Position) {
+  selected_position.value = { ...position };
+  view_position_dialog.value = true;
+}
+
 async function update_position() {
   const selectedPosition = selected_position.value[0];
   const { data, error } = await $rest('sms-position/update-position', {
@@ -730,3 +740,4 @@ const formatted_equivalent = computed(() => {
   background-color: #E8EAF6;
 }
 </style>
+

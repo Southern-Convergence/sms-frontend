@@ -5,14 +5,14 @@
         <v-window v-model="step">
           <v-window-item :value="1">
             <v-card class="w-100 d-flex align-center justify-center " rounded="lg">
-              <v-card class="w-50 pa-10 gradient-background" height="70vh">
+              <v-card class="w-50 pa-10 gradient-background" height="80vh">
                 <v-card-title class="text-h5 mt-5 text-white"> WELCOME to
                   DepEd NCR Reclassification System
                 </v-card-title>
                 <v-card-subtitle class="text-grey">Elevate Your Career: A Guide to the Reclassification System
                 </v-card-subtitle>
 
-                <v-card-text>
+                <v-card-text max-height="45vh" class="overflow-y-auto">
                   <v-list-item class="pl-2" density="compact">
                     <template v-slot:prepend>
                       <v-avatar class="mr-1" variant="text">
@@ -22,7 +22,6 @@
                     <v-list-item-title class="text-white">Individual Qualification</v-list-item-title>
                   </v-list-item>
                   <v-row no-gutters>
-
                     <v-col cols="12" class="pa-2 ">
                       <v-select :items="position_data" v-model="applicant.qualification.position" label="Select Position"
                         variant="solo" hide-details item-value="_id" prepend-inner-icon="mdi-account-hard-hat" />
@@ -47,20 +46,21 @@
                     <v-col cols="12" class="pa-2" v-if="selected_qs?.rating.length">
                       <v-select v-model="applicant.qualification.per_rating" :items="rating_data"
                         label="Performance Rating" variant="solo" hide-details item-value="_id"
-                        prepend-inner-icon="mdi-star" />
+                        prepend-inner-icon="mdi-star" multiple />
                     </v-col>
                   </v-row>
-                  <v-row class="mt-15" no-gutters justify="center">
-                    <v-col cols="5" class="pa-3 "><v-btn block color="white" variant="outlined"
+                </v-card-text>
+                <v-card-actions>
+                  <v-row no-gutters justify="center">
+                    <v-col cols="5" class="pr-2"><v-btn block color="error" variant="outlined"
                         rounded="xl">CLEAR</v-btn></v-col>
-                    <v-col cols="5" class="pa-3"><v-btn @click="next_window" block color="blue-darken-4"
+                    <v-col cols="5"><v-btn @click="next_window" block variant="outlined" color="white"
                         rounded="xl">SUBMIT</v-btn></v-col>
                   </v-row>
-                </v-card-text>
-
+                </v-card-actions>
 
               </v-card>
-              <v-sheet class="w-50  d-flex align-center " height="70vh" color="#E3F2FD">
+              <v-sheet class="w-50  d-flex align-center " height="80vh" color="#E3F2FD">
                 <div class="mx-auto w-100 px-10 ">
                   <v-sheet v-if="selected_qs">
 
@@ -75,6 +75,7 @@
 
                       </v-list-item>
                       <v-sheet class="overflow-y-auto" color="#E3F2FD">
+                        {{ selected_qs }}
                         <v-list-item class="ma-2" color="white" variant="tonal" rounded="rounded">
                           <template v-slot:prepend>
                             <v-icon color="primary" icon="mdi-account-hard-hat"></v-icon>
@@ -461,6 +462,7 @@
                   valid for processing. Your attention to document accuracy is crucial for a smooth application process."></v-alert>
                 <v-card-text>
                   <v-row no-gutters>
+                    {{ selected_qs }}
                     <v-col cols="12" xl="6" lg="6" md="6" sm="12"
                       v-for="( attachment_title, index )  in  selected_qs?.attachment "> <v-file-input
                         variant="underlined" :label="attachment_title" :key="index"
@@ -554,11 +556,11 @@ const step = ref(1)
 const { CDN_ENDPOINT, DEV_CDN_ENDPOINT } = cfg.public;
 const CDN = cfg.public.NODE_ENV === "development" ? DEV_CDN_ENDPOINT : CDN_ENDPOINT;
 
-
 const shet_so_hard = (data: any, title: string) => {
   applicant.value.attachments[title] = data
   console.log(applicant.value.attachments)
 }
+
 onBeforeMount(() => {
   Promise.all(
     [
@@ -639,6 +641,8 @@ const applicant = ref({
 })
 
 const show_footer = ref(false)
+
+
 
 /**
  * START: SERVICE RECORD
@@ -843,8 +847,9 @@ function next_window() {
   if (!applicant_education) return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
   const applicant_experience = applicant.value.qualification.experience;
   if (!applicant_experience) return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
+
   const applicant_rating = applicant.value.qualification.per_rating;
-  if (position_data.value.rating?.length && !applicant_rating) return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
+  if (!applicant_rating) return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
   const applicant_training = applicant.value.qualification.training;
 
 
@@ -876,10 +881,14 @@ function experience_matching(applicant_experience: any, required_experience: any
   return result;
 }
 
-function rating_matching(applicant_rating: string, required_rating: string) {
-  if (!required_rating) return true;
-  return applicant_rating == required_rating;
-};
+
+function rating_matching(applicant_rating: any, required_rating: any) {
+  if (!required_rating) {
+    return false;
+  }
+  const [result] = required_rating.map((v: string) => applicant_rating.includes(v));
+  return result;
+}
 
 
 function training_matching(applicant_training: number, required_training: number) {

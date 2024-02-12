@@ -161,12 +161,12 @@
           </v-row>
           <div class="d-flex mt-4">
             <div class="w-50 text-center px-5">
-              <b>{{ erf }}</b>
+              <b>NONE</b>
               <v-divider />
               <center> School Principal </center>
 
             </div>
-            <div class="w-50 text-center"> <b>Marianne Mar Paclian</b>
+            <div class="w-50 text-center"> <b>NONE</b>
               <v-divider />
               <center> Teacher </center>
             </div>
@@ -208,12 +208,12 @@
           </div>
           <div class="d-flex my-5">
             <div class="w-50 text-center">
-              <b>Marianne Mar Paclian</b>
+              <b>NONE</b>
               <v-divider />
               <center> School Division Superintendent </center>
 
             </div>
-            <div class="w-50 text-center"> <b>Marianne Mar Paclian</b>
+            <div class="w-50 text-center"> <b>NONE</b>
               <v-divider />
               <center> Evaluator </center>
             </div>
@@ -278,7 +278,7 @@ async function get_erf() {
   height: 297mm;
   margin: 0 auto;
   box-shadow: 0 0.5mm 2mm rgba(0, 0, 0, 0.3);
-  margin-top: 10px;
+
 
 }
 
