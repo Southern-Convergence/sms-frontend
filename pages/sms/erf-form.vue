@@ -144,11 +144,7 @@
               </v-row>
               <v-row justify="center">
                 <v-divider />
-                <v-col cols="6">
-                  <v-btn block variant="tonal" color="red">
-                    CLOSE
-                  </v-btn>
-                </v-col>
+
                 <v-col cols="6" v-if="ROLES.ADMIN4 && applicant_details.status === 'Pending'">
                   <v-dialog width="500" v-model="evaluator_dialog">
                     <template v-slot:activator="{ props }">
@@ -211,7 +207,7 @@
                 <span>View Attachment</span>
               </v-btn>
 
-              <v-row dense>
+              <v-row dense v-if="applicant_details.status !== 'Completed'">
                 <v-col cols="auto" class="mt-3 font-weight-bold text-grey "> Evaluation :</v-col>
                 <v-col cols="auto">
                   <v-checkbox color="success" label="Valid" @click="evaluate_attachment(key, true)" hide-details
@@ -267,7 +263,9 @@
             </v-card-text>
           </v-sheet>
         </v-sheet>
-        <v-sheet border v-if="ROLES.PRINCIPAL" class="pa-1">
+
+
+        <v-sheet border class=" pa-1" v-if="user.role !== ROLES.PRINCIPAL">
           <h5 class="pa-2 font-weight-bold text-subtitle-1"> School Division Office</h5>
           <v-sheet v-if="Object.entries(applicant_details).length" border
             v-for=" [key, value], index  in  Object.entries(applicant_details?.sdo_attachments) ">
@@ -281,7 +279,7 @@
                 <span>View Attachment</span>
               </v-btn>
 
-              <v-row dense>
+              <v-row dense v-if="applicant_details.status !== 'Completed'">
                 <v-col cols="auto" class="mt-3 font-weight-bold text-grey "> Evaluation :</v-col>
                 <v-col cols="auto">
                   <v-checkbox color="success" label="Valid" @click="evaluate_sdo_attachment(key, true)" hide-details
@@ -403,20 +401,21 @@ const get_evaluators = async () => {
 }
 
 async function assign_evaluator_applicant() {
-  const is_attachment_valid = Object.values(applicant_details.value.attachments).every(attachment => typeof attachment.valid === 'boolean');
-  if (!is_attachment_valid) {
-    return swal({
-      title: "Evaluate Attachments",
-      text: "Please evaluate all attachments before submitting.",
-      icon: "warning",
-      buttons: {
-        confirm: {
-          text: "OK",
-          className: "success",
-        },
-      },
-    });
-  }
+  // no need to evaluate
+  // const is_attachment_valid = Object.values(applicant_details.value.attachments).every(attachment => typeof attachment.valid === 'boolean');
+  // if (!is_attachment_valid) {
+  //   return swal({
+  //     title: "Evaluate Attachments",
+  //     text: "Please evaluate all attachments before submitting.",
+  //     icon: "warning",
+  //     buttons: {
+  //       confirm: {
+  //         text: "OK",
+  //         className: "success",
+  //       },
+  //     },
+  //   });
+  // }
   const payload = {
     app_id: route.query.id,
     evaluator: selected_evaluator.value
@@ -441,7 +440,7 @@ const handle_application = async () => {
   const is_attachment_valid = Object.values(applicant_details.value.attachments).every(attachment => typeof attachment.valid === 'boolean');
 
   const sdo_attachment = applicant_details.value.sdo_attachments
-
+  // const is_sdo_attachment_valid = Object.values(applicant_details.value.sdo_attachments).every(sdo_attachment => typeof sdo_attachment.valid === 'boolean');
 
   if (!is_attachment_valid) {
     return swal({
@@ -456,6 +455,7 @@ const handle_application = async () => {
       },
     });
   };
+
 
   const payload = {
     attachment,
@@ -505,15 +505,26 @@ const clear_attachments = () => {
     applicant_details.value.attachments[key].valid = null;
   }
 };
+const clear_sdo_attachments = () => {
+  for (const key in applicant_details.value.sdo_attachments) {
+    applicant_details.value.sdo_attachments[key].valid = null;
+  }
+};
+
 
 const is_render_sdo_attachment = computed(() => {
   const sdo_attch = applicant_details.value.sdo_attachments
   return user.role === ROLES.EVALUATOR && sdo_attch;
 });
 
+
+
 const sdo_evaluator_attach = (data: any, title: string) => {
   applicant_details.value.sdo_attachments[title] = data
 }
+
+
+
 /**
  * APPROVAL PROCCESS
  */
@@ -533,6 +544,7 @@ const handle_admin4 = async (payload: any) => {
   if (error) return swal({ title: "Erro", text: error, icon: "error", buttons: { ok: false, cancel: false } });
   swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
   clear_attachments();
+  clear_sdo_attachments();
   router.push({ name: 'sms-reclassification' });
 }
 
@@ -564,6 +576,7 @@ const handle_verifier = async (payload: any) => {
   if (error) return swal({ title: "Erro", text: error, icon: "error", buttons: { ok: false, cancel: false } });
   swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
   clear_attachments();
+  clear_sdo_attachments();
   router.push({ name: 'sms-reclassification' });
 }
 
@@ -572,6 +585,7 @@ const handle_recommending_approver = async (payload: any) => {
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
   swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
   clear_attachments();
+  clear_sdo_attachments();
   router.push({ name: 'sms-reclassification' });
 }
 
@@ -580,6 +594,7 @@ const handle_approver = async (payload: any) => {
   if (error) return swal({ title: "Erro", text: error, icon: "error", buttons: { ok: false, cancel: false } });
   swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
   clear_attachments();
+  clear_sdo_attachments();
   router.push({ name: 'sms-reclassification' });
 }
 

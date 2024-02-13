@@ -2,7 +2,7 @@
     <v-sheet width="85%" class="mx-auto ma-5 elevation-2">
         <v-sheet class="pa-6" height="auto" color="grey-lighten-4">
             <v-row no-gutters>
-                <v-col cols="12" class="text-h6 font-weight-bold text-indigo">School Users </v-col>
+                <v-col cols="12" class="text-h6 font-weight-bold text-indigo">School Panel </v-col>
                 <v-col cols="12" class="text-grey"> A brief overview of school users. </v-col>
             </v-row>
         </v-sheet>
