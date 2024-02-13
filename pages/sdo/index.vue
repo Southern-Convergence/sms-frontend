@@ -15,8 +15,8 @@
           @click="user_invite_dialog = true" color="indigo" rounded="0">
           Invite
           User</v-btn>
-        <commons-item-container class="ma-1" title="SDO USER MANAGEMENT" subtitle="A brief overview of users."
-          :items="users_data" :display_types="['grid', 'list', 'table']">
+        <commons-sms class="ma-1" title="SDO USER MANAGEMENT" subtitle="A brief overview of users." :items="users_data"
+          :display_types="['grid', 'list', 'table']">
           <template v-slot:item="{ value, index, display }">
             <v-sheet :key="index" border class="pa-2">
               <div class="d-flex mb-1">
@@ -42,7 +42,7 @@
                 value.contact_number }}</div>
             </v-sheet>
           </template>
-        </commons-item-container>
+        </commons-sms>
 
         <!-- <v-sheet  class="overflow-y-auto d-flex flex-wrap ga-3 ">
      
