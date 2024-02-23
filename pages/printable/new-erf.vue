@@ -161,12 +161,12 @@
           </v-row>
           <div class="d-flex mt-4">
             <div class="w-50 text-center px-5">
-              <b>NONE</b>
+              <b>{{ erf?.principal_name }}</b>
               <v-divider />
               <center> School Principal </center>
 
             </div>
-            <div class="w-50 text-center"> <b>NONE</b>
+            <div class="w-50 text-center"> <b>{{ erf?.full_name }}</b>
               <v-divider />
               <center> Teacher </center>
             </div>
@@ -208,12 +208,12 @@
           </div>
           <div class="d-flex my-5">
             <div class="w-50 text-center">
-              <b>NONE</b>
+              <b>{{ erf?.sds_name }}</b>
               <v-divider />
               <center> School Division Superintendent </center>
 
             </div>
-            <div class="w-50 text-center"> <b>NONE</b>
+            <div class="w-50 text-center"> <b>{{ erf?.evaluator_name }}</b>
               <v-divider />
               <center> Evaluator </center>
             </div>

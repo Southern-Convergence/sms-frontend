@@ -12,8 +12,8 @@
                 <v-btn prepend-icon="mdi-pencil-plus" @click="user_invite_dialog = true" color="indigo" rounded="0">
                     Invite
                     User</v-btn>
-                <commons-sms class="ma-1" title="USER MANAGEMENT" subtitle="A brief overview of users." :items="users_data"
-                    :display_types="['grid', 'list', 'table']">
+                <commons-sms class="my-1 mr-1 " title="USER MANAGEMENT" subtitle="A brief overview of users."
+                    :items="users_data" :display_types="['grid', 'list', 'table']">
                     <template v-slot:item="{ value, index, display }">
                         <v-sheet :key="index" border class="pa-2">
                             <div class="d-flex mb-1">
@@ -45,7 +45,7 @@
             </v-col>
 
             <v-col cols="4" class="mt-10 ">
-                <v-sheet height="100vh" border>
+                <v-sheet border>
                     <v-toolbar>
                         <span class="ml-2"> School Division Office</span>
                         <v-spacer />
@@ -125,18 +125,7 @@
                                 <v-select v-model="user.role" :items="roles" item-title="name" item-value="_id" label="Role"
                                     hide-details="auto" :rules="[v => !!v || 'Role is required']" />
                             </v-col>
-                            <v-col cols="12"> <v-row dense>
-                                    <v-col cols="12">
-                                        <v-alert color="info" icon="mdi-information" variant="tonal"> Input Regional
-                                            Director
-                                            Information</v-alert>
-                                    </v-col>
-                                    <v-col cols="4"> <v-text-field hide-details="auto" label="Firstname" /></v-col>
-                                    <v-col cols="4"> <v-text-field hide-details="auto" label="Middlename" /></v-col>
-                                    <v-col cols="4"> <v-text-field hide-details="auto" label="Lastname" /></v-col>
-                                    <v-col cols="12"> <v-textarea label="Regional Office" rows="2" /></v-col>
-                                </v-row>
-                            </v-col>
+
 
                         </v-row>
 

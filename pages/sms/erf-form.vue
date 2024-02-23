@@ -196,6 +196,7 @@
 
       <!-- xxl="3" xl="3" lg="4" md="6" sm="10" -->
       <v-col cols="4" xl="4" lg="4" md="12" sm="12" xs="12">
+
         <v-sheet border class="pa-1" v-if="Object.keys(applicant_details).length">
           <v-sheet border v-for=" [key, value], index  in  Object.entries(applicant_details.attachments) ">
             <v-sheet border class="pa-4">
@@ -262,12 +263,12 @@
                 :key="name" :label="name" @update:model-value="sdo_evaluator_attach($event, name)" />
             </v-card-text>
           </v-sheet>
+
         </v-sheet>
 
-
-        <v-sheet border class=" pa-1" v-if="user.role !== ROLES.PRINCIPAL">
-          <h5 class="pa-2 font-weight-bold text-subtitle-1"> School Division Office</h5>
-          <v-sheet v-if="Object.entries(applicant_details).length" border
+        <v-sheet border class=" pa-1" v-if="sdo_attach_render">
+          <h5 class=" pa-2 font-weight-bold text-subtitle-1"> School Division Office</h5>
+          <v-sheet v-if="Object.keys(applicant_details).length" border
             v-for=" [key, value], index  in  Object.entries(applicant_details?.sdo_attachments) ">
             <v-sheet border class="pa-4">
               <h6> {{ index + 1 }}.
@@ -289,10 +290,10 @@
                   <v-checkbox color="error" label="Invalid" @click="evaluate_sdo_attachment(key, false)" hide-details
                     density="compact" :model-value="getsdoCheckboxValue(key, false)" />
                 </v-col>
-                <v-col cols="12" v-if="applicant_details?.sdo_attachments[key].valid == false">
+                <v-col cols="12" v-if="applicant_details?.sdo_attachments[key]?.valid == false">
                   <v-textarea label="Specify reason" v-model="remarks" rows="2" hide-details
                     @update:model-value="sdo_remarks_attachment(key)"
-                    :model-value="applicant_details.sdo_attachments[key].remarks" bg-color="#E8EAF6" />
+                    :model-value="applicant_detail?.sdo_attachments[key]?.remarks" bg-color="#E8EAF6" />
                 </v-col>
               </v-row>
             </v-sheet>
@@ -374,12 +375,26 @@ const evaluate_sdo_attachment = (key: string, value: boolean) => {
 }
 const getsdoCheckboxValue = (key: string, expected_value: boolean) => {
   const sdo_attachment = applicant_details.value.sdo_attachments[key];
-  return sdo_attachment.valid === expected_value;
+  return sdo_attachment?.valid === expected_value;
 };
 
 const sdo_remarks_attachment = (key: string) => {
   applicant_details.value.sdo_attachments[key].remarks = remarks.value
 }
+
+const sdo_attached = (key: string) => {
+  const attachments = applicant_details.value.sdo_attachments[key];
+  const descriptions = attachments.flatMap((item) => item.description);
+  return descriptions;
+}
+
+const sdo_attach_render = computed(() => {
+  const status = applicant_details.value.status;
+  const hasAttachments = applicant_details.value.sdo_attachments && Object.keys(applicant_details.value.sdo_attachments).length > 0;
+  const isStatusToIgnore = status === 'For Evaluation' || status === 'Pending' || status === 'For Signature';
+  return hasAttachments && !isStatusToIgnore;
+});
+
 
 const showRemarks = ref({});
 const toggleInvalid = (key: string) => {
@@ -567,6 +582,7 @@ const handle_evaluator = async (payload: any) => {
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
   swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
   clear_attachments();
+  clear_sdo_attachments();
   router.push({ name: 'sms-reclassification' });
 }
 

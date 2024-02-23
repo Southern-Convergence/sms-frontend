@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-footer color="indigo-lighten-5" class="d-flex" height="48" app border>
+    <v-footer class="d-flex" height="48" app border>
       <small class="text-caption">Developed by Southern Convergence</small>
       <v-spacer />
       <small class="text-caption text--secondary mr-1">EN (Phiippines)</small>

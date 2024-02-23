@@ -10,7 +10,7 @@
           </center>
           <center> August 31, 2023</center>
         </div>
-
+        {{ applicant_endorsement }}
         <div class="py-10" style="text-align: justify;    text-indent: 50px">
           Respectfully transmitted to Ms.<b class="text-red"> REGIONAL DIRECTOR NAME</b>, Regional Director,
           Department of Budget and Management, National Capital Region,<b class="text-red"> REGIONAL OFFICE ADDRESS</b>,
@@ -37,7 +37,7 @@
         </div>
         <div class="py-5">
           <b>Copy furnished:</b>
-          <div class="pl-11 text-red font-weight-bold"> Schools Division Superintendent Name</div>
+          <div class="pl-11  font-weight-bold"> {{ applicant_endorsement.sds_fullname }}</div>
           <div class="pl-11 text-indigo">{{ applicant_endorsement.division }}</div>
         </div>
       </div>
@@ -49,11 +49,12 @@
 
 <script setup lang="ts">
 const router = useRouter();
-
+import useAuth from "~/store/auth";
 const { $rest } = useNuxtApp();
 onBeforeMount(() => {
   get_endorsement();
 });
+const user = useAuth().user;
 const route = useRoute();
 const applicant_endorsement = ref({} as Applicant)
 async function get_endorsement() {
