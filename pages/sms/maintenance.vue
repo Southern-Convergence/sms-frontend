@@ -3,16 +3,41 @@
 
     <v-card-text>
       <v-tabs v-model="tab" color="blue-darken-4" align-tabs="start" centered stacked>
+
         <v-tab :value="1">
-          <v-icon>mdi-cog</v-icon>
-          Set Up Form</v-tab>
-        <v-tab :value="2">
           <v-icon>mdi-certificate</v-icon>
           Qualification Standards</v-tab>
+        <v-tab :value="2">
+          <v-icon>mdi-cog</v-icon>
+          Set Up Form</v-tab>
       </v-tabs>
 
       <v-window v-model="tab">
-        <v-window-item :value="1" height="80vh">
+
+        <v-window-item :value="1">
+          <v-card-text>
+            <v-row no-gutters>
+              <v-col cols="auto" class="mt-3"> <v-btn @click="position_dialog = true" color="blue-darken-4"> Set
+                  Up Position</v-btn></v-col>
+              <v-spacer />
+              <v-col cols="3"><v-text-field prepend-inner-icon="mdi-magnify" label="Enter Position Title"
+                  density="compact" hide-details="auto" variant="solo" bg-color="grey-lighten-4" /></v-col>
+            </v-row>
+            <commons-item-container class="mt-2" title="Qualification Standards"
+              subtitle="A brief overview of qualification standards." :items="position_data"
+              :display_types="['grid', 'list', 'table']">
+              <template v-slot:item="{ value, index, display }">
+                <v-alert class="maintenance-item" color="blue-darken-4" theme="dark" icon="mdi-account-hard-hat" border
+                  @click="view_pos(value)">
+                  {{ value.title
+                  }}
+                </v-alert>
+              </template>
+            </commons-item-container>
+
+          </v-card-text>
+        </v-window-item>
+        <v-window-item :value="2" height="80vh">
           <v-sheet fluid border class="mt-2">
             <v-row no-gutters>
               <v-col cols="4">
@@ -138,30 +163,6 @@
                 </v-sheet>
               </v-col>
             </v-row> </v-sheet>
-        </v-window-item>
-        <v-window-item :value="2">
-          <v-card-text>
-            <v-row no-gutters>
-              <v-col cols="auto" class="mt-3"> <v-btn @click="position_dialog = true" color="blue-darken-4"> Set
-                  Up Position</v-btn></v-col>
-              <v-spacer />
-              <v-col cols="3"><v-text-field prepend-inner-icon="mdi-magnify" label="Enter Position Title"
-                  density="compact" hide-details="auto" variant="solo" bg-color="grey-lighten-4" /></v-col>
-            </v-row>
-            <commons-item-container class="mt-2" title="Qualification Standards"
-              subtitle="A brief overview of qualification standards." :items="position_data"
-              :display_types="['grid', 'list', 'table']">
-              <template v-slot:item="{ value, index, display }">
-                <v-alert class="maintenance-item" color="blue-darken-4" theme="dark" icon="mdi-account-hard-hat" border
-                  @click="view_pos(value)">
-                  {{ value.title
-                  }}
-                </v-alert>
-
-              </template>
-            </commons-item-container>
-
-          </v-card-text>
         </v-window-item>
 
       </v-window>

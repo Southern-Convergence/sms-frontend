@@ -6,7 +6,7 @@
     <v-window v-model="upload_state">
       <v-window-item value="prompt">
         <slot name="default" />
-        <v-card-title> Attach </v-card-title>
+
         <v-card-title class="d-block text-center">
           <v-avatar size="92" contain>
             <v-img src="/file-upload.svg" alt="upload-icon" />

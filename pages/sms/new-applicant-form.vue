@@ -4,8 +4,69 @@
       <v-sheet width="75%" :border="step != 1">
         <v-window v-model="step">
           <v-window-item :value="1">
-            <v-card class="w-100 d-flex align-center justify-center " rounded="lg">
-              <v-card class="w-50 pa-10 gradient-background" height="70vh">
+
+            <div class="h-100 w-100 d-flex align-center justify-center">
+              <v-card class="w-45" color="indigo-lighten-5">
+                <v-card-title class="mt-3 text-title">
+                  WELCOME to DepEd NCR Reclassification System
+                </v-card-title>
+                <v-card-subtitle class="text-grey">Elevate Your Career: A Guide to the Reclassification System
+                </v-card-subtitle>
+                <v-divider class="mt-3"></v-divider>
+
+                <v-card-text class="px-4 overflow-y-auto" style="height: 50vh">
+                  <v-list-item class="pl-2" density="compact">
+                    <template v-slot:prepend>
+                      <v-avatar class="mr-1" variant="text">
+                        <v-icon color="amber"> mdi-seal </v-icon>
+                      </v-avatar>
+                    </template>
+                    <v-list-item-title>Individual Qualification</v-list-item-title>
+                  </v-list-item>
+                  <v-row no-gutters>
+                    <v-col cols="12" class="pa-2">
+                      <v-select :items="position_data" v-model="applicant.qualification.position" label="Select Position"
+                        variant="solo" hide-details item-value="_id" prepend-inner-icon="mdi-account-hard-hat" />
+                    </v-col>
+                    <v-col cols="12" class="pa-2" v-if="selected_qs?.education_level != ''">
+                      <v-select v-model="applicant.qualification.educ_level" :items="['Elementary', 'Secondary']"
+                        label="Education Level" variant="solo" hide-details prepend-inner-icon="mdi-book" />
+                    </v-col>
+                    <v-col cols="12" class="pa-2">
+                      <v-select v-model="applicant.qualification.education" :items="education_data" label="Education"
+                        variant="solo" hide-details multiple item-value="_id" prepend-inner-icon="mdi-school" />
+                    </v-col>
+                    <v-col cols="12" class="pa-2" v-if="selected_qs?.experience.length">
+                      <v-select v-model="applicant.qualification.experience" :items="experience_data" label="Experience"
+                        variant="solo" hide-details multiple item-value="_id" prepend-inner-icon="mdi-head-cog-outline" />
+                    </v-col>
+                    <v-col cols="12" class="pa-2" v-if="selected_qs?.training_hours != 0">
+                      <v-text-field v-model="applicant.qualification.training" label="Enter total training hours"
+                        variant="solo" hide-details type="number" item-value="_id"
+                        prepend-inner-icon="mdi-human-male-board" />
+                    </v-col>
+                    <v-col cols="12" class="pa-2" v-if="selected_qs?.rating.length">
+                      <v-select v-model="applicant.qualification.per_rating" :items="rating_data"
+                        label="Performance Rating" variant="solo" hide-details item-value="_id"
+                        prepend-inner-icon="mdi-star" />
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                  <v-row no-gutters justify="center">
+                    <v-col cols="5"><v-btn block color="error" variant="text" rounded="xl">CLEAR</v-btn></v-col>
+                    <v-col cols="5"><v-btn @click="next_window" block class="gradient-background text-white" rounded="xl"
+                        variant="outlined">SUBMIT</v-btn></v-col>
+                  </v-row>
+                </v-card-actions>
+              </v-card>
+
+            </div>
+
+            <!-- <v-card class="w-50 pa-10 gradient-background" height="70vh">
                 <v-card-title class="text-h5 mt-5 text-white"> WELCOME to
                   DepEd NCR Reclassification System
                 </v-card-title>
@@ -13,6 +74,7 @@
                 </v-card-subtitle>
 
                 <v-card-text>
+                  
                   <v-list-item class="pl-2" density="compact">
                     <template v-slot:prepend>
                       <v-avatar class="mr-1" variant="text">
@@ -22,7 +84,6 @@
                     <v-list-item-title class="text-white">Individual Qualification</v-list-item-title>
                   </v-list-item>
                   <v-row no-gutters>
-
                     <v-col cols="12" class="pa-2 ">
                       <v-select :items="position_data" v-model="applicant.qualification.position" label="Select Position"
                         variant="solo" hide-details item-value="_id" prepend-inner-icon="mdi-account-hard-hat" />
@@ -51,16 +112,16 @@
                     </v-col>
                   </v-row>
                   <v-row class="mt-15" no-gutters justify="center">
-                    <v-col cols="5" class="pa-3 "><v-btn block color="white" variant="outlined"
+                    <v-col cols="5" ><v-btn block color="white" variant="outlined"
                         rounded="xl">CLEAR</v-btn></v-col>
                     <v-col cols="5" class="pa-3"><v-btn @click="next_window" block color="blue-darken-4"
                         rounded="xl">SUBMIT</v-btn></v-col>
-                  </v-row>
+                  </v-row> 
                 </v-card-text>
 
 
-              </v-card>
-              <v-sheet class="w-50  d-flex align-center " height="70vh" color="#E3F2FD">
+              </v-card> -->
+            <!-- <v-sheet class="w-50  d-flex align-center " height="70vh" color="#E3F2FD">
                 <div class="mx-auto w-100 px-10 ">
                   <v-sheet v-if="selected_qs">
 
@@ -142,9 +203,9 @@
 
 
                 </div>
-              </v-sheet>
+              </v-sheet> -->
 
-            </v-card>
+
             <!-- <v-sheet height="70vh">
               <v-toolbar class="py-1" color="primary" border>
                 <v-list-item class="pl-2" density="compact">
@@ -326,8 +387,12 @@
                     label="School" hide-details item-value="_id" />
                 </v-col>
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                  <v-select v-model="applicant.designation.current_position" label="Current Position"
-                    :items="school_position_data" hide-details item-value="_id" />
+                  <v-text-field v-model="applicant.designation.current_position" label="Current Position" hide-details
+                    item-value="_id" />
+                </v-col>
+                <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
+                  <v-select v-model="applicant.designation.current_sg" :items="sg_item" label="Current Salary Grade"
+                    hide-details item-value="_id" />
                 </v-col>
 
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
@@ -459,6 +524,8 @@
                   valid for processing. Your attention to document accuracy is crucial for a smooth application process."></v-alert>
                 <v-card-text>
                   <v-row no-gutters>
+
+
                     <v-col cols="12" xl="6" lg="6" md="6" sm="12"
                       v-for="( attachment_title, index )  in  selected_qs?.attachment "> <v-file-input
                         variant="underlined" :label="attachment_title" :key="index"
@@ -472,7 +539,7 @@
 
           </v-window-item>
         </v-window>
-        <v-divider></v-divider>
+        <v-divider v-if="!step === 1"></v-divider>
         <v-card-actions>
           <v-btn v-if="step > 1" variant="text" @click="step--"> Back </v-btn>
           <v-spacer></v-spacer>
@@ -544,7 +611,8 @@
 </template>
 <script setup lang="ts">
 import swal from 'sweetalert';
-
+import useAuth from "~/store/auth";
+const user = useAuth().user;
 const cfg = useRuntimeConfig();
 const { $rest } = useNuxtApp();
 const step = ref(1)
@@ -566,8 +634,7 @@ onBeforeMount(() => {
       get_rating(),
       get_sdo(),
       get_school(),
-      get_school_position(),
-      get_eligibility(),
+      get_sg(),
       get_qs(),
 
     ]
@@ -596,9 +663,11 @@ const applicant = ref({
     email: "",
     birthday: new Date,
     gender: "",
+
   },
   designation: {
     current_position: "",
+    current_sg: "",
     employee_no: "",
     plantilla_no: "",
     division: "",
@@ -633,7 +702,8 @@ const applicant = ref({
     date: new Date(new Date())
   },
   status: "For Signature",
-  created_date: new Date(new Date())
+  created_date: new Date(new Date()),
+  request_log: []
 })
 
 const show_footer = ref(false)
@@ -821,14 +891,23 @@ async function get_rating() {
   rating_data.value = data
 }
 
-// ELIGIBILITY
-const eligibility_data = ref([]);
-async function get_eligibility() {
-  const { data, error } = await $rest('sms-eligibility/get-eligibility', {
+
+const sg_data = ref<SalaryGrade[]>([]);
+async function get_sg() {
+  const { data, error } = await $rest('sms-salary-grade/get-sg', {
     method: "GET",
   })
-  eligibility_data.value = data
+
+  sg_data.value = data
 }
+const sg_item = computed(() => {
+  return sg_data.value.map((v: SalaryGrade) => {
+    return {
+      ...v,
+      title: Number(v.salary_grade)
+    };
+  });
+});
 
 
 /**
@@ -979,15 +1058,6 @@ function get_sdo_school(division) {
 }
 
 
-const school_position_data = ref<[Position]>([]);
-async function get_school_position() {
-  const { data, error } = await $rest('sms-position/get-school-position', {
-    method: "GET",
-  })
-
-  school_position_data.value = data.map(item => item.title)
-}
-
 
 
 </script>
@@ -1001,5 +1071,15 @@ async function get_school_position() {
   background-image: url('/prime-logo.png');
   background-size: cover;
   background-position: center;
+}
+
+.text-title {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: #2b0cc8;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+
 }
 </style>

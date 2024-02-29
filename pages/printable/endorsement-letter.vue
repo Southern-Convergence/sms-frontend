@@ -10,9 +10,10 @@
           </center>
           <center> August 31, 2023</center>
         </div>
-        {{ applicant_endorsement }}
+
         <div class="py-10" style="text-align: justify;    text-indent: 50px">
-          Respectfully transmitted to Ms.<b class="text-red"> REGIONAL DIRECTOR NAME</b>, Regional Director,
+          Respectfully transmitted to Ms. <b> {{ approver_ro_full_name ? approver_ro_full_name :
+            approver_sdo_full_name }}</b>, Regional Director,
           Department of Budget and Management, National Capital Region,<b class="text-red"> REGIONAL OFFICE ADDRESS</b>,
           the herein request for
           reclassification of position of <span class="text-indigo">Ms. {{
@@ -22,9 +23,11 @@
           chargeable against the lumpsum appropriation for reclassification of
           positions for CY <span class="text-indigo"> 2023</span>.
         </div>
-        <div class="text-end font-weight-bold text-red">REGIONAL DIRECTOR NAME
+        <div class="text-end font-weight-bold">
+          {{ approver_ro_full_name ? approver_ro_full_name :
+            approver_sdo_full_name }}
         </div>
-        <div class="text-end pr-15"> Regional Director</div>
+        <div class="text-end pr-7"> Regional Director</div>
 
 
         <div class="py-5 text-indigo">
@@ -66,6 +69,22 @@ async function get_endorsement() {
   })
   applicant_endorsement.value = data
 }
+const approver_ro_full_name = computed(() => {
+  const first_name = user.first_name;
+  const middle_name = user.middle_name ? `${user.middle_name.charAt(0)}.` : '';
+  const last_name = user.last_name;
+  const role = user.side === 'Approver'
+  const side = user.side === 'RO'
+  return `${first_name} ${middle_name} ${last_name}`;
+});
+const approver_sdo_full_name = computed(() => {
+  const first_name = user.first_name;
+  const middle_name = user.middle_name ? `${user.middle_name.charAt(0)}.` : '';
+  const last_name = user.last_name;
+  const role = user.side === 'Approver'
+  const side = user.side === 'SDO'
+  return `${first_name} ${middle_name} ${last_name}`;
+});
 </script>
 <style scoped>
 .printable-page {

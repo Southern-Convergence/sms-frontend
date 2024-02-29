@@ -28,10 +28,13 @@
                   <v-card-text>
 
                     <div class="d-flex mt-1">
-                      <div class="pr-3"><v-img :width="80" aspect-ratio="4/3" cover src="/yanyan.jpg"></v-img></div>
+                      <div class="pr-3"><v-img :width="80" aspect-ratio="4/3" cover> <v-avatar v-bind="$attrs"
+                            class="ml-2" color="primary" style="cursor: pointer" size="62">
+                            <span class="text-h6">{{ value.first_name.charAt(0) }}{{ value.last_name.charAt(0) }}</span>
+                          </v-avatar></v-img></div>
                       <div>
                         <div class="text-body-1 font-weight-bold">
-                          {{ value.first_name }} {{ value.last_name }}
+                          {{ value.full_name }}
                         </div>
                         <div class="mb-1 text-body-2 text-grey"> {{ value.position }}
                         </div>
@@ -51,15 +54,7 @@
               </template>
             </commons-sms>
 
-            <!-- <v-row dense justify="center" v-else>
-              <v-sheet height="70vh" class="d-flex align-center justify-center ">
-                <v-alert class="align-center justify-center">
 
-                  <h4> No pending application requests at the moment.</h4>
-
-                </v-alert>
-              </v-sheet> 
-            </v-row>-->
           </v-card-text>
         </v-window-item>
       </v-window>
@@ -71,6 +66,8 @@
 const router = useRouter();
 definePageMeta({ layout: "std-systems" });
 const { $rest } = useNuxtApp();
+import useAuth from "~/store/auth";
+const user = useAuth().user;
 onBeforeMount(() => {
   get_application();
 });
@@ -110,6 +107,8 @@ const load_erf_form = (id) => {
     }
   });
 }
+
+
 
 </script>
 

@@ -1,20 +1,7 @@
 <template>
-  <!-- <v-sheet height="80vh" class="d-flex align-center justify-center ">
-    <v-sheet class="h-100 w-100 d-flex align-center justify-center">
+  <v-row>
 
-
-      <h1 class="text-center font-weight-bold">
-        WELCOME to Staffing Modification System
-      </h1>
-
-
-
-
-
-    </v-sheet>
-  </v-sheet> -->
-  <v-row no-gutters>
-    <v-col cols="6" class="mx-auto">
+    <v-col cols="12" class="mx-auto">
       <v-card height="auto" color="indigo">
         <div class="d-flex flex-no-wrap justify-space-between  pl-4">
           <v-avatar class="py-3" size="128">
@@ -22,11 +9,11 @@
           </v-avatar>
           <div>
             <h6 class="text-h6 font-weight-bold mt-4">
-              Marianne Mae Paclian
+              {{ full_name }}
             </h6>
 
-            <h6 class="text-subtitle-2"> School Division Office</h6>
-            <h6 class="text-subtitle-2"> Verifier</h6>
+            <h6 class="text-subtitle-2"> {{ user.side }}</h6>
+            <h6 class="text-subtitle-2"> {{ user.role }}</h6>
 
             <h6 class="font-italic text-blue"> <v-icon icon="mdi-gmail" size="small" color="red" />
               mariannemaepaclian@gamail.com</h6>
@@ -68,12 +55,20 @@ import useNav from "~/store/nav";
 definePageMeta({
   layout: "barren"
 });
+import useAuth from "~/store/auth";
+const user = useAuth().user;
 
 const items = ref([
-  { id: 1, title: 'Teacher II', subtitle: '07/15/2022' },
-  { id: 2, title: 'Teacher III', subtitle: '07/15/2022' },
-  { id: 3, title: 'Head TEacher II', subtitle: '07/15/2022' },
+  { id: 1, title: 'Regional Office  Recommending Approver', subtitle: '07/15/2022' },
+  { id: 2, title: 'Regional Office  Approver', subtitle: '07/15/2024' },
+
 ]);
+const full_name = computed(() => {
+  const first_name = user.first_name;
+  const middle_name = user.middle_name ? `${user.middle_name.charAt(0)}.` : '';
+  const last_name = user.last_name;
+  return `${first_name} ${middle_name} ${last_name}`;
+});
 
 const lines = ref(3);
 </script>

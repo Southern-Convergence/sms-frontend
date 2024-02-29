@@ -7,6 +7,7 @@
             </v-row>
         </v-sheet>
         <v-card-text class="overflow-y-auto h-100 d-flex">
+
             <v-row no-gutters>
                 <v-col cols="4">
                     <v-btn prepend-icon="mdi-pencil-plus" @click="user_invite_dialog = true" color="indigo">
@@ -45,6 +46,25 @@
                     </v-sheet>
                 </v-col>
                 <v-col cols="8">
+
+                    <v-sheet border height="76vh">
+                        <v-toolbar color="white">
+                            <template v-slot:prepend>
+                                <v-icon color="green darken-2">mdi-book</v-icon>
+                            </template>
+                            <b class="ml-3"> Reclass Application Summary</b>
+                            <v-spacer />
+
+                        </v-toolbar>
+                        <v-divider />
+                        <v-card-text variant="tonal" class="">
+                            <v-list>
+
+                            </v-list>
+                        </v-card-text>
+                    </v-sheet>
+                </v-col>
+                <!-- <v-col cols="8">
                     <v-row no-gutters>
                         <v-col cols="6">
                             <v-sheet border height="76vh">
@@ -109,7 +129,7 @@
                         </v-col>
                     </v-row>
 
-                </v-col>
+                </v-col> -->
 
             </v-row>
 
@@ -264,7 +284,7 @@ async function get_users() {
 // SALARY GRADE
 const sg_dialog = ref(false);
 const sg = ref<SalaryGrade>({
-
+    school: route.query.id,
     salary_grade: 0,
     equivalent: 0
 });
