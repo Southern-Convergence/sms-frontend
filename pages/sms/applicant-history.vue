@@ -2,7 +2,7 @@
 <template>
   <v-sheet height="100vh" class="d-flex align-center justify-center ">
     <v-sheet class="h-100 w-100 d-flex align-center justify-center" color="#ECEFF1">
-      <v-sheet border class="w-48">
+      <v-card class="w-45">
         <v-toolbar color="indigo" border>
           <v-list-item class="pl-2" density="compact">
             <template v-slot:prepend>
@@ -16,8 +16,8 @@
           </v-spacer>
         </v-toolbar>
         <v-card-text>
-          <v-sheet>
-            <v-sheet border variant="tonal" color="indigo-lighten-5" class="elevation-2 pa-3 mx-auto">
+          <v-sheet class="mx-auto">
+            <v-sheet color="indigo-lighten-5" class="pa-3 mx-auto">
               <v-card-title class="text-uppercase font-weight-bold"> {{ applicant_history.full_name }}
               </v-card-title>
               <v-card-subtitle>
@@ -26,48 +26,44 @@
               <v-card-subtitle class="text-caption">Date Applied : <b> {{ new
                 Date(applicant_history.created_date).toLocaleString() }}</b></v-card-subtitle>
             </v-sheet>
-            <v-sheet width="auto" border class="overflow-y-auto" height="70vh">
-              <v-timeline side="end">
-                <v-timeline-item v-for="signatory, index in filter_assignees" :key="signatory" icon="mdi-check"
-                  dot-color="success">
-                  <v-sheet border class="elevation-2 pa-3 mr-3" width="500">
-                    <!-- <v-card-title class="text-orange"> {{ applicant_history.status }} </v-card-title> -->
-                    <v-card-subtitle>
-                      Your application has been approved by <b>{{ signatory.name }}</b>.
+            <v-card width="auto" class="overflow-y-auto py-4 " height="70vh">
+              <v-card-text>
+                <v-alert class="pa-5 ma-3" color="#2A3B4D" density="compact" theme="dark" border
+                  v-for="signatory, index in   applicant_history.request_log " :key="signatory"
+                  :icon="icon_display(signatory)">
+                  <v-card-subtitle>
+                    Your application has been {{ !signatory.remarks.length > 0 ? 'Approved' : 'Dissapproved' }} by <b>{{
+                      signatory.signatory }} <br /> {{
+    signatory.side }} {{ signatory.role }}</b>.
+                  </v-card-subtitle>
+                  <v-card-subtitle class="text-caption">Date Approved <span class="text-blue"> : {{ new
+                    Date(signatory?.timestamp).toLocaleString() }}</span></v-card-subtitle>
+
+                  <v-card border color="error" variant="tonal" class="pa-2 mx-4" v-if="signatory.remarks.length"
+                    v-for="  remarks, index   in   signatory.remarks  " :key="remarks">
+                    <v-card-subtitle class="font-weight-bold ">
+                      Reason/Remarks :
                     </v-card-subtitle>
-                    <v-card-subtitle class="text-caption">Date Approved <span class="text-blue"> : {{ new
-                      Date(signatory?.timestamp).toLocaleString() }}</span></v-card-subtitle>
+                    <v-card-subtitle class="text-white"> Attachment : {{ remarks.description }} <br /> Reason : {{
+                      remarks.remarks
+                    }} <br /> Date Dissapproved : {{ new Date(remarks?.timestamp).toLocaleString()
+}}</v-card-subtitle>
 
-                    <v-sheet border class="elevation-2 pa-2" v-if="status == 'Dissapproved'">
-                      <v-card-subtitle class="font-weight-bold">
-                        Reason/Remarks :
-                      </v-card-subtitle>
-                      <v-card-subtitle> Bat ganyan ayuko nyan!</v-card-subtitle>
-
-                    </v-sheet>
-                  </v-sheet>
-                </v-timeline-item>
-                <v-timeline-item icon="mdi-clock-edit-outline" dot-color="orange">
-                  <v-sheet border class="elevation-2 pa-3 mr-3" width="430">
-                    <v-card-subtitle>
-                      Your application is being processed by the <br /><b>{{ pending_assignees.name }}</b>.
-                    </v-card-subtitle>
-
-
-
-                  </v-sheet>
-                </v-timeline-item>
-
-              </v-timeline>
+                  </v-card>
+                </v-alert>
+              </v-card-text>
 
 
 
 
 
-            </v-sheet>
+
+
+
+            </v-card>
           </v-sheet>
         </v-card-text>
-      </v-sheet>
+      </v-card>
     </v-sheet>
   </v-sheet>
 </template>
@@ -90,24 +86,15 @@ async function get_signatory() {
   })
   applicant_history.value = data
 }
-
-const filter_assignees = computed(() => {
-  const assignees = applicant_history.value.assignees;
-
-  if (!Array.isArray(assignees)) {
-    console.error('Assignees is not an array:', assignees);
-    return [];
+const icon_display = (signatory) => {
+  if (signatory.remarks && signatory.remarks.length > 0) {
+    return 'mdi-check-circle';
+  } else {
+    return 'mdi-alpha-x-circle';
   }
-  return assignees.filter(applicant => applicant.approved === true);
-});
-const pending_assignees = computed(() => {
-  const assignees = applicant_history.value.assignees;
+};
 
-  if (!Array.isArray(assignees)) {
-    console.error('Assignees is not an array:', assignees);
-    return [];
-  }
-  return assignees.find(applicant => applicant.approved === false);
-});
+
+
 
 </script>

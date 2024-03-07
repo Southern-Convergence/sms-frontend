@@ -4,9 +4,14 @@
     <v-col cols="12" class="mx-auto">
       <v-card height="auto" color="indigo">
         <div class="d-flex flex-no-wrap justify-space-between  pl-4">
-          <v-avatar class="py-3" size="128">
+          <div class="pa-3"><v-img :width="80" aspect-ratio="4/3" cover> <v-avatar v-bind="$attrs" color="white"
+                style="cursor: pointer" size="62">
+                <span class="text-h6">{{ user.first_name.charAt(0) }}{{ user.last_name.charAt(0) }}</span>
+              </v-avatar></v-img></div>
+
+          <!-- <v-avatar class="py-3" size="128">
             <v-img src="/yanyan.jpg" />
-          </v-avatar>
+          </v-avatar> -->
           <div>
             <h6 class="text-h6 font-weight-bold mt-4">
               {{ full_name }}

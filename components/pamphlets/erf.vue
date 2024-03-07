@@ -5,7 +5,7 @@
         </v-col>
         <v-col cols="10" xxl="8" xl="8" lg="10">
             <v-row dense justify="center">
-                <v-col cols="6"> To : <b> REGINAL DIRECTOR</b> </v-col>
+                <v-col cols="6"> To : <b> REGIONAL DIRECTOR</b> </v-col>
                 <v-col cols="6"> DATE : <v-chip color="primary" density="compact"> Oct. 30, 2023</v-chip></v-col>
                 <v-col cols="8"> DIVISION : <b>Muntinlupa City</b></v-col>
                 <v-col cols="2"> <v-btn class="font-weight-bold" prepend-icon="mdi-history" color="primary" block>View
@@ -121,7 +121,8 @@
                 </v-card-text>
                 <v-card-text class="pa-1 ma-0">
                     <v-sheet border class="pa-4">
-                        <pamphlets-evaluate-attachement :title=" '4 .Omnibus Certification of Authenticity of Documents ' " />
+                        <pamphlets-evaluate-attachement
+                            :title=" '4 .Omnibus Certification of Authenticity of Documents ' " />
                     </v-sheet>
                 </v-card-text>
                 <v-card-text class="pa-1 ma-0">

@@ -1,19 +1,14 @@
 
 <template>
     <v-sheet>
-        <!-- <v-sheet class="pa-6" height="auto" color="grey-lighten-4">
-                <v-row no-gutters>
-                    <v-col cols="12" class="text-h6 font-weight-bold text-indigo">USER MANAGEMENT </v-col>
-                    <v-col cols="12" class="text-grey"> A brief overview of users. </v-col>
-                </v-row>
-            </v-sheet> -->
+
         <v-row no-gutters>
             <v-col cols="8">
                 <v-btn prepend-icon="mdi-pencil-plus" @click="user_invite_dialog = true" color="indigo" rounded="0">
                     Invite
                     User</v-btn>
                 <commons-sms class="my-1 mr-1 " title="USER MANAGEMENT" subtitle="A brief overview of users."
-                    :items="users_data" :display_types="['grid', 'list', 'table']">
+                    :items="users_data" :display_types="['grid', 'table']">
                     <template v-slot:item="{ value, index, display }">
                         <v-sheet :key="index" border class="pa-2">
                             <div class="d-flex mb-1">
@@ -39,6 +34,19 @@
                             <div class="text-caption"> <v-icon color="green-lighten-3"> mdi-phone</v-icon> {{
                                 value.contact_number }}</div>
                         </v-sheet>
+                    </template>
+                    <template v-slot:table="{ items }">
+                        <v-sheet border> <v-data-table :items="items" :headers="user_headers">
+                                <template v-slot:item.full_name="{ item }">
+                                    <span color="primary" density="compact">{{ item.selectable.first_name }} {{
+                                        item.selectable.last_name }}
+                                    </span>
+                                </template>
+                                <!-- <template v-slot:item.actions="{ item }">
+                  <v-btn color="primary" density="compact" variant="tonal">Actions</v-btn>
+                </template> -->
+
+                            </v-data-table></v-sheet>
                     </template>
                 </commons-sms>
 
@@ -115,12 +123,11 @@
                                     hide-details="auto" label="Contact Number" type="tel"
                                     :rules="[v => !!v || 'Contact Number is required']" /></v-col>
                             <v-col cols="12"> Roles and Designation </v-col>
-                            <v-col cols="6"><v-select v-model="user.side" label="Type"
-                                    :items="['School Division Office', 'Regional Office']" hide-details="auto" required
-                                    :rules="[v => !!v || 'Type is required']" /></v-col>
-                            <!-- <v-col cols="6">
+                            <v-col cols="6"><v-select v-model="user.side" label="Type" :items="['SDO', 'RO']"
+                                    hide-details="auto" required :rules="[v => !!v || 'Type is required']" /></v-col>
+                            <v-col cols="6" v-if="user.side === 'SDO'">
                                 <v-select v-model="user.designation_information.division" :items="sdo_data" label="Division"
-                                    item-value="_id" hide-details="auto" /></v-col> -->
+                                    item-value="_id" hide-details="auto" /></v-col>
                             <v-col cols="6">
                                 <v-select v-model="user.role" :items="roles" item-title="name" item-value="_id" label="Role"
                                     hide-details="auto" :rules="[v => !!v || 'Role is required']" />
@@ -209,7 +216,7 @@ const user = ref<SmsUser>({
     status: "pending",
 });
 
-const headers = ref([""])
+
 /**
  * 
  */
@@ -224,6 +231,15 @@ const get_apts = async () => {
     const apts = data.filter((v: any) => v.internal === false);
     roles.value = apts;
 }
+
+const user_headers = ref([
+    { title: "Full Name", key: "full_name", sortable: false },
+    { title: "Role", key: "role", sortable: false },
+    { title: "Side", key: "side", sortable: false },
+    { title: "Email Address", key: "email", sortable: false },
+    { title: "Conatact Number", key: "contact_number", sortable: false },
+    // { title: "Actions", key: "actions" },
+])
 
 
 

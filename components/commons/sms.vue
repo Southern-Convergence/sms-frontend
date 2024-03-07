@@ -137,7 +137,7 @@ export default {
       const grid = this.display_type === "grid";
       return {
         default: grid ? 12 : 12,
-        xl: grid ? 4 : 12,
+        xl: grid ? 6 : 12,
         lg: grid ? 6 : 12,
         md: grid ? 6 : 12,
         sm: grid ? 12 : 12,

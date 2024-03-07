@@ -6,91 +6,92 @@ import VCalendar from "v-calendar";
 
 export default defineNuxtPlugin(nuxtApp => {
   const vuetify = createVuetify({
-    ssr : false,
+    ssr: false,
     components: {
       ...components,
       ...labs
     },
 
-    display : {
-      mobileBreakpoint : "sm"
+    display: {
+      mobileBreakpoint: "sm"
     },
 
     directives,
 
-    defaults : {
+    defaults: {
       /*Labs */
-      VDataTable : {
-        fixedHeader : true,
-        noDataText  : "No items found."
+      VDataTable: {
+        fixedHeader: true,
+        noDataText: "No items found.",
+        sortable: false
       },
 
-      VTextField : {
-        color   : "primary",
-        variant : "outlined",
-        density : "compact"
+      VTextField: {
+        color: "primary",
+        variant: "outlined",
+        density: "compact"
       },
 
-      VCombobox : {
-        color   : "primary",
-        variant : "outlined",
-        density : "compact"
+      VCombobox: {
+        color: "primary",
+        variant: "outlined",
+        density: "compact"
       },
 
-      VSelect : {
-        color   : "primary",
-        variant : "outlined",
-        density : "compact"
-      },
-      
-      VSwitch : {
-        color : "primary"
+      VSelect: {
+        color: "primary",
+        variant: "outlined",
+        density: "compact"
       },
 
-      VTextarea : {
-        color   : "primary",
-        variant : "outlined",
-        density : "compact"
+      VSwitch: {
+        color: "primary"
       },
 
-      VRadio : {
-        color   : "primary",
+      VTextarea: {
+        color: "primary",
+        variant: "outlined",
+        density: "compact"
       },
 
-      VListItem : {
-        "active-color" : "primary",
+      VRadio: {
+        color: "primary",
       },
 
-      VCheckbox : {
-        color   : "primary",
-        variant : "outlined",
-        density : "compact"
+      VListItem: {
+        "active-color": "primary",
       },
 
-      VToolbar : {
-        density : "compact"
+      VCheckbox: {
+        color: "primary",
+        variant: "outlined",
+        density: "compact"
       },
 
-      VFileInput : {
-        color   : "primary",
-        density : "compact",
-        variant : "outlined"
+      VToolbar: {
+        density: "compact"
+      },
+
+      VFileInput: {
+        color: "primary",
+        density: "compact",
+        variant: "outlined"
       },
     },
 
     theme: {
       defaultTheme: 'light',
 
-      themes : {
-        light : {
-          colors : {
-            primary : "#0D47A1"
+      themes: {
+        light: {
+          colors: {
+            primary: "#0D47A1"
           }
         },
-        dark : {
-          dark : true,
-          colors : {
-            primary : "#1565C0"
+        dark: {
+          dark: true,
+          colors: {
+            primary: "#1565C0"
           }
         }
       }

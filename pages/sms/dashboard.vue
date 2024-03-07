@@ -19,7 +19,7 @@
                 <div>
                   <b class="text-h5  text-uppercase "> Total Reclass Application</b>
                   <h6 class="text-h2 py-7 text-center font-weight-bold">
-                    109
+                    {{ application_data.length }}
                   </h6>
                   <h5 class="text-center"> 16 Schools Division Office</h5>
                 </div>
@@ -50,7 +50,7 @@
                       <div>
                         <h3 class="text-white font-weight-regular"> Current for DBM</h3>
                         <h6 class="text-h3 pt-5 font-weight-bold text-white">
-                          10
+                          {{ ro_completed_data }}
                         </h6>
                         <h3 class="text-white text-caption font-weight-thin"> 10 of 101 reclass</h3>
                       </div>
@@ -66,7 +66,7 @@
                       <div>
                         <h3 class="text-white font-weight-regular"> Completed</h3>
                         <h6 class="text-h3 pt-5 font-weight-bold text-white">
-                          10
+                          {{ ro_completed_data }}
                         </h6>
                         <h3 class="text-white text-caption font-weight-thin"> 10 of 101 reclass</h3>
                       </div>
@@ -81,7 +81,7 @@
                       <div>
                         <h3 class="text-white font-weight-regular"> Pending</h3>
                         <h6 class="text-h3 pt-5 font-weight-bold text-white">
-                          22
+                          {{ pending_data }}
                         </h6>
                         <h3 class="text-white text-caption font-weight-thin"> 10 of 101 reclass</h3>
                       </div>
@@ -129,8 +129,39 @@ import useAuth from "~/store/auth";
 
 const { $rest } = useNuxtApp();
 const auth = useAuth();
-
+onBeforeMount(() => {
+  get_application();
+  get_pending_admin5();
+  get_ro_completed()
+});
 definePageMeta({ layout: "std-systems" });
+
+
+
+const application_data = ref([]);
+async function get_application() {
+  const { data, error } = await $rest('new-applicant/get-application', {
+    method: "GET"
+  });
+  application_data.value = data;
+}
+
+const pending_data = ref([]);
+async function get_pending_admin5() {
+  const { data, error } = await $rest('new-applicant/get-pending-dashboard', {
+    method: "GET"
+  });
+  pending_data.value = data;
+}
+const ro_completed_data = ref([]);
+async function get_ro_completed() {
+  const { data, error } = await $rest('new-applicant/get-ro-completed-dashboard', {
+    method: "GET"
+  });
+  ro_completed_data.value = data;
+}
+
+
 
 
 </script>

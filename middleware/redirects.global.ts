@@ -14,7 +14,8 @@ const PUBLIC_ROUTES = [
   "loading",
   "home",
   "error",
-  "sms-new-applicant-form"
+  "sms-new-applicant-form",
+  "sms-applicant-history"
 ]
 /* Code should be relevant to redirects and or conditionally forwarding users to default pages */
 export default defineNuxtRouteMiddleware((to, from) => {

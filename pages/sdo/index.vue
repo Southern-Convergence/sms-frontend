@@ -2,21 +2,14 @@
 <template>
   <v-sheet>
 
-    <!-- <v-sheet class="pa-6" height="auto" color="grey-lighten-4">
-        <v-row no-gutters>
-          <v-col cols="12" class="text-h6 font-weight-bold text-indigo">Schools Administrators of </v-col>
-          <v-col cols="12" class="text-grey"> A concise summary of the administrative functions within a school
-            office. </v-col>
-        </v-row>
-      </v-sheet> -->
 
     <v-row no-gutters>
       <v-col cols="12" xl="8" lg="8" md="12" sm="12"><v-btn prepend-icon="mdi-pencil-plus"
           @click="user_invite_dialog = true" color="indigo" rounded="0">
           Invite
           User</v-btn>
-        <commons-sms class="ma-1" title="SDO USER MANAGEMENT" subtitle="A brief overview of users." :items="users_data"
-          :display_types="['grid', 'list', 'table']">
+        <commons-sms class="my-1 mr-1" title="SDO USER MANAGEMENT" subtitle="A brief overview of users."
+          :items="users_data" :display_types="['grid', 'table']">
           <template v-slot:item="{ value, index, display }">
             <v-sheet :key="index" border class="pa-2">
               <div class="d-flex mb-1">
@@ -42,47 +35,28 @@
                 value.contact_number }}</div>
             </v-sheet>
           </template>
+
+          <template v-slot:table="{ items }">
+            <v-sheet border> <v-data-table :items="items" :headers="user_headers">
+                <template v-slot:item.full_name="{ item }">
+                  <span color="primary" density="compact">{{ item.selectable.first_name }} {{ item.selectable.last_name }}
+                  </span>
+                </template>
+                <!-- <template v-slot:item.actions="{ item }">
+                  <v-btn color="primary" density="compact" variant="tonal">Actions</v-btn>
+                </template> -->
+
+              </v-data-table></v-sheet>
+          </template>
         </commons-sms>
 
-        <!-- <v-sheet  class="overflow-y-auto d-flex flex-wrap ga-3 ">
-     
-              <v-sheet class="pa-1 pt-2" width="50%" variant="tonal" v-for="user, index in users_data" :key="index">
-                <v-alert rounded="0" class="my-1 space-around" border="start" border-color="indigo">
-                  <div>
-                    <div class="d-flex mb-1">
-                      <div class="text-uppercase  text-indigo text-body-1"> {{ user.first_name
-                      }}
-                        {{
-                          user.last_name }}
-                      </div>
-                      <v-spacer />
-                      <div> <v-chip density="compact" class="text-uppercase text-overline" color="success">{{
-                        user.status }}</v-chip></div>
-                    </div>
-                    <div class="text-subtitle-1" v-if="user.school"> {{ user.role }} of {{ user.school
-                    }}
-                    </div>
-                    <div class="text-subtitle-1" v-if="!user.school"> Role : {{ user.role
-                    }}
-                    </div>
-
-                    <div class="text-caption"> <v-icon color="red"> mdi-email</v-icon> <u class="text-blue">{{ user.email
-                    }}</u>
-                    </div>
-                    <div class="text-caption"> <v-icon color="success"> mdi-phone</v-icon> {{
-                      user.contact_number }}</div>
-                  </div>
-                </v-alert>
-              </v-sheet>
-
-            </v-sheet> -->
       </v-col>
       <v-col cols="12" xl="4" lg="4" md="12" sm="12" class="mt-10">
-        <v-sheet height="100vh" border>
+        <v-sheet border>
           <v-toolbar>
             <span class="ml-2"> School</span>
             <v-spacer />
-            <v-tooltip text="Click to add Education" location="top">
+            <v-tooltip text="Click to add School" location="top">
               <template v-slot:activator="{ props }">
                 <v-btn prepend-icon="mdi-pencil-plus" @click="create_school_dialog = true" v-bind="props" color="indigo"
                   class="mr-0" rounded="0">Add School</v-btn>
@@ -109,32 +83,6 @@
             </v-alert>
           </v-sheet>
         </v-sheet>
-        <!-- <v-sheet class="pl-2 w-100">
-              <v-btn @click="create_school_dialog = true" prepend-icon="mdi-pencil-plus" color="success"
-                class="mr-0 mb-3">
-                Create
-                School </v-btn>
-             
-              <v-sheet height="70vh" class="overflow-auto">
-                <v-sheet v-for="(school, index) in school_data" :key="school" variant="tonal" class="pb-2 mr-2">
-                  <v-alert rounded="0" class="my-1 user-item  space-around" border="start" border-color="success"
-                    @click="route_to_school(school._id)">
-                    <div class="font-weight-bold text-uppercase text-subtitle-1">
-                      {{ school.title }}
-                    </div>
-                    <div>
-                      <v-icon color="blue"> mdi-map-marker</v-icon> {{ school.address }}
-                    </div>
-                    <div class="text-blue font-italic text-decoration-underline">
-                      <v-icon color="red"> mdi-email</v-icon> {{ school.email }}
-                    </div>
-                    <div>
-                      <v-icon color="success"> mdi-phone</v-icon> {{ school.telephone }}
-                    </div>
-                  </v-alert>
-                </v-sheet>
-              </v-sheet>
-            </v-sheet> -->
       </v-col>
     </v-row>
 
@@ -240,6 +188,16 @@ const auth = useAuth().user;
 const { $rest } = useNuxtApp();
 
 const is_hovered = ref(false);
+
+
+const user_headers = ref([
+  { title: "Full Name", key: "full_name" },
+  { title: "Role", key: "role" },
+  { title: "Side", key: "side" },
+  { title: "Email Address", key: "email" },
+  { title: "Conatact Number", key: "contact_number" },
+  // { title: "Actions", key: "actions" },
+])
 
 const sdo_user = ref<SmsUser>({
   username: "",

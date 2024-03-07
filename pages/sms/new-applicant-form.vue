@@ -4,17 +4,16 @@
       <v-sheet width="75%" :border="step != 1">
         <v-window v-model="step">
           <v-window-item :value="1">
-
-            <div class="h-100 w-100 d-flex align-center justify-center">
-              <v-card class="w-45" color="indigo-lighten-5">
-                <v-card-title class="mt-3 text-title">
-                  WELCOME to DepEd NCR Reclassification System
+            <div class="d-flex  justify-center">
+              <v-card class="w-50 mx-auto" max-width="650px" color="indigo-lighten-5">
+                <v-card-title class="mt-7 text-title">
+                  <v-icon class="pr-2">mdi-hand-wave</v-icon> WELCOME to DepEd NCR Reclassification System
                 </v-card-title>
-                <v-card-subtitle class="text-grey">Elevate Your Career: A Guide to the Reclassification System
+                <v-card-subtitle class="text-grey pl-13">Elevate Your Career: A Guide to the Reclassification System
                 </v-card-subtitle>
                 <v-divider class="mt-3"></v-divider>
 
-                <v-card-text class="px-4 overflow-y-auto" style="height: 50vh">
+                <v-card-text class="px-10 overflow-y-auto" style="height: 60vh">
                   <v-list-item class="pl-2" density="compact">
                     <template v-slot:prepend>
                       <v-avatar class="mr-1" variant="text">
@@ -28,11 +27,12 @@
                       <v-select :items="position_data" v-model="applicant.qualification.position" label="Select Position"
                         variant="solo" hide-details item-value="_id" prepend-inner-icon="mdi-account-hard-hat" />
                     </v-col>
-                    <v-col cols="12" class="pa-2" v-if="selected_qs?.education_level != ''">
+                    <v-col cols="12" class="pa-2"
+                      v-if="applicant.qualification.position && !selected_qs?.education_level == ''">
                       <v-select v-model="applicant.qualification.educ_level" :items="['Elementary', 'Secondary']"
                         label="Education Level" variant="solo" hide-details prepend-inner-icon="mdi-book" />
                     </v-col>
-                    <v-col cols="12" class="pa-2">
+                    <v-col cols="12" class="pa-2" v-if="applicant.qualification.position">
                       <v-select v-model="applicant.qualification.education" :items="education_data" label="Education"
                         variant="solo" hide-details multiple item-value="_id" prepend-inner-icon="mdi-school" />
                     </v-col>
@@ -40,7 +40,8 @@
                       <v-select v-model="applicant.qualification.experience" :items="experience_data" label="Experience"
                         variant="solo" hide-details multiple item-value="_id" prepend-inner-icon="mdi-head-cog-outline" />
                     </v-col>
-                    <v-col cols="12" class="pa-2" v-if="selected_qs?.training_hours != 0">
+                    <v-col cols="12" class="pa-2"
+                      v-if="applicant.qualification.position && selected_qs?.training_hours != 0">
                       <v-text-field v-model="applicant.qualification.training" label="Enter total training hours"
                         variant="solo" hide-details type="number" item-value="_id"
                         prepend-inner-icon="mdi-human-male-board" />
@@ -57,278 +58,85 @@
 
                 <v-card-actions>
                   <v-row no-gutters justify="center">
-                    <v-col cols="5"><v-btn block color="error" variant="text" rounded="xl">CLEAR</v-btn></v-col>
+
                     <v-col cols="5"><v-btn @click="next_window" block class="gradient-background text-white" rounded="xl"
                         variant="outlined">SUBMIT</v-btn></v-col>
                   </v-row>
                 </v-card-actions>
               </v-card>
+              <v-card class="w-50 d-flex align-center  justify-center" max-width="650px" variant="tonal"
+                v-if="selected_qs">
+                <v-card-text class="px-10 overflow-y-auto" style="height: 60vh">
+                  <v-list lines="one">
+                    <v-list-item class="pl-2" density="compact" color="blue-darken-4">
+                      <template v-slot:prepend>
+                        <v-avatar class="mr-1" variant="text">
+                          <v-icon color="amber"> mdi-certificate </v-icon>
+                        </v-avatar>
+                      </template>
+                      <v-list-item-title class="text-center text-primary">Qualification Standards</v-list-item-title>
 
-            </div>
+                    </v-list-item>
+                    <v-sheet class="overflow-y-auto">
+                      <v-list-item class="ma-2" variant="tonal" rounded="rounded">
+                        <template v-slot:prepend>
+                          <v-icon color="primary" icon="mdi-account-hard-hat"></v-icon>
+                        </template>
+                        <b>{{ basta.title }} <i class="font-weight-thin" v-if="basta?.education_level"> ({{
+                          basta?.education_level
+                        }})</i></b>
+                      </v-list-item>
 
-            <!-- <v-card class="w-50 pa-10 gradient-background" height="70vh">
-                <v-card-title class="text-h5 mt-5 text-white"> WELCOME to
-                  DepEd NCR Reclassification System
-                </v-card-title>
-                <v-card-subtitle class="text-grey">Elevate Your Career: A Guide to the Reclassification System
-                </v-card-subtitle>
+                      <v-list-item class="ma-2" variant="tonal" rounded="rounded" v-if="basta.education.length">
+                        <template v-slot:prepend>
+                          <v-icon color="primary" icon="mdi-school"></v-icon>
+                        </template>
+                        <v-list-item-title>Education :</v-list-item-title>
+                        <v-list-item-subtitle v-for="(education, index) in basta.education" :key="index">{{
+                          education.title }}</v-list-item-subtitle>
+                      </v-list-item>
 
-                <v-card-text>
-                  
-                  <v-list-item class="pl-2" density="compact">
-                    <template v-slot:prepend>
-                      <v-avatar class="mr-1" variant="text">
-                        <v-icon color="amber"> mdi-seal </v-icon>
-                      </v-avatar>
-                    </template>
-                    <v-list-item-title class="text-white">Individual Qualification</v-list-item-title>
-                  </v-list-item>
-                  <v-row no-gutters>
-                    <v-col cols="12" class="pa-2 ">
-                      <v-select :items="position_data" v-model="applicant.qualification.position" label="Select Position"
-                        variant="solo" hide-details item-value="_id" prepend-inner-icon="mdi-account-hard-hat" />
-                    </v-col>
-                    <v-col cols="12" class="pa-2" v-if="selected_qs?.education_level != ''">
-                      <v-select v-model="applicant.qualification.educ_level" :items="['Elementary', 'Secondary']"
-                        label="Education Level" variant="solo" hide-details prepend-inner-icon="mdi-book" />
-                    </v-col>
-                    <v-col cols="12" class="pa-2">
-                      <v-select v-model="applicant.qualification.education" :items="education_data" label="Education"
-                        variant="solo" hide-details multiple item-value="_id" prepend-inner-icon="mdi-school" />
-                    </v-col>
-                    <v-col cols="12" class="pa-2" v-if="selected_qs?.experience.length">
-                      <v-select v-model="applicant.qualification.experience" :items="experience_data" label="Experience"
-                        variant="solo" hide-details multiple item-value="_id" prepend-inner-icon="mdi-head-cog-outline" />
-                    </v-col>
-                    <v-col cols="12" class="pa-2" v-if="selected_qs?.training_hours != 0">
-                      <v-text-field v-model="applicant.qualification.training" label="Enter total training hours"
-                        variant="solo" hide-details type="number" item-value="_id"
-                        prepend-inner-icon="mdi-human-male-board" />
-                    </v-col>
-                    <v-col cols="12" class="pa-2" v-if="selected_qs?.rating.length">
-                      <v-select v-model="applicant.qualification.per_rating" :items="rating_data"
-                        label="Performance Rating" variant="solo" hide-details item-value="_id"
-                        prepend-inner-icon="mdi-star" />
-                    </v-col>
-                  </v-row>
-                  <v-row class="mt-15" no-gutters justify="center">
-                    <v-col cols="5" ><v-btn block color="white" variant="outlined"
-                        rounded="xl">CLEAR</v-btn></v-col>
-                    <v-col cols="5" class="pa-3"><v-btn @click="next_window" block color="blue-darken-4"
-                        rounded="xl">SUBMIT</v-btn></v-col>
-                  </v-row> 
+                      <v-list-item class="ma-2" variant="tonal" rounded="rounded" v-if="basta.experience.length">
+                        <template v-slot:prepend>
+                          <v-icon color="primary" icon="mdi-head-cog-outline"></v-icon>
+                        </template>
+                        <v-list-item-title>Experience :</v-list-item-title>
+                        <v-list-item-subtitle v-for="(experience, index) in basta.experience" :key="index">{{
+                          experience.title }}</v-list-item-subtitle>
+                      </v-list-item>
+                      <v-list-item class="ma-2" variant="tonal" rounded="rounded" v-if="basta.rating.length">
+                        <template v-slot:prepend>
+                          <v-icon color="primary" icon="mdi-human-male-board"></v-icon>
+                        </template>
+                        <v-list-item-title>Performance Rating :</v-list-item-title>
+                        <v-list-item-subtitle v-for="(rating, index) in basta.rating" :key="index">{{
+                          rating.title }}</v-list-item-subtitle>
+                      </v-list-item>
+                      <v-list-item class="ma-2" variant="tonal" rounded="rounded" title=" Training Hours:"
+                        v-if="basta.training_hours != 0">
+                        <template v-slot:prepend>
+                          <v-icon color="primary" icon="mdi-star"></v-icon>
+                        </template>
+                        <v-list-item-subtitle>{{ basta.training_hours }} </v-list-item-subtitle>
+                      </v-list-item>
+                      <!-- <v-list-item class="ma-2" variant="tonal" rounded="rounded" v-if="basta.sg" title="Salary Grade:">
+                        <template v-slot:prepend>
+                          <v-icon color="primary" icon="mdi-cash"></v-icon>
+                        </template>
+                        <v-list-item-subtitle>{{ basta.sg.salary_grade }} </v-list-item-subtitle>
+                      </v-list-item> -->
+                    </v-sheet>
+                  </v-list>
                 </v-card-text>
 
+              </v-card>
+              <v-card class="w-50  d-flex align-center  justify-center" max-width="600px" flat v-else>
 
-              </v-card> -->
-            <!-- <v-sheet class="w-50  d-flex align-center " height="70vh" color="#E3F2FD">
-                <div class="mx-auto w-100 px-10 ">
-                  <v-sheet v-if="selected_qs">
-
-                    <v-list lines="one" bg-color="#E3F2FD">
-                      <v-list-item class="pl-2" density="compact" color="blue-darken-4">
-                        <template v-slot:prepend>
-                          <v-avatar class="mr-1" variant="text">
-                            <v-icon color="amber"> mdi-certificate </v-icon>
-                          </v-avatar>
-                        </template>
-                        <v-list-item-title>Qualification Standards</v-list-item-title>
-
-                      </v-list-item>
-                      <v-sheet class="overflow-y-auto" color="#E3F2FD">
-                        <v-list-item class="ma-2" color="white" variant="tonal" rounded="rounded">
-                          <template v-slot:prepend>
-                            <v-icon color="primary" icon="mdi-account-hard-hat"></v-icon>
-                          </template>
-                          <b>{{ basta.title }} <span class="font-weight-thin"> ({{ basta?.education_level
-                          }})</span></b>
-                        </v-list-item>
-
-                        <v-list-item class="ma-2" color="white" variant="tonal" rounded="rounded"
-                          v-if="basta.education.length">
-                          <template v-slot:prepend>
-                            <v-icon color="primary" icon="mdi-school"></v-icon>
-                          </template>
-                          <v-list-item-title>Education :</v-list-item-title>
-                          <v-list-item-subtitle v-for="(education, index) in basta.education" :key="index">{{
-                            education.title }}</v-list-item-subtitle>
-                        </v-list-item>
-
-                        <v-list-item class="ma-2" color="white" variant="tonal" rounded="rounded"
-                          v-if="basta.experience.length">
-                          <template v-slot:prepend>
-                            <v-icon color="primary" icon="mdi-head-cog-outline"></v-icon>
-                          </template>
-                          <v-list-item-title>Experience :</v-list-item-title>
-                          <v-list-item-subtitle v-for="(experience, index) in basta.experience" :key="index">{{
-                            experience.title }}</v-list-item-subtitle>
-                        </v-list-item>
-                        <v-list-item class="ma-2" color="white" variant="tonal" rounded="rounded"
-                          v-if="basta.rating.length">
-                          <template v-slot:prepend>
-                            <v-icon color="primary" icon="mdi-human-male-board"></v-icon>
-                          </template>
-                          <v-list-item-title>Performance Rating :</v-list-item-title>
-                          <v-list-item-subtitle v-for="(rating, index) in basta.rating" :key="index">{{
-                            rating.title }}</v-list-item-subtitle>
-                        </v-list-item>
-                        <v-list-item class="ma-2" color="white" variant="tonal" rounded="rounded" title=" Training Hours:"
-                          v-if="basta.training_hours != 0">
-                          <template v-slot:prepend>
-                            <v-icon color="primary" icon="mdi-star"></v-icon>
-                          </template>
-                          <v-list-item-subtitle>{{ basta.training_hours }} </v-list-item-subtitle>
-                        </v-list-item>
-                        <v-list-item class="ma-2" color="white" variant="tonal" rounded="rounded" v-if="basta.sg"
-                          title="Salary Grade:">
-                          <template v-slot:prepend>
-                            <v-icon color="primary" icon="mdi-cash"></v-icon>
-                          </template>
-                          <v-list-item-subtitle>{{ basta.sg.salary_grade }} </v-list-item-subtitle>
-                        </v-list-item>
-                      </v-sheet>
-                    </v-list>
-                  </v-sheet>
-
-                  <v-sheet v-else height="43vh" class="d-flex align-center justify-center" color="#E3F2FD">
-                    <v-row no-gutters justify="center">
-
-                      <v-col cols=" 12" class="text-center">
-                        <v-icon size="64" style="color: red;">mdi-alert-circle-outline</v-icon>
-                      </v-col>
-                      <v-col cols="12" class="text-center font-weight-bold">NO
-                        SELECTED POSITION</v-col>
-                    </v-row>
-                  </v-sheet>
-
-
-                </div>
-              </v-sheet> -->
-
-
-            <!-- <v-sheet height="70vh">
-              <v-toolbar class="py-1" color="primary" border>
-                <v-list-item class="pl-2" density="compact">
-                  <template v-slot:prepend>
-                    <v-avatar class="mr-1" variant="text">
-                      <v-icon dark>mdi-file-document</v-icon>
-                    </v-avatar>
-                  </template>
-                  <v-list-item-title class="text-h5"> Application Form </v-list-item-title>
-                  <v-list-item-subtitle class="text-caption"> Position Requirements and Criteria
-                  </v-list-item-subtitle>
-                </v-list-item>
-              </v-toolbar>
-              <v-card-text>
-                <v-card-title class="text-h5 text-primary mt-5"> WELCOME to
-                  <strong>DepEd NCR Reclassification System</strong>
-                </v-card-title>
-                <v-card-subtitle>Elevate Your Career: A Guide to the Reclassification System </v-card-subtitle>
-                <v-row dense>
-                  <v-col cols="12" xl="6" lg="6" md="12" sm="12" class="pa-4">
-                    <v-card>
-                      <v-toolbar color="grey-ligthen-4" border>
-                        <v-list-item class="pl-2" density="compact">
-                          <template v-slot:prepend>
-                            <v-avatar class="mr-1" variant="text">
-                              <v-icon color="primary"> mdi-seal </v-icon>
-                            </v-avatar>
-                          </template>
-                  
-            </v-list-item>
-            </v-toolbar>
-            <v-sheet height="43vh" class="overflow-y-auto pa-4">
-              <v-row no-gutters>
-                <v-col cols="12" class="pa-2 ">
-                  <v-select :items="position_data" v-model="applicant.qualification.position" label="Select Position"
-                    hide-details item-value="_id" prepend-inner-icon="mdi-account-hard-hat" />
-                </v-col>
-                <v-col cols="12" class="pa-2">
-                  <v-select v-model="applicant.qualification.educ_level" :items="['Elementary', 'Secondary']"
-                    label="Education Level" hide-details />
-                </v-col>
-                <v-col cols="12" class="pa-2">
-                  <v-select v-model="applicant.qualification.education" :items="education_data" label="Education"
-                    hide-details multiple item-value="_id" prepend-inner-icon="mdi-school" />
-                </v-col>
-                <v-col cols="12" class="pa-2">
-                  <v-select v-model="applicant.qualification.experience" :items="experience_data" label="Experience"
-                    hide-details multiple item-value="_id" prepend-inner-icon="mdi-head-cog-outline" />
-                </v-col>
-                <v-col cols="12" class="pa-2">
-
-                  <v-text-field v-model="applicant.qualification.training" label="Enter total training hours" hide-details
-                    type="number" item-value="_id" prepend-inner-icon="mdi-human-male-board" />
-                </v-col>
-                <v-col cols="12" class="pa-2">
-                  <v-select v-model="applicant.qualification.per_rating" :items="rating_data" label="Performance Rating"
-                    hide-details item-value="_id" prepend-inner-icon="mdi-school" />
-                </v-col>
-
-              </v-row>
-            </v-sheet>
-            </v-card>
-
-
-            </v-col>
-            <v-col cols="12" xl="6" lg="6" md="12" sm="12" class="pa-4">
-              <v-card>
-                <v-toolbar color="grey-ligthen-4" border>
-                  <v-list-item class="pl-2" density="compact">
-                    <template v-slot:prepend>
-                      <v-avatar class="mr-1" variant="text">
-                        <v-icon color="primary"> mdi-certificate </v-icon>
-                      </v-avatar>
-                    </template>
-                    <v-list-item-title>Qualification Standards</v-list-item-title>
-
-                  </v-list-item>
-                </v-toolbar>
-                <v-sheet height="43vh" class="overflow-y-auto" v-if="selected_qs">
-                  <v-list lines="one" density="compact">
-                    <v-list-item>
-                      Position : <b>{{ selected_qs.title }} </b>
-                    </v-list-item>
-                    <v-list-item>
-                      <v-list-item-title>Education :</v-list-item-title>
-                      <v-list-item-subtitle v-for="(education, index) in selected_qs.education" :key="index">{{
-                        education.title }}</v-list-item-subtitle>
-                    </v-list-item>
-                    <v-list-item>
-                      <v-list-item-title>Experience :</v-list-item-title>
-                      <v-list-item-subtitle v-for="(experience, index) in selected_qs.experience" :key="index">{{
-                        experience.title }}</v-list-item-subtitle>
-                    </v-list-item>
-                    <v-list-item>
-                      <v-list-item-title>Performance Rating :</v-list-item-title>
-                      <v-list-item-subtitle v-for="(rating, index) in selected_qs.rating" :key="index">{{
-                        rating.title }}</v-list-item-subtitle>
-                    </v-list-item>
-                    <v-list-item title="Training Hours:">
-                      <v-list-item-subtitle>{{ selected_qs.training_hours }} </v-list-item-subtitle>
-                    </v-list-item>
-                    <v-list-item v-if="selected_qs.sg" title="Salary Grade:">
-                      <v-list-item-subtitle>{{ selected_qs.sg.salary_grade }} </v-list-item-subtitle>
-                    </v-list-item>
-                  </v-list>
-                </v-sheet>
-                <v-sheet v-else height="43vh" class="d-flex align-center justify-center">
-                  <v-row no-gutters>
-                    <v-col cols="12" class="text-center">
-                      <v-icon size="64" style="color: red;">mdi-alert-circle-outline</v-icon>
-                    </v-col>
-                    <v-col cols="12" class="text-center font-weight-bold">NO
-                      SELECTED POSITION</v-col>
-                  </v-row>
-                </v-sheet>
+                <v-img :aspect-ratio="1" class="bg-white" src="/prime-logo.png" contain></v-img>
 
 
               </v-card>
-
-            </v-col>
-            </v-row>
-            </v-card-text>
-      </v-sheet> -->
+            </div>
           </v-window-item>
           <v-window-item :value="2">
             <v-card-text>
@@ -920,9 +728,13 @@ function next_window() {
   if (!applicant_education) return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
   const applicant_experience = applicant.value.qualification.experience;
   if (!applicant_experience) return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
+
   const applicant_rating = applicant.value.qualification.per_rating;
   if (position_data.value.rating?.length && !applicant_rating) return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
+  // if (position_data.value.rating?.length && !applicant_rating) return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
+
   const applicant_training = applicant.value.qualification.training;
+  if (position_data.value.training_hours?.length > 0 && !applicant_training) return swal({ title: "Oops!", text: "Training Hours is required", icon: "info" });
 
 
 
@@ -933,8 +745,8 @@ function next_window() {
   is_yes.push(rating_matching(applicant_rating, selected_position.rating));
   is_yes.push(training_matching(applicant_training, selected_position.training_hours));
   if (is_yes.includes(false)) return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" })
-  console.log(is_yes);
 
+  console.log(is_yes);
   step.value++
 }
 
@@ -953,10 +765,18 @@ function experience_matching(applicant_experience: any, required_experience: any
   return result;
 }
 
-function rating_matching(applicant_rating: string, required_rating: string) {
-  if (!required_rating) return true;
-  return applicant_rating == required_rating;
-};
+// function rating_matching(applicant_rating: string, required_rating: string) {
+//   if (!required_rating) return true;
+//   return applicant_rating == required_rating;
+// };
+
+function rating_matching(applicant_rating: any, required_rating: any) {
+  if (!required_rating) {
+    return false;
+  }
+  const [result] = required_rating.map((v: string) => applicant_rating.includes(v));
+  return result;
+}
 
 
 function training_matching(applicant_training: number, required_training: number) {
@@ -1076,10 +896,10 @@ function get_sdo_school(division) {
 .text-title {
   font-family: 'Open Sans', sans-serif;
   font-weight: 600;
-  font-size: 1.5rem;
-  color: #2b0cc8;
+  font-size: 1.2rem;
+  color: #200a8d;
   letter-spacing: 1px;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
 
 }
 </style>

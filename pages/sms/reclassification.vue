@@ -6,21 +6,22 @@
           <v-card-text class="overflow-y-auto">
             <v-sheet class="pa-6" height="auto" color="indigo">
               <v-row no-gutters>
-                <v-col cols="9" class="text-h5  text-white">List of Reclassification Application <br /> <span
-                    class="text-subtitle-2 text-grey-lighten-2">A
+                <v-col cols="9" class="text-h5  text-white">List of Reclassification Application
+                  <br /> <span class="text-subtitle-2 text-grey-lighten-2">A
                     brief overview of reclassification applications.</span>
                 </v-col>
-                <!-- <v-col cols="3" class="text-grey d-flex">
-                  <v-text-field prepend-inner-icon="mdi-magnify" label="Search Control Number" density="compact"
-                    hide-details variant="solo" bg-color="grey-lighten-3" />
+                <v-col cols="3" class="text-grey d-flex">
+                  <!-- <v-text-field prepend-inner-icon="mdi-magnify" label="Search Control Number" density="compact"
+                    hide-details bg-color="grey-lighten-3" />
                   <v-btn icon="mdi-settings" class="ma-1" variant="plain">
-                    <v-icon size="36" color="blue">mdi-settings</v-icon> </v-btn>
-                </v-col> -->
+                    <v-icon color="primary">mdi-settings</v-icon> </v-btn> -->
+                </v-col>
               </v-row>
             </v-sheet>
 
-            <commons-sms title="Reclass Application/s" icon="mdi-note-text-outline"
-              :items="get_applicant_by_status(status.value)" :display_types="['grid', 'list', 'table']">
+            <commons-item-container title="Reclass Application/s" icon="mdi-note-text-outline"
+              :items="get_applicant_by_status(status.value)" :display_types="['grid', 'table']">
+
               <template v-slot:item="{ value, index, display }">
                 <v-sheet elevation="2" @click="load_erf_form(value._id)" v-bind="props" class="mx-auto reclass-item"
                   :class="{ 'elevation-4': is_hovered }"
@@ -44,15 +45,29 @@
                     </div>
                     <div class="d-flex">
                       <div class="text-overline d-flex ">
-                        Control Number : <b class="text-success">{{ value.control_number }}</b>
+                        Control Number : <b class="text-indigo">{{ value.control_number }}</b>
                       </div> <v-spacer /> <v-chip color="success">{{ value.status
                       }}</v-chip>
                     </div>
                   </v-card-text>
                 </v-sheet>
-
               </template>
-            </commons-sms>
+
+              <template v-slot:table="{ items }">
+                <v-sheet border> <v-data-table :items="items" :headers="table_headers">
+                    <template v-slot:item.control_number="{ item }">
+                      <span class="text-primary">{{ item.selectable.control_number }}</span>
+                    </template>
+                    <template v-slot:item.status="{ item }">
+                      <v-chip color="success" variant="text">{{ item.selectable.status }}</v-chip>
+                    </template>
+                    <template v-slot:item.actions="{ item }">
+                      <v-btn density="compact" color="primary"
+                        @click="load_erf_form(item.selectable._id)">Evaluate</v-btn>
+                    </template>
+                  </v-data-table></v-sheet>
+              </template>
+            </commons-item-container>
 
 
           </v-card-text>
@@ -85,6 +100,15 @@ const tabItems = ref([
   { label: 'Disapproved', value: 'Dissapproved' },
 ]);
 
+const table_headers = ref([
+  { title: "Applicant Name", key: "full_name", sortable: false },
+  { title: "School", key: "school", sortable: false },
+  { title: "Division", key: "division", sortable: false },
+  { title: "Control Number", key: "control_number", sortable: false },
+  { title: "Status", key: "status", sortable: false },
+  { title: "Actions", key: "actions", sortable: false, align: "center" },
+])
+
 const application_data = ref([]);
 async function get_application() {
   const { data, error } = await $rest('new-applicant/get-application', {
@@ -107,8 +131,6 @@ const load_erf_form = (id) => {
     }
   });
 }
-
-
 
 </script>
 

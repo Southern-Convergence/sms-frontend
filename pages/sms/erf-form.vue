@@ -1,9 +1,19 @@
 <template>
   <v-sheet>
-    <!-- cols="10" xxl="8" xl="8" lg="10" -->
+    <!-- <v-row dense>
+      <v-col cols="3"> <v-btn color="primary" variant="text" @mouseover="is_hovered = true"
+          @mouseleave="is_hovered = false">
+          <v-icon size="24">mdi-arrow-left-circle</v-icon>
+          <span v-if="is_hovered">Back to Previous Page</span>
+        </v-btn></v-col>
+    </v-row> -->
     <v-row dense justify="center">
+
       <v-col cols="12" class="font-weight-bold text-h6">
-        EVALUATION / LIST OF REQUIREMENTS FORM
+
+        EVALUATION /
+        LIST OF
+        REQUIREMENTS FORM
       </v-col>
       <v-col cols="12">
         <v-row no-gutters>
@@ -382,6 +392,7 @@ onBeforeMount(() => {
   ])
 });
 
+const is_hovered = ref(false)
 
 const enum ROLES {
   PRINCIPAL = "Principal",
@@ -715,35 +726,35 @@ async function get_applicant_details() {
 
 // Table headers start
 const attainment_headers = [
-  { title: 'Degree', key: 'degree' },
-  { title: 'Institution', key: 'institution' },
-  { title: 'Year Received', key: 'year_received' },
-  { title: 'Board Examination', key: 'board_exam' },
-  { title: 'Rating', key: 'rating' },
-  { title: 'Date', key: 'date' },
+  { title: 'Degree', key: 'degree', sortable: false },
+  { title: 'Institution', key: 'institution', sortable: false },
+  { title: 'Year Received', key: 'year_received', sortable: false },
+  { title: 'Board Examination', key: 'board_exam', sortable: false },
+  { title: 'Rating', key: 'rating', sortable: false },
+  { title: 'Date', key: 'date', sortable: false },
 ];
 const service_record_headers = [
-  { title: 'Designation', key: 'designation' },
-  { title: 'From', key: 'from' },
-  { title: 'To', key: 'to' }
+  { title: 'Designation', key: 'designation', sortable: false },
+  { title: 'From', key: 'from', sortable: false },
+  { title: 'To', key: 'to', sortable: false }
 ];
 const years_teaching_headers =
   [
-    { title: 'Publics Schools', key: 'yt_public_schools' },
-    { title: 'Private Schools', key: 'yt_private_schools' },
+    { title: 'Publics Schools', key: 'yt_public_schools', sortable: false },
+    { title: 'Private Schools', key: 'yt_private_schools', sortable: false },
 
   ];
 const experience_teaching_headers =
   [
-    { title: 'Publics Schools', key: 'te_public_schools' },
-    { title: 'Private Schools', key: 'te_private_schools' },
+    { title: 'Publics Schools', key: 'te_public_schools', sortable: false },
+    { title: 'Private Schools', key: 'te_private_schools', sortable: false },
 
   ];
 const professional_study_headers =
   [
-    { title: 'School Year', key: 'sy' },
-    { title: 'Number of Units', key: 'unit_no' },
-    { title: 'Description', key: 'description' }
+    { title: 'School Year', key: 'sy', sortable: false },
+    { title: 'Number of Units', key: 'unit_no', sortable: false },
+    { title: 'Description', key: 'description', sortable: false }
   ];
 // Table headers end
 const disapproved_dialog = ref(false);

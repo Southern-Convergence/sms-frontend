@@ -24,8 +24,7 @@
                   density="compact" hide-details="auto" variant="solo" bg-color="grey-lighten-4" /></v-col>
             </v-row>
             <commons-item-container class="mt-2" title="Qualification Standards"
-              subtitle="A brief overview of qualification standards." :items="position_data"
-              :display_types="['grid', 'list', 'table']">
+              subtitle="A brief overview of qualification standards." :items="position_data" :display_types="['grid']">
               <template v-slot:item="{ value, index, display }">
                 <v-alert class="maintenance-item" color="blue-darken-4" theme="dark" icon="mdi-account-hard-hat" border
                   @click="view_pos(value)">
