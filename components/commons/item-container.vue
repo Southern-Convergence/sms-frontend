@@ -13,7 +13,7 @@
 
       <template v-if="$attrs.extended === ''" v-slot:extension>
         <v-divider />
-        <v-sheet class="pa-1" min-height="64" rounded="0">
+        <v-sheet class="pa-1" min-height="64" rounded="xl">
           <slot name="extension" />
         </v-sheet>
       </template>

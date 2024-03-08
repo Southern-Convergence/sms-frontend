@@ -27,6 +27,7 @@
                       <v-select :items="position_data" v-model="applicant.qualification.position" label="Select Position"
                         variant="solo" hide-details item-value="_id" prepend-inner-icon="mdi-account-hard-hat" />
                     </v-col>
+
                     <v-col cols="12" class="pa-2"
                       v-if="applicant.qualification.position && !selected_qs?.education_level == ''">
                       <v-select v-model="applicant.qualification.educ_level" :items="['Elementary', 'Secondary']"
@@ -51,6 +52,7 @@
                         label="Performance Rating" variant="solo" hide-details item-value="_id"
                         prepend-inner-icon="mdi-star" />
                     </v-col>
+
                   </v-row>
                 </v-card-text>
 
@@ -87,6 +89,7 @@
                         }})</i></b>
                       </v-list-item>
 
+
                       <v-list-item class="ma-2" variant="tonal" rounded="rounded" v-if="basta.education.length">
                         <template v-slot:prepend>
                           <v-icon color="primary" icon="mdi-school"></v-icon>
@@ -119,6 +122,10 @@
                         </template>
                         <v-list-item-subtitle>{{ basta.training_hours }} </v-list-item-subtitle>
                       </v-list-item>
+
+
+
+
                       <!-- <v-list-item class="ma-2" variant="tonal" rounded="rounded" v-if="basta.sg" title="Salary Grade:">
                         <template v-slot:prepend>
                           <v-icon color="primary" icon="mdi-cash"></v-icon>
@@ -461,7 +468,6 @@ const applicant = ref({
     education: [],
     experience: [],
     training: 0,
-    eligibility: "",
     per_rating: "",
   },
   personal_information: {

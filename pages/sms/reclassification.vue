@@ -1,6 +1,6 @@
 <template>
   <div class="mx-auto">
-    <v-sheet>
+    <v-card flat>
       <v-window v-model="tab">
         <v-window-item v-for=" status  in  tabItems " :key="status.value" :value="status.value">
           <v-card-text class="overflow-y-auto">
@@ -21,9 +21,8 @@
 
             <commons-item-container title="Reclass Application/s" icon="mdi-note-text-outline"
               :items="get_applicant_by_status(status.value)" :display_types="['grid', 'table']">
-
               <template v-slot:item="{ value, index, display }">
-                <v-sheet elevation="2" @click="load_erf_form(value._id)" v-bind="props" class="mx-auto reclass-item"
+                <v-card @click="load_erf_form(value._id)" v-bind="props" class="mx-auto reclass-item" rounded="lg" border
                   :class="{ 'elevation-4': is_hovered }"
                   v-if="get_applicant_by_status(status.value).some(applicant => Object.keys(applicant).length > 0)">
                   <v-card-text>
@@ -46,11 +45,14 @@
                     <div class="d-flex">
                       <div class="text-overline d-flex ">
                         Control Number : <b class="text-indigo">{{ value.control_number }}</b>
-                      </div> <v-spacer /> <v-chip color="success">{{ value.status
-                      }}</v-chip>
+                      </div> <v-spacer /> 
+                     
+                      <v-chip color="success" v-if="user.role === 'Administrative Officer V' && value.status === 'Completed'">Pending</v-chip>
+                           <v-chip color="success" v-else>{{ value.status
+                      }}</v-chip> 
                     </div>
                   </v-card-text>
-                </v-sheet>
+                </v-card>
               </template>
 
               <template v-slot:table="{ items }">
@@ -73,7 +75,7 @@
           </v-card-text>
         </v-window-item>
       </v-window>
-    </v-sheet>
+    </v-card>
   </div>
 </template>
 

@@ -19,7 +19,7 @@
                 <div>
                   <b class="text-h5  text-uppercase "> Total Reclass Application</b>
                   <h6 class="text-h2 py-7 text-center font-weight-bold">
-                    {{ application_data.length }}
+                    {{ application_data.length ? application_data.length : 0 }}
                   </h6>
                   <h5 class="text-center"> 16 Schools Division Office</h5>
                 </div>
@@ -34,7 +34,7 @@
                       <div>
                         <h3 class="text-white font-weight-regular"> Current Evaluated</h3>
                         <h6 class="text-h3 pt-5 font-weight-bold text-white">
-                          1
+                          0
                         </h6>
                         <h3 class="text-white text-caption font-weight-thin"> 10 of 101 reclass</h3>
                       </div>
@@ -50,7 +50,7 @@
                       <div>
                         <h3 class="text-white font-weight-regular"> Current for DBM</h3>
                         <h6 class="text-h3 pt-5 font-weight-bold text-white">
-                          {{ ro_completed_data }}
+                          {{ ro_completed_data ? ro_completed_data : 0 }}
                         </h6>
                         <h3 class="text-white text-caption font-weight-thin"> 10 of 101 reclass</h3>
                       </div>
@@ -66,7 +66,7 @@
                       <div>
                         <h3 class="text-white font-weight-regular"> Completed</h3>
                         <h6 class="text-h3 pt-5 font-weight-bold text-white">
-                          {{ ro_completed_data }}
+                          {{ ro_completed_data ? ro_completed_data : 0 }}
                         </h6>
                         <h3 class="text-white text-caption font-weight-thin"> 10 of 101 reclass</h3>
                       </div>
@@ -81,7 +81,7 @@
                       <div>
                         <h3 class="text-white font-weight-regular"> Pending</h3>
                         <h6 class="text-h3 pt-5 font-weight-bold text-white">
-                          {{ pending_data }}
+                          {{ pending_data ? pending_data : 0 }}
                         </h6>
                         <h3 class="text-white text-caption font-weight-thin"> 10 of 101 reclass</h3>
                       </div>

@@ -1,6 +1,5 @@
 <template>
   <v-sheet color="#E8EAF6" height="96vh">
-
     <v-card-text>
       <v-tabs v-model="tab" color="blue-darken-4" align-tabs="start" centered stacked>
 
@@ -23,24 +22,42 @@
               <v-col cols="3"><v-text-field prepend-inner-icon="mdi-magnify" label="Enter Position Title"
                   density="compact" hide-details="auto" variant="solo" bg-color="grey-lighten-4" /></v-col>
             </v-row>
-            <commons-item-container class="mt-2" title="Qualification Standards"
+            <!-- <commons-item-container class="mt-2" title="Qualification Standards"
               subtitle="A brief overview of qualification standards." :items="position_data" :display_types="['grid']">
               <template v-slot:item="{ value, index, display }">
-                <v-alert class="maintenance-item" color="blue-darken-4" theme="dark" icon="mdi-account-hard-hat" border
+               <v-card class="mx-auto ma-1 elevation-0" append-icon="mdi-open-in-new" rounded="md" border
+                  :title="value.title" @click="view_pos(value)"></v-card> 
+                <v-alert class="maintenance-item" append-icon="mdi-open-in-new" border-color="indigo" border
                   @click="view_pos(value)">
                   {{ value.title
                   }}
+
                 </v-alert>
               </template>
-            </commons-item-container>
+            </commons-item-container> -->
+
+            <v-card class="mt-3" title="Summary of Set Qualification Standards"
+              subtitle="A brief overview of qualification standards." prepend-icon="mdi-certificate" rounded="lg">
+              <v-divider />
+              <v-card-text>
+                <v-row no-gutters>
+                  <v-col cols="4" class="pa-2" v-for="pos, index in position_data" :key="pos">
+                    <v-alert class="maintenance-item" append-icon="mdi-open-in-new" @click="view_pos(pos)">
+                      {{ pos.title
+                      }}
+                    </v-alert>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
 
           </v-card-text>
         </v-window-item>
         <v-window-item :value="2" height="80vh">
-          <v-sheet fluid border class="mt-2">
+          <div fluid border class="mt-2">
             <v-row no-gutters>
               <v-col cols="4">
-                <v-sheet height="40vh" class="d-flex flex-column pa-1">
+                <v-card height="40vh" class="d-flex flex-column ma-2">
                   <v-toolbar color="blue-darken-4" class="pl-3 text-subtitle-1">
                     Education
                     <v-spacer />
@@ -51,17 +68,20 @@
                       </template>
                     </v-tooltip>
                   </v-toolbar>
-                  <v-sheet height="35vh" class="overflow-y-auto pa-2">
-                    <v-alert v-for="educ in education_data" :key="educ.title" @click="education_update_dialog(educ)"
-                      class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="0" icon="mdi-school">
-                      {{ educ.title }}
-                    </v-alert>
-                  </v-sheet>
+                  <v-card-text>
+                    <v-sheet height="31vh" class="overflow-y-auto pa-2">
+                      <v-alert v-for="educ in education_data" :key="educ.title" @click="education_update_dialog(educ)"
+                        class="my-2 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="lg"
+                        icon="mdi-school">
+                        {{ educ.title }}
+                      </v-alert>
+                    </v-sheet>
+                  </v-card-text>
 
-                </v-sheet>
+                </v-card>
               </v-col>
               <v-col cols="4">
-                <v-sheet height="40vh" class="d-flex flex-column pa-1">
+                <v-card height="40vh" class="d-flex flex-column ma-2">
                   <v-toolbar color="blue-darken-4" class="pl-3 text-subtitle-1">
                     Experience
                     <v-spacer />
@@ -72,17 +92,18 @@
                       </template>
                     </v-tooltip>
                   </v-toolbar>
-                  <v-sheet height="35vh" class="overflow-y-auto pa-2">
-                    <v-alert v-for=" experience, index  in  experience_data " :key="index"
-                      @click="experience_update_dialog(experience)" class="my-1 maintenance-item"
-                      :class="{ 'elevation-4': is_hovered }" rounded="0" icon="mdi-head-cog-outline">
-                      {{ experience.title }}
-                    </v-alert>
-                  </v-sheet>
-                </v-sheet>
+                  <v-card-text> <v-sheet height="31vh" class="overflow-y-auto pa-2">
+                      <v-alert v-for=" experience, index  in  experience_data " :key="index"
+                        @click="experience_update_dialog(experience)" class="my-2 maintenance-item"
+                        :class="{ 'elevation-4': is_hovered }" rounded="lg" icon="mdi-head-cog-outline">
+                        {{ experience.title }}
+                      </v-alert>
+                    </v-sheet>
+                  </v-card-text>
+                </v-card>
               </v-col>
               <v-col cols="4">
-                <v-sheet height="40vh" class="d-flex flex-column pa-1">
+                <v-card height="40vh" class="d-flex flex-column ma-2">
                   <v-toolbar color="blue-darken-4" class="pl-3 text-subtitle-1">
                     Performance Rating
                     <v-spacer />
@@ -93,16 +114,18 @@
                       </template>
                     </v-tooltip>
                   </v-toolbar>
-                  <v-sheet height="35vh" class="overflow-y-auto pa-2">
-                    <v-alert v-for=" rating, index  in  rating_data " :key="index" @click="rating_update_dialog(rating)"
-                      class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="0" icon="mdi-star">
-                      {{ rating.title }}
-                    </v-alert>
-                  </v-sheet>
-                </v-sheet>
+                  <v-card-text>
+                    <v-sheet height="31vh" class="overflow-y-auto pa-2">
+                      <v-alert v-for=" rating, index  in  rating_data " :key="index" @click="rating_update_dialog(rating)"
+                        class="my-2 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="lg" icon="mdi-star">
+                        {{ rating.title }}
+                      </v-alert>
+                    </v-sheet>
+                  </v-card-text>
+                </v-card>
               </v-col>
               <v-col cols="4">
-                <v-sheet height="40vh" class="d-flex flex-column pa-1">
+                <v-card height="40vh" class="d-flex flex-column ma-2">
                   <v-toolbar color="blue-darken-4" class="pl-3 text-subtitle-1">
                     Salary Grade
                     <v-spacer />
@@ -112,19 +135,19 @@
                       </template>
                     </v-tooltip>
                   </v-toolbar>
-                  <v-sheet height="35vh" class="overflow-y-auto pa-2">
-                    <v-alert v-for=" sg, index  in  sg_data " :key="index" @click="update_salary_grade(sg)"
-                      class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="0" icon="mdi-cash">
-                      <div> Salary Grade : <b> {{ sg.salary_grade }} </b></div>
-                      <div> Equivalent : <b> {{ sg.equivalent }} </b></div>
-                    </v-alert>
-                  </v-sheet>
-                </v-sheet>
+                  <v-card-text> <v-sheet height="31vh" class="overflow-y-auto pa-2">
+                      <v-alert v-for=" sg, index  in  sg_data " :key="index" @click="update_salary_grade(sg)"
+                        class="my-2 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="lg" icon="mdi-cash">
+                        <div> Salary Grade : <b> {{ sg.salary_grade }} </b></div>
+                        <div> Equivalent : <b> {{ sg.equivalent }} </b></div>
+                      </v-alert>
+                    </v-sheet></v-card-text>
+                </v-card>
               </v-col>
               <v-col cols="4">
-                <v-sheet height="40vh" class="d-flex flex-column pa-1">
+                <v-card height="40vh" class="d-flex flex-column ma-2">
                   <v-toolbar color="blue-darken-4" class="pl-3 text-subtitle-1">
-                    NONE
+                    M.A Units
                     <v-spacer />
                     <v-tooltip text="Click to add     Eligibility" location="top">
                       <template v-slot:activator="{ props }">
@@ -132,16 +155,16 @@
                       </template>
                     </v-tooltip>
                   </v-toolbar>
-                  <v-sheet height="35vh" class="overflow-y-auto pa-2">
-                    <v-alert class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" border="start"
-                      rounded="0" border-color="blue-darken-4">
-                      NONE
-                    </v-alert>
-                  </v-sheet>
-                </v-sheet>
+                  <v-card-text> <v-sheet height="31vh" class="overflow-y-auto pa-2">
+                      <v-alert class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="lg"
+                        icon="mdi-alert" border-color="blue-darken-4">
+                        Not yet avaliable
+                      </v-alert>
+                    </v-sheet></v-card-text>
+                </v-card>
               </v-col>
               <v-col cols="4">
-                <v-sheet height="40vh" class="d-flex flex-column pa-1">
+                <v-card height="40vh" class="d-flex flex-column ma-2">
                   <v-toolbar color="blue-darken-4" class="pl-3 text-subtitle-1">
                     Attachments
                     <v-spacer />
@@ -152,16 +175,19 @@
                       </template>
                     </v-tooltip>
                   </v-toolbar>
-                  <v-sheet height="35vh" class="overflow-y-auto pa-2">
-                    <v-alert v-for=" attachment, index  in  attachment_data " :key="index"
-                      @click="update_attachment(attachment)" class="my-1 maintenance-item"
-                      :class="{ 'elevation-4': is_hovered }" rounded="0" icon="mdi-paperclip">
-                      {{ attachment.title }}
-                    </v-alert>
-                  </v-sheet>
-                </v-sheet>
+                  <v-card-text>
+                    <v-sheet height="31vh" class="overflow-y-auto pa-2">
+                      <v-alert v-for=" attachment, index  in  attachment_data " :key="index"
+                        @click="update_attachment(attachment)" class="my-2 maintenance-item"
+                        :class="{ 'elevation-4': is_hovered }" rounded="lg" icon="mdi-paperclip">
+                        {{ attachment.title }}
+                      </v-alert>
+                    </v-sheet>
+                  </v-card-text>
+                </v-card>
               </v-col>
-            </v-row> </v-sheet>
+            </v-row>
+          </div>
         </v-window-item>
 
       </v-window>

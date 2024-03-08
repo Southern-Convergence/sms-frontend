@@ -1,16 +1,16 @@
 
 <template>
-    <v-sheet>
+    <div>
 
         <v-row no-gutters>
             <v-col cols="8">
-                <v-btn prepend-icon="mdi-pencil-plus" @click="user_invite_dialog = true" color="indigo" rounded="0">
+                <v-btn prepend-icon="mdi-pencil-plus" @click="user_invite_dialog = true" color="indigo">
                     Invite
                     User</v-btn>
-                <commons-sms class="my-1 mr-1 " title="USER MANAGEMENT" subtitle="A brief overview of users."
+                <commons-sms class="my-2 mr-3 " title="USER MANAGEMENT" subtitle="A brief overview of users." rounded="lg"
                     :items="users_data" :display_types="['grid', 'table']">
                     <template v-slot:item="{ value, index, display }">
-                        <v-sheet :key="index" border class="pa-2">
+                        <v-card :key="index" border class="pa-2 ma-1" rounded="lg">
                             <div class="d-flex mb-1">
                                 <div class="text-uppercase  text-indigo text-body-1"> {{ value.first_name
                                 }}
@@ -33,7 +33,7 @@
                             </div>
                             <div class="text-caption"> <v-icon color="green-lighten-3"> mdi-phone</v-icon> {{
                                 value.contact_number }}</div>
-                        </v-sheet>
+                        </v-card>
                     </template>
                     <template v-slot:table="{ items }">
                         <v-sheet border> <v-data-table :items="items" :headers="user_headers">
@@ -52,41 +52,80 @@
 
             </v-col>
 
-            <v-col cols="4" class="mt-10 ">
-                <v-sheet border>
-                    <v-toolbar>
-                        <span class="ml-2"> School Division Office</span>
-                        <v-spacer />
-                        <v-tooltip text="Click to add Education" location="top">
-                            <template v-slot:activator="{ props }">
-                                <v-btn prepend-icon="mdi-pencil-plus" @click="create_sdo_dialog = true" v-bind="props"
-                                    color="indigo" class="mr-0" rounded="0">Add SDO</v-btn>
-                            </template>
-                        </v-tooltip>
-                    </v-toolbar>
-                    <v-divider />
-                    <v-sheet class="ma-3" variant="tonal" color="indigo" v-for="(sdo, index) in sdo_data" :key="index">
-                        <v-alert class="my-1 maintenance-item" @click="route_to_sdo(sdo._id)"
-                            :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
-                            <div class="font-weight-bold text-uppercase 
+            <v-col cols="4" class="mt-15">
+
+                <v-toolbar color="transparent">
+                    <span class="ml-2 text-subtitle-1"> School Division Office</span>
+                    <v-spacer />
+                    <v-tooltip text="Click to add Education" location="top">
+                        <template v-slot:activator="{ props }">
+                            <v-btn variant="tonal" prepend-icon="mdi-pencil-plus" @click="create_sdo_dialog = true"
+                                v-bind="props" color="indigo">Add SDO</v-btn>
+                        </template>
+                    </v-tooltip>
+                </v-toolbar>
+
+
+
+                <v-card class="ma-3" v-for="(sdo, index) in sdo_data" :key="index" rounded="lg">
+                    <v-alert class=" maintenance-item" @click="route_to_sdo(sdo._id)" :class="{ 'elevation-4': is_hovered }"
+                        border="start" border-color="indigo" color="white">
+                        <div class="font-weight-bold text-uppercase 
 ">{{ sdo.title }}
-                            </div>
-                            <div>
-                                <v-icon color="blue-lighten-2"> mdi-map-marker</v-icon> {{
-                                    sdo.address }}
-                            </div>
-                            <div class="text-blue font-italic text-decoration-underline">
-                                <v-icon color="red"> mdi-email</v-icon> {{ sdo.email }}
-                            </div>
-                            <div>
-                                <v-icon color="success"> mdi-phone</v-icon> {{ sdo.telephone }}
-                            </div>
-                        </v-alert>
-                    </v-sheet>
-                </v-sheet>
+                        </div>
+                        <div>
+                            <v-icon color="blue-lighten-2"> mdi-map-marker</v-icon> {{
+                                sdo.address }}
+                        </div>
+                        <div class="text-blue font-italic text-decoration-underline">
+                            <v-icon color="red"> mdi-email</v-icon> {{ sdo.email }}
+                        </div>
+                        <div>
+                            <v-icon color="success"> mdi-phone</v-icon> {{ sdo.telephone }}
+                        </div>
+                    </v-alert>
+                </v-card>
+
 
 
             </v-col>
+
+
+            <!-- <v-col cols="4" class="mt-11 ">
+                    <v-card>
+                        <v-toolbar>
+                            <span class="ml-2"> School Division Office</span>
+                            <v-spacer />
+                            <v-tooltip text="Click to add Education" location="top">
+                                <template v-slot:activator="{ props }">
+                                    <v-btn prepend-icon="mdi-pencil-plus" @click="create_sdo_dialog = true" v-bind="props"
+                                        color="indigo" class="mr-0" rounded="0">Add SDO</v-btn>
+                                </template>
+                            </v-tooltip>
+                        </v-toolbar>
+                        <v-divider />
+                        <v-sheet class="ma-3" variant="tonal" color="indigo" v-for="(sdo, index) in sdo_data" :key="index">
+                            <v-alert class="my-1 maintenance-item" @click="route_to_sdo(sdo._id)"
+                                :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
+                                <div class="font-weight-bold text-uppercase 
+">{{ sdo.title }}
+                                </div>
+                                <div>
+                                    <v-icon color="blue-lighten-2"> mdi-map-marker</v-icon> {{
+                                        sdo.address }}
+                                </div>
+                                <div class="text-blue font-italic text-decoration-underline">
+                                    <v-icon color="red"> mdi-email</v-icon> {{ sdo.email }}
+                                </div>
+                                <div>
+                                    <v-icon color="success"> mdi-phone</v-icon> {{ sdo.telephone }}
+                                </div>
+                            </v-alert>
+                        </v-sheet>
+                    </v-card>
+
+
+                </v-col> -->
         </v-row>
 
 
@@ -168,7 +207,7 @@
                 </v-form>
             </v-card-text>
         </commons-dialog>
-    </v-sheet>
+    </div>
 </template>
 
 <script setup lang="ts">

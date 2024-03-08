@@ -6,7 +6,6 @@
         <commons-header />
         <v-sheet class="mx-5">
           <v-row no-gutters class="ma-2">
-
             <v-col cols="6">Name : <b>{{ erf.full_name }} </b>
             </v-col>
             <v-col cols="6">Date of Birth : <b>
@@ -161,7 +160,7 @@
           </v-row>
           <div class="d-flex mt-4">
             <div class="w-50 text-center px-5">
-              <b>{{ erf?.principal_name }}</b>
+              <b>Current Principal</b>
               <v-divider />
               <center> School Principal </center>
 
@@ -208,12 +207,12 @@
           </div>
           <div class="d-flex my-5">
             <div class="w-50 text-center">
-              <b>{{ erf?.sds_name }}</b>
+              <b>Current SDO Approver</b>
               <v-divider />
               <center> School Division Superintendent </center>
 
             </div>
-            <div class="w-50 text-center"> <b>{{ erf?.evaluator_name }}</b>
+            <div class="w-50 text-center"> <b>Current Evaluator</b>
               <v-divider />
               <center> Evaluator </center>
             </div>

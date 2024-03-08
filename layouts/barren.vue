@@ -1,6 +1,6 @@
 <template>
-  <v-app>
-    <layout-std-appbar appbar_title="Systems"/> 
+  <v-app class="app-background">
+    <layout-std-appbar appbar_title="Systems" />
 
     <v-main>
       <v-container>
@@ -13,6 +13,10 @@
 </template>
 
 <style scoped>
+.app-background {
+  background-color: #F3F4FA;
+}
+
 @media (min-width: 2560px) {
   ::v-deep(.v-container) {
     max-width: 1000px !important;

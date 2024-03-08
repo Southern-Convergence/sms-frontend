@@ -1,6 +1,6 @@
 
 <template>
-  <v-sheet>
+  <div>
 
 
     <v-row no-gutters>
@@ -8,7 +8,7 @@
           @click="user_invite_dialog = true" color="indigo" rounded="0">
           Invite
           User</v-btn>
-        <commons-sms class="my-1 mr-1" title="SDO USER MANAGEMENT" subtitle="A brief overview of users."
+        <commons-sms class="my-2 mr-3" title="SDO USER MANAGEMENT" subtitle="A brief overview of users." rounded="lg"
           :items="users_data" :display_types="['grid', 'table']">
           <template v-slot:item="{ value, index, display }">
             <v-sheet :key="index" border class="pa-2">
@@ -51,38 +51,40 @@
         </commons-sms>
 
       </v-col>
-      <v-col cols="12" xl="4" lg="4" md="12" sm="12" class="mt-10">
-        <v-sheet border>
-          <v-toolbar>
-            <span class="ml-2"> School</span>
-            <v-spacer />
-            <v-tooltip text="Click to add School" location="top">
-              <template v-slot:activator="{ props }">
-                <v-btn prepend-icon="mdi-pencil-plus" @click="create_school_dialog = true" v-bind="props" color="indigo"
-                  class="mr-0" rounded="0">Add School</v-btn>
-              </template>
-            </v-tooltip>
-          </v-toolbar>
-          <v-divider />
-          <v-sheet class="ma-3" variant="tonal" color="indigo" v-for="(school, index) in school_data" :key="index">
-            <v-alert class="my-1 maintenance-item" @click="route_to_school(school._id)"
-              :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
-              <div class=" text-uppercase 
+      <v-col cols="12" xl="4" lg="4" md="12" sm="12" class="mt-15">
+
+        <v-toolbar color="transparent">
+          <span class="ml-2 text-subtitle-1"> School/s</span>
+          <v-spacer />
+          <v-tooltip text="Click to add School" location="top">
+            <template v-slot:activator="{ props }">
+              <v-btn variant="tonal" prepend-icon="mdi-pencil-plus" @click="create_school_dialog = true" v-bind="props"
+                color="indigo">Add SCHOOL</v-btn>
+            </template>
+          </v-tooltip>
+        </v-toolbar>
+
+
+
+        <v-card class="ma-3" v-for="(school, index) in school_data" :key="index">
+          <v-alert class=" maintenance-item" color="white" @click="route_to_school(school._id)"
+            :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
+            <div class=" text-uppercase 
 ">{{ school.title }}
-              </div>
-              <div>
-                <v-icon color="blue-lighten-2"> mdi-map-marker</v-icon> {{
-                  school.address }}
-              </div>
-              <div class="text-blue font-italic text-decoration-underline">
-                <v-icon color="red"> mdi-email</v-icon> {{ school.email }}
-              </div>
-              <div>
-                <v-icon color="success"> mdi-phone</v-icon> {{ school.telephone }}
-              </div>
-            </v-alert>
-          </v-sheet>
-        </v-sheet>
+            </div>
+            <div>
+              <v-icon color="blue-lighten-2"> mdi-map-marker</v-icon> {{
+                school.address }}
+            </div>
+            <div class="text-blue font-italic text-decoration-underline">
+              <v-icon color="red"> mdi-email</v-icon> {{ school.email }}
+            </div>
+            <div>
+              <v-icon color="success"> mdi-phone</v-icon> {{ school.telephone }}
+            </div>
+          </v-alert>
+        </v-card>
+
       </v-col>
     </v-row>
 
@@ -162,7 +164,7 @@
           prepend-inner-icon="mdi-phone" />
       </v-card-text>
     </commons-dialog>
-  </v-sheet>
+  </div>
 </template>
 
 <script setup lang="ts">

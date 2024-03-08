@@ -1,5 +1,5 @@
 <template>
-  <v-sheet width="85%" class="mx-auto ma-5">
+  <v-sheet bg-color="#E8EAF6" width="85%" class="mx-auto ma-5">
     <v-card height="90vh">
       <v-sheet class="pa-6" height="auto" color="grey-lighten-4">
         <v-row no-gutters>
@@ -202,14 +202,16 @@
       </v-card-text> -->
 
 
-      <v-tabs v-model="tab" color="primary">
-        <v-tab :value="1">Education </v-tab>
-        <v-tab :value="2">Experience</v-tab>
-        <v-tab :value="3">Performance Rating</v-tab>
-        <v-tab :value="4">Salary Grade</v-tab>
-        <v-tab :value="5">Position</v-tab>
+      <v-tabs v-model="tab" color="primary" align-tabs="start" centered stacked>
+        <v-tab :value="1">
+          <v-icon>mdi-school</v-icon>
+          Education </v-tab>
+        <v-tab :value="2"> <v-icon>mdi-head-cog-outline</v-icon> Experience</v-tab>
+        <v-tab :value="3"> <v-icon>mdi-star</v-icon> Performance Rating</v-tab>
+        <v-tab :value="4"> <v-icon>mdi-cash</v-icon> Salary Grade</v-tab>
+        <v-tab :value="5"> <v-icon>mdi-certificate</v-icon>Position</v-tab>
       </v-tabs>
-      <v-divider />
+
       <v-card-text>
         <v-window v-model="tab">
           <v-window-item :value="1">
