@@ -241,27 +241,30 @@
 
 
 
-    <commons-dialog max-width="40%" v-model="position_dialog" :icon="mdi - school" :title="'Position  Form'"
+    <commons-dialog max-width="40%" v-model="position_dialog" :title="'Position  Form'"
       @submit="create_position" :subtitle="'Create position and modify Qualification Standards'" :submitText="'Submit'">
-      <v-card-text>
+      <v-card-text class="ma-2">
         <v-row no-gutters>
-          <v-col cols="6" class="pr-2"> <v-text-field v-model="position.title" label="Position" /></v-col>
-          <v-col cols="6"> <v-select v-model="position.education_level" :items="['Elementary', 'Secondary']"
-              label="Education Level" /></v-col>
+          <v-col cols="6" class="pr-2"> <v-text-field v-model="position.title" label="Position" hide-details prepend-inner-icon="mdi-account-hard-hat"  /></v-col>
+                  <v-col cols="6"> <v-select v-model="position.education_level" :items="['Elementary', 'Secondary']"
+              label="Education Level" hide-details prepend-inner-icon="mdi-book" /></v-col>
+               <v-col cols="12">   <v-checkbox label="Check if with ERF"  ></v-checkbox></v-col>
+  
+         
           <v-col cols="12"> <v-select v-model="position.education" :items="education_data" item-value="_id"
-              label="Education" multiple /></v-col>
+              label="Education" multiple prepend-inner-icon="mdi-school"/></v-col>
           <v-col cols="12"> <v-select v-model="position.experience" item-value="_id" :items="experience_data"
-              label="Experience" multiple /></v-col>
+              label="Experience" multiple prepend-inner-icon="mdi-head-cog-outline"/></v-col>
         </v-row>
         <v-row no-gutters>
           <v-col cols="6" class="pr-2"> <v-text-field v-model="position.training_hours"
-              label="Training Number of Hours Required" /></v-col>
+              label="Training Number of Hours Required"    prepend-inner-icon="mdi-human-male-board" /></v-col>
           <v-col cols="6"> <v-select v-model="position.rating" :items="rating_data" label="Performance Rating Required"
-              multiple item-value="_id" /></v-col>
+              multiple item-value="_id"     prepend-inner-icon="mdi-star"/></v-col>
         </v-row>
         <v-row no-gutters>
           <v-col cols="6" class="pr-2"> <v-select v-model="position.sg" :items="sg_item" label="Salary Grade"
-              item-value="_id" /></v-col>
+              item-value="_id"     prepend-inner-icon="mdi-cash" /></v-col>
 
         </v-row>
 
@@ -312,7 +315,7 @@
       <v-card>
         <v-card-text>
           <v-row no-gutters justify="end">
-            <v-col cols="12"> REQUIREMENTS FOR EVALUATION FOR {{ selected_position?.title }}</v-col>
+            <v-col cols="12" class="mb-2"> REQUIREMENTS FOR EVALUATION FOR <b class="text-indigo text-uppercase">{{ selected_position?.title }}</b></v-col>
             <v-col cols="4"> Education</v-col>
             <v-col cols="8" v-for=" educ, index  in  selected_position.education " :key="index">
               : {{ educ.text }} <br />
@@ -765,5 +768,6 @@ const formatted_equivalent = computed(() => {
 .maintenance-item:hover {
   background-color: #E8EAF6;
 }
+
 </style>
 

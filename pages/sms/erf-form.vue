@@ -144,8 +144,22 @@
                 applicant_details.designation?.ipcrf_rating }}</div>
             </v-row>
 
+<!--         
+          <v-card  class="ma-5" color="error" variant="tonal" >
+            <v-card-text><v-list color="error" flat>
+              <h5 class=" font-weight-bold text-uppercase text-subtitle-2 text-red"> ACTION REQUIRED: </h5>
+              <v-list-item v-for="(attachment, key) in invalid_attachments" :key="key">
+                <v-list-title> ATTACHMENT : <b>{{ attachment.description }}</b></v-list-title>
+                <v-list-item-subtitle>
+                  <span class="text-red">REASON</span> : {{ attachment.remarks }}
+                </v-list-item-subtitle>
+              </v-list-item>
+            </v-list>
+          </v-card-text>
+          </v-card> -->
+   
             <v-row justify="center">
-              <v-divider />
+    
 
               <v-col cols=" 6" v-if="ROLES.ADMIN4 && applicant_details.status === 'Pending'">
                 <v-dialog width="500" v-model="evaluator_dialog">
@@ -265,18 +279,7 @@
         </v-card>
       </v-card>
 
-      <!-- <v-sheet border class="pa-1">
-          <v-sheet border class="pa-4"><v-list lines="auto" color="error">
-              <h5 class=" font-weight-bold text-uppercase text-subtitle-2 text-red"> ACTION REQUIRED: </h5>
-              <v-list-item v-for="(attachment, key) in invalid_attachments" :key="key">
-                <v-list-title> ATTACHMENT : <b>{{ attachment.description }}</b></v-list-title>
-                <v-list-item-subtitle>
-                  <span class="text-red">REASON</span> : {{ attachment.remarks }}
-                </v-list-item-subtitle>
-              </v-list-item>
-            </v-list>
-          </v-sheet>
-        </v-sheet> -->
+
       <v-card class="mb-2" rounded="lg" v-if="is_render_sdo_attachment">
         <h5 class="pa-2 font-weight-bold text-subtitle-1"> School Division Office</h5>
         <v-divider />
@@ -372,7 +375,6 @@ onBeforeMount(() => {
   ])
 });
 
-const is_hovered = ref(false)
 
 const enum ROLES {
   PRINCIPAL = "Principal",
@@ -446,7 +448,6 @@ const evaluators = ref([]);
 const get_evaluators = async () => {
   const role = user.role;
   if (role !== ROLES.ADMIN4) return;
-
   const { data, error } = await $rest("new-applicant/get-evaluators", { method: "GET", query: { division_id: user.division } });
   if (error) return swal({ title: "Error", error: error, icon: "error", buttons: { ok: false, cancel: false } });
   evaluators.value = data;
@@ -482,16 +483,12 @@ async function assign_ro_evaluator_applicant() {
     app_id: route.query.id,
     evaluator: selected_ro_evaluator.value
   }
-
   const { data, error } = await $rest('new-applicant/assign-ro-evaluator-application', {
     method: "PUT",
     body: payload
   });
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
-  clear_attachments();
-  clear_sdo_attachments();
-  router.push({ name: 'sms-reclassification' });
 }
 /**
  * end : evaluator
@@ -505,6 +502,8 @@ const handle_application = async () => {
 
   const sdo_attachment = applicant_details.value.sdo_attachments
   const is_sdo_attachment_valid = Object.values(applicant_details.value.sdo_attachments).every(sdo_attachment => typeof sdo_attachment?.valid === 'boolean');
+
+
 
   if (!is_attachment_valid) {
     return swal({
@@ -525,6 +524,7 @@ const handle_application = async () => {
     attachment,
     sdo_attachment,
     app_id: route.query.id,
+
   };
 
   switch (role) {
@@ -553,22 +553,6 @@ const handle_application = async () => {
     case "Administrative Officer V":
       handle_admin5(payload);
       break;
-
-    case "Evaluator":
-      handle_evaluator(payload);
-      break;
-
-    case "Verifier":
-      handle_verifier(payload);
-      break;
-
-    case "Recommending Approver":
-      handle_recommending_approver(payload);
-      break;
-
-    case "Approver":
-      handle_approver(payload);
-      break;
     default:
       break;
   }
@@ -582,7 +566,6 @@ const invalid_attachments = computed(() =>
     )
     : {}
 );
-
 
 
 const is_render_sdo_attachment = computed(() => {
@@ -627,7 +610,6 @@ const handle_admin4 = async (payload: any) => {
 const handle_evaluator = async (payload: any) => {
   const temp = new FormData();
   const attachment = applicant_details.value.sdo_attachments;
-
   Object.entries(attachment).forEach(([title, file]) => {
 
     if (file?.length)
@@ -681,6 +663,8 @@ const handle_admin5 = async (payload: any) => {
   clear_sdo_attachments();
   router.push({ name: 'sms-reclassification' });
 }
+
+
 const attach = ref({ dialog: false, title: "", src: "" })
 const open_attachment_dialog = (attachment: string) => {
   const attachments = applicant_details.value.attachments;

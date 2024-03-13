@@ -6,7 +6,7 @@
           <v-card-text class="overflow-y-auto">
             <v-sheet class="pa-6" height="auto" color="indigo">
               <v-row no-gutters>
-                <v-col cols="9" class="text-h5  text-white">List of Reclassification Application
+                <v-col cols="9" class="text-h5  text-white">List of Reclassification Application 
                   <br /> <span class="text-subtitle-2 text-grey-lighten-2">A
                     brief overview of reclassification applications.</span>
                 </v-col>
