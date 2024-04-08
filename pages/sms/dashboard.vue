@@ -1,27 +1,38 @@
 <template>
-  <v-sheet height="98vh" class="pa-10" color="#E8EAF6">
-    <v-card class="pa-10 " rounded="xl" flat color="transparent">
-      <v-card-text> <v-row justify="center" dense>
+  <v-sheet>
+    <v-card class="pa-10" rounded="xl" flat color="transparent">
+      <v-card-text> <v-row justify="center" no-gutters>
           <v-col cols="12">
             <h6 class="text-title">Staffing Modification System Dashboard</h6>
-
-            <h6 class="text-subtitle-2 text-medium-emphasis  ">Manage reclassification metrix and dashboard.
+            <h6 class="text-subtitle-2 text-medium-emphasis  ">Manage applicationsification metrix and dashboard.
             </h6>
-            <v-divider class="mt-4 mb-4" />
+            <v-divider class="mb-2" />
           </v-col>
-
         </v-row>
-
-        <v-row>
+        <v-row dense>
+          <v-col cols="3" class="d-flex"> <v-select label="Filter by SDO" v-model="selected_sdo" :items="sdo"
+              item-value="_id" persistent-hint clearable />
+            <v-btn @click="get_dashboard" class="ml-2 mt-1" color="primary">
+              <v-icon class="pr-1">mdi-filter</v-icon>Filter</v-btn>
+          </v-col>
+          <v-spacer />
+          <v-col cols="auto"><v-btn variant="tonal" color="error" prepend-icon="mdi-printer"
+              @click="dbm_disapproved(selected_sdo)">DBM
+              Disapproved</v-btn></v-col>
+          <v-col cols="auto"><v-btn @click="dbm_approved(selected_sdo)" variant="tonal" color="success"
+              prepend-icon="mdi-printer">DBM
+              Approved</v-btn></v-col>
+        </v-row>
+        <v-row class="mt-0 pt-0">
           <v-col cols="6">
             <v-card class="pa-3 d-flex align-center justify-center h-100" color="primary" variant="tonal" rounded="xl">
               <v-card-text class="d-flex align-center justify-center">
                 <div>
-                  <b class="text-h5  text-uppercase "> Total Reclass Application</b>
+                  <b class="text-h5  text-uppercase "> Total Reclass Applications</b>
                   <h6 class="text-h2 py-7 text-center font-weight-bold">
-                    {{ application_data.length ? application_data.length : 0 }}
+                    {{ applicants.length }}
                   </h6>
-                  <h5 class="text-center"> 16 Schools Division Office</h5>
+                  <h5 class="text-center"> {{ sdo.length }} Schools Division Office</h5>
                 </div>
               </v-card-text>
             </v-card></v-col>
@@ -32,11 +43,12 @@
                   <v-card-text>
                     <div class="justify-space-between">
                       <div>
-                        <h3 class="text-white font-weight-regular"> Current Evaluated</h3>
+                        <h3 class="text-white font-weight-regular"> Current For Evaluation</h3>
                         <h6 class="text-h3 pt-5 font-weight-bold text-white">
-                          0
+                          {{ for_evaluation_applicant }}
                         </h6>
-                        <h3 class="text-white text-caption font-weight-thin"> 10 of 101 reclass</h3>
+                        <h3 class="text-white text-caption font-weight-thin"> {{ for_evaluation_applicant }} of of {{
+            applicants.length }} applications </h3>
                       </div>
                     </div>
                   </v-card-text>
@@ -50,9 +62,11 @@
                       <div>
                         <h3 class="text-white font-weight-regular"> Current for DBM</h3>
                         <h6 class="text-h3 pt-5 font-weight-bold text-white">
-                          {{ ro_completed_data ? ro_completed_data : 0 }}
+                          {{ for_dbm_applicant }}
                         </h6>
-                        <h3 class="text-white text-caption font-weight-thin"> 10 of 101 reclass</h3>
+                        <h3 class="text-white text-caption font-weight-thin"> {{ for_dbm_applicant }} of {{
+            applicants.length }} applications
+                        </h3>
                       </div>
                     </div>
                   </v-card-text>
@@ -66,9 +80,11 @@
                       <div>
                         <h3 class="text-white font-weight-regular"> Completed</h3>
                         <h6 class="text-h3 pt-5 font-weight-bold text-white">
-                          {{ ro_completed_data ? ro_completed_data : 0 }}
+                          {{ completed_applicant }}
                         </h6>
-                        <h3 class="text-white text-caption font-weight-thin"> 10 of 101 reclass</h3>
+                        <h3 class="text-white text-caption font-weight-thin"> {{ completed_applicant }} of {{
+            applicants.length }} applications
+                        </h3>
                       </div>
                     </div>
                   </v-card-text>
@@ -81,41 +97,20 @@
                       <div>
                         <h3 class="text-white font-weight-regular"> Pending</h3>
                         <h6 class="text-h3 pt-5 font-weight-bold text-white">
-                          {{ pending_data ? pending_data : 0 }}
+                          {{ pending_applicant }}
                         </h6>
-                        <h3 class="text-white text-caption font-weight-thin"> 10 of 101 reclass</h3>
+                        <h3 class="text-white text-caption font-weight-thin"> {{ pending_applicant }} of {{
+                          applicants.length }} applications
+                        </h3>
                       </div>
                     </div>
                   </v-card-text>
                 </v-card>
               </v-col>
-
-
-
             </v-row>
+          </v-col>
+        </v-row>
 
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="6">
-            <v-card class="pa-3 d-flex align-center justify-center " height="30vh" rounded="xl">
-              <v-card-text class="d-flex align-center ">
-                <div>
-                  Graph
-                </div>
-              </v-card-text>
-            </v-card>
-          </v-col>
-          <v-col cols="6">
-            <v-card class="pa-3 d-flex align-center justify-center " height="30vh" rounded="xl">
-              <v-card-text class="d-flex align-center ">
-                <div>
-                  Graph
-                </div>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
 
 
       </v-card-text>
@@ -125,43 +120,72 @@
 
 
 <script lang="ts" setup>
-import useAuth from "~/store/auth";
-
+const router = useRouter();
 const { $rest } = useNuxtApp();
-const auth = useAuth();
 onBeforeMount(() => {
-  get_application();
-  get_pending_admin5();
-  get_ro_completed()
+
+  get_sdo();
+  get_dashboard()
 });
 definePageMeta({ layout: "std-systems" });
 
 
-
-const application_data = ref([]);
-async function get_application() {
-  const { data, error } = await $rest('new-applicant/get-application', {
+const sdo = ref([]);
+const selected_sdo = ref("");
+async function get_sdo() {
+  const { data, error } = await $rest('new-applicant/get-all-sdo', {
     method: "GET"
   });
-  application_data.value = data;
-}
+  sdo.value = data;
 
-const pending_data = ref([]);
-async function get_pending_admin5() {
-  const { data, error } = await $rest('new-applicant/get-pending-dashboard', {
-    method: "GET"
+};
+
+const applicants = ref([]);
+async function get_dashboard() {
+  const payload = {
+    sdo: selected_sdo.value
+  };
+  const { data, error } = await $rest('new-applicant/get-dashboard', {
+    method: "GET",
+    query: payload,
   });
-  pending_data.value = data;
+  applicants.value = data;
 }
-const ro_completed_data = ref([]);
-async function get_ro_completed() {
-  const { data, error } = await $rest('new-applicant/get-ro-completed-dashboard', {
-    method: "GET"
+
+const completed_applicant = computed(() => {
+  const completed = applicants.value.filter(applicant => applicant.status === "Completed");
+  return completed.length
+});
+const for_dbm_applicant = computed(() => {
+  const for_dbm = applicants.value.filter(applicant => applicant.status === "For DBM");
+  return for_dbm.length
+});
+
+const pending_applicant = computed(() => {
+  const pending = applicants.value.filter(applicant => applicant.status === "Pending");
+  return pending.length
+});
+const for_evaluation_applicant = computed(() => {
+  const for_evaluation = applicants.value.filter(applicant => applicant.status === "For Evaluation");
+  return for_evaluation.length
+});
+
+const dbm_disapproved = (id: string) => {
+  router.push({
+    name: 'printable-dbm-disapproved',
+    query: {
+      id: id
+    }
   });
-  ro_completed_data.value = data;
 }
-
-
+const dbm_approved = (id: string) => {
+  router.push({
+    name: 'printable-dbm-approved',
+    query: {
+      id: id
+    }
+  });
+}
 
 
 </script>

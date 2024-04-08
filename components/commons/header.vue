@@ -7,7 +7,8 @@
             Republic of the
             Philippines
         </h5>
-        <h4 style="font-family: 'Old English Text MT', serif; font-size: 18pt; font-weight: bold;"> Department of Education
+        <h4 style="font-family: 'Old English Text MT', serif; font-size: 18pt; font-weight: bold;"> Department of
+            Education
         </h4>
         <h5
             style="font-family: Tahoma, sans-serif; font-size: 10pt; font-weight: bold;line-height: 1.2mm; margin-bottom: 5px">

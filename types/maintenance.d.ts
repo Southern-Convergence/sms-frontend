@@ -22,6 +22,7 @@ interface SalaryGrade {
 
 interface Position {
   title: string;
+  with_erf: boolean;
   education: string[];
   education_level?: string;
   experience: string[];

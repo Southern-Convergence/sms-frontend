@@ -1,7 +1,6 @@
 <template>
-  <v-sheet id="item-container" class="h-100" color="transparent" rounded="0" border>
+  <v-sheet id="item-container" class="h-100 elevation-2" color="transparent" rounded="lg">
     <v-toolbar class="d-block border-b" extension-height="64" :extended="Boolean($attrs.extended)">
-
       <v-toolbar-title>
         <v-list-item class="pl-0" :title="title" :subtitle="subtitle">
           <template v-if="$attrs.icon || $attrs.img" v-slot:prepend>
@@ -13,7 +12,7 @@
 
       <template v-if="$attrs.extended === ''" v-slot:extension>
         <v-divider />
-        <v-sheet class="pa-1" min-height="64" rounded="xl">
+        <v-sheet class="pa-2" min-height="64" rounded="xl">
           <slot name="extension" />
         </v-sheet>
       </template>
@@ -31,8 +30,8 @@
       </v-toolbar-items>
     </v-toolbar>
 
-    <slot name="prepend-body" />
 
+    <slot name="prepend-body" />
     <v-sheet class="rounded-b-lg" :height="Number($attrs.height)" :max-height="Number($attrs['max-height'])"
       style="overflow-y : auto">
       <v-card-text>
@@ -49,8 +48,8 @@
             <slot name="table" :items="items" :headers="$attrs.headers" />
           </v-col>
 
-          <v-col v-for="(item, i) in items" :key="i" v-else :cols="cols.default" :xl="cols.xl" :lg="cols.lg" :md="cols.md"
-            :sm="cols.sm">
+          <v-col class="pa-1" v-for="(item, i) in items" :key="i" v-else :cols="cols.default" :xl="cols.xl"
+            :lg="cols.lg" :md="cols.md" :sm="cols.sm">
             <v-skeleton-loader class="mx-auto border" v-if="loading" type="card, actions" rounded="lg">
 
             </v-skeleton-loader>
@@ -62,6 +61,7 @@
     </v-sheet>
 
     <slot name="default" />
+
   </v-sheet>
 </template>
 

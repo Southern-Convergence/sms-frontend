@@ -1,4 +1,3 @@
-
 <template>
     <div>
 
@@ -7,39 +6,39 @@
                 <v-btn prepend-icon="mdi-pencil-plus" @click="user_invite_dialog = true" color="indigo">
                     Invite
                     User</v-btn>
-                <commons-sms class="my-2 mr-3 " title="USER MANAGEMENT" subtitle="A brief overview of users." rounded="lg"
-                    :items="users_data" :display_types="['grid', 'table']">
+                <commons-sms class="my-2 mr-3 " title="USER MANAGEMENT" subtitle="A brief overview of users."
+                    rounded="lg" :items="users_data" :display_types="['grid', 'table']">
                     <template v-slot:item="{ value, index, display }">
                         <v-card :key="index" border class="pa-2 ma-1" rounded="lg">
                             <div class="d-flex mb-1">
                                 <div class="text-uppercase  text-indigo text-body-1"> {{ value.first_name
-                                }}
+                                    }}
                                     {{
-                                        value.last_name }}
+                    value.last_name }}
                                 </div>
                                 <v-spacer />
                                 <div> <v-chip density="compact" class="text-uppercase text-overline" color="success">{{
-                                    value.status }}</v-chip></div>
+                    value.status }}</v-chip></div>
                             </div>
                             <div> {{ value.role }} <span v-if="value.division"> of
                                     {{
-                                        value.division.title
-                                    }}</span>
+                    value.division.title
+                }}</span>
                             </div>
                             <div class="text-caption text-capitalize mb-2">{{ value.side }}</div>
                             <div class="text-caption"> <v-icon color="red-lighten-3"> mdi-email</v-icon> <u
                                     class="text-blue">{{
-                                        value.email }}</u>
+                    value.email }}</u>
                             </div>
                             <div class="text-caption"> <v-icon color="green-lighten-3"> mdi-phone</v-icon> {{
-                                value.contact_number }}</div>
+                    value.contact_number }}</div>
                         </v-card>
                     </template>
                     <template v-slot:table="{ items }">
                         <v-sheet border> <v-data-table :items="items" :headers="user_headers">
                                 <template v-slot:item.full_name="{ item }">
                                     <span color="primary" density="compact">{{ item.selectable.first_name }} {{
-                                        item.selectable.last_name }}
+                    item.selectable.last_name }}
                                     </span>
                                 </template>
                                 <!-- <template v-slot:item.actions="{ item }">
@@ -68,14 +67,14 @@
 
 
                 <v-card class="ma-3" v-for="(sdo, index) in sdo_data" :key="index" rounded="lg">
-                    <v-alert class=" maintenance-item" @click="route_to_sdo(sdo._id)" :class="{ 'elevation-4': is_hovered }"
-                        border="start" border-color="indigo" color="white">
+                    <v-alert class=" maintenance-item" @click="route_to_sdo(sdo._id)"
+                        :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo" color="white">
                         <div class="font-weight-bold text-uppercase 
 ">{{ sdo.title }}
                         </div>
                         <div>
                             <v-icon color="blue-lighten-2"> mdi-map-marker</v-icon> {{
-                                sdo.address }}
+                    sdo.address }}
                         </div>
                         <div class="text-blue font-italic text-decoration-underline">
                             <v-icon color="red"> mdi-email</v-icon> {{ sdo.email }}
@@ -152,10 +151,11 @@
                             <v-col cols="12"><v-text-field v-model="user.email" density="compact" label="Email address"
                                     prepend-inner-icon="mdi-email-outline" required
                                     :rules="[(v) => /.+@.+/.test(v) || 'Invalid Email address']" /></v-col>
-                            <v-col cols="4"><v-text-field v-model="user.first_name" density="compact" hide-details="auto"
-                                    label="Firstname" required :rules="[v => !!v || 'Firstname is required']" /></v-col>
-                            <v-col cols="4"><v-text-field v-model="user.middle_name" density="compact" hide-details="auto"
-                                    label="Middlename" /></v-col>
+                            <v-col cols="4"><v-text-field v-model="user.first_name" density="compact"
+                                    hide-details="auto" label="Firstname" required
+                                    :rules="[v => !!v || 'Firstname is required']" /></v-col>
+                            <v-col cols="4"><v-text-field v-model="user.middle_name" density="compact"
+                                    hide-details="auto" label="Middlename" /></v-col>
                             <v-col cols="4"><v-text-field v-model="user.last_name" density="compact" hide-details="auto"
                                     label="Lastname" required :rules="[v => !!v || 'Lastname is required']" /></v-col>
                             <v-col cols="4"><v-text-field v-model="user.contact_number" density="compact"
@@ -165,11 +165,11 @@
                             <v-col cols="6"><v-select v-model="user.side" label="Type" :items="['SDO', 'RO']"
                                     hide-details="auto" required :rules="[v => !!v || 'Type is required']" /></v-col>
                             <v-col cols="6" v-if="user.side === 'SDO'">
-                                <v-select v-model="user.designation_information.division" :items="sdo_data" label="Division"
-                                    item-value="_id" hide-details="auto" /></v-col>
+                                <v-select v-model="user.designation_information.division" :items="sdo_data"
+                                    label="Division" item-value="_id" hide-details="auto" /></v-col>
                             <v-col cols="6">
-                                <v-select v-model="user.role" :items="roles" item-title="name" item-value="_id" label="Role"
-                                    hide-details="auto" :rules="[v => !!v || 'Role is required']" />
+                                <v-select v-model="user.role" :items="roles" item-title="name" item-value="_id"
+                                    label="Role" hide-details="auto" :rules="[v => !!v || 'Role is required']" />
                             </v-col>
 
 
@@ -191,8 +191,8 @@
             </v-sheet>
         </v-dialog>
 
-        <commons-dialog v-model="create_sdo_dialog" max-width="35%" icon="mdi-school" title="Create School Division Office"
-            @submit="create_sdo" submitText="Submit">
+        <commons-dialog v-model="create_sdo_dialog" max-width="35%" icon="mdi-school"
+            title="Create School Division Office" @submit="create_sdo" submitText="Submit">
             <v-card-text>
                 <v-form ref="create_sdo_form">
                     <v-text-field v-model="sdo.title" label=" Division" hide-details="auto" required

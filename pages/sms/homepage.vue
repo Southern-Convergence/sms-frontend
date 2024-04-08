@@ -11,10 +11,7 @@
           </v-col>
 
         </v-row>
-
         <v-row>
-
-
           <v-col cols="12" xl="6" lg="6">
             <v-card class="pa-3" color="primary" variant="tonal" rounded="lg">
               <div class="d-flex flex-no-wrap justify-space-between py-4 pl-4">
@@ -22,7 +19,32 @@
                   <h6 class="text-h6 font-weight-bold">
                     INTRODUCTION
                   </h6>
-                  <h6 class="text-subtitle-2">The Reclass System automates reclassification requests for school personnel
+                  <h6 class="text-subtitle-2">The Reclass System automates reclassification requests for school
+                    personnel
+                    (T2, T3, MT, HT, and Principal) from application to approval, providing real-time status updates. It
+                    streamlines the process, eliminates paperwork, and supports remote work by allowing access to
+                    voluminous
+                    supporting documents.</h6>
+
+                  <v-btn class="mt-4" size="small" variant="outlined" disabled dark>Review</v-btn>
+                </div>
+
+                <v-avatar class="px-4 pb-4" size="128" rounded="0">
+                  <v-img class="ma-2" src="/NCR.png" />
+                </v-avatar>
+              </div>
+            </v-card>
+          </v-col>
+          <v-col cols="12" xl="6" lg="6">
+            <v-card class="pa-3" color="primary" variant="tonal" rounded="lg">
+              <div class="d-flex flex-no-wrap justify-space-between py-4 pl-4">
+                <div>
+                  <h6 class="text-h6 font-weight-bold">
+                    INTRODUCTION
+                  </h6>
+
+                  <h6 class="text-subtitle-2">The Reclass System automates reclassification requests for school
+                    personnel
                     (T2, T3, MT, HT, and Principal) from application to approval, providing real-time status updates. It
                     streamlines the process, eliminates paperwork, and supports remote work by allowing access to
                     voluminous
@@ -38,29 +60,6 @@
             </v-card>
           </v-col>
 
-          <v-col cols="12" xl="6" lg="6">
-            <v-card class="pa-3" color="primary" variant="tonal" rounded="lg">
-              <div class="d-flex flex-no-wrap justify-space-between py-4 pl-4">
-                <div>
-                  <h6 class="text-h6 font-weight-bold">
-                    INTRODUCTION
-                  </h6>
-
-                  <h6 class="text-subtitle-2">The Reclass System automates reclassification requests for school personnel
-                    (T2, T3, MT, HT, and Principal) from application to approval, providing real-time status updates. It
-                    streamlines the process, eliminates paperwork, and supports remote work by allowing access to
-                    voluminous
-                    supporting documents.</h6>
-
-                  <v-btn class="mt-4" size="small" variant="outlined" disabled dark>Review</v-btn>
-                </div>
-
-                <v-avatar class="px-4 pb-4" size="128" rounded="0">
-                  <v-img class="ma-2" src="/NCR.png" />
-                </v-avatar>
-              </div>
-            </v-card>
-          </v-col>
         </v-row></v-card-text>
     </v-card>
   </v-sheet>
@@ -72,12 +71,38 @@ import useAuth from "~/store/auth";
 
 const { $rest } = useNuxtApp();
 const auth = useAuth();
+const user = useAuth().user;
+
 
 definePageMeta({ layout: "std-systems" });
 
 onBeforeMount(async () => {
   load_profile_completion();
+  get_sdo();
+
 });
+
+
+const sdo = ref([]);
+const selected_sdo = ref("");
+async function get_sdo() {
+  const { data, error } = await $rest('new-applicant/get-all-sdo', {
+    method: "GET"
+  });
+  sdo.value = data;
+
+};
+
+const table_headers = ref([
+  { title: "Applicant Name", key: "full_name", sortable: false },
+  { title: "School", key: "school", sortable: false },
+  { title: "Division", key: "division", sortable: false },
+  { title: "Position", key: "position", sortable: false },
+  { title: "Control Number", key: "control_number", sortable: false },
+  { title: "Status", key: "status", sortable: false },
+]);
+
+
 
 async function load_profile_completion() {
   loading_profile_completion.value = true;
@@ -85,6 +110,8 @@ async function load_profile_completion() {
   loading_profile_completion.value = false;
   profile_completion_data.value = data;
 }
+
+
 
 const greet_state = computed(() => {
   const time = new Date().getHours();

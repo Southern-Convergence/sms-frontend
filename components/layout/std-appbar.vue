@@ -18,10 +18,12 @@
             <v-icon class="mr-4" icon="mdi-book-open" color="primary" size="24" />
           </h6>
         </template>
-      </v-tooltip>
- -->
+</v-tooltip>
+-->
+
 
       <v-menu location="bottom center" location-strategy="connected" :close-on-content-click="false">
+
         <template v-slot:activator="{ props }">
           <v-btn v-bind="props" @click="notification_menu = false" icon="mdi-tools" color="primary" />
         </template>
@@ -52,12 +54,13 @@
                   <v-icon class="mr-1" icon="mdi-account" />
                 </template>
               </v-list-item>
-              <v-list-item title="SDO Panel" color="primary" :to="{ name: `sdo`, params: account_params }">
+
+              <v-list-item title="SDO Panel" color="primary" :to="{ name: `sdo`, query: { id: user.division } }">
                 <template v-slot:prepend>
                   <v-icon class="mr-1" icon="mdi-key-chain" />
                 </template>
               </v-list-item>
-              <v-list-item title="School Panel" color="primary" :to="{ name: `school`, params: account_params }">
+              <v-list-item title="School Panel" color="primary" :to="{ name: `school`, query: { id: user.school } }">
                 <template v-slot:prepend>
                   <v-icon class="mr-1" icon="mdi-key-chain" />
                 </template>
@@ -123,6 +126,7 @@
                     color="primary" hide-details />
                 </template>
               </v-list-item>
+
               <v-divider />
             </v-list>
 
@@ -145,6 +149,19 @@
                 </template>
               </v-list-item>
               <NavItem :items="nav.std_header_navs" />
+              <v-divider />
+
+              <v-list-item :title="model ? 'Enable Application' : 'Disable Application'" color="primary"
+                density="compact">
+                <template v-slot:prepend>
+                  <v-icon class="mr-1" v-if="model" icon="mdi-lock-open-check" color="success" />
+                  <v-icon class="mr-1" v-else icon="mdi-lock-alert" color="error" />
+                </template>
+                <template v-slot:append>
+                  <v-switch v-model="model" @click="openDialog = true" hide-details color="primary"
+                    variant="outlined"></v-switch>
+                </template>
+              </v-list-item>
               <v-divider class="mb-2" />
               <v-list-item class="py-0">
                 <v-btn color="indigo" prepend-icon="mdi-logout-variant" variant="outlined" @click="logout"
@@ -155,6 +172,23 @@
         </v-card>
       </v-menu>
     </v-container>
+
+    <v-dialog v-model="openDialog" max-width="500px">
+      <v-card>
+        <v-card-title>Confirmation</v-card-title>
+        <v-card-text>
+
+          Are you sure you want to <b> {{ model ? 'enable' :
+    'disable'
+            }}</b> the submission of reclassification
+          applications?
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" @click="update_application">Yes</v-btn>
+          <v-btn color="red" @click="cancelUpdate">No</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <template v-if="$attrs.extended === ''" v-slot:extension>
       <slot name="extension" />
     </template>
@@ -168,14 +202,17 @@
 import useAuth from "~/store/auth";
 import useNav from "~/store/nav";
 import { useTheme } from "vuetify/lib/framework.mjs";
-
+const user = useAuth().user;
 import { useGlobalConfig } from "~/store/index";
+import swal from 'sweetalert';
+
 
 const auth = useAuth();
 const router = useRouter();
 const theme = useTheme();
 const nav = useNav();
 const cfg = useGlobalConfig();
+const { $rest } = useNuxtApp()
 
 defineProps({
   appbar_title: String
@@ -183,11 +220,33 @@ defineProps({
 
 onBeforeMount(() => {
   theme.global.name.value = cfg.preferences.dark ? "dark" : "light";
+  get_current_status()
 });
+
+
+const openDialog = ref(false);
+
+let previousModel: boolean | undefined;
+
+const cancelUpdate = () => {
+  openDialog.value = false;
+  get_current_status()
+
+};
+
+const model = ref();
+async function get_current_status() {
+  const { data, error } = await $rest('sms-position/get-submission-status', {
+    method: 'GET',
+  })
+  model.value = data.enable_application
+}
 
 const notification_menu = ref(false);
 
 const account_params = computed(() => ({ [`${auth.type}`]: (auth.user || {}).username }));
+
+
 const ring_bell = computed(() => false);
 const toggle_dark_mode = () => {
   cfg.set_dark_mode();
@@ -198,4 +257,21 @@ const logout = () => {
   auth.logout();
   router.replace({ name: "index" })
 }
+
+const update_application = async () => {
+  const update_model = model.value;
+  const { data, error } = await $rest('sms-position/update-application', {
+    method: "PUT",
+    body: {
+      enable_application: update_model,
+    }
+  });
+
+  if (error) {
+    return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
+  } else {
+    return swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } });
+  }
+};
+
 </script>

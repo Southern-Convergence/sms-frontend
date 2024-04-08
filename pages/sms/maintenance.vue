@@ -9,15 +9,18 @@
         <v-tab :value="2">
           <v-icon>mdi-cog</v-icon>
           Set Up Form</v-tab>
+        <v-tab :value="3">
+          <v-icon>mdi-human</v-icon>
+          Regional Director Info</v-tab>
       </v-tabs>
 
       <v-window v-model="tab">
-
         <v-window-item :value="1">
           <v-card-text>
             <v-row no-gutters>
               <v-col cols="auto" class="mt-3"> <v-btn @click="position_dialog = true" color="blue-darken-4"> Set
                   Up Position</v-btn></v-col>
+
               <v-spacer />
               <v-col cols="3"><v-text-field prepend-inner-icon="mdi-magnify" label="Enter Position Title"
                   density="compact" hide-details="auto" variant="solo" bg-color="grey-lighten-4" /></v-col>
@@ -25,8 +28,8 @@
             <!-- <commons-item-container class="mt-2" title="Qualification Standards"
               subtitle="A brief overview of qualification standards." :items="position_data" :display_types="['grid']">
               <template v-slot:item="{ value, index, display }">
-               <v-card class="mx-auto ma-1 elevation-0" append-icon="mdi-open-in-new" rounded="md" border
-                  :title="value.title" @click="view_pos(value)"></v-card> 
+                <v-card class="mx-auto ma-1 elevation-0" append-icon="mdi-open-in-new" rounded="md" border
+                  :title="value.title" @click="view_pos(value)"></v-card>
                 <v-alert class="maintenance-item" append-icon="mdi-open-in-new" border-color="indigo" border
                   @click="view_pos(value)">
                   {{ value.title
@@ -34,7 +37,7 @@
 
                 </v-alert>
               </template>
-            </commons-item-container> -->
+</commons-item-container> -->
 
             <v-card class="mt-3" title="Summary of Set Qualification Standards"
               subtitle="A brief overview of qualification standards." prepend-icon="mdi-certificate" rounded="lg">
@@ -42,7 +45,8 @@
               <v-card-text>
                 <v-row no-gutters>
                   <v-col cols="4" class="pa-2" v-for="pos, index in position_data" :key="pos">
-                    <v-alert class="maintenance-item" append-icon="mdi-open-in-new" @click="view_pos(pos)">
+                    <v-alert border-color="indigo" class="maintenance-item" append-icon="mdi-open-in-new"
+                      @click="view_pos(pos)">
                       {{ pos.title
                       }}
                     </v-alert>
@@ -116,8 +120,9 @@
                   </v-toolbar>
                   <v-card-text>
                     <v-sheet height="31vh" class="overflow-y-auto pa-2">
-                      <v-alert v-for=" rating, index  in  rating_data " :key="index" @click="rating_update_dialog(rating)"
-                        class="my-2 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="lg" icon="mdi-star">
+                      <v-alert v-for=" rating, index  in  rating_data " :key="index"
+                        @click="rating_update_dialog(rating)" class="my-2 maintenance-item"
+                        :class="{ 'elevation-4': is_hovered }" rounded="lg" icon="mdi-star">
                         {{ rating.title }}
                       </v-alert>
                     </v-sheet>
@@ -131,13 +136,15 @@
                     <v-spacer />
                     <v-tooltip text="Click to add     Salary Grade" location="top">
                       <template v-slot:activator="{ props }">
-                        <v-btn @click="sg_dialog = true" v-bind="props" color="indigo-lighten-4" icon="mdi-plus"></v-btn>
+                        <v-btn @click="sg_dialog = true" v-bind="props" color="indigo-lighten-4"
+                          icon="mdi-plus"></v-btn>
                       </template>
                     </v-tooltip>
                   </v-toolbar>
                   <v-card-text> <v-sheet height="31vh" class="overflow-y-auto pa-2">
                       <v-alert v-for=" sg, index  in  sg_data " :key="index" @click="update_salary_grade(sg)"
-                        class="my-2 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="lg" icon="mdi-cash">
+                        class="my-2 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="lg"
+                        icon="mdi-cash">
                         <div> Salary Grade : <b> {{ sg.salary_grade }} </b></div>
                         <div> Equivalent : <b> {{ sg.equivalent }} </b></div>
                       </v-alert>
@@ -188,6 +195,37 @@
               </v-col>
             </v-row>
           </div>
+        </v-window-item>
+        <v-window-item :value="3" height="80vh">
+          <v-card class="mx-auto my-15" elevation="2" max-width="600">
+            <v-card-item>
+              <v-card-title>
+                Set Up Regional Director Information
+              </v-card-title>
+              <v-card-subtitle>
+                This is for the generation of Indorsement Letters.
+              </v-card-subtitle>
+            </v-card-item>
+            <v-card-text>
+              <v-row>
+                <v-col cols="4">
+                  <v-text-field label="First Name" hide-details />
+                </v-col>
+                <v-col cols="4">
+                  <v-text-field label="Middle Name" hide-details />
+
+                </v-col>
+                <v-col cols="4">
+                  <v-text-field label="Last Name" hide-details />
+
+                </v-col>
+                <v-col cols="12"> <v-textarea label="Regional Office Address" /></v-col>
+
+              </v-row>
+            </v-card-text>
+          </v-card>
+
+
         </v-window-item>
 
       </v-window>
@@ -241,30 +279,29 @@
 
 
 
-    <commons-dialog max-width="40%" v-model="position_dialog" :title="'Position  Form'"
-      @submit="create_position" :subtitle="'Create position and modify Qualification Standards'" :submitText="'Submit'">
+    <commons-dialog max-width="40%" v-model="position_dialog" :title="'Position  Form'" @submit="create_position"
+      :subtitle="'Create position and modify Qualification Standards'" :submitText="'Submit'">
       <v-card-text class="ma-2">
         <v-row no-gutters>
-          <v-col cols="6" class="pr-2"> <v-text-field v-model="position.title" label="Position" hide-details prepend-inner-icon="mdi-account-hard-hat"  /></v-col>
-                  <v-col cols="6"> <v-select v-model="position.education_level" :items="['Elementary', 'Secondary']"
+          <v-col cols="6" class="pr-2"> <v-text-field v-model="position.title" label="Position" hide-details
+              prepend-inner-icon="mdi-account-hard-hat" /></v-col>
+          <v-col cols="6"> <v-select v-model="position.education_level" :items="['Elementary', 'Secondary']"
               label="Education Level" hide-details prepend-inner-icon="mdi-book" /></v-col>
-               <v-col cols="12">   <v-checkbox label="Check if with ERF"  ></v-checkbox></v-col>
-  
-         
+          <v-col cols="12"> <v-checkbox label="Check if with ERF" v-model="position.with_erf"></v-checkbox></v-col>
           <v-col cols="12"> <v-select v-model="position.education" :items="education_data" item-value="_id"
-              label="Education" multiple prepend-inner-icon="mdi-school"/></v-col>
+              label="Education" multiple prepend-inner-icon="mdi-school" /></v-col>
           <v-col cols="12"> <v-select v-model="position.experience" item-value="_id" :items="experience_data"
-              label="Experience" multiple prepend-inner-icon="mdi-head-cog-outline"/></v-col>
+              label="Experience" multiple prepend-inner-icon="mdi-head-cog-outline" /></v-col>
         </v-row>
         <v-row no-gutters>
           <v-col cols="6" class="pr-2"> <v-text-field v-model="position.training_hours"
-              label="Training Number of Hours Required"    prepend-inner-icon="mdi-human-male-board" /></v-col>
+              label="Training Number of Hours Required" prepend-inner-icon="mdi-human-male-board" /></v-col>
           <v-col cols="6"> <v-select v-model="position.rating" :items="rating_data" label="Performance Rating Required"
-              multiple item-value="_id"     prepend-inner-icon="mdi-star"/></v-col>
+              multiple item-value="_id" prepend-inner-icon="mdi-star" /></v-col>
         </v-row>
         <v-row no-gutters>
           <v-col cols="6" class="pr-2"> <v-select v-model="position.sg" :items="sg_item" label="Salary Grade"
-              item-value="_id"     prepend-inner-icon="mdi-cash" /></v-col>
+              item-value="_id" prepend-inner-icon="mdi-cash" /></v-col>
 
         </v-row>
 
@@ -279,8 +316,8 @@
           <v-col cols="12">
             <v-list-subheader class="text-indigo"> <v-icon>mdi-paperclip</v-icon> Required attachments for
               School Division Office.</v-list-subheader>
-            <v-select v-model="position.sdo_attachment" :items="attachment_data" label="SDO Attachments" item-value="_id"
-              multiple clearable chips /></v-col>
+            <v-select v-model="position.sdo_attachment" :items="attachment_data" label="SDO Attachments"
+              item-value="_id" multiple clearable chips /></v-col>
         </v-row>
       </v-card-text>
     </commons-dialog>
@@ -295,8 +332,8 @@
         <v-select v-model="selected_position[0].experience" item-value="_id" :items="experience_data" label="Experience"
           rows="4" multiple />
         <v-text-field v-model="selected_position[0].training_hours" label="Training Number of Hours Required" />
-        <v-select v-model="selected_position[0].rating" :items="rating_data" label="Performance Rating Required" multiple
-          item-value="_id" />
+        <v-select v-model="selected_position[0].rating" :items="rating_data" label="Performance Rating Required"
+          multiple item-value="_id" />
         <v-select v-model="selected_position[0].sg" :items="sg_item" label="Salary Grade" item-value="_id" />
       </v-card-text>
     </commons-dialog>
@@ -309,65 +346,96 @@
       </v-card-text>
     </commons-dialog>
 
-
-    <v-dialog max-width="50%" v-model="view_position_dialog" icon="mdi-school"
-      :subtitle="'Modify details for the salary grade.'">
-      <v-card>
+    <v-dialog max-width="60%" v-model="view_qs_dialog">
+      <v-card color="#E8EAF6" class="pa-5">
+        <v-card-title> Evaluation Criteria : <span class="text-primary">{{ selected_position.title }}</span>
+        </v-card-title>
         <v-card-text>
-          <v-row no-gutters justify="end">
-            <v-col cols="12" class="mb-2"> REQUIREMENTS FOR EVALUATION FOR <b class="text-indigo text-uppercase">{{ selected_position?.title }}</b></v-col>
-            <v-col cols="4"> Education</v-col>
-            <v-col cols="8" v-for=" educ, index  in  selected_position.education " :key="index">
-              : {{ educ.text }} <br />
+          <v-row>
+            <v-col cols="12" xl="6" lg="6" md="6" sm="12">
+              <v-list class="pa-4" rounded="lg">
+                <v-list-item-title class="text-primary">Education</v-list-item-title>
+                <v-sheet class="overflow-y-auto pa-2" height="22vh">
+                  <v-list-item-subtitle v-for=" educ, index  in  selected_position.education " :key="index">
+                    <v-icon>mdi-circle-medium</v-icon> {{ educ.text }}</v-list-item-subtitle>
+                </v-sheet>
+              </v-list>
             </v-col>
-          </v-row>
-          <v-row no-gutters justify="end" v-if="selected_position.education_level">
-            <v-col cols="4">Education Level </v-col>
-            <v-col cols="8"> : {{ selected_position.education_level }}</v-col>
-          </v-row>
+            <v-col cols="12" xl="6" lg="6" md="6" sm="12">
+              <v-list class="pa-4" rounded="lg">
+                <v-list-item-title class="text-primary">Experience</v-list-item-title>
+                <v-sheet class="overflow-y-auto pa-2" height="22vh">
+                  <v-list-item-subtitle v-for=" exp, index  in  selected_position.experience " :key="index">
+                    <v-icon>mdi-circle-medium</v-icon> {{ selected_position.experience.length ? exp.text : 'N/A'
+                    }}</v-list-item-subtitle>
+                </v-sheet>
+              </v-list>
+            </v-col>
+            <v-col cols="12" xl="6" lg="6" md="6" sm="12">
+              <v-list class="pa-4" rounded="lg">
+                <v-list-item-title class="text-primary">Education Level</v-list-item-title>
+                <v-list-item-subtitle> <v-icon>mdi-circle-medium</v-icon> {{ selected_position.education_level ?
+        selected_position.education_level : 'N/A'
+                  }}</v-list-item-subtitle>
+              </v-list>
+            </v-col>
+            <v-col cols="12" xl="6" lg="6" md="6" sm="12">
+              <v-list class="pa-4" rounded="lg">
+                <v-list-item-title class="text-primary">Training Hours</v-list-item-title>
+                <v-list-item-subtitle> <v-icon>mdi-circle-medium</v-icon> {{ selected_position.training_hours ?
+        selected_position.training_hours : 'N/A'
+                  }}</v-list-item-subtitle>
+              </v-list>
+            </v-col>
+            <v-col cols="12" xl="6" lg="6" md="6" sm="12">
+              <v-list class="pa-4" rounded="lg">
+                <v-list-item-title class="text-primary">Salary Grade</v-list-item-title>
+                <v-list-item-subtitle> <v-icon>mdi-circle-medium</v-icon> {{ selected_position.sg.salary_grade ?
+        selected_position.sg.salary_grade : 'N/A'
+                  }}</v-list-item-subtitle>
+              </v-list>
+            </v-col>
 
-          <v-row no-gutters justify="end" v-if="selected_position.experience && selected_position.experience.length">
-            <v-col cols="4"> Experience </v-col>
-            <v-col cols="8" v-for=" exp, index  in  selected_position.experience " :key="index"> : {{ exp.text }}
-              <br /></v-col>
-          </v-row>
-          <v-row no-gutters justify="end"
-            v-if="selected_position.training_hours && selected_position.training_hours.length">
-            <v-col cols="4"> Training Hours </v-col>
-            <v-col cols="8"> : {{
-              selected_position.training_hours }}
-              <br /></v-col>
-          </v-row>
-          <v-row no-gutters justify="end" v-if="selected_position.sg.salary_grade">
-            <v-col cols="4"> Salary Grade </v-col>
-            <v-col cols="8"> : {{ selected_position.sg.salary_grade }}
-              <br /></v-col>
-          </v-row>
-          <v-row no-gutters justify="end" v-if="selected_position.sg.equivalent">
-            <v-col cols="4"> Salary Equivalent </v-col>
-            <v-col cols="8"> : {{ selected_position.sg.equivalent }}
-              <br />
+            <v-col cols="12" xl="6" lg="6" md="6" sm="12">
+              <v-list class="pa-4" rounded="lg">
+                <v-list-item-title class="text-primary">Salary Equivalent</v-list-item-title>
+                <v-list-item-subtitle> <v-icon>mdi-circle-medium</v-icon> {{ selected_position.sg.equivalent ?
+        selected_position.sg.equivalent : 'N/A'
+                  }}</v-list-item-subtitle>
+              </v-list>
             </v-col>
-          </v-row>
-          <v-row no-gutters justify="end" v-if="selected_position.attachment">
-            <v-col cols="4"> Attachment
-              Require</v-col>
-            <v-col cols="8" v-for=" attach, index  in  selected_position.attachment " :key="index"> : {{ attach.title
-            }}
-              <br />
+            <v-col cols="12" xl="6" lg="6" md="6" sm="12">
+              <v-list class="pa-4" rounded="lg">
+                <v-list-item-title class="text-primary"> Applicant Attachment Requirements</v-list-item-title>
+                <v-sheet class="overflow-y-auto pa-2" height="12vh">
+                  <v-list-item-subtitle v-for=" attach, index  in  selected_position.attachment " :key="index">
+                    <v-icon>mdi-circle-medium</v-icon> {{ attach.title }}</v-list-item-subtitle>
+                </v-sheet>
+              </v-list>
             </v-col>
-          </v-row>
-          <v-row no-gutters justify="end" v-if="selected_position.sdo_attachment">
-            <v-col cols="4"> SDO Attachment
-              Required</v-col>
-            <v-col cols="8" v-for=" attach, index  in  selected_position.attachment " :key="index"> : {{ attach.title
-            }}
-              <br />
+            <v-col cols="12" xl="6" lg="6" md="6" sm="12">
+              <v-list class="pa-4" rounded="lg">
+                <v-list-item-title class="text-primary"> Applicant Attachment Requirements</v-list-item-title>
+                <v-sheet class="overflow-y-auto pa-2" height="12vh">
+                  <v-list-item-subtitle v-for=" attach, index  in  selected_position.sdo_attachment " :key="index">
+                    <v-icon>mdi-circle-medium</v-icon> {{ attach.title }}</v-list-item-subtitle>
+                </v-sheet>
+              </v-list>
             </v-col>
           </v-row>
         </v-card-text>
+        <v-card-actions>
+          <v-row justify="center">
+            <v-col cols="4"> <v-btn @click="update_position_dialog = true" block color="primary"
+                variant="tonal">Update</v-btn></v-col>
+            <v-col cols="4"> <v-btn @click="view_qs_dialog = false" block color="primary"
+                variant="tonal">Close</v-btn></v-col>
+          </v-row>
+        </v-card-actions>
       </v-card>
+
     </v-dialog>
+
   </v-sheet>
 </template>
 
@@ -395,14 +463,14 @@ onBeforeMount(() => {
   }))
 })
 
-
+const view_qs_dialog = ref(false)
 const tab = ref(null);
 const is_hovered = ref(false)
 // dialog
 
 const position_dialog = ref(false);
+const model = ref(true)
 
-const view_position_dialog = ref(false)
 
 // CREATE EDUCATION
 const education = ref<Education>({
@@ -647,12 +715,12 @@ const sg_item = computed(() => {
 const position_data = ref<Position[]>([]);
 const position = ref<Position>({
   title: "",
+  with_erf: false,
   education: [],
   education_level: "",
   experience: [],
   training_hours: 0,
   rating: [],
-
   sg: "",
   attachment: [],
   sdo_attachment: []
@@ -689,7 +757,7 @@ const view_position = ref<Position[]>([]);
 
 function view_pos(position: Position) {
   selected_position.value = { ...position };
-  view_position_dialog.value = true;
+  view_qs_dialog.value = true;
 }
 
 async function update_position() {
@@ -758,7 +826,6 @@ const formatted_equivalent = computed(() => {
 });
 
 
-
 </script>
 <style scoped>
 .maintenance-item {
@@ -768,6 +835,4 @@ const formatted_equivalent = computed(() => {
 .maintenance-item:hover {
   background-color: #E8EAF6;
 }
-
 </style>
-

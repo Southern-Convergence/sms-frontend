@@ -1,4 +1,3 @@
-
 <template>
   <v-sheet height="100vh" class="d-flex align-center justify-center ">
     <v-sheet class="h-100 w-100 d-flex align-center justify-center" color="#ECEFF1">
@@ -17,42 +16,56 @@
         </v-toolbar>
 
         <v-sheet class="mx-auto">
-          <v-sheet color="indigo-lighten-5" class="pa-3 mx-auto">
-            <v-card-title class="text-uppercase font-weight-bold pl-10 text-indigo"> {{ applicant_history.full_name }}
+
+          <v-sheet color="grey-lighten-4" class="pa-3 mx-auto">
+            <v-card-title class="text-uppercase font-weight-bold pl-5 text-indigo"> {{ applicant_history.full_name }}
             </v-card-title>
-            <v-card-subtitle class="pl-10">
+            <v-card-subtitle class="pl-5">
               Control Number : <b class="text-indigo">{{ applicant_history.control_number }}</b>
             </v-card-subtitle>
-            <v-card-subtitle class="text-caption pl-10">Date Applied : <b> {{ new
+            <v-card-subtitle class="text-caption pl-5">Date Applied : <b> {{ new
               Date(applicant_history.created_date).toLocaleString() }}</b></v-card-subtitle>
           </v-sheet>
+
           <v-card width="auto" class="overflow-y-auto py-4" height="70vh">
+
             <v-card-text>
-              <v-alert class="pa-5 ma-5" :border-color="!signatory.remarks.length > 0 ? 'primary' : 'error'" border
-                rounded="md" color="grey-lighten-4" v-for="signatory, index in     applicant_history.request_log   "
-                :key="signatory">
+              <v-btn v-if="!applicant_history.request_log" class="ml-5" rounded="md"
+                @click="update_applicant(applicant_history._id)" color="primary" density="compact">
+                Update
+                Application
+              </v-btn>
+
+              <v-alert v-if="applicant_history?.request_log && applicant_history.request_log.length > 0"
+                class="pa-5 ma-5" border rounded="lg" v-for="(att, index) in applicant_history?.request_log"
+                :key="index">
+
                 <v-card-subtitle>
-                  Your application has been {{ !signatory.remarks.length > 0 ? 'Approved' : 'Dissapproved' }} by <b>{{
-                    signatory.signatory }} <br /> {{
-    signatory.side }} {{ signatory.role }}</b>.
+                  Your application has been {{ att.status }} by <b> {{
+              att.signatory }} <br /> </b>
                 </v-card-subtitle>
-                <v-card-subtitle class="text-caption" v-if="!signatory.remarks.length > 0">Date Approved <span
-                    class="text-blue text-caption"> : {{ new
-                      Date(signatory?.timestamp).toLocaleString() }}</span></v-card-subtitle>
-                <v-card-subtitle> <v-chip class=" mt-2" density="compact" color="error" v-if="signatory.remarks.length">
+                <v-card-subtitle class="text-caption">Date Approved <span class="text-blue text-caption"> : {{ new
+              Date(att?.timestamp).toLocaleString() }}</span>
+                </v-card-subtitle>
+                <v-card-subtitle v-if="att?.remarks?.length">
+                  <v-chip class="mt-2" density="compact" color="error">
                     Reason/Remarks :
-                  </v-chip> </v-card-subtitle>
-                <v-card border class="mt-1 mx-4" v-if="signatory.remarks.length"
-                  v-for="    remarks, index     in     signatory.remarks    " :key="remarks">
+                  </v-chip>
+                  <v-card border class="ma-2 pa-2" v-for="(remarks, index) in att.remarks" :key="index">
+                    <v-card-subtitle> Attachment : {{ remarks.description }} <br /> Reason : {{
+              remarks.remarks }} <br /> Date Disapproved : <span class="text-red text-caption"> {{ new
+              Date(remarks?.timestamp).toLocaleString() }}</span>
+                    </v-card-subtitle>
+                  </v-card>
+                </v-card-subtitle>
 
-                  <v-card-subtitle> Attachment : {{ remarks.description }} <br /> Reason : {{
-                    remarks.remarks
-                  }} <br /> Date Dissapproved : <span class="text-red text-caption"> {{ new
-  Date(remarks?.timestamp).toLocaleString()
-}}</span></v-card-subtitle>
-
-                </v-card>
               </v-alert>
+
+              <v-alert v-else-if="applicant_history?.request_log && applicant_history.request_log.length === 0"
+                class="pa-5 ma-5" border rounded="md" type="info" variant="tonal">
+                Your application is being processed by the <b>Principal</b>.
+              </v-alert>
+
             </v-card-text>
 
 
@@ -88,13 +101,15 @@ async function get_signatory() {
   })
   applicant_history.value = data
 }
-// const icon_display = (signatory) => {
-//   if (signatory.remarks && signatory.remarks.length > 0) {
-//     return 'mdi-check-circle';
-//   } else {
-//     return 'mdi-alpha-x-circle';
-//   }
-// };
+
+const update_applicant = (id) => {
+  router.push({
+    name: 'sms-new-applicant-form',
+    query: {
+      id: id
+    }
+  });
+}
 
 
 

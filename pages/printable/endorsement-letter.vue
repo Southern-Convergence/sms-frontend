@@ -14,11 +14,12 @@
         <div class="py-10" style="text-align: justify;    text-indent: 50px">
           Respectfully transmitted to Ms. <b> {{ approver_ro_full_name ? approver_ro_full_name :
             approver_sdo_full_name }}</b>, Regional Director,
-          Department of Budget and Management, National Capital Region,<b class="text-red"> REGIONAL OFFICE ADDRESS</b>,
+          Department of Budget and Management, National Capital Region,<b> 6 Misamis Street, Bago
+            Bantay, 1105 Quezon City, Philippines</b>,
           the herein request for
           reclassification of position of <span class="text-indigo">Ms. {{
             applicant_endorsement.full_name }}, from {{ applicant_endorsement.current_position }} to {{
-    applicant_endorsement.applied_position }},
+            applicant_endorsement.applied_position }},
             {{ applicant_endorsement.school }} – {{ applicant_endorsement.division }}, </span> this Region,
           chargeable against the lumpsum appropriation for reclassification of
           positions for CY <span class="text-indigo"> 2023</span>.
