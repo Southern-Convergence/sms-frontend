@@ -9,9 +9,7 @@
                 <span class="text-h6">{{ user.first_name.charAt(0) }}{{ user.last_name.charAt(0) }}</span>
               </v-avatar></v-img></div>
 
-          <!-- <v-avatar class="py-3" size="128">
-            <v-img src="/yanyan.jpg" />
-          </v-avatar> -->
+
           <div>
             <h6 class="text-h6 font-weight-bold mt-4">
               {{ full_name }}
@@ -22,11 +20,24 @@
 
             <h6 class="font-italic text-blue"> <v-icon icon="mdi-gmail" size="small" color="red" />
               mariannemaepaclian@gamail.com</h6>
-            <v-btn class="mx-0 px-0 mt-1 text-caption" variant="text" x-small density="compact"> <u>Edit Account
-              </u></v-btn>
+
+
+
           </div>
+
+
           <v-spacer />
 
+        </div>
+        <div class="ml-5">
+          <v-row dense>
+            <v-col cols="auto"> <v-btn class="mx-0 px-0 mt-1 text-caption" variant="text" x-small density="compact">
+                <u>Edit Account
+                </u></v-btn>
+            </v-col>
+            <v-spacer />
+            <v-col cols="auto"><commons-esig /></v-col>
+          </v-row>
         </div>
         <v-divider />
 

@@ -26,9 +26,23 @@ interface Position {
   education: string[];
   education_level?: string;
   experience: string[];
+  is_experience: boolean;
   training_hours?: number;
   rating?: array;
   sg?: string;
   attachment?: array;
   sdo_attachment?: array;
 };
+interface Rd {
+  first_name: string,
+  middle_name: string,
+  last_name: string,
+  ro_address: string,
+  position: string
+}
+
+interface Maunits {
+  type: string,
+  number_of_years: number,
+  years_equivalent: number,
+}

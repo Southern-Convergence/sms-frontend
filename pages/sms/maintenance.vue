@@ -154,20 +154,23 @@
               <v-col cols="4">
                 <v-card height="40vh" class="d-flex flex-column ma-2">
                   <v-toolbar color="blue-darken-4" class="pl-3 text-subtitle-1">
-                    M.A Units
+                    M.A Units to Descriptive Ratio
                     <v-spacer />
-                    <v-tooltip text="Click to add     Eligibility" location="top">
+                    <v-tooltip text="Click to add  Masteral Arts" location="top">
                       <template v-slot:activator="{ props }">
-                        <v-btn v-bind="props" color="indigo-lighten-4" icon="mdi-plus"></v-btn>
+                        <v-btn @click="ma_units_dialog = true" v-bind="props" color="indigo-lighten-4"
+                          icon="mdi-plus"></v-btn>
                       </template>
                     </v-tooltip>
                   </v-toolbar>
                   <v-card-text> <v-sheet height="31vh" class="overflow-y-auto pa-2">
                       <v-alert class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="lg"
-                        icon="mdi-alert" border-color="blue-darken-4">
-                        Not yet avaliable
+                        icon="mdi-book" border-color="blue-darken-4"  v-for="unit, index in ma_units_data" :key="index">
+                              <b>{{unit.number_of_years}}</b> years of experience in the  <b> {{unit.type}} </b> sector is equivalent to <b>{{unit.years_equivalent}}  M.A Unit/s.</b>
+                   
                       </v-alert>
-                    </v-sheet></v-card-text>
+                    </v-sheet>
+                  </v-card-text>
                 </v-card>
               </v-col>
               <v-col cols="4">
@@ -207,19 +210,24 @@
               </v-card-subtitle>
             </v-card-item>
             <v-card-text>
-              <v-row>
+              <v-row justify="center">
                 <v-col cols="4">
-                  <v-text-field label="First Name" hide-details />
+                  <v-text-field v-model="rd.first_name" label="First Name" hide-details />
                 </v-col>
                 <v-col cols="4">
-                  <v-text-field label="Middle Name" hide-details />
+                  <v-text-field v-model="rd.middle_name" label="Middle Name" hide-details />
 
                 </v-col>
                 <v-col cols="4">
-                  <v-text-field label="Last Name" hide-details />
+                  <v-text-field v-model="rd.last_name" label="Last Name" hide-details />
 
                 </v-col>
-                <v-col cols="12"> <v-textarea label="Regional Office Address" /></v-col>
+                <v-col cols="12">
+                  <v-text-field v-model="rd.position" label="CES Rank" hide-details />
+                </v-col>
+                <v-col cols="12"> <v-textarea v-model="rd.ro_address" label="Regional Office Address" /></v-col>
+                <v-col cols="4" v-if="!rd._id"> <v-btn block @click="create_rd">SUBMIT</v-btn></v-col>
+                <v-col cols="4" v-else> <v-btn block @click="update_rd">UPDATE</v-btn></v-col>
 
               </v-row>
             </v-card-text>
@@ -275,7 +283,35 @@
       </v-card-text>
     </commons-dialog>
 
+    <commons-dialog max-width="35%" v-model="ma_units_dialog" icon="mdi-school"
+      :title="status === 'create' ? 'Create  M.A. Units to Experience Ratio' : 'Update  M.A. Units to Experience Ratio'"
+      @submit="create_ma_units" :subtitle="'Enter or modify details for the  M.A. Units to Experience Ratio.'"
+      :submitText="status === 'create' ? 'Submit' : 'Update'">
+      <v-card-text class="ma-2">
 
+        <v-radio-group v-model="ma_units.type" inline hide-details>
+          <v-radio label="Public" value="Public"></v-radio>
+          <v-radio label="Private" value="Private"></v-radio>
+        </v-radio-group>
+ <hr class="my-4">
+<!-- {{ma_units.number_of_years}} M.A Units Equivalent {{ma_units.years_equivalent}} {{ma_units.type}} -->
+        <v-row>
+         
+          <v-col cols="6">        
+            <v-text-field v-model="ma_units.number_of_years" label="Number of Years" hide-details /> </v-col>
+         <v-col cols="12" v-if="ma_units.number_of_years <= 2 && ma_units.type === 'Public' || ma_units.number_of_years <= 4 && ma_units.type === 'Private'">
+              <v-alert color="error" >
+                  {{ cal(ma_units)}} 
+              </v-alert>
+            </v-col>
+            <v-col cols="6" class="text-primary " v-else-if="ma_units.number_of_years && ma_units.type">
+        <v-text-field :value="`${cal(ma_units)} is M.A Unit Equivalent`" hide-details readonly />
+
+
+            </v-col>
+        </v-row>
+      </v-card-text>
+    </commons-dialog>
 
 
 
@@ -291,7 +327,8 @@
           <v-col cols="12"> <v-select v-model="position.education" :items="education_data" item-value="_id"
               label="Education" multiple prepend-inner-icon="mdi-school" /></v-col>
           <v-col cols="12"> <v-select v-model="position.experience" item-value="_id" :items="experience_data"
-              label="Experience" multiple prepend-inner-icon="mdi-head-cog-outline" /></v-col>
+              label="Experience" multiple prepend-inner-icon="mdi-head-cog-outline" hide-details /></v-col>
+               <v-col cols="12"> <v-checkbox v-model="position.is_experience" label="Check if the experience accepts  less than the specified minimum." /></v-col>
         </v-row>
         <v-row no-gutters>
           <v-col cols="6" class="pr-2"> <v-text-field v-model="position.training_hours"
@@ -453,7 +490,9 @@ onBeforeMount(() => {
       get_rating(),
       get_sg(),
       get_qs(),
-      get_attachment()
+      get_attachment(),
+      get_rd(),
+      get_ma_units()
     ]
   ).catch(() => swal({
     title: "Error",
@@ -466,12 +505,13 @@ onBeforeMount(() => {
 const view_qs_dialog = ref(false)
 const tab = ref(null);
 const is_hovered = ref(false)
+const ma_units_dialog = ref(false)
+const inline = ref(null)
 // dialog
 
 const position_dialog = ref(false);
 const model = ref(true)
-
-
+const update_position_dialog  = ref(false);
 // CREATE EDUCATION
 const education = ref<Education>({
   title: "",
@@ -645,7 +685,6 @@ async function update_rating() {
 
 // SALARY GRADE
 const sg = ref<SalaryGrade>({
-
   salary_grade: 0,
   equivalent: 0
 });
@@ -698,10 +737,6 @@ async function update_sg() {
 
 }
 
-
-
-
-
 const sg_item = computed(() => {
   return sg_data.value.map((v: SalaryGrade) => {
     return {
@@ -719,6 +754,7 @@ const position = ref<Position>({
   education: [],
   education_level: "",
   experience: [],
+  is_experience : false,
   training_hours: 0,
   rating: [],
   sg: "",
@@ -747,13 +783,6 @@ async function get_qs() {
 }
 
 const selected_position = ref<Position[]>([]);
-const update_position_dialog = ref(false)
-function update_selected_position(position: Position) {
-  selected_position.value = [{ ...position }];
-  update_position_dialog.value = true;
-}
-
-const view_position = ref<Position[]>([]);
 
 function view_pos(position: Position) {
   selected_position.value = { ...position };
@@ -814,16 +843,150 @@ async function get_attachment() {
   })
   attachment_data.value = data
 }
-const formatted_equivalent = computed(() => {
-  const equivalent = position.value.sg?.equivalent;
 
-  if (typeof equivalent === 'number' && !isNaN(equivalent)) {
-    return equivalent.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  } else {
-    console.error("Invalid Number:", equivalent);
-    return "Invalid Number";
+
+
+
+//  RD INFO
+const rd = ref<Rd>({
+  first_name: "",
+  middle_name: "",
+  last_name: "",
+  ro_address: "",
+  position: "",
+})
+
+
+async function create_rd() {
+  const { data, error } = await $rest('sms-rd/create-rd', {
+    method: "POST",
+    body: { ...rd.value }
+
+  })
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+}
+/**
+ * HANDLES FETCHING RD
+ */
+async function get_rd() {
+  const { data, error } = await $rest('sms-rd/get-rd', {
+    method: "GET",
+  })
+  if (data) {
+    Object.assign(rd.value, data)
   }
+}
+async function update_rd() {
+  const rdData = rd.value;
+  const { data, error } = await $rest('sms-rd/update-rd', {
+    method: "PUT",
+    body: {
+      _id: rdData?._id,
+      first_name: rdData.first_name,
+      middle_name: rdData.middle_name,
+      last_name: rdData.last_name,
+      ro_address: rdData.ro_address,
+    }
+  });
+
+  if (error) {
+    return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
+  } 
+    return swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } });
+  
+}
+
+
+async function create_ma_units() {
+  const { data, error } = await $rest('sms-ma-units/create-ma-units', {
+    method: "POST",
+    body: { ...ma_units.value }
+  });
+  if (error) {
+    swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
+  } 
+    swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } });
+  
+}
+
+
+async function get_ma_units() {
+  const { data, error } = await $rest('sms-ma-units/get-ma-units', {
+    method: "GET",
+  });
+  if (!error && data) {
+
+    ma_units_data.value = data;
+  }
+}
+
+const ma_units_data = ref<Maunits[]>([]);
+
+const ma_units = ref({
+  type: "",
+  number_of_years: 0,
+  years_equivalent: 0,
 });
+
+
+ const public_ranges = [
+    { min: 3, max: 5, equivalent: 1 },
+    { min: 6, max: 8, equivalent: 2 },
+    { min: 9, max: 11, equivalent: 3 },
+    { min: 12, max: 14, equivalent: 4 },
+    { min: 15, max: 17, equivalent: 5 },
+    { min: 18, max: 20, equivalent: 6 },
+    { min: 21, max: 23, equivalent: 7 },
+    { min: 24, max: 26, equivalent: 8 },
+    { min: 27, max: 30, equivalent: 7 },
+  ];
+  const private_ranges = [
+  { min: 5, max: 9, equivalent: 1 },
+  { min: 10, max: 14, equivalent: 2 },
+  { min: 15, max: 19, equivalent: 3 },
+  { min: 20, max: 24, equivalent: 4 },
+  { min: 25, max: 29, equivalent: 5 },
+  { min: 30, max: 34, equivalent: 6 },
+  { min: 35, max: 39, equivalent: 7 },
+  { min: 40, max: 44, equivalent: 8 },
+  { min: 45, max: 49, equivalent: 9 },
+  { min: 50, max: 54, equivalent: 10 },
+  { min: 55, max: 59, equivalent: 11 },
+];
+
+function cal(unit) {
+  const mathing_public_range = public_ranges.find(range => 
+    unit.type === 'Public' && unit.number_of_years >= range.min && unit.number_of_years <= range.max
+  );
+   const mathing_private_range = private_ranges.find(range => 
+    unit.type === 'Private' && unit.number_of_years >= range.min && unit.number_of_years <= range.max
+  );
+  if (mathing_public_range) {
+    return unit.years_equivalent = mathing_public_range.equivalent;
+  }  if (mathing_private_range) {
+    return unit.years_equivalent = mathing_private_range.equivalent;
+  } else {
+    if( unit.type === 'Public' && unit.number_of_years < 3){
+    return unit.years_equivalent = 'Sorry, the minimum requirement is 3 years of experience.';
+    } else {
+      return  unit.years_equivalent = 'Sorry, the minimum requirement is 5 years of experience.';
+    }
+    
+  }
+}
+
+
+// function cal(unit){
+// if (unit.type === 'Public' && unit.number_of_years >= 3 && unit.number_of_years <= 5) {
+//     return unit.years_equivalent = 1;  
+//   } 
+//   else {
+//      return unit.years_equivalent = 'Not valid';  
+//   } 
+// }
+
+
 
 
 </script>

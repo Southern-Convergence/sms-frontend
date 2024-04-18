@@ -2,20 +2,25 @@
   <div>
 
     <body class="printable-page">
-      <div class="content px-15">
-        <commons-header />
-        <div class="pt-8">
+      <commons-header />
+      <div class="content mx-10">
+
+        <div>
           <center>
             1st Indorsement
           </center>
           <center> August 31, 2023</center>
         </div>
 
+
         <div class="py-10" style="text-align: justify;    text-indent: 50px">
-          Respectfully transmitted to Ms. <b> {{ approver_ro_full_name ? approver_ro_full_name :
-            approver_sdo_full_name }}</b>, Regional Director,
-          Department of Budget and Management, National Capital Region,<b> 6 Misamis Street, Bago
-            Bantay, 1105 Quezon City, Philippines</b>,
+          Respectfully transmitted to Ms. <b class="text-capitalize">{{ rd.first_name }} {{ rd.middle_name ?
+            rd.middle_name.charAt(0) + '.' : '' }}
+            {{
+            rd.last_name }}</b>, Regional
+          nt
+          Director,
+          Department of Budget and Management, National Capital Region,<b> {{ rd.ro_address }}</b>,
           the herein request for
           reclassification of position of <span class="text-indigo">Ms. {{
             applicant_endorsement.full_name }}, from {{ applicant_endorsement.current_position }} to {{
@@ -24,9 +29,11 @@
           chargeable against the lumpsum appropriation for reclassification of
           positions for CY <span class="text-indigo"> 2023</span>.
         </div>
-        <div class="text-end font-weight-bold">
-          {{ approver_ro_full_name ? approver_ro_full_name :
-            approver_sdo_full_name }}
+        <div class="text-end font-weight-bold text-uppercase">
+          {{ rd.first_name }} {{ rd.middle_name ?
+            rd.middle_name.charAt(0) + '.' : '' }}
+          {{
+            rd.last_name }}
         </div>
         <div class="text-end pr-7"> Regional Director</div>
 
@@ -48,6 +55,12 @@
 
 
     </body>
+    <div style="position: fixed; bottom: 20px; right: 20px;" class="d-print-none">
+      <v-btn icon="mdi-printer" size="large" class="mb-2" @click="print()">
+      </v-btn> <br />
+      <v-btn icon="mdi-keyboard-return" size="large" @click="$router.back()">
+      </v-btn>
+    </div>
   </div>
 </template>
 
@@ -57,6 +70,7 @@ import useAuth from "~/store/auth";
 const { $rest } = useNuxtApp();
 onBeforeMount(() => {
   get_endorsement();
+  get_rd()
 });
 const user = useAuth().user;
 const route = useRoute();
@@ -70,31 +84,27 @@ async function get_endorsement() {
   })
   applicant_endorsement.value = data
 }
-const approver_ro_full_name = computed(() => {
-  const first_name = user.first_name;
-  const middle_name = user.middle_name ? `${user.middle_name.charAt(0)}.` : '';
-  const last_name = user.last_name;
-  const role = user.side === 'Approver'
-  const side = user.side === 'RO'
-  return `${first_name} ${middle_name} ${last_name}`;
-});
-const approver_sdo_full_name = computed(() => {
-  const first_name = user.first_name;
-  const middle_name = user.middle_name ? `${user.middle_name.charAt(0)}.` : '';
-  const last_name = user.last_name;
-  const role = user.side === 'Approver'
-  const side = user.side === 'SDO'
-  return `${first_name} ${middle_name} ${last_name}`;
-});
+
+
+const rd = ref({} as Rd)
+async function get_rd() {
+  const { data, error } = await $rest('sms-rd/get-rd', {
+    method: "GET",
+  })
+  if (data) {
+    Object.assign(rd.value, data)
+  }
+}
+function print() {
+  window.print();
+}
 </script>
 <style scoped>
 .printable-page {
   width: 210mm;
-  height: 294mm;
+  height: 297mm;
   margin: 0 auto;
   box-shadow: 0 0.5mm 2mm rgba(0, 0, 0, 0.3);
-  margin-top: 10px;
-
 }
 
 * {
@@ -135,6 +145,7 @@ th {
 @media print {
   body {
     margin: 0;
+
 
   }
 }

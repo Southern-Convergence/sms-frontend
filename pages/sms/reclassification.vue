@@ -4,13 +4,13 @@
       <v-window-item v-for="status in tabItems" :key="status.value" :value="status.value">
         <v-card-text class="overflow-y-auto mt-4">
           <v-row no-gutters>
-            <v-col cols="6">
+            <v-col cols="5">
 
               <div class="w-100 text-title mb-0">List of Reclassification Application</div>
               <div class="w-100 text-subtitle-2 text-grey mt-0 mb-2">A brief overview of reclassification applications.
               </div>
             </v-col>
-            <v-col cols="6" class="text-grey d-flex mt-4" v-if="user.role === 'Administrative Officer V'">
+            <v-col cols="7" class="text-grey d-flex mt-4" v-if="user.role === 'Administrative Officer V'">
               <v-select class="pr-2" label="Filter by Position" v-model="selected_position" :items="positions"
                 item-value="_id" persistent-hint clearable />
               <v-select label="Filter by SDO" v-model="selected_sdo" :items="sdo" item-value="_id" persistent-hint
@@ -21,7 +21,12 @@
 
               <v-btn @click="evaluators_dialog = true" class="ml-2 mt-1" color="primary"
                 v-if="user.role === 'Administrative Officer V'">Assign to
+
                 Evaluator</v-btn>
+
+              <v-btn @click="evaluators_dialog = true" class="ml-2 mt-1" color="amber"
+                v-if="user.role === 'Administrative Officer V'"> Generate Endorsement</v-btn>
+
             </v-col>
 
           </v-row>

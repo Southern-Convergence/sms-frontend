@@ -1,14 +1,22 @@
 <template>
   <div>
-    <v-row class="mt-5" style="padding-left: 149mm">
-      <v-col cols="3" class="d-flex"> <v-select label="Filter by SDO" v-model="selected_sdo" :items="sdo"
-          item-value="_id" persistent-hint clearable />
-        <v-btn @click="get_dashboard" class="ml-2 mt-1" color="primary">
-          <v-icon class="pr-1">mdi-filter</v-icon>Filter</v-btn>
-      </v-col>
-    </v-row>
+    <div class="notprintable">
+      <v-row class="mt-5">
 
-    <body class="printable-page">
+        <v-col cols="6" class="d-flex"> <v-select label="Filter by SDO" v-model="selected_sdo" :items="sdo"
+            item-value="_id" persistent-hint clearable />
+          <v-btn @click="get_dashboard" class="ml-2 mt-1" color="primary">
+            <v-icon class="pr-1">mdi-filter</v-icon>Filter</v-btn>
+        </v-col>
+      </v-row>
+    </div>
+    <div class="notprintable" v-if="!applicants.length">
+      <v-alert icon="mdi-alert-circle" title="No Data Found" text="There are no approved reclassifications by DBM."
+        type="error" variant="tonal"></v-alert>
+    </div>
+
+
+    <body class="printable-page" v-else>
       <div class="content">
         <commons-header />
         <v-sheet class="ma-5">
@@ -44,6 +52,16 @@
 
       </div>
     </body>
+
+
+
+    <div style="position: fixed; bottom: 20px; right: 20px;" class="d-print-none">
+      <v-btn icon="mdi-printer" fixed fab color="primary" size="large" class="mb-2" @click="print()">
+      </v-btn> <br />
+      <v-btn icon="mdi-keyboard-return" fixed fab size="large" @click="$router.back()">
+      </v-btn>
+    </div>
+
   </div>
 </template>
 
@@ -79,6 +97,9 @@ async function get_sdo() {
   sdo.value = data;
 
 }
+function print() {
+  window.print();
+}
 
 </script>
 <style scoped>
@@ -90,6 +111,12 @@ async function get_sdo() {
 
 
 }
+
+.notprintable {
+  margin: 0 auto;
+  width: 210mm;
+}
+
 
 * {
   font-size: 13px

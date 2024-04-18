@@ -359,6 +359,7 @@
                   valid for processing. Your attention to document accuracy is crucial for a smooth application process."></v-alert>
                 <v-card-text>
                   <v-row no-gutters>
+                    {{ applicant }}
                     <v-col cols="12" xl="6" lg="6" md="6" sm="12"
                       v-for="( attachment_title, index )  in  selected_qs?.attachment"> <v-file-input
                         variant="underlined" :label="attachment_title" :key="index"

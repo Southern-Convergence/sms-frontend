@@ -47,6 +47,8 @@
 <v-divider />
 </v-alert></v-col> -->
         <!-- Applicant Personal Information -->
+
+
         <v-col :cols="applicant_details.is_with_erf ? '8' : '12'">
           <v-card class="mx-auto mt-4" rounded="lg">
             <v-card-title class="d-flex  font-weight-bold">
@@ -247,6 +249,7 @@
               </v-card>
             </v-col>
             <!-- SDO Attachments -->
+
             <v-col :cols="applicant_details.is_with_erf ? '12' : '6'"
               :class="applicant_details.is_with_erf ? '' : 'mt-7'" v-if="is_render_sdo_attachment">
               <v-card class="my-2" rounded="lg">
@@ -526,9 +529,11 @@ const handle_application = async () => {
   const side = user.side;
   const status = applicant_details.value.status;
   const attachment = applicant_details.value.attachments;
+
   const is_attachment_valid = Object.values(applicant_details.value.attachments).every(attachment => typeof attachment.valid === 'boolean');
-  const sdo_attachment = applicant_details.value.sdo_attachments
+  const sdo_attachment = applicant_details.value.sdo_attachments;
   const is_sdo_attachment_valid = Object.values(applicant_details.value.sdo_attachments).every(sdo_attachment => typeof sdo_attachment?.valid === 'boolean');
+
   if (!is_attachment_valid && !(["Pending", "Approved for Printing", "For DBM"].includes(status) || (status === 'For Verifying' && user.side === 'RO'))) {
     return swal({
       title: "Evaluate Attachments",
@@ -536,14 +541,10 @@ const handle_application = async () => {
       buttons: { ok: false, cancel: false }
     });
   };
-  // || (["Pending", "For Verifying", "Approved for Printing", "For DBM", "For Signature"].includes(status))
-  if (!is_sdo_attachment_valid && !(["For Evaluation", "For Verifying"].includes(status) && side === "SDO")
-
+  if (!is_sdo_attachment_valid && status === 'For Signature' && ([,
+    "Pending", "For Verifying", "Approved for Printing", "For DBM"].includes(status) &&
+    !(["For Evaluation", "For Verifying"].includes(status) && side === "SDO"))
   ) {
-    console.log("is_sdo_attachment_valid:", is_sdo_attachment_valid);
-    console.log("status:", status);
-    console.log("user.side:", user.side);
-
     return swal({
       title: "Evaluate SDO Attachments",
       icon: "warning",
@@ -551,10 +552,10 @@ const handle_application = async () => {
     });
   }
 
-
   const payload = {
     attachment,
     sdo_attachment,
+    status,
     app_id: route.query.id,
 
   };
@@ -637,6 +638,8 @@ const sdo_evaluator_attach = (data: any, title: string) => {
  */
 
 const handle_principal = async (payload: any) => {
+  console.log('PAyload', payload);
+
   const { data, error } = await $rest('new-applicant/handle-principal', { method: "PUT", body: payload })
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
   swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
