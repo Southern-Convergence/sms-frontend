@@ -9,7 +9,7 @@
                 <v-icon icon="mdi-history" dark />
               </v-avatar>
             </template>
-            <v-list-item-title>Reclassification Application History</v-list-item-title>
+            <v-list-item-title>Staffing Modification Application History</v-list-item-title>
           </v-list-item>
           <v-spacer>
           </v-spacer>
@@ -30,8 +30,11 @@
           <v-card width="auto" class="overflow-y-auto py-4" height="70vh">
 
             <v-card-text>
-              <v-btn v-if="!applicant_history.request_log" class="ml-5" rounded="md"
-                @click="update_applicant(applicant_history._id)" color="primary" density="compact">
+
+              <v-btn
+                v-if="applicant_history.request_log && applicant_history.request_log.length && applicant_history.request_log[0].remarks.length"
+                class="ml-5" rounded="md" @click="update_applicant(applicant_history._id)" color="primary"
+                density="compact">
                 Update
                 Application
               </v-btn>
@@ -42,10 +45,10 @@
 
                 <v-card-subtitle>
                   Your application has been {{ att.status }} by <b> {{
-              att.signatory }} <br /> </b>
+                    att.signatory }} <br /> </b>
                 </v-card-subtitle>
                 <v-card-subtitle class="text-caption">Date Approved <span class="text-blue text-caption"> : {{ new
-              Date(att?.timestamp).toLocaleString() }}</span>
+                  Date(att?.timestamp).toLocaleString() }}</span>
                 </v-card-subtitle>
                 <v-card-subtitle v-if="att?.remarks?.length">
                   <v-chip class="mt-2" density="compact" color="error">
@@ -53,8 +56,8 @@
                   </v-chip>
                   <v-card border class="ma-2 pa-2" v-for="(remarks, index) in att.remarks" :key="index">
                     <v-card-subtitle> Attachment : {{ remarks.description }} <br /> Reason : {{
-              remarks.remarks }} <br /> Date Disapproved : <span class="text-red text-caption"> {{ new
-              Date(remarks?.timestamp).toLocaleString() }}</span>
+                      remarks.remarks }} <br /> Date Disapproved : <span class="text-red text-caption"> {{ new
+                        Date(remarks?.timestamp).toLocaleString() }}</span>
                     </v-card-subtitle>
                   </v-card>
                 </v-card-subtitle>
@@ -65,21 +68,17 @@
                 class="pa-5 ma-5" border rounded="md" type="info" variant="tonal">
                 Your application is being processed by the <b>Principal</b>.
               </v-alert>
-
             </v-card-text>
-
-
-
-
-
-
-
-
           </v-card>
         </v-sheet>
 
       </v-card>
     </v-sheet>
+    <div style="position: fixed; bottom: 20px; right: 20px;" class="d-print-none">
+
+      <v-btn icon="mdi-keyboard-return" size="large" color="primary" @click="$router.back()">
+      </v-btn>
+    </div>
   </v-sheet>
 </template>
 

@@ -15,7 +15,8 @@ const PUBLIC_ROUTES = [
   "home",
   "error",
   "sms-new-applicant-form",
-  "sms-applicant-history"
+  "sms-applicant-history",
+  "sms-erf"
 ]
 /* Code should be relevant to redirects and or conditionally forwarding users to default pages */
 export default defineNuxtRouteMiddleware((to, from) => {

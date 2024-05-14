@@ -1,10 +1,9 @@
-
 <template>
   <v-container class="h-100 ">
     <v-sheet color="indigo-lighten-5">
       <h2 class="text-uppercase text-indigo px-4 pt-5"> Registration Form</h2>
       <v-card-title class=" font-weight-thin text-grey text-body-1">
-        Greetings to the Reclassification System. Kindly establish your account!
+        Greetings to the Staffing Modification System. Kindly establish your account!
       </v-card-title>
       <v-divider />
       <v-card-text>

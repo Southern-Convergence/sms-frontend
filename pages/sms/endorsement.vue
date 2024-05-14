@@ -1,21 +1,23 @@
 <template>
-  <v-sheet class="pa-5">
-    <v-card rounded="lg" flat>
+  <v-sheet class="pa-10">
+    <v-card class="pa-10 " rounded="lg" flat>
       <v-card-text> <v-row :class="`${$vuetify.display.mobile ? 'text-center' : ''}`" justify="center" dense>
           <v-col cols="12">
-            <h6 class="text-h5 reclass-title">Summary of Reclassification Application/s</h6>
+            <h6 class="text-h5 reclass-title">Summary of Endorsement Letter</h6>
 
-            <h6 class="text-subtitle-2 text-medium-emphasis  ">View reclassification applications.
+            <h6 class="text-subtitle-2 text-medium-emphasis  "> View and verify endorsement letter.
             </h6>
             <v-divider class="mt-4 mb-2" />
           </v-col>
 
         </v-row>
         <v-row>
-
           <v-col cols="12">
+
             <v-sheet border>
-              <v-data-table :headers="table_headers" :items="applicants">
+
+              <v-data-table :headers="table_headers" :items="endorsement_data">
+
                 <template v-slot:item.control_number="{ item }">
                   <span class="text-primary">{{ item.selectable.control_number }}</span>
                 </template>
@@ -23,7 +25,13 @@
                   <v-chip color="success" variant="text">{{ item.selectable.status }}</v-chip>
                 </template>
                 <template v-slot:item.actions="{ item }">
-                  <v-btn color="primary" density="compact" @click="load_erf_form(item.selectable._id)"> View</v-btn>
+                  <v-btn @click="load_endorsement_letter(item.selectable._id)" density="compact" color="primary">
+                    {{
+                      item.selectable.status === 'Verified' ? 'Print' : (item.selectable.status === 'Discrepancy' ? 'View'
+                        : 'Verify')
+                    }}
+
+                  </v-btn>
                 </template>
               </v-data-table>
             </v-sheet>
@@ -35,52 +43,47 @@
 
 
 <script lang="ts" setup>
-import useAuth from "~/store/auth";
+
 
 const { $rest } = useNuxtApp();
-const auth = useAuth();
-const user = useAuth().user;
+
 const router = useRouter();
 
 definePageMeta({ layout: "std-systems" });
 
 onBeforeMount(async () => {
-
-  get_applicants()
+  get_endorsement()
 });
 
 
 
 
 const table_headers = ref([
-  { title: "Applicant Name", key: "full_name", sortable: false },
-  { title: "School", key: "school", sortable: false },
-  { title: "Division", key: "division", sortable: false },
-  { title: "Position", key: "position", sortable: false },
-  { title: "Control Number", key: "control_number", sortable: false },
+  { title: "Schools Division Office", key: "division", sortable: false },
+  { title: "Applied Position", key: "position", sortable: false },
+  { title: "Transaction Code", key: "batch_code", sortable: false },
   { title: "Status", key: "status", sortable: false },
-   { title: "Actions", key: "actions", sortable: false },
+  { title: "Action", key: "actions", sortable: false },
 ]);
 
-const applicants = ref([]);
-async function get_applicants() {
-  const payload = {
-    sdo: user.division
-  };
-  const { data, error } = await $rest('new-applicant/get-dashboard', {
+const endorsement_data = ref([]);
+async function get_endorsement() {
+  const { data, error } = await $rest('sms-endorsement/get-endorsement', {
     method: "GET",
-    query: payload,
-  });
-  applicants.value = data;
+  })
+  endorsement_data.value = data
+
 }
-const load_erf_form = (id: any) => {
+
+const load_endorsement_letter = (id: any) => {
   router.push({
-    name: 'sms-erf',
+    name: 'printable-multiple-endorsement',
     query: {
       id: id
     }
   });
 }
+
 
 
 </script>

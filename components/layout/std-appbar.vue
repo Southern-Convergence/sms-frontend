@@ -6,8 +6,9 @@
       <!-- <v-avatar class="pa-1">
         <v-img src="/logo.svg" @click="$router.push({ name: 'home' })" style="cursor : pointer" />
       </v-avatar> -->
-      <v-app-bar-title class="pt-1 text-indigo" @click="$router.push({ name: 'home' })" style="cursor : pointer">
-        <!-- {{ $props.appbar_title }} -->RECLASSIFICATION SYSTEM
+      <v-app-bar-title class="pt-1 text-indigo text-uppercase" @click="$router.push({ name: 'home' })"
+        style="cursor : pointer">
+        <!-- {{ $props.appbar_title }} -->Staffing Modification System
       </v-app-bar-title>
       <!-- <dev-display-debugger id="floater" /> -->
       <v-spacer />
@@ -179,7 +180,7 @@
         <v-card-text>
 
           Are you sure you want to <b> {{ model ? 'enable' :
-    'disable'
+            'disable'
             }}</b> the submission of reclassification
           applications?
         </v-card-text>

@@ -3,10 +3,9 @@
     <v-sheet v-if="!model" class="h-100 w-100 d-flex align-center justify-center">
       <v-card class=" mx-auto" color="indigo-lighten-5" width="800px">
         <v-card-title class="mt-7 ml-10 text-title">
-          <v-icon class="pr-2">mdi-hand-wave</v-icon> WELCOME to DepEd NCR Reclassification System
+          <v-icon class="pr-2">mdi-hand-wave</v-icon> WELCOME to DepEd NCR Staffing Modification System
         </v-card-title>
-        <v-card-subtitle class="text-grey pl-13 ml-10">Elevate Your Career: A Guide to the Reclassification
-          System
+        <v-card-subtitle class="text-grey pl-13 ml-10">Elevate Your Career: A Guide to the Staffing Modification System
         </v-card-subtitle>
         <v-divider class="mt-3"></v-divider>
         <v-card-item class="text-center my-10">
@@ -32,129 +31,190 @@
 
             <v-card class="w-90 mx-auto" color="indigo-lighten-5">
               <v-card-title class="mt-7 ml-10 text-title">
-                <v-icon class="pr-2">mdi-hand-wave</v-icon> WELCOME to DepEd NCR Reclassification System
+                <v-icon class="pr-2">mdi-hand-wave</v-icon> WELCOME to DepEd NCR Staffing Modification System
               </v-card-title>
-              <v-card-subtitle class="text-grey pl-13 ml-10">Elevate Your Career: A Guide to the Reclassification
+              <v-card-subtitle class="text-grey pl-13 ml-10">Elevate Your Career: A Guide to the Staffing Modification
                 System
               </v-card-subtitle>
-              <v-divider class="mt-3"></v-divider>
+              <v-divider class="my-2" />
 
-              <v-card-text class="px-10" style="height: 65vh">
-                <v-row>
+              <v-card-text class="pa-5" style="height:70vh; justify-content: center; align-items: center;">
+
+                <v-row dense v-if="!position_form" class="h-100 w-100 d-flex align-center justify-center">
+                  <v-col cols="6" class="px-15">
+
+
+                    <v-img src="/stronger.png" height="17vh" cover />
+                    <h4 class="text-grey font-weight-regular mt-4 mb-2"> Click the list below and select the position
+                      you wish to apply for. Click Apply Now to begin the application process.</h4>
+                    <v-select v-model="applicant.qualification.position" label="Select Position" variant="solo"
+                      hide-details item-value="_id" :items="position_data" dense />
+
+                    <v-btn class="mt-2" :disabled="applicant.qualification.position == ''" color="success" rounded="xl"
+                      @click="apply_dialog = true">APPLY NOW</v-btn>
+
+                  </v-col>
+                  <v-col cols="5">
+
+                    <v-card class="pa-5" color="primary" variant="tonal" rounded="lg">
+                      <v-card-text>
+                        The Staffing Modification System automates reclassification requests for school
+                        personnel
+                        (T2, T3, MT, HT, and Principal) from application to approval, providing real-time status
+                        updates. It
+                        streamlines the process, eliminates paperwork, and supports remote work by allowing access
+                        to
+                        voluminous
+                        supporting documents.
+                      </v-card-text>
+
+
+
+                    </v-card>
+                    <v-card class="pa-5 mt-5" color="primary" variant="tonal" rounded="lg">
+                      <v-card-text>
+                        The Staffing Modification System automates reclassification requests for school
+                        personnel
+                        (T2, T3, MT, HT, and Principal) from application to approval, providing real-time status
+                        updates. It
+                        streamlines the process, eliminates paperwork, and supports remote work by allowing access
+                        to
+                        voluminous
+                        supporting documents.
+                      </v-card-text>
+                    </v-card>
+                  </v-col>
+                </v-row>
+                <v-row v-if="position_form">
                   <v-col cols="6">
-                    <v-card-text class="px-10 overflow-y-auto" style="height: 55vh">
-                      <v-list-item class="pl-2" density="compact">
+                    <v-card-text class="overflow-y-auto" style="height: 60vh">
+
+                      <v-list-item class="mx-0 px-0 mb-2" density="compact">
                         <template v-slot:prepend>
                           <v-avatar class="mr-1" variant="text">
                             <v-icon color="amber"> mdi-seal </v-icon>
                           </v-avatar>
                         </template>
                         <v-list-item-title>Individual Qualification</v-list-item-title>
+                        <v-list-item-subtitle> <b>Instruction :</b> Click each of the standard below and select or enter
+                          your appropriate
+                          qualification. Click <b>"cancel"</b> to end the application
+                          process.</v-list-item-subtitle>
                       </v-list-item>
-                      <v-row no-gutters>
-                        <v-col cols="12" class="pa-2">
-                          <v-select :items="position_data" v-model="applicant.qualification.position"
-                            label="Select Position" variant="solo" hide-details item-value="_id"
-                            prepend-inner-icon="mdi-account-hard-hat" />
-                        </v-col>
 
-                        <v-col cols="12" class="pa-2"
-                          v-if="applicant.qualification.position && !selected_qs?.education_level == ''">
+                      <v-row dense>
+                        <v-col cols="12" v-if="selected_qs">
+                          {{ qs }}
+                          <v-text-field :value="qs.title" variant="underlined" hide-details readonly />
+                        </v-col>
+                        <v-col cols="12" v-if="applicant.qualification.position && !selected_qs?.education_level == ''">
                           <v-select v-model="applicant.qualification.educ_level" :items="['Elementary', 'Secondary']"
                             label="Education Level" variant="solo" hide-details prepend-inner-icon="mdi-book" />
                         </v-col>
-                        <v-col cols="12" class="pa-2" v-if="applicant.qualification.position">
+                        <v-col cols="12" v-if="applicant.qualification.position">
                           <v-select v-model="applicant.qualification.education" :items="education_data"
                             label="Education" variant="solo" hide-details multiple item-value="_id"
                             prepend-inner-icon="mdi-school" />
                         </v-col>
-                        <v-col cols="12" class="pa-2" v-if="selected_qs?.experience.length">
+                        <v-col cols="12" v-if="selected_qs?.experience.length">
                           <v-select v-model="applicant.qualification.experience" :items="experience_data"
                             label="Experience" variant="solo" hide-details multiple item-value="_id"
                             prepend-inner-icon="mdi-head-cog-outline" />
                         </v-col>
-                        <v-col cols="12" class="pa-2"
-                          v-if="applicant.qualification.position && selected_qs?.training_hours != 0">
+                        <v-col cols="12" v-if="applicant.qualification.position && selected_qs?.training_hours != 0">
                           <v-text-field v-model="applicant.qualification.training" label="Enter total training hours"
                             variant="solo" hide-details type="number" item-value="_id"
                             prepend-inner-icon="mdi-human-male-board" />
                         </v-col>
-                        <v-col cols="12" class="pa-2" v-if="selected_qs?.rating.length">
+                        <v-col cols="12" v-if="selected_qs?.rating.length">
                           <v-select v-model="applicant.qualification.per_rating" :items="rating_data"
                             label="Performance Rating" variant="solo" hide-details item-value="_id"
                             prepend-inner-icon="mdi-star" />
                         </v-col>
 
+                        <v-col cols="12" v-if="qs">
+                          <v-text-field v-model="applicant.qualification.sg" variant="solo" hide-details
+                            :value="qs.sg.salary_grade" />
+                          <v-text-field v-model="applicant.qualification.sg_equivalent" variant="solo" hide-details
+                            :value="qs.sg.equivalent" />
+                        </v-col>
                       </v-row>
                     </v-card-text>
+                    <v-card-actions class="mx-2">
+                      <v-row dense>
+                        <v-col cols="6"> <v-btn block color="error" variant="tonal"
+                            @click="cancel_dialog = true">CANCEL</v-btn></v-col>
+                        <v-col cols="6"> <v-btn block color="success" variant="tonal"
+                            @click="next_window">SUBMIT</v-btn></v-col>
+                      </v-row>
+
+                    </v-card-actions>
                   </v-col>
                   <v-col cols="6" v-if="selected_qs">
-                    <v-card-text class="px-10 overflow-y-auto" style="height: 55vh">
-                      <v-list-item class="pl-2" density="compact" color="blue-darken-4">
-                        <template v-slot:prepend>
-                          <v-avatar class="mr-1" variant="text">
-                            <v-icon color="amber"> mdi-certificate </v-icon>
-                          </v-avatar>
-                        </template>
-                        <v-list-item-title class="text-primary">Qualification Standards</v-list-item-title>
-                      </v-list-item>
+                    <v-card rounded="xl" class="ma-5">
+                      <v-card-text class="px-10 overflow-y-auto" style="height: 60vh">
+                        <v-list-item class="pl-2" density="compact" color="blue-darken-4">
 
-                      <v-list-item class="ma-2" variant="tonal" rounded="rounded">
-                        <template v-slot:prepend>
-                          <v-icon color="primary" icon="mdi-account-hard-hat"></v-icon>
-                        </template>
-                        <v-list-item-title> Position :</v-list-item-title>
-                        <b>{{ qs.title }} <i class="font-weight-thin" v-if="qs?.education_level"> ({{
-      qs?.education_level
-    }})</i></b>
-                      </v-list-item>
+                          <v-list-item-title class="text-primary text-center font-weight-bold">QUALIFICATION
+                            STANDARD</v-list-item-title>
+                          <v-divider class="my-2" />
+                          <v-list-item-subtitle> Here is the defined Qualification Standard of the<b> Department of
+                              Education National Capital Region </b><i>( DepEd NCR)</i> for the
+                            selected
+                            position
+                            which you must meet. </v-list-item-subtitle>
+                        </v-list-item>
+
+                        <v-list-item class="ma-2" variant="tonal" rounded="rounded">
+                          <template v-slot:prepend>
+                            <v-icon color="primary" icon="mdi-account-hard-hat"></v-icon>
+                          </template>
+                          <v-list-item-title> Position :</v-list-item-title>
+                          <b>{{ qs.title }} <i class="font-weight-thin" v-if="qs?.education_level"> ({{
+                              qs?.education_level
+                              }})</i></b>
+                        </v-list-item>
+                        <v-list-item class="ma-2" variant="tonal" rounded="rounded" v-if="qs.education.length">
+                          <template v-slot:prepend>
+                            <v-icon color="primary" icon="mdi-school"></v-icon>
+                          </template>
+                          <v-list-item-title>Education :</v-list-item-title>
+                          <v-list-item-subtitle v-for="(education, index) in qs.education" :key="index">{{
+                            education.title }}</v-list-item-subtitle>
+                        </v-list-item>
+
+                        <v-list-item class="ma-2" variant="tonal" rounded="rounded" v-if="qs.experience.length">
+                          <template v-slot:prepend>
+                            <v-icon color="primary" icon="mdi-head-cog-outline"></v-icon>
+                          </template>
+                          <v-list-item-title>Experience :</v-list-item-title>
+                          <v-list-item-subtitle v-for="(experience, index) in qs.experience" :key="index">{{
+                            experience.title }}</v-list-item-subtitle>
+                        </v-list-item>
+                        <v-list-item class="ma-2" variant="tonal" rounded="rounded" v-if="qs.rating.length">
+                          <template v-slot:prepend>
+                            <v-icon color="primary" icon="mdi-human-male-board"></v-icon>
+                          </template>
+                          <v-list-item-title>Performance Rating :</v-list-item-title>
+                          <v-list-item-subtitle v-for="(rating, index) in qs.rating" :key="index">{{
+                            rating.title }}</v-list-item-subtitle>
+                        </v-list-item>
+                        <v-list-item class="ma-2" variant="tonal" rounded="rounded" title=" Training Hours:"
+                          v-if="qs.training_hours != 0">
+                          <template v-slot:prepend>
+                            <v-icon color="primary" icon="mdi-star"></v-icon>
+                          </template>
+                          <v-list-item-subtitle>{{ qs.training_hours }} </v-list-item-subtitle>
+                        </v-list-item>
 
 
-                      <v-list-item class="ma-2" variant="tonal" rounded="rounded" v-if="qs.education.length">
-                        <template v-slot:prepend>
-                          <v-icon color="primary" icon="mdi-school"></v-icon>
-                        </template>
-                        <v-list-item-title>Education :</v-list-item-title>
-                        <v-list-item-subtitle v-for="(education, index) in qs.education" :key="index">{{
-      education.title }}</v-list-item-subtitle>
-                      </v-list-item>
-
-                      <v-list-item class="ma-2" variant="tonal" rounded="rounded" v-if="qs.experience.length">
-                        <template v-slot:prepend>
-                          <v-icon color="primary" icon="mdi-head-cog-outline"></v-icon>
-                        </template>
-                        <v-list-item-title>Experience :</v-list-item-title>
-                        <v-list-item-subtitle v-for="(experience, index) in qs.experience" :key="index">{{
-      experience.title }}</v-list-item-subtitle>
-                      </v-list-item>
-                      <v-list-item class="ma-2" variant="tonal" rounded="rounded" v-if="qs.rating.length">
-                        <template v-slot:prepend>
-                          <v-icon color="primary" icon="mdi-human-male-board"></v-icon>
-                        </template>
-                        <v-list-item-title>Performance Rating :</v-list-item-title>
-                        <v-list-item-subtitle v-for="(rating, index) in qs.rating" :key="index">{{
-      rating.title }}</v-list-item-subtitle>
-                      </v-list-item>
-                      <v-list-item class="ma-2" variant="tonal" rounded="rounded" title=" Training Hours:"
-                        v-if="qs.training_hours != 0">
-                        <template v-slot:prepend>
-                          <v-icon color="primary" icon="mdi-star"></v-icon>
-                        </template>
-                        <v-list-item-subtitle>{{ qs.training_hours }} </v-list-item-subtitle>
-                      </v-list-item>
-
-
-                    </v-card-text>
-
-                  </v-col>
-                  <v-col cols="6" v-else>
-                    <v-card class=" d-flex align-center  justify-center" height="55vh" flat>
-                      <v-img :aspect-ratio="1" class="bg-white" src="/prime-logo.png" contain></v-img>
+                      </v-card-text>
                     </v-card>
+
+
                   </v-col>
+
                 </v-row>
-
-
               </v-card-text>
 
             </v-card>
@@ -359,10 +419,10 @@
                   valid for processing. Your attention to document accuracy is crucial for a smooth application process."></v-alert>
                 <v-card-text>
                   <v-row no-gutters>
-                    {{ applicant }}
+
                     <v-col cols="12" xl="6" lg="6" md="6" sm="12"
-                      v-for="( attachment_title, index )  in  selected_qs?.attachment"> <v-file-input
-                        variant="underlined" :label="attachment_title" :key="index"
+                      v-for="( attachment_title, index )  in selected_qs?.attachment">
+                      <v-file-input variant="underlined" :label="attachment_title" :key="index"
                         @update:model-value="shet_so_hard($event, attachment_title)" />
                     </v-col>
                   </v-row>
@@ -377,13 +437,13 @@
         <v-card-actions>
           <v-btn v-if="step > 1" variant="text" @click="back"> Back </v-btn>
           <v-spacer></v-spacer>
-          <v-btn color="primary" variant="flat" @click="next_window">
-            Next
+          <v-btn v-if="step === 2 || step === 3" color="primary" variant="flat" @click="next_window">
+            NEXT
           </v-btn>
-          <v-btn @click="create_application" v-if="step === 4 && !applicant._id" color=" success" variant="flat">
+          <v-btn @click="principal_dialog = true" v-if="step === 4 && !applicant._id" color="success" variant="flat">
             SUBMIT
           </v-btn>
-          <v-btn v-if="step === 4 && applicant?._id" @click="update_applicant" color="primary" variant="flat">
+          <v-btn v-if="step === 4 && applicant?._id" @click="update_dialog = true" color="primary" variant="flat">
             UPDATE</v-btn>
         </v-card-actions>
 
@@ -443,6 +503,70 @@
           </v-row>
         </v-card-text>
       </commons-dialog>
+
+
+      <commons-dialog max-width="35%" v-model="apply_dialog" :icon="'mdi-information'" :title="'Confirmation!'"
+        @submit="position_form_cond" :submitText="'Confirm'">
+        <v-card-text v-if="selected_qs" class="ma-4">
+          You are applying for the reclassification of the <b class="text-primary">{{ qs.title
+            }}</b>.
+          Click <b class="text-primary">cancel</b> to
+          select a different position.
+        </v-card-text>
+      </commons-dialog>
+
+      <commons-dialog max-width="35%" v-model="next_dialog" :icon="'mdi-information'" :title="'Confirmation!'"
+        @submit="position_form_cond" :submitText="'SUBMIT'">
+        <v-card-text class="my
+      -2">
+          <v-row dense>
+            <v-col cols="12"> Are you sure you want to proceed?</v-col>
+            <v-col cols="12"> <v-text-field variant="underlined" value="Selected position" hide-details /></v-col>
+          </v-row>
+        </v-card-text>
+      </commons-dialog>
+
+      <commons-dialog max-width="35%" v-model="confirmation_dialog" :icon="'mdi-information'" :title="'Confirmation!'"
+        @submit="next_to_step2" :submitText="'Ok'">
+        <v-card-text v-if="selected_qs" class="ma-4">
+          You are qualified for your applied position <b class="text-primary">{{ qs.title }}</b>. Clicking <b
+            class="text-primary">cancel</b>
+          will terminate the
+          entire
+          process.
+        </v-card-text>
+      </commons-dialog>
+
+      <commons-dialog max-width="35%" v-model="cancel_dialog" :icon="'mdi-information'" :title="'Confirmation!'"
+        :submitText="'Ok'">
+        <v-card-text v-if="selected_qs" class="ma-4 text-center">
+          Are you sure you want to end applying for this position ?
+        </v-card-text>
+      </commons-dialog>
+
+
+      <commons-dialog max-width="35%" v-model="principal_dialog" :icon="'mdi-information'"
+        :title="'Principal Email Address is required!'" :submitText="'Submit'" @submit="create_application">
+        <v-card-text class="ma-4 ">
+
+
+          Please enter the email address of your school principal to validate the authenticity of the attached
+          document/s.
+
+          <v-text-field v-model="applicant.principal_email" label="Enter Principal's Email Address" />
+        </v-card-text>
+      </commons-dialog>
+      <commons-dialog max-width="35%" v-model="update_dialog" :icon="'mdi-information'"
+        :title="'Principal Email Address is required!'" :submitText="'Submit'" @submit="update_applicant">
+        <v-card-text class="ma-4 ">
+
+
+          Please enter the email address of your school principal to validate the authenticity of the attached
+          document/s.
+
+          <v-text-field v-model="applicant.principal_email" label="Enter Principal's Email Address" />
+        </v-card-text>
+      </commons-dialog>
     </v-sheet>
   </v-sheet>
 </template>
@@ -493,6 +617,21 @@ const back = () => {
   return step.value--;
 }
 
+
+function position_form_cond() {
+  position_form.value = true
+  apply_dialog.value = false
+
+}
+const apply_dialog = ref(false)
+const next_dialog = ref(false)
+const confirmation_dialog = ref(false)
+const cancel_dialog = ref(false)
+const principal_dialog = ref(false)
+const update_dialog = ref(false)
+
+
+const position_form = ref(false)
 const applicant = ref({
   qualification: {
     position: "",
@@ -501,6 +640,8 @@ const applicant = ref({
     experience: [],
     training: 0,
     per_rating: "",
+    sg: 0,
+    sg_equivalent: 0,
   },
   personal_information: {
     last_name: "",
@@ -519,7 +660,7 @@ const applicant = ref({
     division: "",
     district: "",
     item_no: "",
-    school: "",
+    // school: "",
     ipcrf_rating: "",
   },
   educational_attainment: [],
@@ -547,6 +688,7 @@ const applicant = ref({
     signature: "WARAY PA",
     date: new Date(new Date())
   },
+  principal_email: "",
   status: "For Signature",
   created_date: new Date(new Date()),
   request_log: [],
@@ -789,8 +931,16 @@ function next_window() {
     is_yes.push(training_matching(applicant_training, selected_position.training_hours));
     if (is_yes.includes(false)) return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" })
 
-    console.log(is_yes);
-    step.value++
+    confirmation_dialog.value = true
+
+  }
+}
+
+function next_to_step2() {
+  step.value++
+  confirmation_dialog.value = false
+  if (step.value === 1) {
+    confirmation_dialog.value = false
   }
 }
 
@@ -859,8 +1009,10 @@ async function create_application() {
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 }
 
+const hide_windows = ref(false)
 async function update_applicant() {
   get_applicant_details()
+  hide_windows.value = false
   const payload = {
     applicant,
   }

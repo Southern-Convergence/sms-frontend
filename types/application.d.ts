@@ -98,4 +98,11 @@ interface ProfessionalStudy {
 }
 
 
+interface Endorsement {
+    applicants: Array,
+    branch_code: string,
+    division: string,
+    position: string,
+}
+
 

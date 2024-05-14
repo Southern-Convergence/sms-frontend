@@ -1,31 +1,40 @@
 <template>
   <div class="pa-3">
     <v-window v-model="tab">
+
       <v-window-item v-for="status in tabItems" :key="status.value" :value="status.value">
         <v-card-text class="overflow-y-auto mt-4">
+
           <v-row no-gutters>
-            <v-col cols="5">
+            <v-col cols="12">
 
               <div class="w-100 text-title mb-0">List of Reclassification Application</div>
               <div class="w-100 text-subtitle-2 text-grey mt-0 mb-2">A brief overview of reclassification applications.
+
               </div>
             </v-col>
-            <v-col cols="7" class="text-grey d-flex mt-4" v-if="user.role === 'Administrative Officer V'">
+          </v-row>
+
+          <v-row dense justify="end" v-if="user.role === 'Administrative Officer V'"><v-col cols="8"
+              class="text-grey d-flex mt-4">
               <v-select class="pr-2" label="Filter by Position" v-model="selected_position" :items="positions"
                 item-value="_id" persistent-hint clearable />
-              <v-select label="Filter by SDO" v-model="selected_sdo" :items="sdo" item-value="_id" persistent-hint
-                clearable />
+              <v-select v-if="user.role === 'Administrative Officer V'" class="pr-2" label="Filter by SDO"
+                v-model="selected_sdo" :items="sdo" item-value="_id" persistent-hint clearable />
+              <v-select v-if="user.role === 'Administrative Officer V'" label="Filter by Status"
+                v-model="selected_status" :items="['Pending', 'Received Printout/s']" persistent-hint clearable />
 
               <v-btn @click="get_application" class="ml-2 mt-1" color="primary">
                 <v-icon class="pr-1">mdi-filter</v-icon>Filter</v-btn>
 
               <v-btn @click="evaluators_dialog = true" class="ml-2 mt-1" color="primary"
-                v-if="user.role === 'Administrative Officer V'">Assign to
-
+                v-if="selected_status === 'Pending'">Assign to
                 Evaluator</v-btn>
+              <v-btn @click="endorsement_dialog = true" class="ml-2 mt-1" color="amber"
+                v-if="selected_status === 'Received Printout/s'">Generate
+                Endorsment
+              </v-btn>
 
-              <v-btn @click="evaluators_dialog = true" class="ml-2 mt-1" color="amber"
-                v-if="user.role === 'Administrative Officer V'"> Generate Endorsement</v-btn>
 
             </v-col>
 
@@ -50,10 +59,11 @@
                     <div>
                       <div class="w-40 text-body-1 font-weight-bold d-flex">{{ value.full_name }}</div>
                       <div class="mb-1 text-body-2 text-grey">{{ value.position }}</div>
-                      <div class="text-body-2">School: {{ value.school }}</div>
+
                       <div class="text-body-2">Division: {{ value.division }}</div>
-                      <div class="text-body-2" v-if="typeof value.approved === 'boolean'">
-                        This reclassification was <span :class="value.approved ? 'text-success' : 'text-error'">
+                      <div class="text-body-2" v-if="typeof value.approved === 'boolean'"> This
+                        reclassification was
+                        <span :class="value.approved ? 'text-success' : 'text-error'">
                           <i>{{ value.approved === true ? 'approved' : 'disapproved' }}</i>
                         </span> by DBM.
                       </div>
@@ -91,7 +101,7 @@
       </v-window-item>
     </v-window>
     <v-dialog width="500" v-model="evaluators_dialog">
-      <v-card title="Select an Evaluator">
+      <v-card title="Select an RO Evaluator">
         <v-card-text>
           <v-select :items="evaluators" item-value="_id" item-title="title" v-model="selected_ro_evaluator" />
         </v-card-text>
@@ -101,8 +111,67 @@
               <v-btn @click="isActive.value = false" variant="tonal" color="error" block>CANCEL</v-btn>
             </v-col>
             <v-col cols="5">
-              <v-btn variant="tonal" color="success" block @click="assign_evaluator">
-                SUBMIT
+              <v-btn :disabled="!selected_ro_evaluator" variant="tonal" color="success" block @click="assign_evaluator">
+                ASSIGN
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-card-actions>
+      </v-card>
+
+
+    </v-dialog>
+
+    <v-dialog width="900" v-model="endorsement_dialog">
+      <v-card title="Generate Endorsement Letter">
+        <v-card-text class="pa-5">
+
+          <h5 class="text-center">
+            1st Indorsement <br />
+            April 16, 2024
+          </h5>
+
+
+          <p class="ma-5">
+            Respectfully transmitted to the <b>Regional Director,
+              Department of Budget and Management, National Capital Region</b>,<b> Misamis St., Bago Bantay, Quezon
+              City</b>,
+            enclosing herein with copies of the Plantilla Allocation List covering the implementing approved Equivalent
+            Record Forms (ERF) of the folliwing Master Teacher IV, <b> Division of Manila</b>, this Region, for
+            post-audit
+            and
+            approval,
+            chargeable
+            against the lump su, appropriation for reclassification of positions for CY 2024 to with:
+            <v-sheet>
+              <table>
+                <tr class="text-center font-weight-regular">
+                  <th width="50%">NAME</th>
+                  <th width="25%">FROM</th>
+                  <th width="25%">TO</th>
+
+                </tr>
+
+                <tr v-for="app , index in application_data" :key="index">
+                  <td width="50%"> 1. {{ app.full_name }}</td>
+                  <td width="25%">{{app.position}}</td>
+                  <td width="25%">{{app.position}}</td>
+
+                </tr>
+
+              </table>
+            </v-sheet>
+
+          </p>
+        </v-card-text>
+        <v-card-actions class="">
+          <v-row dense justify="center">
+            <v-col cols="5">
+              <v-btn variant="tonal" color="error" block>CANCEL</v-btn>
+            </v-col>
+            <v-col cols="5">
+              <v-btn @click="generate_endorsement" variant="tonal" color="success" block>
+                GENERATE
               </v-btn>
             </v-col>
           </v-row>
@@ -110,6 +179,7 @@
       </v-card>
 
     </v-dialog>
+
   </div>
 </template>
 
@@ -132,6 +202,7 @@ onBeforeMount(() => {
   ]);
 
 });
+const endorsement_dialog = ref(false)
 const tab = ref(null);
 const is_hovered = ref(false);
 const evaluators_dialog = ref(false)
@@ -157,20 +228,24 @@ const table_headers = ref([
   { title: "Actions", key: "actions", sortable: false, align: "center" },
 ])
 
+
+const selected_status = ref("");
+
 const application_data = ref([]);
 async function get_application() {
-
   const payload = {
     position: selected_position.value,
     sdo: selected_sdo.value,
+    status : selected_status.value
   };
-
 
   const { data, error } = await $rest('new-applicant/get-application', {
     method: "GET",
     query: payload,
   });
   application_data.value = data;
+
+  
 }
 
 
@@ -212,6 +287,7 @@ const load_erf_form = (id: any) => {
     }
   });
 }
+
 const evaluators = ref([]);
 const selected_ro_evaluator = ref("");
 const get_ro_evaluators = async () => {
@@ -229,6 +305,23 @@ async function assign_evaluator() {
   const { data, error } = await $rest('new-applicant/assign-multiple-evaluator-application', {
     method: "PUT",
     body: payload
+  });
+
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
+  return swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } });
+}
+
+async function generate_endorsement() {
+  const all_id = application_data.value.map((item: any) => item._id);
+  const payload = {
+      applicants: all_id,
+      division: selected_sdo.value,
+      position: selected_position.value
+  };
+
+  const { data, error } = await $rest('sms-endorsement/generate-endorsement', {
+    method: "POST",
+    body: payload,
   });
 
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });

@@ -3,9 +3,10 @@
     <v-card class="w-100 d-flex align-center justify-center elevation-3" rounded="lg">
       <v-sheet class="w-50 pa-10 gradient-background" height="70vh">
         <v-card-title class="text-h6 mt-5 text-white"> WELCOME to
-          <strong>DepEd NCR Reclassification System</strong>
+          <strong>DepEd NCR Staffing Modification System</strong>
         </v-card-title>
-        <v-card-subtitle class="text-grey">Elevate Your Career: A Guide to the Reclassification System </v-card-subtitle>
+        <v-card-subtitle class="text-grey">Elevate Your Career: A Guide to the Staffing Modification System
+        </v-card-subtitle>
 
         <v-card-text>
           <v-list-item class="pl-2" density="compact">

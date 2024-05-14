@@ -97,7 +97,7 @@
                     </v-tooltip>
                   </v-toolbar>
                   <v-card-text> <v-sheet height="31vh" class="overflow-y-auto pa-2">
-                      <v-alert v-for=" experience, index  in  experience_data " :key="index"
+                      <v-alert v-for=" experience, index in experience_data " :key="index"
                         @click="experience_update_dialog(experience)" class="my-2 maintenance-item"
                         :class="{ 'elevation-4': is_hovered }" rounded="lg" icon="mdi-head-cog-outline">
                         {{ experience.title }}
@@ -120,9 +120,9 @@
                   </v-toolbar>
                   <v-card-text>
                     <v-sheet height="31vh" class="overflow-y-auto pa-2">
-                      <v-alert v-for=" rating, index  in  rating_data " :key="index"
-                        @click="rating_update_dialog(rating)" class="my-2 maintenance-item"
-                        :class="{ 'elevation-4': is_hovered }" rounded="lg" icon="mdi-star">
+                      <v-alert v-for=" rating, index in rating_data " :key="index" @click="rating_update_dialog(rating)"
+                        class="my-2 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="lg"
+                        icon="mdi-star">
                         {{ rating.title }}
                       </v-alert>
                     </v-sheet>
@@ -142,7 +142,7 @@
                     </v-tooltip>
                   </v-toolbar>
                   <v-card-text> <v-sheet height="31vh" class="overflow-y-auto pa-2">
-                      <v-alert v-for=" sg, index  in  sg_data " :key="index" @click="update_salary_grade(sg)"
+                      <v-alert v-for=" sg, index in sg_data " :key="index" @click="update_salary_grade(sg)"
                         class="my-2 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="lg"
                         icon="mdi-cash">
                         <div> Salary Grade : <b> {{ sg.salary_grade }} </b></div>
@@ -165,9 +165,11 @@
                   </v-toolbar>
                   <v-card-text> <v-sheet height="31vh" class="overflow-y-auto pa-2">
                       <v-alert class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="lg"
-                        icon="mdi-book" border-color="blue-darken-4"  v-for="unit, index in ma_units_data" :key="index">
-                              <b>{{unit.number_of_years}}</b> years of experience in the  <b> {{unit.type}} </b> sector is equivalent to <b>{{unit.years_equivalent}}  M.A Unit/s.</b>
-                   
+                        icon="mdi-book" border-color="blue-darken-4" v-for="unit, index in ma_units_data" :key="index">
+                        <b>{{ unit.number_of_years }}</b> years of experience in the <b> {{ unit.type }} </b> sector is
+                        equivalent
+                        to <b>{{ unit.years_equivalent }} M.A Unit/s.</b>
+
                       </v-alert>
                     </v-sheet>
                   </v-card-text>
@@ -187,7 +189,7 @@
                   </v-toolbar>
                   <v-card-text>
                     <v-sheet height="31vh" class="overflow-y-auto pa-2">
-                      <v-alert v-for=" attachment, index  in  attachment_data " :key="index"
+                      <v-alert v-for=" attachment, index in attachment_data " :key="index"
                         @click="update_attachment(attachment)" class="my-2 maintenance-item"
                         :class="{ 'elevation-4': is_hovered }" rounded="lg" icon="mdi-paperclip">
                         {{ attachment.title }}
@@ -200,10 +202,10 @@
           </div>
         </v-window-item>
         <v-window-item :value="3" height="80vh">
-          <v-card class="mx-auto my-15" elevation="2" max-width="600">
+          <v-card class="mx-auto mt-10" elevation="2" max-width="80%">
             <v-card-item>
               <v-card-title>
-                Set Up Regional Director Information
+                Set Up RD and DBM Information
               </v-card-title>
               <v-card-subtitle>
                 This is for the generation of Indorsement Letters.
@@ -211,25 +213,59 @@
             </v-card-item>
             <v-card-text>
               <v-row justify="center">
-                <v-col cols="4">
-                  <v-text-field v-model="rd.first_name" label="First Name" hide-details />
-                </v-col>
-                <v-col cols="4">
-                  <v-text-field v-model="rd.middle_name" label="Middle Name" hide-details />
+                <v-col cols="6"> <v-row justify="center">
+                    <v-col cols="12">
+                      Regional Director Info for Endorsement Letter
+                    </v-col>
+                    <v-col cols="4">
+                      <v-text-field v-model="rd.rd.first_name" label="First Name" hide-details />
+                    </v-col>
+                    <v-col cols="4">
+                      <v-text-field v-model="rd.rd.middle_name" label="Middle Name" hide-details />
+                    </v-col>
+                    <v-col cols="4">
+                      <v-text-field v-model="rd.rd.last_name" label="Last Name" hide-details />
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field v-model="rd.rd.position" label="CES Rank" hide-details />
+                    </v-col>
 
-                </v-col>
-                <v-col cols="4">
-                  <v-text-field v-model="rd.last_name" label="Last Name" hide-details />
+                    <v-col cols="12">
+                      <v-textarea rows="3" v-model="rd.rd.ro_address" label="Regional Office Address" />
+                    </v-col>
+                  </v-row></v-col>
+                <v-col cols="6"> <v-row justify="center"> <v-col cols="12">
+                      DBM Info for Endorsement Letter
+                    </v-col>
+                    <v-col cols="4">
+                      <v-text-field v-model="rd.dbm.first_name" label="First Name" hide-details />
+                    </v-col>
+                    <v-col cols="4">
+                      <v-text-field v-model="rd.dbm.middle_name" label="Middle Name" hide-details />
+                    </v-col>
+                    <v-col cols="4">
+                      <v-text-field v-model="rd.dbm.last_name" label="Last Name" hide-details />
+                    </v-col>
+                    <v-col cols="6">
+                      <v-text-field v-model="rd.dbm.government_agency" label="Government Agency" hide-details />
+                    </v-col>
+                    <v-col cols="6">
+                      <v-text-field v-model="rd.dbm.position" label="Position" hide-details />
+                    </v-col>
+                    <v-col cols="12">
+                      <v-textarea rows="3" v-model="rd.dbm.dbm_address" label="Office Address" />
+                    </v-col></v-row></v-col>
 
-                </v-col>
-                <v-col cols="12">
-                  <v-text-field v-model="rd.position" label="CES Rank" hide-details />
-                </v-col>
-                <v-col cols="12"> <v-textarea v-model="rd.ro_address" label="Regional Office Address" /></v-col>
-                <v-col cols="4" v-if="!rd._id"> <v-btn block @click="create_rd">SUBMIT</v-btn></v-col>
-                <v-col cols="4" v-else> <v-btn block @click="update_rd">UPDATE</v-btn></v-col>
 
+
+                <v-col cols="4" v-if="!rd._id">
+                  <v-btn block @click="create_rd">SUBMIT</v-btn>
+                </v-col>
+                <v-col cols="4" v-else>
+                  <v-btn block @click="update_rd">UPDATE</v-btn>
+                </v-col>
               </v-row>
+
             </v-card-text>
           </v-card>
 
@@ -293,22 +329,23 @@
           <v-radio label="Public" value="Public"></v-radio>
           <v-radio label="Private" value="Private"></v-radio>
         </v-radio-group>
- <hr class="my-4">
-<!-- {{ma_units.number_of_years}} M.A Units Equivalent {{ma_units.years_equivalent}} {{ma_units.type}} -->
+        <hr class="my-4">
+        <!-- {{ma_units.number_of_years}} M.A Units Equivalent {{ma_units.years_equivalent}} {{ma_units.type}} -->
         <v-row>
-         
-          <v-col cols="6">        
+
+          <v-col cols="6">
             <v-text-field v-model="ma_units.number_of_years" label="Number of Years" hide-details /> </v-col>
-         <v-col cols="12" v-if="ma_units.number_of_years <= 2 && ma_units.type === 'Public' || ma_units.number_of_years <= 4 && ma_units.type === 'Private'">
-              <v-alert color="error" >
-                  {{ cal(ma_units)}} 
-              </v-alert>
-            </v-col>
-            <v-col cols="6" class="text-primary " v-else-if="ma_units.number_of_years && ma_units.type">
-        <v-text-field :value="`${cal(ma_units)} is M.A Unit Equivalent`" hide-details readonly />
+          <v-col cols="12"
+            v-if="ma_units.number_of_years <= 2 && ma_units.type === 'Public' || ma_units.number_of_years <= 4 && ma_units.type === 'Private'">
+            <v-alert color="error">
+              {{ cal(ma_units) }}
+            </v-alert>
+          </v-col>
+          <v-col cols="6" class="text-primary " v-else-if="ma_units.number_of_years && ma_units.type">
+            <v-text-field :value="`${cal(ma_units)} is M.A Unit Equivalent`" hide-details readonly />
 
 
-            </v-col>
+          </v-col>
         </v-row>
       </v-card-text>
     </commons-dialog>
@@ -328,17 +365,21 @@
               label="Education" multiple prepend-inner-icon="mdi-school" /></v-col>
           <v-col cols="12"> <v-select v-model="position.experience" item-value="_id" :items="experience_data"
               label="Experience" multiple prepend-inner-icon="mdi-head-cog-outline" hide-details /></v-col>
-               <v-col cols="12"> <v-checkbox v-model="position.is_experience" label="Check if the experience accepts  less than the specified minimum." /></v-col>
+          <v-col cols="12"> <v-checkbox v-model="position.is_experience"
+              label="Check if the experience accepts  less than the specified minimum." /></v-col>
         </v-row>
         <v-row no-gutters>
           <v-col cols="6" class="pr-2"> <v-text-field v-model="position.training_hours"
               label="Training Number of Hours Required" prepend-inner-icon="mdi-human-male-board" /></v-col>
           <v-col cols="6"> <v-select v-model="position.rating" :items="rating_data" label="Performance Rating Required"
               multiple item-value="_id" prepend-inner-icon="mdi-star" /></v-col>
+
         </v-row>
         <v-row no-gutters>
           <v-col cols="6" class="pr-2"> <v-select v-model="position.sg" :items="sg_item" label="Salary Grade"
               item-value="_id" prepend-inner-icon="mdi-cash" /></v-col>
+          <v-col cols="6"><v-text-field v-model="position.code" label="Position Code" hide-details="auto"
+              prepend-inner-icon="mdi-codepen" hint="This is for transaction codes for endorsements." /></v-col>
 
         </v-row>
 
@@ -393,7 +434,7 @@
               <v-list class="pa-4" rounded="lg">
                 <v-list-item-title class="text-primary">Education</v-list-item-title>
                 <v-sheet class="overflow-y-auto pa-2" height="22vh">
-                  <v-list-item-subtitle v-for=" educ, index  in  selected_position.education " :key="index">
+                  <v-list-item-subtitle v-for=" educ, index in selected_position.education " :key="index">
                     <v-icon>mdi-circle-medium</v-icon> {{ educ.text }}</v-list-item-subtitle>
                 </v-sheet>
               </v-list>
@@ -402,7 +443,7 @@
               <v-list class="pa-4" rounded="lg">
                 <v-list-item-title class="text-primary">Experience</v-list-item-title>
                 <v-sheet class="overflow-y-auto pa-2" height="22vh">
-                  <v-list-item-subtitle v-for=" exp, index  in  selected_position.experience " :key="index">
+                  <v-list-item-subtitle v-for=" exp, index in selected_position.experience " :key="index">
                     <v-icon>mdi-circle-medium</v-icon> {{ selected_position.experience.length ? exp.text : 'N/A'
                     }}</v-list-item-subtitle>
                 </v-sheet>
@@ -412,7 +453,7 @@
               <v-list class="pa-4" rounded="lg">
                 <v-list-item-title class="text-primary">Education Level</v-list-item-title>
                 <v-list-item-subtitle> <v-icon>mdi-circle-medium</v-icon> {{ selected_position.education_level ?
-        selected_position.education_level : 'N/A'
+                  selected_position.education_level : 'N/A'
                   }}</v-list-item-subtitle>
               </v-list>
             </v-col>
@@ -420,7 +461,7 @@
               <v-list class="pa-4" rounded="lg">
                 <v-list-item-title class="text-primary">Training Hours</v-list-item-title>
                 <v-list-item-subtitle> <v-icon>mdi-circle-medium</v-icon> {{ selected_position.training_hours ?
-        selected_position.training_hours : 'N/A'
+                  selected_position.training_hours : 'N/A'
                   }}</v-list-item-subtitle>
               </v-list>
             </v-col>
@@ -428,7 +469,7 @@
               <v-list class="pa-4" rounded="lg">
                 <v-list-item-title class="text-primary">Salary Grade</v-list-item-title>
                 <v-list-item-subtitle> <v-icon>mdi-circle-medium</v-icon> {{ selected_position.sg.salary_grade ?
-        selected_position.sg.salary_grade : 'N/A'
+                  selected_position.sg.salary_grade : 'N/A'
                   }}</v-list-item-subtitle>
               </v-list>
             </v-col>
@@ -437,7 +478,7 @@
               <v-list class="pa-4" rounded="lg">
                 <v-list-item-title class="text-primary">Salary Equivalent</v-list-item-title>
                 <v-list-item-subtitle> <v-icon>mdi-circle-medium</v-icon> {{ selected_position.sg.equivalent ?
-        selected_position.sg.equivalent : 'N/A'
+                  selected_position.sg.equivalent : 'N/A'
                   }}</v-list-item-subtitle>
               </v-list>
             </v-col>
@@ -445,7 +486,7 @@
               <v-list class="pa-4" rounded="lg">
                 <v-list-item-title class="text-primary"> Applicant Attachment Requirements</v-list-item-title>
                 <v-sheet class="overflow-y-auto pa-2" height="12vh">
-                  <v-list-item-subtitle v-for=" attach, index  in  selected_position.attachment " :key="index">
+                  <v-list-item-subtitle v-for=" attach, index in selected_position.attachment " :key="index">
                     <v-icon>mdi-circle-medium</v-icon> {{ attach.title }}</v-list-item-subtitle>
                 </v-sheet>
               </v-list>
@@ -454,7 +495,7 @@
               <v-list class="pa-4" rounded="lg">
                 <v-list-item-title class="text-primary"> Applicant Attachment Requirements</v-list-item-title>
                 <v-sheet class="overflow-y-auto pa-2" height="12vh">
-                  <v-list-item-subtitle v-for=" attach, index  in  selected_position.sdo_attachment " :key="index">
+                  <v-list-item-subtitle v-for=" attach, index in selected_position.sdo_attachment " :key="index">
                     <v-icon>mdi-circle-medium</v-icon> {{ attach.title }}</v-list-item-subtitle>
                 </v-sheet>
               </v-list>
@@ -491,7 +532,6 @@ onBeforeMount(() => {
       get_sg(),
       get_qs(),
       get_attachment(),
-      get_rd(),
       get_ma_units()
     ]
   ).catch(() => swal({
@@ -511,7 +551,7 @@ const inline = ref(null)
 
 const position_dialog = ref(false);
 const model = ref(true)
-const update_position_dialog  = ref(false);
+const update_position_dialog = ref(false);
 // CREATE EDUCATION
 const education = ref<Education>({
   title: "",
@@ -754,12 +794,13 @@ const position = ref<Position>({
   education: [],
   education_level: "",
   experience: [],
-  is_experience : false,
+  is_experience: false,
   training_hours: 0,
   rating: [],
   sg: "",
   attachment: [],
-  sdo_attachment: []
+  sdo_attachment: [],
+  code: ""
 });
 
 async function create_position() {
@@ -801,7 +842,8 @@ async function update_position() {
       experience: selectedPosition.experience,
       training_hours: selectedPosition.training_hours,
       rating: selectedPosition.rating,
-      sg: selectedPosition.sg
+      sg: selectedPosition.sg,
+      code: selectedPosition.code
     }
   });
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
@@ -849,53 +891,47 @@ async function get_attachment() {
 
 //  RD INFO
 const rd = ref<Rd>({
-  first_name: "",
-  middle_name: "",
-  last_name: "",
-  ro_address: "",
-  position: "",
+  rd: {
+    first_name: "",
+    middle_name: "",
+    last_name: "",
+    ro_address: "",
+    position: "",
+  },
+  dbm: {
+    first_name: "",
+    middle_name: "",
+    last_name: "",
+    government_agency: "",
+    dbm_address: "",
+    position: "",
+  }
 })
+
 
 
 async function create_rd() {
   const { data, error } = await $rest('sms-rd/create-rd', {
     method: "POST",
-    body: { ...rd.value }
-
-  })
-  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+    body: { rd: rd.value.rd, dbm: rd.value.dbm }
+  });
+  if (error) {
+    return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
+  }
+  return swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } });
 }
+
 /**
  * HANDLES FETCHING RD
  */
-async function get_rd() {
-  const { data, error } = await $rest('sms-rd/get-rd', {
-    method: "GET",
-  })
-  if (data) {
-    Object.assign(rd.value, data)
-  }
-}
-async function update_rd() {
-  const rdData = rd.value;
-  const { data, error } = await $rest('sms-rd/update-rd', {
-    method: "PUT",
-    body: {
-      _id: rdData?._id,
-      first_name: rdData.first_name,
-      middle_name: rdData.middle_name,
-      last_name: rdData.last_name,
-      ro_address: rdData.ro_address,
-    }
-  });
-
-  if (error) {
-    return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
-  } 
-    return swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } });
-  
-}
+// async function get_rd() {
+//   const { data, error } = await $rest('sms-rd/get-rd', {
+//     method: "GET",
+//   })
+//   if (data) {
+//     Object.assign(rd.value, data)
+//   }
+// }
 
 
 async function create_ma_units() {
@@ -905,9 +941,9 @@ async function create_ma_units() {
   });
   if (error) {
     swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
-  } 
-    swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } });
-  
+  }
+  swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } });
+
 }
 
 
@@ -930,18 +966,18 @@ const ma_units = ref({
 });
 
 
- const public_ranges = [
-    { min: 3, max: 5, equivalent: 1 },
-    { min: 6, max: 8, equivalent: 2 },
-    { min: 9, max: 11, equivalent: 3 },
-    { min: 12, max: 14, equivalent: 4 },
-    { min: 15, max: 17, equivalent: 5 },
-    { min: 18, max: 20, equivalent: 6 },
-    { min: 21, max: 23, equivalent: 7 },
-    { min: 24, max: 26, equivalent: 8 },
-    { min: 27, max: 30, equivalent: 7 },
-  ];
-  const private_ranges = [
+const public_ranges = [
+  { min: 3, max: 5, equivalent: 1 },
+  { min: 6, max: 8, equivalent: 2 },
+  { min: 9, max: 11, equivalent: 3 },
+  { min: 12, max: 14, equivalent: 4 },
+  { min: 15, max: 17, equivalent: 5 },
+  { min: 18, max: 20, equivalent: 6 },
+  { min: 21, max: 23, equivalent: 7 },
+  { min: 24, max: 26, equivalent: 8 },
+  { min: 27, max: 30, equivalent: 7 },
+];
+const private_ranges = [
   { min: 5, max: 9, equivalent: 1 },
   { min: 10, max: 14, equivalent: 2 },
   { min: 15, max: 19, equivalent: 3 },
@@ -956,23 +992,23 @@ const ma_units = ref({
 ];
 
 function cal(unit) {
-  const mathing_public_range = public_ranges.find(range => 
+  const mathing_public_range = public_ranges.find(range =>
     unit.type === 'Public' && unit.number_of_years >= range.min && unit.number_of_years <= range.max
   );
-   const mathing_private_range = private_ranges.find(range => 
+  const mathing_private_range = private_ranges.find(range =>
     unit.type === 'Private' && unit.number_of_years >= range.min && unit.number_of_years <= range.max
   );
   if (mathing_public_range) {
     return unit.years_equivalent = mathing_public_range.equivalent;
-  }  if (mathing_private_range) {
+  } if (mathing_private_range) {
     return unit.years_equivalent = mathing_private_range.equivalent;
   } else {
-    if( unit.type === 'Public' && unit.number_of_years < 3){
-    return unit.years_equivalent = 'Sorry, the minimum requirement is 3 years of experience.';
+    if (unit.type === 'Public' && unit.number_of_years < 3) {
+      return unit.years_equivalent = 'Sorry, the minimum requirement is 3 years of experience.';
     } else {
-      return  unit.years_equivalent = 'Sorry, the minimum requirement is 5 years of experience.';
+      return unit.years_equivalent = 'Sorry, the minimum requirement is 5 years of experience.';
     }
-    
+
   }
 }
 

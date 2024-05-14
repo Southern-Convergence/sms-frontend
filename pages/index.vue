@@ -9,7 +9,7 @@
             <v-avatar size="92" image="/NCR.png" />
           </template>
 
-          <h6 class="text-h5 text-medium-emphasis"> Reclassification System</h6>
+          <h6 class="text-h5 text-medium-emphasis"> Staffing Modification System</h6>
         </v-list-item>
       </v-sheet>
       <v-card class="mt-4 pt-6 pb-4 px-6" id="login-card" :loading="login_load" max-width="480" min-height="560"

@@ -17,14 +17,14 @@
           Respectfully transmitted to Ms. <b class="text-capitalize">{{ rd.first_name }} {{ rd.middle_name ?
             rd.middle_name.charAt(0) + '.' : '' }}
             {{
-            rd.last_name }}</b>, Regional
-          nt
+              rd.last_name }}</b>, Regional
+
           Director,
           Department of Budget and Management, National Capital Region,<b> {{ rd.ro_address }}</b>,
           the herein request for
           reclassification of position of <span class="text-indigo">Ms. {{
             applicant_endorsement.full_name }}, from {{ applicant_endorsement.current_position }} to {{
-            applicant_endorsement.applied_position }},
+              applicant_endorsement.applied_position }},
             {{ applicant_endorsement.school }} – {{ applicant_endorsement.division }}, </span> this Region,
           chargeable against the lumpsum appropriation for reclassification of
           positions for CY <span class="text-indigo"> 2023</span>.

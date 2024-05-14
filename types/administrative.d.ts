@@ -15,6 +15,7 @@ interface Sdo {
   address: string;
   email: string;
   telephone: string;
+  code: string;
 }
 
 interface Setup {

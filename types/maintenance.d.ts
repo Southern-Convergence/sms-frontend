@@ -32,14 +32,26 @@ interface Position {
   sg?: string;
   attachment?: array;
   sdo_attachment?: array;
+  code: string;
 };
 interface Rd {
-  first_name: string,
-  middle_name: string,
-  last_name: string,
-  ro_address: string,
-  position: string
+  rd: {
+    first_name: string;
+    middle_name: string;
+    last_name: string;
+    ro_address: string;
+    position: string;
+  };
+  dbm: {
+    first_name: string;
+    middle_name: string;
+    last_name: string;
+    government_agency: string;
+    dbm_address: string;
+    position: string;
+  };
 }
+
 
 interface Maunits {
   type: string,

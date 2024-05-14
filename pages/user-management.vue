@@ -14,31 +14,31 @@
                                 <div class="text-uppercase  text-indigo text-body-1"> {{ value.first_name
                                     }}
                                     {{
-                    value.last_name }}
+                                        value.last_name }}
                                 </div>
                                 <v-spacer />
                                 <div> <v-chip density="compact" class="text-uppercase text-overline" color="success">{{
-                    value.status }}</v-chip></div>
+                                    value.status }}</v-chip></div>
                             </div>
                             <div> {{ value.role }} <span v-if="value.division"> of
                                     {{
-                    value.division.title
-                }}</span>
+                                        value.division.title
+                                    }}</span>
                             </div>
                             <div class="text-caption text-capitalize mb-2">{{ value.side }}</div>
                             <div class="text-caption"> <v-icon color="red-lighten-3"> mdi-email</v-icon> <u
                                     class="text-blue">{{
-                    value.email }}</u>
+                                        value.email }}</u>
                             </div>
                             <div class="text-caption"> <v-icon color="green-lighten-3"> mdi-phone</v-icon> {{
-                    value.contact_number }}</div>
+                                value.contact_number }}</div>
                         </v-card>
                     </template>
                     <template v-slot:table="{ items }">
                         <v-sheet border> <v-data-table :items="items" :headers="user_headers">
                                 <template v-slot:item.full_name="{ item }">
                                     <span color="primary" density="compact">{{ item.selectable.first_name }} {{
-                    item.selectable.last_name }}
+                                        item.selectable.last_name }}
                                     </span>
                                 </template>
                                 <!-- <template v-slot:item.actions="{ item }">
@@ -74,7 +74,7 @@
                         </div>
                         <div>
                             <v-icon color="blue-lighten-2"> mdi-map-marker</v-icon> {{
-                    sdo.address }}
+                                sdo.address }}
                         </div>
                         <div class="text-blue font-italic text-decoration-underline">
                             <v-icon color="red"> mdi-email</v-icon> {{ sdo.email }}
@@ -204,6 +204,8 @@
                         :rules="[(v) => /.+@.+/.test(v) || 'Invalid Email address']" />
                     <v-text-field class="mt-2" v-model="sdo.telephone" type="tel" label="Telephone Number"
                         hide-details="auto" prepend-inner-icon="mdi-phone" />
+                    <v-text-field class="mt-2" v-model="sdo.code" label="SDO Code" hide-details="auto"
+                        prepend-inner-icon="mdi-codepen" hint="This is for transaction codes for endorsements." />
                 </v-form>
             </v-card-text>
         </commons-dialog>
@@ -314,6 +316,7 @@ const sdo = ref<Sdo>({
     address: "",
     email: "",
     telephone: "",
+    code: ""
 })
 
 /**

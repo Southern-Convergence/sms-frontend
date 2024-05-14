@@ -4,7 +4,8 @@
     <body class="printable-page">
       <div class="content">
         <commons-header />
-        <v-sheet class="mx-5">
+        <v-sheet class="mx-5" v-if="erf">
+
           <v-row no-gutters class="ma-2">
             <v-col cols="6">Name : <b>{{ erf.full_name }} </b>
             </v-col>
@@ -156,7 +157,8 @@
 
           </v-sheet>
           <v-row no-gutters class="ml-15 mt-1">
-            LATEST IPCRF RATING : <div style="border-bottom: 1.5px solid black" class="px-2"> {{ erf.ipcrf_rating }}</div>
+            LATEST IPCRF RATING : <div style="border-bottom: 1.5px solid black" class="px-2"> {{ erf.ipcrf_rating }}
+            </div>
           </v-row>
           <div class="d-flex mt-4">
             <div class="w-50 text-center px-5">
@@ -183,7 +185,8 @@
               <tbody>
                 <tr>
                   <td></td>
-                  <td></td>
+                  <td>
+                  </td>
                   <td></td>
                 </tr>
               </tbody>
@@ -197,8 +200,8 @@
               </thead>
               <tbody>
                 <tr>
-                  <td></td>
-                  <td></td>
+                  <td>{{ erf?.qualification?.sg }}</td>
+                  <td v-if="annual_sg">{{ annual_sg }}</td>
                   <td></td>
                 </tr>
               </tbody>
@@ -246,6 +249,12 @@
 
       </div>
     </body>
+    <div style="position: fixed; bottom: 20px; right: 20px;" class="d-print-none">
+      <v-btn icon="mdi-printer" size="large" class="mb-2" @click="print()">
+      </v-btn> <br />
+      <v-btn icon="mdi-keyboard-return" size="large" @click="$router.back()">
+      </v-btn>
+    </div>
   </div>
 </template>
 
@@ -270,6 +279,13 @@ async function get_erf() {
   })
   erf.value = data
 }
+const annual_sg = computed(() => {
+  return erf?.value.qualification?.sg_equivalent ? erf.value.qualification.sg_equivalent * 12 : null;
+});
+function print() {
+  window.print();
+}
+
 </script>
 <style scoped>
 .printable-page {

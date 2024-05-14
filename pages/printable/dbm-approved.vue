@@ -36,7 +36,7 @@
 
               </thead>
               <tbody>
-                {{ applicants }}
+
                 <tr v-for="app, index in applicants" :key="app">
                   <td>{{ app.control_number }}</td>
                   <td> {{ app.full_name }}</td>
