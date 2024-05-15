@@ -1,4 +1,3 @@
-
 <template>
   <div>
 
@@ -14,7 +13,7 @@
             <v-sheet :key="index" border class="pa-2">
               <div class="d-flex mb-1">
                 <div class="text-uppercase  text-indigo text-body-1"> {{ value.first_name
-                }}
+                  }}
                   {{
                     value.last_name }}
                 </div>
@@ -39,7 +38,8 @@
           <template v-slot:table="{ items }">
             <v-sheet border> <v-data-table :items="items" :headers="user_headers">
                 <template v-slot:item.full_name="{ item }">
-                  <span color="primary" density="compact">{{ item.selectable.first_name }} {{ item.selectable.last_name }}
+                  <span color="primary" density="compact">{{ item.selectable.first_name }} {{ item.selectable.last_name
+                    }}
                   </span>
                 </template>
                 <!-- <template v-slot:item.actions="{ item }">
@@ -123,8 +123,8 @@
               <v-col cols="4"><v-text-field v-model="sdo_user.contact_number" density="compact" hide-details
                   label="Contact Number" /></v-col>
               <v-col cols="12"> Roles and Designation </v-col>
-              <v-col cols="6"><v-select v-model="sdo_user.side" label="Type" :items="['School Division Office', 'School']"
-                  hide-details /></v-col>
+              <v-col cols="6"><v-select v-model="sdo_user.side" label="Type"
+                  :items="['School Division Office', 'School']" hide-details /></v-col>
 
 
               <v-col cols="6">

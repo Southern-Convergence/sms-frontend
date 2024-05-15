@@ -3,7 +3,7 @@
     <v-card rounded="lg" flat>
       <v-card-text> <v-row :class="`${$vuetify.display.mobile ? 'text-center' : ''}`" justify="center" dense>
           <v-col cols="12">
-            <h6 class="text-h5 reclass-title">Summary of Reclassification Application/s</h6>
+            <h6 class="text-h5 text-primary">Summary of Reclassification Application/s</h6>
 
             <h6 class="text-subtitle-2 text-medium-emphasis  ">View reclassification applications.
             </h6>
@@ -36,16 +36,13 @@
 
 <script lang="ts" setup>
 import useAuth from "~/store/auth";
-
 const { $rest } = useNuxtApp();
 const auth = useAuth();
 const user = useAuth().user;
 const router = useRouter();
 
 definePageMeta({ layout: "std-systems" });
-
 onBeforeMount(async () => {
-
   get_applicants()
 });
 
@@ -54,12 +51,11 @@ onBeforeMount(async () => {
 
 const table_headers = ref([
   { title: "Applicant Name", key: "full_name", sortable: false },
-  { title: "School", key: "school", sortable: false },
   { title: "Division", key: "division", sortable: false },
   { title: "Position", key: "position", sortable: false },
   { title: "Control Number", key: "control_number", sortable: false },
   { title: "Status", key: "status", sortable: false },
-   { title: "Actions", key: "actions", sortable: false },
+  { title: "Actions", key: "actions", sortable: false },
 ]);
 
 const applicants = ref([]);
@@ -84,17 +80,3 @@ const load_erf_form = (id: any) => {
 
 
 </script>
-
-<style scoped>
-.reclass-title {
-  font-family: Times New Roman;
-  font-weight: 20px;
-  background: #0A17CF;
-  background: -webkit-linear-gradient(to right, #0A17CF 8%, #C5CBCF 100%);
-  background: -moz-linear-gradient(to right, #0A17CF 8%, #C5CBCF 100%);
-  background: linear-gradient(to right, #0A17CF 8%, #C5CBCF 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-
-}
-</style>

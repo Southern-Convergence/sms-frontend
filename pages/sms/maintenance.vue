@@ -204,18 +204,19 @@
         <v-window-item :value="3" height="80vh">
           <v-card class="mx-auto mt-10" elevation="2" max-width="80%">
             <v-card-item>
-              <v-card-title>
+              <v-card-title class="text-primary">
                 Set Up RD and DBM Information
               </v-card-title>
               <v-card-subtitle>
                 This is for the generation of Indorsement Letters.
               </v-card-subtitle>
             </v-card-item>
+            <v-divider />
             <v-card-text>
               <v-row justify="center">
                 <v-col cols="6"> <v-row justify="center">
-                    <v-col cols="12">
-                      Regional Director Info for Endorsement Letter
+                    <v-col cols="12" class="text-primary">
+                      Regional Director
                     </v-col>
                     <v-col cols="4">
                       <v-text-field v-model="rd.rd.first_name" label="First Name" hide-details />
@@ -234,8 +235,8 @@
                       <v-textarea rows="3" v-model="rd.rd.ro_address" label="Regional Office Address" />
                     </v-col>
                   </v-row></v-col>
-                <v-col cols="6"> <v-row justify="center"> <v-col cols="12">
-                      DBM Info for Endorsement Letter
+                <v-col cols="6"> <v-row justify="center"> <v-col cols="12" class="text-primary">
+                      DBM
                     </v-col>
                     <v-col cols="4">
                       <v-text-field v-model="rd.dbm.first_name" label="First Name" hide-details />
@@ -250,7 +251,7 @@
                       <v-text-field v-model="rd.dbm.government_agency" label="Government Agency" hide-details />
                     </v-col>
                     <v-col cols="6">
-                      <v-text-field v-model="rd.dbm.position" label="Position" hide-details />
+                      <v-text-field v-model="rd.dbm.position" label="CES Rank" hide-details />
                     </v-col>
                     <v-col cols="12">
                       <v-textarea rows="3" v-model="rd.dbm.dbm_address" label="Office Address" />

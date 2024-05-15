@@ -26,7 +26,6 @@
 
       <v-sheet width="75%" :border="step != 1">
         <v-window v-model="step">
-
           <v-window-item :value="1">
 
             <v-card class="w-90 mx-auto" color="indigo-lighten-5">
@@ -104,7 +103,7 @@
 
                       <v-row dense>
                         <v-col cols="12" v-if="selected_qs">
-                          {{ qs }}
+
                           <v-text-field :value="qs.title" variant="underlined" hide-details readonly />
                         </v-col>
                         <v-col cols="12" v-if="applicant.qualification.position && !selected_qs?.education_level == ''">
@@ -132,7 +131,7 @@
                             prepend-inner-icon="mdi-star" />
                         </v-col>
 
-                        <v-col cols="12" v-if="qs">
+                        <v-col cols="12" v-if="!qs">
                           <v-text-field v-model="applicant.qualification.sg" variant="solo" hide-details
                             :value="qs.sg.salary_grade" />
                           <v-text-field v-model="applicant.qualification.sg_equivalent" variant="solo" hide-details
@@ -213,7 +212,6 @@
 
 
                   </v-col>
-
                 </v-row>
               </v-card-text>
 
@@ -275,11 +273,11 @@
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
                   <v-text-field v-model="applicant.designation.district" label="District" hide-details />
                 </v-col>
-                <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
+                <!-- <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
                   <v-select v-model="applicant.designation.school"
                     :items="get_sdo_school(applicant.designation.division)" label="School" hide-details
                     item-value="_id" />
-                </v-col>
+                </v-col> -->
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
                   <v-text-field v-model="applicant.designation.current_position" label="Current Position" hide-details
                     item-value="_id" />
@@ -437,7 +435,7 @@
         <v-card-actions>
           <v-btn v-if="step > 1" variant="text" @click="back"> Back </v-btn>
           <v-spacer></v-spacer>
-          <v-btn v-if="step === 2 || step === 3" color="primary" variant="flat" @click="next_window">
+          <v-btn v-if="step === 2 || step === 3" color="primary" variant="flat" @click="next">
             NEXT
           </v-btn>
           <v-btn @click="principal_dialog = true" v-if="step === 4 && !applicant._id" color="success" variant="flat">
@@ -538,7 +536,7 @@
       </commons-dialog>
 
       <commons-dialog max-width="35%" v-model="cancel_dialog" :icon="'mdi-information'" :title="'Confirmation!'"
-        :submitText="'Ok'">
+        :submitText="'Ok'" @submit="cancel_application">
         <v-card-text v-if="selected_qs" class="ma-4 text-center">
           Are you sure you want to end applying for this position ?
         </v-card-text>
@@ -559,8 +557,6 @@
       <commons-dialog max-width="35%" v-model="update_dialog" :icon="'mdi-information'"
         :title="'Principal Email Address is required!'" :submitText="'Submit'" @submit="update_applicant">
         <v-card-text class="ma-4 ">
-
-
           Please enter the email address of your school principal to validate the authenticity of the attached
           document/s.
 
@@ -579,11 +575,10 @@ const { $rest } = useNuxtApp();
 const step = ref(1)
 const route = useRoute();
 
-
+const router = useRouter();
 
 const { CDN_ENDPOINT, DEV_CDN_ENDPOINT } = cfg.public;
 const CDN = cfg.public.NODE_ENV === "development" ? DEV_CDN_ENDPOINT : CDN_ENDPOINT;
-
 
 const shet_so_hard = (data: any, title: string) => {
   applicant.value.attachments[title] = data
@@ -615,6 +610,10 @@ onBeforeMount(() => {
 const back = () => {
   if (step.value === 4 && !qs?.value?.with_erf) return step.value = 2;
   return step.value--;
+}
+const next = () => {
+  if (step.value === 2 && !qs?.value?.with_erf) return step.value = 4;
+  return step.value++;
 }
 
 
@@ -904,8 +903,10 @@ const sg_item = computed(() => {
  * MATCHING
  */
 function next_window() {
+
   if (step.value === 2 && !qs.value.with_erf) {
     step.value = 4;
+    confirmation_dialog.value = false
   } else {
     const selected_position: { _id: string; education: string[] } | undefined = position_data.value.filter((v: any) => v._id == applicant.value.qualification.position)[0];
     if (!selected_position) return swal({ title: "Oops!", text: "Select position", icon: "info" });
@@ -932,6 +933,8 @@ function next_window() {
     if (is_yes.includes(false)) return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" })
 
     confirmation_dialog.value = true
+   
+   
 
   }
 }
@@ -940,9 +943,20 @@ function next_to_step2() {
   step.value++
   confirmation_dialog.value = false
   if (step.value === 1) {
-    confirmation_dialog.value = false
+    confirmation_dialog.value = true
   }
 }
+
+
+
+function cancel_application() {
+  location.reload();
+}
+
+
+
+
+
 
 function education_matching(applicant_education: any, required_education: any) {
   if (!required_education) {

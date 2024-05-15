@@ -8,7 +8,7 @@
           <v-row no-gutters>
             <v-col cols="12">
 
-              <div class="w-100 text-title mb-0">List of Reclassification Application</div>
+              <div class="w-100 text-primary text-h5 mb-0">List of Reclassification Application</div>
               <div class="w-100 text-subtitle-2 text-grey mt-0 mb-2">A brief overview of reclassification applications.
 
               </div>
@@ -152,10 +152,10 @@
 
                 </tr>
 
-                <tr v-for="app , index in application_data" :key="index">
+                <tr v-for="app, index in application_data" :key="index">
                   <td width="50%"> 1. {{ app.full_name }}</td>
-                  <td width="25%">{{app.position}}</td>
-                  <td width="25%">{{app.position}}</td>
+                  <td width="25%">{{ app.position }}</td>
+                  <td width="25%">{{ app.position }}</td>
 
                 </tr>
 
@@ -236,7 +236,7 @@ async function get_application() {
   const payload = {
     position: selected_position.value,
     sdo: selected_sdo.value,
-    status : selected_status.value
+    status: selected_status.value
   };
 
   const { data, error } = await $rest('new-applicant/get-application', {
@@ -245,7 +245,7 @@ async function get_application() {
   });
   application_data.value = data;
 
-  
+
 }
 
 
@@ -314,9 +314,9 @@ async function assign_evaluator() {
 async function generate_endorsement() {
   const all_id = application_data.value.map((item: any) => item._id);
   const payload = {
-      applicants: all_id,
-      division: selected_sdo.value,
-      position: selected_position.value
+    applicants: all_id,
+    division: selected_sdo.value,
+    position: selected_position.value
   };
 
   const { data, error } = await $rest('sms-endorsement/generate-endorsement', {
@@ -341,16 +341,6 @@ async function generate_endorsement() {
 
 .reclass-item:hover {
   background-color: #E8EAF6;
-
-}
-
-.text-title {
-  font-family: 'Open Sans', sans-serif;
-  font-weight: 600;
-  font-size: 1.5rem;
-  color: #2c1375;
-  letter-spacing: 1px;
-  margin-bottom: 10px;
 
 }
 </style>

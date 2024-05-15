@@ -229,18 +229,18 @@
             </v-col>
             <!-- SDO Attachments -->
             <v-col :cols="applicant_details.is_with_erf ? '12' : '6'"
-              :class="applicant_details.is_with_erf ? '' : 'mt-7'" v-if="is_render_sdo_attachment">
-              <v-card class="my-2" rounded="lg">
+              :class="applicant_details.is_with_erf ? '' : 'mt-7 pl-4'" v-if="is_render_sdo_attachment">
 
-                <v-divider />
+              <v-card class="my-2" rounded="lg">
                 <v-card-text>
-                  <v-alert density="compact" variant="tonal" type="info" closable>The SDO representative needs to
-                    provide
-                    attachments.
+                  <v-alert density="compact" variant="tonal" type="info" closable>Attachments to be provided by the SDO
+                    representative
                   </v-alert>
-                  <v-file-input class="mt-2"
-                    v-for=" [name, value] in Object.entries(applicant_details.sdo_attachments) " :key="name"
-                    :label="name" @update:model-value="sdo_evaluator_attach($event, name)" />
+                  <div class="ma-3" v-for=" [name, value] in Object.entries(applicant_details.sdo_attachments) "
+                    :key="name">
+                    <h6 class="pl-10"> {{ name }}</h6>
+                    <v-file-input class="mt-2" @update:model-value="sdo_evaluator_attach($event, name)" />
+                  </div>
                 </v-card-text>
 
 
@@ -415,7 +415,10 @@ const sdo_remarks_attachment = (key: string) => {
 }
 
 
-
+function truncate_lebel(text: string): string {
+  const maxLength = 60;
+  return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+}
 
 /**
  * start: evaluator
@@ -540,7 +543,16 @@ const handle_application = async () => {
       buttons: { ok: false, cancel: false }
     });
   }
+ const missing_attachment = Object.values(sdo_attachment).some(file => file === null || file === undefined);
 
+  if (missing_attachment && side === "SDO") {
+    return swal({ 
+      title: "Missing Attachments",
+      text: "Please ensure all required attachments are provided.",
+      icon: "info" 
+});
+
+  }
   const payload = {
     attachment,
     sdo_attachment,
@@ -558,7 +570,7 @@ const handle_application = async () => {
     case "Verifier":
       handle_verifier(payload);
       break;
-    
+
     case "Administrative Officer V":
       handle_admin5(payload);
       break;
@@ -580,16 +592,16 @@ const is_render_sdo_attachment = computed(() => {
 
 
 const display_sdo_attachment_conditon = computed(() => {
-  if (!user) return true;
+  if (!user) return false;
   const admin4 = user.role === 'Administrative Officer IV' && applicant_details.value.status === 'Pending';
-  const evaluator = user.role === 'Evaluator' && applicant_details.value.status === 'For Evaluation' && user.side === 'SDO'; 
+  const evaluator = user.role === 'Evaluator' && applicant_details.value.status === 'For Evaluation' && user.side === 'SDO';
   return admin4 || evaluator;
 });
 
 
 const sdo_attachment_evaluator_condition = computed(() => {
   if (!user) return true;
- const valid = ['For Checking', 'For Evaluation'].includes(applicant_details.value.status);
+  const valid = ['For Checking', 'For Evaluation'].includes(applicant_details.value.status);
   return valid
 })
 
@@ -607,21 +619,21 @@ const sdo_evaluator_attach = (data: any, title: string) => {
 
 const clear_attachment = () => {
   const attachments = applicant_details.value.attachments;
-    Object.values(attachments).forEach(attachment => {
-        attachment.valid = null;
-         attachment.remarks = null;
-        attachment.timestamp = null;
-    });
+  Object.values(attachments).forEach(attachment => {
+    attachment.valid = null;
+    attachment.remarks = null;
+    attachment.timestamp = null;
+  });
 };
 
 const clear_sdo_attachment = () => {
   const sdo_attachments = applicant_details.value.sdo_attachments;
-    Object.values(sdo_attachments).forEach(attachment => {
-        attachment.valid = null;
-        attachment.remarks = null;
-        attachment.timestamp = null;
-    });
-  
+  Object.values(sdo_attachments).forEach(attachment => {
+    attachment.valid = null;
+    attachment.remarks = null;
+    attachment.timestamp = null;
+  });
+
 };
 
 const handle_principal = async () => {
@@ -659,7 +671,9 @@ const handle_admin4 = async (payload: any) => {
 }
 const handle_evaluator = async (payload: any) => {
   const temp = new FormData();
+
   const attachment = applicant_details.value.sdo_attachments;
+
   Object.entries(attachment).forEach(([title, file]) => {
     if (file?.length)
       file.forEach((v: any) => {
@@ -741,20 +755,8 @@ const professional_study_headers =
   ];
 // Table headers end
 
-const reason = ref('')
-// Dissapproved Application
-async function disapproved_applicant(item: any) {
-  const { data, error } = await $rest('new-applicant/dissapproved-application', {
-    method: "POST",
-    body: {
-      id: item._id,
-      applicants_data: { ...item },
-      reason: reason.value,
-    }
-  })
-  if (!error) return swal({ title: "Successfully Dissapproved!", icon: "success" })
-  return swal({ title: data, icon: "error" })
-}
+
+
 
 const applicant_history = (id) => {
   router.push({
@@ -780,5 +782,10 @@ const applicant_erf = (id) => {
 <style scoped>
 * {
   font-size: 13px
+}
+
+.v-file-input__label {
+  max-width: 100%;
+  word-break: break-all;
 }
 </style>

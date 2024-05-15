@@ -14,8 +14,8 @@
             </center>
             <center>{{ new Date(endorsement_data?.generated_date).toLocaleDateString('en-US', {
               month: 'long', day:
-              'numeric', year: 'numeric'
-              }) }}</center>
+                'numeric', year: 'numeric'
+            }) }}</center>
           </div>
           <div class="py-10" style="text-align: justify;    text-indent: 50px">
             Respectfully transmitted to the <b>Regional Director, Department of Budget and Management, National Capital
@@ -72,8 +72,8 @@
           <div class="py-5">
             <div>Copy furnished: (1st Indorsement dated {{ new
               Date(endorsement_data?.generated_date).toLocaleDateString('en-US', {
-              month: 'long', day:
-              'numeric', year: 'numeric'
+                month: 'long', day:
+                  'numeric', year: 'numeric'
               }) }} </div>
             <div style="padding-left: 30mm;">with original copy of ERF )</div>
 
@@ -184,7 +184,7 @@ const chunkArray = (array: any[] | undefined, size: number) => {
   if (!array || array.length === 0) {
     return []; // Return an empty array if input array is undefined or empty
   }
-  
+
   const chunkedArray: any[][] = [];
   for (let i = 0; i < array.length; i += size) {
     chunkedArray.push(array.slice(i, i + size));
