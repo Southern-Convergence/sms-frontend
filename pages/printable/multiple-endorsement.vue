@@ -14,8 +14,8 @@
             </center>
             <center>{{ new Date(endorsement_data?.generated_date).toLocaleDateString('en-US', {
               month: 'long', day:
-                'numeric', year: 'numeric'
-            }) }}</center>
+              'numeric', year: 'numeric'
+              }) }}</center>
           </div>
           <div class="py-10" style="text-align: justify;    text-indent: 50px">
             Respectfully transmitted to the <b>Regional Director, Department of Budget and Management, National Capital
@@ -72,8 +72,8 @@
           <div class="py-5">
             <div>Copy furnished: (1st Indorsement dated {{ new
               Date(endorsement_data?.generated_date).toLocaleDateString('en-US', {
-                month: 'long', day:
-                  'numeric', year: 'numeric'
+              month: 'long', day:
+              'numeric', year: 'numeric'
               }) }} </div>
             <div style="padding-left: 30mm;">with original copy of ERF )</div>
 
@@ -93,27 +93,37 @@
     <div style="position: fixed; bottom: 20px; right: 20px;" class="d-print-none"
       v-if="endorsement_data.status === 'Verified'">
       <v-btn color="primary" icon="mdi-printer" size="large" class="mb-2" @click="print()">
+      </v-btn>
+      <v-btn v-if="endorsement_data.status === 'For Verification'" color="amber" size="large" rounded="xl" class="mb-2"
+        prepend-icon="mdi-check-all" @click="verify_dialog = true">
+        Verify
+      </v-btn>
+      <v-btn v-if="endorsement_data.status === 'Discrepancy'" color="amber" size="large" rounded="xl" class="mb-2"
+        prepend-icon="mdi-check-all" @click="verify_dialog = true">
+        Resubmit
       </v-btn> <br />
       <v-btn icon="mdi-keyboard-return" size="large" @click="$router.back()">
       </v-btn>
+
     </div>
-    <div v-if="endorsement_data.status === 'For Verification'" style="position: fixed; bottom: 20px; right: 20px;"
-      class="d-print-none">
-      <v-btn color="amber" size="large" rounded="xl" class="mb-2" prepend-icon="mdi-check-all"
-        @click="verify_dialog = true">
-        Verify
-      </v-btn>
+    <div style="position: fixed; bottom: 20px; right: 20px;" class="d-print-none">
+
 
 
     </div>
+
+
 
     <commons-dialog max-width="35%" v-model="verify_dialog" :icon="'mdi-information'"
       :title="'Verification Confirmation!'" @submit="update_endorsement_letter"
       :submitText="remarks === '' ? 'Submit' : 'Return to AOV'">
-      <v-card-text class="ma-4 ">
+      <v-card-text class="ma-4" v-if="user.role === 'Verifier'">
         Are you sure that you've verified the content of the endorsement letter before submitting it to the DBM? <br />
         If <b class="text-red">NOT</b> add remarks to return to Administrative Officer V.
         <v-textarea class="pt-2" rows="3" label="Remarks" v-model="remarks" />
+      </v-card-text>
+      <v-card-text class="ma-4" v-else>
+        Are you sure you want to re-submit the endorsement letter?
       </v-card-text>
     </commons-dialog>
   </div>
@@ -124,6 +134,8 @@ const router = useRouter();
 import swal from 'sweetalert';
 
 const route = useRoute();
+import useAuth from "~/store/auth";
+const user = useAuth().user;
 
 const { $rest } = useNuxtApp();
 
@@ -161,8 +173,15 @@ function print() {
 }
 const remarks = ref('')
 
-async function update_endorsement_letter() {
-  let status = remarks.value === '' ? "Verified" : "Discrepancy";
+async function update_endorsement_letter() { 
+ let status;
+  
+  if (user.role === 'Administrative Officer V') {
+    status = "For Verification"; 
+  } else {
+    status = remarks.value === '' ? "Verified" : "Discrepancy"; 
+  }
+  
 
   const payload = {
     app_id: route.query.id,

@@ -170,8 +170,8 @@
                           </template>
                           <v-list-item-title> Position :</v-list-item-title>
                           <b>{{ qs.title }} <i class="font-weight-thin" v-if="qs?.education_level"> ({{
-                              qs?.education_level
-                              }})</i></b>
+                            qs?.education_level
+                          }})</i></b>
                         </v-list-item>
                         <v-list-item class="ma-2" variant="tonal" rounded="rounded" v-if="qs.education.length">
                           <template v-slot:prepend>
@@ -676,7 +676,8 @@ const applicant = ref({
     registrar_no: 0
   },
   service_record: [],
-  professional_study: [],
+  professional_study: [
+  ],
   attachments: {
   },
   sdo_attachments: {},
@@ -933,8 +934,8 @@ function next_window() {
     if (is_yes.includes(false)) return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" })
 
     confirmation_dialog.value = true
-   
-   
+
+
 
   }
 }

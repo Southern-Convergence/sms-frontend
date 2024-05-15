@@ -128,7 +128,10 @@
 
           <h5 class="text-center">
             1st Indorsement <br />
-            April 16, 2024
+            {{ new Date().toLocaleDateString('en-US', {
+            month: 'long', day:
+            'numeric', year: 'numeric'
+            }) }}
           </h5>
 
 
@@ -143,31 +146,40 @@
             approval,
             chargeable
             against the lump su, appropriation for reclassification of positions for CY 2024 to with:
-            <v-sheet>
-              <table>
-                <tr class="text-center font-weight-regular">
-                  <th width="50%">NAME</th>
-                  <th width="25%">FROM</th>
-                  <th width="25%">TO</th>
 
-                </tr>
 
-                <tr v-for="app, index in application_data" :key="index">
-                  <td width="50%"> 1. {{ app.full_name }}</td>
-                  <td width="25%">{{ app.position }}</td>
-                  <td width="25%">{{ app.position }}</td>
+            <v-card class="mt-5">
+              <!-- <v-data-table :headers="endorsement_headers" :items="application_data" /> -->
 
-                </tr>
+              <table style="width: 100%;" class="pa-2">
+                <thead>
+                  <tr style="border-bottom: 1px solid black">
+                    <th style="width: 50%; text-align: start;">NAME</th>
+                    <th style="width: 25%;">FROM</th>
+                    <th style="width: 25%;">TO</th>
 
+                  </tr>
+                </thead>
+
+                <tbody class="mt-1">
+
+                  <tr v-for="(app, index) in application_data" :key="index">
+                    <td style="width: 50%; text-align: start;">{{ app.full_name }}</td>
+                    <td style="width: 25%; text-align: center;">{{ app.position }}</td>
+                    <td style="width: 25%; text-align: center;">{{ app.position }}</td>
+                  </tr>
+                </tbody>
               </table>
-            </v-sheet>
+            </v-card>
+
+
 
           </p>
         </v-card-text>
-        <v-card-actions class="">
+        <v-card-actions>
           <v-row dense justify="center">
             <v-col cols="5">
-              <v-btn variant="tonal" color="error" block>CANCEL</v-btn>
+              <v-btn variant="tonal" color="error" block @click="endorsement_dialog = true">CANCEL</v-btn>
             </v-col>
             <v-col cols="5">
               <v-btn @click="generate_endorsement" variant="tonal" color="success" block>
@@ -226,6 +238,12 @@ const table_headers = ref([
   { title: "Control Number", key: "control_number", sortable: false },
   { title: "Status", key: "status", sortable: false },
   { title: "Actions", key: "actions", sortable: false, align: "center" },
+])
+const endorsement_headers = ref([
+  { title: "Applicant Name", key: "full_name", sortable: false },
+  { title: "From", key: "current_position", sortable: false },
+  { title: "To", key: "position", sortable: false },
+ 
 ])
 
 

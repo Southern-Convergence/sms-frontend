@@ -14,6 +14,6 @@
             style="font-family: Tahoma, sans-serif; font-size: 10pt; font-weight: bold;line-height: 1.2mm; margin-bottom: 5px">
             NATIONAL CAPITAL
             REGION</h5>
-        <v-divider class="my-2" style="background-color: black; height: 3px" />
+        <hr class="my-2" style="background-color: black; height: 2px" />
     </div>
 </template>

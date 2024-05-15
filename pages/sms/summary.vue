@@ -22,6 +22,10 @@
                 <template v-slot:item.status="{ item }">
                   <v-chip color="success" variant="text">{{ item.selectable.status }}</v-chip>
                 </template>
+                <!-- <template v-slot:item.approved="{ item }">
+                  <v-chip color="success" variant="text">{{ item.selectable.approved ? 'Approved' : 'Disapproved'
+                    }}</v-chip>
+                </template> -->
                 <template v-slot:item.actions="{ item }">
                   <v-btn color="primary" density="compact" @click="load_erf_form(item.selectable._id)"> View</v-btn>
                 </template>
@@ -54,7 +58,9 @@ const table_headers = ref([
   { title: "Division", key: "division", sortable: false },
   { title: "Position", key: "position", sortable: false },
   { title: "Control Number", key: "control_number", sortable: false },
+
   { title: "Status", key: "status", sortable: false },
+    //  { title: "DBM Status", key: "approved", sortable: false },
   { title: "Actions", key: "actions", sortable: false },
 ]);
 

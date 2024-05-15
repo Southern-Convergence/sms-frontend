@@ -15,7 +15,6 @@
           <v-col cols="12">
 
             <v-sheet border>
-
               <v-data-table :headers="table_headers" :items="endorsement_data">
 
                 <template v-slot:item.control_number="{ item }">
@@ -27,8 +26,8 @@
                 <template v-slot:item.actions="{ item }">
                   <v-btn @click="load_endorsement_letter(item.selectable._id)" density="compact" color="primary">
                     {{
-                      item.selectable.status === 'Verified' ? 'Print' : (item.selectable.status === 'Discrepancy' ? 'View'
-                        : 'Verify')
+                    item.selectable.status === 'Verified' ? 'Print' : (item.selectable.status === 'Discrepancy' ? 'View'
+                    : 'Verify')
                     }}
 
                   </v-btn>
