@@ -41,16 +41,16 @@
 
                 <v-row dense v-if="!position_form" class="h-100 w-100 d-flex align-center justify-center">
                   <v-col cols="6" class="px-15">
-
-
                     <v-img src="/stronger.png" height="17vh" cover />
                     <h4 class="text-grey font-weight-regular mt-4 mb-2"> Click the list below and select the position
                       you wish to apply for. Click Apply Now to begin the application process.</h4>
-                    <v-select v-model="applicant.qualification.position" label="Select Position" variant="solo"
-                      hide-details item-value="_id" :items="position_data" dense />
+
+                    <v-select class="mt-3" v-model="applicant.qualification.position" label="Select Position"
+                      variant="solo" hide-details item-value="_id" :items="position_data" dense />
 
                     <v-btn class="mt-2" :disabled="applicant.qualification.position == ''" color="success" rounded="xl"
                       @click="apply_dialog = true">APPLY NOW</v-btn>
+
 
                   </v-col>
                   <v-col cols="5">
@@ -103,13 +103,13 @@
 
                       <v-row dense>
                         <v-col cols="12" v-if="selected_qs">
-
                           <v-text-field :value="qs.title" variant="underlined" hide-details readonly />
                         </v-col>
                         <v-col cols="12" v-if="applicant.qualification.position && !selected_qs?.education_level == ''">
                           <v-select v-model="applicant.qualification.educ_level" :items="['Elementary', 'Secondary']"
                             label="Education Level" variant="solo" hide-details prepend-inner-icon="mdi-book" />
                         </v-col>
+
                         <v-col cols="12" v-if="applicant.qualification.position">
                           <v-select v-model="applicant.qualification.education" :items="education_data"
                             label="Education" variant="solo" hide-details multiple item-value="_id"
@@ -119,6 +119,47 @@
                           <v-select v-model="applicant.qualification.experience" :items="experience_data"
                             label="Experience" variant="solo" hide-details multiple item-value="_id"
                             prepend-inner-icon="mdi-head-cog-outline" />
+                          <v-checkbox label="Check if you have less than 20 years of experience." v-model="if_20_years"
+                            hide-details />
+                          <v-row dense v-if="if_20_years">
+                            <v-col cols="12"> <b>Indicate the number of years served in each sector</b></v-col>
+                            <v-col cols="6">
+                              <v-select v-model="applicant.qualification.experience_sr_public" label="Public"
+                                :items="unit_items" hide-details clearable />
+                            </v-col>
+                            <v-col cols="6">
+                              <v-text-field label="Equivalent M.A Units" model-value="0" prefix="="
+                                :value="public_equivalent_ma_units" readonly />
+
+                            </v-col>
+                            <v-col cols="6">
+                              <v-select v-model="applicant.qualification.experience_sr_private" label="Private"
+                                :items="unit_items" hide-details clearable />
+                            </v-col>
+
+                            <v-col cols="6">
+                              <v-text-field label="Equivalent M.A Units" model-value="0" prefix="="
+                                :value="private_equivalent_ma_units" readonly />
+                            </v-col>
+
+                            <v-col cols="12">
+                              <v-text-field v-model="applicant.qualification.ma_units" label="Enter Number of M.A Units"
+                                hide-details />
+                            </v-col>
+                            <v-col cols="6" class="text-end mt-4 text-primary font-weight-bold text-subtitle-1">
+                              TOTAL M.A. EQUIVALENT UNITS
+                            </v-col>
+                            <v-col cols="6">
+                              <v-text-field :value="total_ma" bg-color="primary" readonly />
+                            </v-col>
+                          </v-row>
+
+
+
+                        </v-col>
+                        <v-col cols="12" v-if="selected_qs?.ma_units > 0">
+                          <v-text-field v-model="applicant.qualification.ma_units" label="Enter M.A. Units"
+                            variant="solo" hide-details type="number" prepend-inner-icon="mdi-book" />
                         </v-col>
                         <v-col cols="12" v-if="applicant.qualification.position && selected_qs?.training_hours != 0">
                           <v-text-field v-model="applicant.qualification.training" label="Enter total training hours"
@@ -151,6 +192,8 @@
                   </v-col>
                   <v-col cols="6" v-if="selected_qs">
                     <v-card rounded="xl" class="ma-5">
+
+
                       <v-card-text class="px-10 overflow-y-auto" style="height: 60vh">
                         <v-list-item class="pl-2" density="compact" color="blue-darken-4">
 
@@ -170,8 +213,8 @@
                           </template>
                           <v-list-item-title> Position :</v-list-item-title>
                           <b>{{ qs.title }} <i class="font-weight-thin" v-if="qs?.education_level"> ({{
-                            qs?.education_level
-                          }})</i></b>
+                              qs?.education_level
+                              }})</i></b>
                         </v-list-item>
                         <v-list-item class="ma-2" variant="tonal" rounded="rounded" v-if="qs.education.length">
                           <template v-slot:prepend>
@@ -189,6 +232,14 @@
                           <v-list-item-title>Experience :</v-list-item-title>
                           <v-list-item-subtitle v-for="(experience, index) in qs.experience" :key="index">{{
                             experience.title }}</v-list-item-subtitle>
+                        </v-list-item>
+                        <v-list-item class="ma-2" variant="tonal" rounded="rounded" v-if="qs.ma_units">
+                          <template v-slot:prepend>
+                            <v-icon color="primary" icon="mdi-book"></v-icon>
+                          </template>
+                          <v-list-item-title>M.A. Units :</v-list-item-title>
+                          <v-list-item-subtitle>{{
+                            qs.ma_units }}</v-list-item-subtitle>
                         </v-list-item>
                         <v-list-item class="ma-2" variant="tonal" rounded="rounded" v-if="qs.rating.length">
                           <template v-slot:prepend>
@@ -401,15 +452,13 @@
 
 
               </v-card-text>
-
-
             </v-card-text>
           </v-window-item>
           <v-window-item :value="4">
             <v-sheet min-height="50vh">
               <v-card-text>
                 <v-card-title class="text-subtitle-2">
-                  III. Attachements
+                  III. Attachments
 
                 </v-card-title>
                 <v-alert class="mx-5" density="compact" type="warning" closable variant="tonal" border="start"
@@ -527,11 +576,21 @@
       <commons-dialog max-width="35%" v-model="confirmation_dialog" :icon="'mdi-information'" :title="'Confirmation!'"
         @submit="next_to_step2" :submitText="'Ok'">
         <v-card-text v-if="selected_qs" class="ma-4">
-          You are qualified for your applied position <b class="text-primary">{{ qs.title }}</b>. Clicking <b
-            class="text-primary">cancel</b>
-          will terminate the
-          entire
-          process.
+          <h5> You are qualified for your applied position <b class="text-primary text-subtitle-1">{{ qs.title }}</b>.
+          </h5>
+          <h5 class="mt-5">Download the
+            <a href="https://dev-hris.sgp1.cdn.digitaloceanspaces.com/sms-assets/Omnibus_Certification_of_Authenticity_and_Veracity_of_Documents.pdf"
+              download>
+              <i>Omnibus
+                Certification of
+                Authenticity and
+                Veracity of
+                Documents</i>.
+            </a> A notarized copy must be submitted in the Attachments page.
+
+          </h5>
+
+          <h5 class="mt-5">Clicking <b>cancel</b> will terminate the entire process.</h5>
         </v-card-text>
       </commons-dialog>
 
@@ -596,7 +655,8 @@ onBeforeMount(() => {
       get_sg(),
       get_qs(),
       get_applicant_details(),
-      get_current_status()
+      get_current_status(),
+       get_ma_units(),
 
     ]
   ).catch(() => swal({
@@ -628,7 +688,7 @@ const confirmation_dialog = ref(false)
 const cancel_dialog = ref(false)
 const principal_dialog = ref(false)
 const update_dialog = ref(false)
-
+const if_20_years = ref(false)
 
 const position_form = ref(false)
 const applicant = ref({
@@ -637,6 +697,13 @@ const applicant = ref({
     educ_level: "",
     education: [],
     experience: [],
+    experience_type: '',
+    experience_sr_public: 0,
+    experience_sr_private: 0,
+    experience_sr_public_equivalent: 0,
+    experience_sr_private_equivalent: 0,
+    ma_units: 0,
+    total_ma: 0,
     training: 0,
     per_rating: "",
     sg: 0,
@@ -900,45 +967,48 @@ const sg_item = computed(() => {
 });
 
 
-/**
- * MATCHING
- */
-function next_window() {
-
-  if (step.value === 2 && !qs.value.with_erf) {
-    step.value = 4;
-    confirmation_dialog.value = false
-  } else {
-    const selected_position: { _id: string; education: string[] } | undefined = position_data.value.filter((v: any) => v._id == applicant.value.qualification.position)[0];
-    if (!selected_position) return swal({ title: "Oops!", text: "Select position", icon: "info" });
-    const applicant_education = applicant.value.qualification.education;
-    if (!applicant_education) return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
-    const applicant_experience = applicant.value.qualification.experience;
-    if (!applicant_experience) return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
-
-    const applicant_rating = applicant.value.qualification.per_rating;
-    if (position_data.value.rating?.length && !applicant_rating) return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
-    // if (position_data.value.rating?.length && !applicant_rating) return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
-
-    const applicant_training = applicant.value.qualification.training;
-    if (position_data.value.training_hours?.length > 0 && !applicant_training) return swal({ title: "Oops!", text: "Training Hours is required", icon: "info" });
 
 
 
-    const is_yes: boolean[] = [];
 
-    is_yes.push(education_matching(applicant_education, selected_position.education));
-    is_yes.push(experience_matching(applicant_experience, selected_position.experience));
-    is_yes.push(rating_matching(applicant_rating, selected_position.rating));
-    is_yes.push(training_matching(applicant_training, selected_position.training_hours));
-    if (is_yes.includes(false)) return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" })
+// function next_window() {
 
-    confirmation_dialog.value = true
+//   if (step.value === 2 && !qs.value.with_erf) {
+//     step.value = 4;
+//     confirmation_dialog.value = false
+//   } else {
+//     const selected_position: { _id: string; education: string[] } | undefined = position_data.value.filter((v: any) => v._id == applicant.value.qualification.position)[0];
+//     if (!selected_position) return swal({ title: "Oops!", text: "Select position", icon: "info" });
+//     const applicant_education = applicant.value.qualification.education;
+
+
+//     if (!applicant_education) return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
+//     const applicant_experience = applicant.value.qualification.experience;
+//     if (!applicant_experience) return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
+
+//     const applicant_rating = applicant.value.qualification.per_rating;
+//     if (position_data.value.rating?.length && !applicant_rating) return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
+//     // if (position_data.value.rating?.length && !applicant_rating) return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
+
+//     const applicant_training = applicant.value.qualification.training;
+//     if (position_data.value.training_hours?.length > 0 && !applicant_training) return swal({ title: "Oops!", text: "Training Hours is required", icon: "info" });
 
 
 
-  }
-}
+//     const is_yes: boolean[] = [];
+
+//     is_yes.push(education_matching(applicant_education, selected_position.education));
+//     is_yes.push(experience_matching(applicant_experience, selected_position.experience));
+//     is_yes.push(rating_matching(applicant_rating, selected_position.rating));
+//     is_yes.push(training_matching(applicant_training, selected_position.training_hours));
+//     if (is_yes.includes(false)) return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" })
+
+//     confirmation_dialog.value = true
+
+
+
+//   }
+// }
 
 function next_to_step2() {
   step.value++
@@ -955,6 +1025,7 @@ function cancel_application() {
 }
 
 
+const unit_items = Array.from({ length: 19 }, (_, index) => index + 1);
 
 
 
@@ -993,6 +1064,15 @@ function training_matching(applicant_training: number, required_training: number
   required_training = parseFloat(required_training.toString());
   return applicant_training >= required_training;
 }
+
+function ma_units_matching(applicant_ma_units: number, required_ma_units: number) {
+  applicant_ma_units = parseFloat(applicant_ma_units.toString());
+  required_ma_units = parseFloat(required_ma_units.toString());
+  return applicant_ma_units >= required_ma_units;
+}
+
+
+
 
 
 // CREATE 
@@ -1039,6 +1119,36 @@ async function update_applicant() {
   swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } });
 
 }
+async function get_ma_units() {
+  const { data, error } = await $rest('sms-ma-units/get-ma-units', {
+    method: "GET",
+  });
+  if (!error && data) {
+
+    ma_units_data.value = data;
+  }
+}
+
+const ma_units_data = ref<Maunits[]>([]);
+
+const filtered_unit = computed(() => {
+  if (applicant.value.experience_type === 'Both') {
+    const public_years = ma_units_data.value
+      .filter(unit => unit.type === 'Public')
+      .map(unit => unit.number_of_years);
+
+    const private_years = ma_units_data.value
+      .filter(unit => unit.type === 'Private')
+      .map(unit => unit.number_of_years);
+
+    return { public_years, private_years };
+  }
+
+  const type = applicant.value.experience_type;
+  const filteredData = ma_units_data.value.filter(unit => unit.type === type);
+  return { public_years: type === 'Public' ? filteredData.map(unit => unit.number_of_years) : [], private_years: type === 'Private' ? filteredData.map(unit => unit.number_of_years) : [] };
+});
+
 
 
 async function get_applicant_details() {
@@ -1064,6 +1174,152 @@ const email_rules = computed((v: any) => [
   (v: string) => is_email_valid(v) || 'Email must be valid'
 ]);
 
+/**
+ * MATCHING
+ */
+
+function next_window() {
+  const selected_position = position_data.value.find(v => v._id === applicant.value.qualification.position);
+  if (!selected_position) {
+    return swal({ title: "Oops!", text: "Please select a position", icon: "info" });
+  }
+
+  const applicant_education_id = applicant.value.qualification.education;
+  const find_qs_education = qs?.value.education;
+
+  if (!applicant_education_id || !find_qs_education) {
+    return swal({ title: "Oops!", text: "Education is required", icon: "info" });
+  }
+
+  const educations = applicant_education_id.map(educ_id => find_qs_education.find(edu => edu._id === educ_id));
+  educations.forEach(education => {
+    if (!education.high_degree) {
+      const applicant_experience = applicant.value.qualification.experience;
+    
+      const applicant_rating = applicant.value.qualification.per_rating;
+      const applicant_training = applicant.value.qualification.training;
+      // const applicant_ma_units = applicant.value.qualification.ma_units;
+
+      if (!applicant_experience && !if_20_years.value ) {
+        return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
+      }
+
+      if (if_20_years.value && applicant.value.qualification.total_ma < 40) {
+        return swal({ title: "Oops!", text: "The equivalent M.A. units do not meet the requirement.", icon: "info" });
+      }
+
+    
+
+      if (position_data.value.rating?.length && !applicant_rating) {
+        return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
+      }
+
+      if (position_data.value.training_hours?.length > 0 && !applicant_training) {
+        return swal({ title: "Oops!", text: "Training Hours is required", icon: "info" });
+      }
+
+      // if (position_data.value.ma_units?.length > 0 && !applicant_ma_units) {
+      //   return swal({ title: "Oops!", text: "M.A. Units is required", icon: "info" });
+      // }
+
+      const is_yes = [
+        (!if_20_years.value ? experience_matching(applicant_experience, selected_position.experience) : true),
+        rating_matching(applicant_rating, selected_position.rating),
+        training_matching(applicant_training, selected_position.training_hours),
+        // ma_units_matching(applicant_ma_units, selected_position.ma_units)
+      ];
+
+      if (is_yes.includes(false)) {
+        return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" });
+      }
+      
+    
+      confirmation_dialog.value = true;
+    } else {
+      console.log(`${education.title} is a high degree.`);
+      confirmation_dialog.value = true;
+    }
+  });
+}
+
+
+// function next_window() {
+//   const selected_position = position_data.value.find(v => v._id === applicant.value.qualification.position);
+//   if (!selected_position) {
+//     return swal({ title: "Oops!", text: "Please select a position", icon: "info" });
+//   }
+//   const applicant_education_id = applicant.value.qualification.education;
+//   const find_qs_education = qs?.value.education;
+
+//   if (!applicant_education_id || !find_qs_education) {
+//     return swal({ title: "Oops!", text: "Education is required", icon: "info" });
+//   }
+//   const educations = applicant_education_id.map(educ_id => find_qs_education.find(edu => edu._id === educ_id));
+//   educations.forEach(education => {
+//     if (!education.high_degree) {
+//       const applicant_experience = applicant.value.qualification.experience;
+//       const applicant_rating = applicant.value.qualification.per_rating;
+//       const applicant_training = applicant.value.qualification.training;
+
+//       if (!applicant_experience) {
+//         return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
+//       }
+    
+// if (if_20_years.value && applicant.value.qualification.total_ma < 40) {
+//   return swal({ title: "Oops!", text: "Total experience must be 40 or above.", icon: "info" });
+// }
+
+
+//       if (position_data.value.rating?.length && !applicant_rating) {
+//         return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
+//       }
+//       if (position_data.value.training_hours?.length > 0 && !applicant_training) {
+//         return swal({ title: "Oops!", text: "Training Hours is required", icon: "info" });
+//       }
+
+//       const is_yes = [
+//         experience_matching(applicant_experience, selected_position.experience),
+//         rating_matching(applicant_rating, selected_position.rating),
+//         training_matching(applicant_training, selected_position.training_hours)
+//       ];
+
+//       if (is_yes.includes(false)) {
+//         return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" });
+//       }
+//   console.log("YES", is_yes);
+//       confirmation_dialog.value = true;
+//       console.log("YES", is_yes);
+//     } else {
+//       console.log(`${education.title} is a high degree.`);
+//       confirmation_dialog.value = true;
+//     }
+//   });
+// }
+const public_equivalent_ma_units = computed(() => {
+  const public_experience = Number(applicant.value.qualification.experience_sr_public);
+  const equivalent = Math.floor(public_experience / 3); 
+  applicant.value.qualification.experience_sr_public_equivalent = equivalent;
+  return equivalent;
+});
+
+const private_equivalent_ma_units = computed(() => {
+  const private_experience = Number(applicant.value.qualification.experience_sr_private);
+  const equivalent = Math.floor(private_experience / 5); 
+  applicant.value.qualification.experience_sr_private_equivalent = equivalent;
+  return equivalent;
+});
+
+
+
+
+const total_ma = computed(() => {
+  const public_equivalent = Number(applicant.value.qualification.experience_sr_public_equivalent);
+  const private_equivalent = Number(applicant.value.qualification.experience_sr_private_equivalent);
+  const ma = Number(applicant.value.qualification.ma_units);
+  const total_equivalent = public_equivalent + private_equivalent + ma;
+  applicant.value.qualification.total_ma = total_equivalent;
+  return total_equivalent;
+});
 
 
 // QS

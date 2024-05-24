@@ -14,13 +14,14 @@
             </center>
             <center>{{ new Date(endorsement_data?.generated_date).toLocaleDateString('en-US', {
               month: 'long', day:
-              'numeric', year: 'numeric'
-              }) }}</center>
+                'numeric', year: 'numeric'
+            }) }}</center>
           </div>
+
           <div class="py-10" style="text-align: justify;    text-indent: 50px">
             Respectfully transmitted to the <b>Regional Director, Department of Budget and Management, National Capital
               Region, 2nd Floor, Arcache Building, Gen. Solano corner Nepomuceno St., San Miguel, Manila </b>
-            enclosing here with copies of the Plantilla Allocation List covering the implementing approved Equivalent
+            enclosing herewith copies of the Plantilla Allocation List covering the implementing approved Equivalent
             Record Forms (ERF) of the following {{ endorsement_data.position }}, <b> Schools Division of {{
               endorsement_data.division }}</b>, this
             Region,
@@ -37,16 +38,16 @@
             <div class="mx-auto mt-4" style="width: 80%; min-height: 290px;">
               <table>
                 <tr class="text-center">
-                  <th width="50%">NAME</th>
-                  <th width="25%">FROM</th>
-                  <th width="25%">TO</th>
+                  <th width="30%">NAME</th>
+                  <th width="35%">FROM</th>
+                  <th width="35%">TO</th>
 
                 </tr>
 
                 <tr v-for="(endorsement, index) in group" :key="index">
-                  <td width="50%"> {{ (groupIndex * 10) + index + 1 }}. {{ endorsement.full_name }}</td>
-                  <td width="25%" class="text-center"> {{ endorsement.current_position }}</td>
-                  <td width="25%" class="text-center">{{ endorsement_data.position }}</td>
+                  <td width="30%"> {{ (groupIndex * 10) + index + 1 }}. {{ endorsement.full_name }}</td>
+                  <td width="35%" class="text-center"> {{ endorsement.current_position }}</td>
+                  <td width="35%" class="text-center">{{ endorsement_data.position }}</td>
                 </tr>
 
 
@@ -72,8 +73,8 @@
           <div class="py-5">
             <div>Copy furnished: (1st Indorsement dated {{ new
               Date(endorsement_data?.generated_date).toLocaleDateString('en-US', {
-              month: 'long', day:
-              'numeric', year: 'numeric'
+                month: 'long', day:
+                  'numeric', year: 'numeric'
               }) }} </div>
             <div style="padding-left: 30mm;">with original copy of ERF )</div>
 
@@ -90,26 +91,20 @@
       </body>
     </template>
 
-    <div style="position: fixed; bottom: 20px; right: 20px;" class="d-print-none"
-      v-if="endorsement_data.status === 'Verified'">
-      <v-btn color="primary" icon="mdi-printer" size="large" class="mb-2" @click="print()">
+    <div style="position: fixed; bottom: 20px; right: 20px;" class="d-print-none">
+      <v-btn v-if="endorsement_data.status === 'Verified' && user.role === 'Administrative Officer V'" color="primary"
+        icon="mdi-printer" size="large" class="mb-2" @click="print()">
       </v-btn>
-      <v-btn v-if="endorsement_data.status === 'For Verification'" color="amber" size="large" rounded="xl" class="mb-2"
-        prepend-icon="mdi-check-all" @click="verify_dialog = true">
+      <v-btn v-if="endorsement_data.status === 'For Verification' && user.role === 'Verifier'" color="primary"
+        size="large" rounded="xl" class="mb-2" prepend-icon="mdi-check-all" @click="verify_dialog = true">
         Verify
       </v-btn>
-      <v-btn v-if="endorsement_data.status === 'Discrepancy'" color="amber" size="large" rounded="xl" class="mb-2"
-        prepend-icon="mdi-check-all" @click="verify_dialog = true">
+      <v-btn v-if="endorsement_data.status === 'Discrepancy' && user.role === 'Administrative Officer V'" color="amber"
+        size="large" rounded="xl" class="mb-2" prepend-icon="mdi-check-all" @click="verify_dialog = true">
         Resubmit
       </v-btn> <br />
       <v-btn icon="mdi-keyboard-return" size="large" @click="$router.back()">
       </v-btn>
-
-    </div>
-    <div style="position: fixed; bottom: 20px; right: 20px;" class="d-print-none">
-
-
-
     </div>
 
 
@@ -173,15 +168,15 @@ function print() {
 }
 const remarks = ref('')
 
-async function update_endorsement_letter() { 
- let status;
-  
+async function update_endorsement_letter() {
+  let status;
+
   if (user.role === 'Administrative Officer V') {
-    status = "For Verification"; 
+    status = "For Verification";
   } else {
-    status = remarks.value === '' ? "Verified" : "Discrepancy"; 
+    status = remarks.value === '' ? "Verified" : "Discrepancy";
   }
-  
+
 
   const payload = {
     app_id: route.query.id,

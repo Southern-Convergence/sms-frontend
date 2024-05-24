@@ -126,9 +126,9 @@
 
                 <tbody>
                   <tr v-for="(prof, index) in erf.professional_study" :key="index">
-                    <td>{{ prof.sy ? prof.sy : '&nbsp;' }} Sample</td>
-                    <td>{{ prof.unit_no }} Sample</td>
-                    <td>{{ prof.description }} Sample</td>
+                    <td>{{ prof.sy ? prof.sy : '&nbsp;' }} </td>
+                    <td>{{ prof.unit_no }} </td>
+                    <td>{{ prof.description }} </td>
                   </tr>
                 </tbody>
 

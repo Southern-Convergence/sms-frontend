@@ -214,6 +214,7 @@
             <v-divider />
             <v-card-text>
               <v-row justify="center">
+
                 <v-col cols="6"> <v-row justify="center">
                     <v-col cols="12" class="text-primary">
                       Regional Director
@@ -283,8 +284,11 @@
       @submit="submit_education" :subtitle="'Enter or modify details for the education qualification.'"
       :submitText="status === 'create' ? 'Submit' : 'Update'">
       <v-card-text>
-        <v-textarea v-model="education.title" rows="3" label="Enter Education Title" />
-        <!-- <v-text-field label="Master Arts Degree Units" v-model="education.units" /> -->
+        <v-textarea v-model="education.title" rows="3" label="Enter Education Title" hide-details />
+        <v-checkbox v-model="education.high_degree"
+          label="Check this if obtain a higher degree. This will override experience and Master's degree units." />
+
+        <!-- <v-text-field label=" Master Arts Degree Units" v-model="education.units" /> -->
       </v-card-text>
     </commons-dialog>
     <commons-dialog max-width="35%" v-model="experience_dialog" icon="mdi-school"
@@ -292,7 +296,8 @@
       @submit="submit_experience" :subtitle="'Enter or modify details for the experience qualification.'"
       :submitText="status === 'create' ? 'Submit' : 'Update'">
       <v-card-text>
-        <v-textarea v-model="experience.title" rows="3" label="Enter experience Title" />
+        <v-textarea v-model="experience.title" rows="3" label="Enter experience Title" /> <br />
+        <v-text-field label="Equivalent" v-model="experience.equivalent" />
       </v-card-text>
     </commons-dialog>
 
@@ -364,11 +369,15 @@
           <v-col cols="12"> <v-checkbox label="Check if with ERF" v-model="position.with_erf"></v-checkbox></v-col>
           <v-col cols="12"> <v-select v-model="position.education" :items="education_data" item-value="_id"
               label="Education" multiple prepend-inner-icon="mdi-school" /></v-col>
+          <v-col cols="12"> <v-text-field v-model="position.ma_units" label="M.A Units" /></v-col>
           <v-col cols="12"> <v-select v-model="position.experience" item-value="_id" :items="experience_data"
               label="Experience" multiple prepend-inner-icon="mdi-head-cog-outline" hide-details /></v-col>
           <v-col cols="12"> <v-checkbox v-model="position.is_experience"
               label="Check if the experience accepts  less than the specified minimum." /></v-col>
+
         </v-row>
+
+
         <v-row no-gutters>
           <v-col cols="6" class="pr-2"> <v-text-field v-model="position.training_hours"
               label="Training Number of Hours Required" prepend-inner-icon="mdi-human-male-board" /></v-col>
@@ -533,7 +542,8 @@ onBeforeMount(() => {
       get_sg(),
       get_qs(),
       get_attachment(),
-      get_ma_units()
+      get_ma_units(),
+      get_rd()
     ]
   ).catch(() => swal({
     title: "Error",
@@ -556,6 +566,7 @@ const update_position_dialog = ref(false);
 // CREATE EDUCATION
 const education = ref<Education>({
   title: "",
+  high_degree: false,
 })
 async function create_education() {
   const { data, error } = await $rest('sms-education/create-education', {
@@ -599,7 +610,8 @@ async function update_education() {
     method: "PUT",
     body: {
       _id: selectedEducation._id,
-      title: selectedEducation.title
+      title: selectedEducation.title,
+      high_degree: selectedEducation.high_degree
     }
   });
 
@@ -615,8 +627,7 @@ async function update_education() {
 const experience = ref<Experience>({
 
   title: "",
-  // is_ma_equivalent: false,
-  // master_arts: ""
+  equivalent : 0
 })
 async function create_experience() {
   const { data, error } = await $rest('sms-experience/create-experience', {
@@ -794,6 +805,7 @@ const position = ref<Position>({
   with_erf: false,
   education: [],
   education_level: "",
+  ma_units: 0,
   experience: [],
   is_experience: false,
   training_hours: 0,
@@ -925,14 +937,14 @@ async function create_rd() {
 /**
  * HANDLES FETCHING RD
  */
-// async function get_rd() {
-//   const { data, error } = await $rest('sms-rd/get-rd', {
-//     method: "GET",
-//   })
-//   if (data) {
-//     Object.assign(rd.value, data)
-//   }
-// }
+async function get_rd() {
+  const { data, error } = await $rest('sms-rd/get-rd', {
+    method: "GET",
+  })
+  if (data) {
+    Object.assign(rd.value, data)
+  }
+}
 
 
 async function create_ma_units() {

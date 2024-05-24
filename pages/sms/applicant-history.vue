@@ -1,7 +1,7 @@
 <template>
   <v-sheet height="100vh" class="d-flex align-center justify-center ">
     <v-sheet class="h-100 w-100 d-flex align-center justify-center" color="#ECEFF1">
-      <v-card rounded="lg" min-wdith="300px">
+      <v-card rounded="lg" width="40%">
         <v-toolbar color="indigo" border>
           <v-list-item class="pl-2" density="compact">
             <template v-slot:prepend>
@@ -23,32 +23,40 @@
             <v-card-subtitle class="pl-5">
               Control Number : <b class="text-indigo">{{ applicant_history.control_number }}</b>
             </v-card-subtitle>
-            <v-card-subtitle class="text-caption pl-5">Date Applied : <b> {{ new
-              Date(applicant_history.created_date).toLocaleString() }}</b></v-card-subtitle>
+            <v-card-subtitle class="text-caption pl-5">Application Date : <b> {{ new
+                Date(applicant_history.created_date).toLocaleString() }}</b></v-card-subtitle>
           </v-sheet>
 
-          <v-card width="auto" class="overflow-y-auto py-4" height="70vh">
+          <v-card class="overflow-y-auto py-4" height="70vh" width="100%">
 
             <v-card-text>
 
-              <v-btn
-                v-if="applicant_history.request_log && applicant_history.request_log.length && applicant_history.request_log[0].remarks.length"
-                class="ml-5" rounded="md" @click="update_applicant(applicant_history._id)" color="primary"
-                density="compact">
+              <v-btn v-if=" applicant_history.request_log && applicant_history.request_log.length &&
+            applicant_history.request_log[0].remarks.length" class="ml-5" rounded="md"
+                @click="update_applicant(applicant_history._id)" color="primary" density="compact">
                 Update
                 Application
               </v-btn>
-
               <v-alert v-if="applicant_history?.request_log && applicant_history.request_log.length > 0"
-                class="pa-5 ma-5" border rounded="lg" v-for="(att, index) in applicant_history?.request_log"
+                class="pa-5 ma-5" border rounded="lg" v-for="(att, index) in applicant_history?.request_log.reverse()"
                 :key="index">
-
                 <v-card-subtitle>
-                  Your application has been {{ att.status }} by <b> {{
-                    att.signatory }} <br /> </b>
+                  Status : <span class="text-uppercase"> {{ att.status }} </span>
                 </v-card-subtitle>
-                <v-card-subtitle class="text-caption">Date Approved <span class="text-blue text-caption"> : {{ new
-                  Date(att?.timestamp).toLocaleString() }}</span>
+                <v-card-subtitle>
+                  Signatory : <b> {{ att.signatory }}</b>
+                </v-card-subtitle>
+                <v-card-subtitle>
+                  Office :
+                  <b>
+                    {{ att.side === 'SDO' ? 'Schools Division Office'
+                    : (att.side === 'School' ? 'School' : 'Regional Office') }}
+                  </b>
+
+                </v-card-subtitle>
+                <v-card-subtitle class="text-caption" v-if="user">Date <span class="text-blue"> :
+                    {{ new
+                    Date(att?.timestamp).toLocaleString() }}</span>
                 </v-card-subtitle>
                 <v-card-subtitle v-if="att?.remarks?.length">
                   <v-chip class="mt-2" density="compact" color="error">
@@ -61,7 +69,6 @@
                     </v-card-subtitle>
                   </v-card>
                 </v-card-subtitle>
-
               </v-alert>
 
               <v-alert v-else-if="applicant_history?.request_log && applicant_history.request_log.length === 0"
@@ -84,6 +91,8 @@
 
 <script setup lang="ts">
 const router = useRouter();
+import useAuth from "~/store/auth";
+const user = useAuth().user;
 
 const { $rest } = useNuxtApp();
 onBeforeMount(() => {

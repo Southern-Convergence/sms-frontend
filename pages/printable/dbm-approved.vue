@@ -1,10 +1,12 @@
 <template>
-  <div>
-    <div class="notprintable">
-      <v-row class="mt-5">
+  <v-container>
+    <div class="d-print-none">
+      <v-row>
 
-        <v-col cols="6" class="d-flex"> <v-select label="Filter by SDO" v-model="selected_sdo" :items="sdo"
-            item-value="_id" persistent-hint clearable />
+        <v-col cols="6" class="d-flex ">
+          <v-select label="Filter by SDO" v-model="selected_sdo" :items="sdo" item-value="_id" persistent-hint clearable
+            class="pr-2" />
+          <v-select label="Filter by year" persistent-hint clearable />
           <v-btn @click="get_dashboard" class="ml-2 mt-1" color="primary">
             <v-icon class="pr-1">mdi-filter</v-icon>Filter</v-btn>
         </v-col>
@@ -27,9 +29,10 @@
               <thead>
                 <tr>
                   <th> CONTROL NUMBER</th>
-                  <th> NAMES</th>
-                  <th>SCHOOL DIVISION OFFICE</th>
-                  <th>POSITION</th>
+                  <th> NAME</th>
+                  <th>SDO</th>
+                  <th>FROM</th>
+                  <th>TO</th>
                   <th>DATE APPLIED</th>
 
                 </tr>
@@ -38,11 +41,16 @@
               <tbody>
 
                 <tr v-for="app, index in applicants" :key="app">
+                  <td> {{ index + 1 }}. {{ app.full_name }}</td>
                   <td>{{ app.control_number }}</td>
-                  <td> {{ app.full_name }}</td>
                   <td class="text-center"> {{ app.division }} </td>
+                  <td class="text-center"> {{ app.current_position }}</td>
                   <td class="text-center"> {{ app.position }}</td>
-                  <td class="text-center"> {{ app.created_date }} </td>
+                  <td class="text-center">{{ new Date(app.created_date).toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: '2-digit', year: 'numeric'
+                  }) }}</td>
+
 
                 </tr>
               </tbody>
@@ -62,7 +70,7 @@
       </v-btn>
     </div>
 
-  </div>
+  </v-container>
 </template>
 
 <script lang="ts" setup>
@@ -112,10 +120,6 @@ function print() {
 
 }
 
-.notprintable {
-  margin: 0 auto;
-  width: 210mm;
-}
 
 
 * {
@@ -155,7 +159,15 @@ th {
 @media print {
   body {
     margin: 0;
-    /* Reset margin for printing */
+
+  }
+
+  .printable-page {
+
+    margin: 0 auto;
+    box-shadow: none;
+
+
   }
 }
 

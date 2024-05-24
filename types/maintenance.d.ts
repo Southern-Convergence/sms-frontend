@@ -25,6 +25,7 @@ interface Position {
   with_erf: boolean;
   education: string[];
   education_level?: string;
+  ma_units?: number;
   experience: string[];
   is_experience: boolean;
   training_hours?: number;

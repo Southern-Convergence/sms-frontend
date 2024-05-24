@@ -122,15 +122,15 @@
 
     </v-dialog>
 
-    <v-dialog width="900" v-model="endorsement_dialog">
+    <v-dialog width="900px" v-model="endorsement_dialog">
       <v-card title="Generate Endorsement Letter">
         <v-card-text class="pa-5">
 
           <h5 class="text-center">
             1st Indorsement <br />
             {{ new Date().toLocaleDateString('en-US', {
-            month: 'long', day:
-            'numeric', year: 'numeric'
+              month: 'long', day:
+                'numeric', year: 'numeric'
             }) }}
           </h5>
 
@@ -148,7 +148,7 @@
             against the lump su, appropriation for reclassification of positions for CY 2024 to with:
 
 
-            <v-card class="mt-5">
+            <v-card class="mt-5" flat>
               <!-- <v-data-table :headers="endorsement_headers" :items="application_data" /> -->
 
               <table style="width: 100%;" class="pa-2">
@@ -165,7 +165,7 @@
 
                   <tr v-for="(app, index) in application_data" :key="index">
                     <td style="width: 50%; text-align: start;">{{ app.full_name }}</td>
-                    <td style="width: 25%; text-align: center;">{{ app.position }}</td>
+                    <td style="width: 25%; text-align: center;">{{ app.current_position }}</td>
                     <td style="width: 25%; text-align: center;">{{ app.position }}</td>
                   </tr>
                 </tbody>
@@ -243,7 +243,7 @@ const endorsement_headers = ref([
   { title: "Applicant Name", key: "full_name", sortable: false },
   { title: "From", key: "current_position", sortable: false },
   { title: "To", key: "position", sortable: false },
- 
+
 ])
 
 

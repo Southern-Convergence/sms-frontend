@@ -16,16 +16,25 @@
           <v-col cols="12">
             <v-sheet border>
               <v-data-table :headers="table_headers" :items="applicants">
+                <template v-slot:item.created_date="{ item }">
+                  <span class="text-primary">{{ new Date(item.selectable.created_date).toLocaleDateString('en-US', {
+                    year: 'numeric', month:
+                    '2-digit', day: '2-digit' }) }}</span>
+                </template>
                 <template v-slot:item.control_number="{ item }">
                   <span class="text-primary">{{ item.selectable.control_number }}</span>
                 </template>
                 <template v-slot:item.status="{ item }">
-                  <v-chip color="success" variant="text">{{ item.selectable.status }}</v-chip>
+                  <v-chip color="success" variant="outlined">{{ item.selectable.status }}</v-chip>
                 </template>
-                <!-- <template v-slot:item.approved="{ item }">
-                  <v-chip color="success" variant="text">{{ item.selectable.approved ? 'Approved' : 'Disapproved'
-                    }}</v-chip>
-                </template> -->
+                <template v-slot:item.approved="{ item }">
+                  <v-chip
+                    :color="item.selectable.approved === true ? 'success' : (item.selectable.approved === false ? 'red' : 'amber')"
+                    variant="outlined">
+                    {{ item.selectable.approved === true ? 'Approved' : (item.selectable.approved === false ?
+                    'Disapproved' : 'Pending') }}
+                  </v-chip>
+                </template>
                 <template v-slot:item.actions="{ item }">
                   <v-btn color="primary" density="compact" @click="load_erf_form(item.selectable._id)"> View</v-btn>
                 </template>
@@ -54,13 +63,14 @@ onBeforeMount(async () => {
 
 
 const table_headers = ref([
+    { title: "Date Applied", key: "created_date", sortable: false },
   { title: "Applicant Name", key: "full_name", sortable: false },
   { title: "Division", key: "division", sortable: false },
   { title: "Position", key: "position", sortable: false },
   { title: "Control Number", key: "control_number", sortable: false },
 
   { title: "Status", key: "status", sortable: false },
-    //  { title: "DBM Status", key: "approved", sortable: false },
+  { title: "DBM Status", key: "approved", sortable: false },
   { title: "Actions", key: "actions", sortable: false },
 ]);
 

@@ -15,8 +15,14 @@
           <v-col cols="12">
 
             <v-sheet border>
-              <v-data-table :headers="table_headers" :items="endorsement_data">
 
+              <v-data-table :headers="table_headers" :items="endorsement_data">
+                <template v-slot:item.generated_date="{ item }">
+                  <span class="text-primary">{{ new Date(item.selectable.generated_date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month:
+                    '2-digit', day: '2-digit' }) }}</span>
+                </template>
                 <template v-slot:item.control_number="{ item }">
                   <span class="text-primary">{{ item.selectable.control_number }}</span>
                 </template>
@@ -25,10 +31,22 @@
                 </template>
                 <template v-slot:item.actions="{ item }">
                   <v-btn @click="load_endorsement_letter(item.selectable._id)" density="compact" color="primary">
+                    <!-- {{
+                      item.selectable.status === 'Verified' ? 'Print' : (item.selectable.status === 'Discrepancy' ||
+                        (item.selectable.status === 'For Verification' && user.role === 'Administrative Officer V') ? 'View'
+                        : 'Verify')
+                    }} -->
                     {{
-                    item.selectable.status === 'Verified' ? 'Print' : (item.selectable.status === 'Discrepancy' ? 'View'
-                    : 'Verify')
+                    item.selectable.status === 'Verified' && user.role === 'Verifier' ? 'View' : (
+                    item.selectable.status === 'Verified' ? 'Print' : (
+                    item.selectable.status === 'Discrepancy' ||
+                    (item.selectable.status === 'For Verification' && user.role === 'Administrative Officer V')
+                    ? 'View'
+                    : 'Verify'
+                    )
+                    )
                     }}
+
 
                   </v-btn>
                 </template>
@@ -45,7 +63,8 @@
 
 
 const { $rest } = useNuxtApp();
-
+const user = useAuth().user;
+import useAuth from "~/store/auth";
 const router = useRouter();
 
 definePageMeta({ layout: "std-systems" });
@@ -58,6 +77,7 @@ onBeforeMount(async () => {
 
 
 const table_headers = ref([
+    { title: "Generated Date", key: "generated_date", sortable: false },
   { title: "Schools Division Office", key: "division", sortable: false },
   { title: "Applied Position", key: "position", sortable: false },
   { title: "Transaction Code", key: "batch_code", sortable: false },

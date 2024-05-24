@@ -16,9 +16,9 @@
           </v-chip></v-col>
       </v-row>
       <v-row no-gutters> <v-col cols="5" class="text-subtitle-2 font-weight-bold"> DIVISION : {{
-        applicant_details?.division }} </v-col>
+          applicant_details?.division }} </v-col>
         <v-col cols="auto"> Control No. : <v-chip class="font-weight-bold" color="orange" density="compact"> {{
-          applicant_details?.control_number }}
+            applicant_details?.control_number }}
           </v-chip></v-col>
         <v-spacer />
 
@@ -45,11 +45,11 @@
             <v-card-text>
               <v-row no-gutters class="ma-2">
                 <v-col cols="6" class="text-capitalize">Name : <b> {{
-                  applicant_details?.personal_information?.first_name
+                    applicant_details?.personal_information?.first_name
                     }} {{ applicant_details?.personal_information?.last_name }} </b>
                 </v-col>
                 <v-col cols="6">Date of Birth : <b> {{
-                  applicant_details?.personal_information?.birthday }}
+                    applicant_details?.personal_information?.birthday }}
                   </b>
                 </v-col>
                 <v-col cols="6">Employee Number : <b> {{ applicant_details?.designation?.employee_no }}</b> </v-col>
@@ -92,10 +92,10 @@
                     <v-sheet width="70%">
                       <v-row dense class="pa-2">
                         <v-col cols="6"> Public Schools : <span class="pl-2"> {{
-                          applicant_details?.equivalent_unit?.public_years_teaching }}</span>
+                            applicant_details?.equivalent_unit?.public_years_teaching }}</span>
                         </v-col>
                         <v-col cols="6"> Private Schools : <span class="pl-2"> {{
-                          applicant_details?.equivalent_unit?.yt_equivalent }}
+                            applicant_details?.equivalent_unit?.yt_equivalent }}
                           </span>
                         </v-col>
                       </v-row>
@@ -128,7 +128,7 @@
                     <v-sheet class="ml-15" width="70%">
                       <v-row dense class="pa-2">
                         <v-col cols="6"> Public Schools : <b class="pl-2"> {{
-                          applicant_details?.equivalent_unit?.public_years_teaching }}</b>
+                            applicant_details?.equivalent_unit?.public_years_teaching }}</b>
                         </v-col>
                         <v-col cols="6"> Private Schools : <b class="pl-2"></b>
                         </v-col>
@@ -139,7 +139,7 @@
                   <v-row dense class="ml-15 mt-1">
                     LATEST IPCRF RATING : <div class="px-5 font-weight-bold" style="border-bottom: 1px solid black">
                       {{
-                        applicant_details.designation?.ipcrf_rating }}</div>
+                      applicant_details.designation?.ipcrf_rating }}</div>
                   </v-row>
                 </v-col>
               </v-row>
@@ -234,7 +234,7 @@
               <v-card class="my-2" rounded="lg">
                 <v-card-text>
                   <v-alert density="compact" variant="tonal" type="info" closable>Attachments to be provided by the SDO
-                    representative
+                    evaluator
                   </v-alert>
                   <div class="ma-3" v-for=" [name, value] in Object.entries(applicant_details.sdo_attachments) "
                     :key="name">
@@ -288,7 +288,7 @@
         </v-col>
         <v-col cols="6"
           v-else-if="user && user.role === ROLES.EVALUATOR && applicant_details?.status === 'Approved for Printing'">
-          <v-btn variant="tonal" color="success" block @click="move_to_dbm">
+          <v-btn variant="tonal" color="success" block @click="attach_output_requirement">
             SUBMIT
           </v-btn>
         </v-col>
@@ -297,7 +297,8 @@
         <v-col cols="6" v-else-if="!user"> <v-btn @click="handle_principal" block variant="tonal" color="success">
             AUTHENTICATE
           </v-btn></v-col>
-        <v-col cols="6" v-else-if="applicant_details?.status != 'Completed'">
+        <v-col cols="6"
+          v-else-if="applicant_details?.status != 'Completed' && applicant_details?.status != 'Received Printout/s'">
           <v-btn @click="handle_application" block variant="tonal" color="success">
             SUBMIT
           </v-btn>
@@ -448,7 +449,7 @@ async function assign_evaluator_applicant() {
   router.push({ name: 'sms-reclassification' });
 }
 
-async function move_to_dbm() {
+async function attach_output_requirement() {
   /* @ts-ignore */
   applicant_details.value.output_requirement[0] = {
     data: applicant_details.value.output_requirement[0],
@@ -459,7 +460,7 @@ async function move_to_dbm() {
   form.append("sms", applicant_details.value.output_requirement[0].data)
   form.append("app_id", applicant_details.value._id);
 
-  const { data, error } = await $rest('new-applicant/assign-to-dbm', {
+  const { data, error } = await $rest('new-applicant/attach-output-requirement', {
     method: "POST",
     body: form
   })
@@ -543,14 +544,14 @@ const handle_application = async () => {
       buttons: { ok: false, cancel: false }
     });
   }
-  const missing_attachment = Object.values(sdo_attachment).some(file => file === null || file === undefined);
+ const missing_attachment = Object.values(sdo_attachment).some(file => file === null || file === undefined);
 
   if (missing_attachment && side === "SDO") {
-    return swal({
+    return swal({ 
       title: "Missing Attachments",
       text: "Please ensure all required attachments are provided.",
-      icon: "info"
-    });
+      icon: "info" 
+});
 
   }
   const payload = {
