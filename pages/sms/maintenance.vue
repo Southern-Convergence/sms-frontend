@@ -154,21 +154,20 @@
               <v-col cols="4">
                 <v-card height="40vh" class="d-flex flex-column ma-2">
                   <v-toolbar color="blue-darken-4" class="pl-3 text-subtitle-1">
-                    M.A Units to Descriptive Ratio
+                    Leadership and Potential
                     <v-spacer />
-                    <v-tooltip text="Click to add  Masteral Arts" location="top">
+                    <v-tooltip text="Click to add  Leadership and Potential" location="top">
                       <template v-slot:activator="{ props }">
-                        <v-btn @click="ma_units_dialog = true" v-bind="props" color="indigo-lighten-4"
+                        <v-btn @click="leaderhip_dialog = true" v-bind="props" color="indigo-lighten-4"
                           icon="mdi-plus"></v-btn>
                       </template>
                     </v-tooltip>
                   </v-toolbar>
                   <v-card-text> <v-sheet height="31vh" class="overflow-y-auto pa-2">
                       <v-alert class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="lg"
-                        icon="mdi-book" border-color="blue-darken-4" v-for="unit, index in ma_units_data" :key="index">
-                        <b>{{ unit.number_of_years }}</b> years of experience in the <b> {{ unit.type }} </b> sector is
-                        equivalent
-                        to <b>{{ unit.years_equivalent }} M.A Unit/s.</b>
+                        icon="mdi-book" border-color="blue-darken-4" v-for="lead, index in leadership_data"
+                        :key="index">
+                        {{ lead.title }}
 
                       </v-alert>
                     </v-sheet>
@@ -325,88 +324,81 @@
       </v-card-text>
     </commons-dialog>
 
-    <commons-dialog max-width="35%" v-model="ma_units_dialog" icon="mdi-school"
-      :title="status === 'create' ? 'Create  M.A. Units to Experience Ratio' : 'Update  M.A. Units to Experience Ratio'"
-      @submit="create_ma_units" :subtitle="'Enter or modify details for the  M.A. Units to Experience Ratio.'"
+    <commons-dialog max-width="35%" v-model="leaderhip_dialog" icon="mdi-school"
+      :title="status === 'create' ? 'Create  Leadership and Potential to Experience Ratio' : 'Update  Leadership and Potential'"
+      @submit="create_leadership_and_potential" :subtitle="'Enter or modify details Leadership and Potential.'"
       :submitText="status === 'create' ? 'Submit' : 'Update'">
       <v-card-text class="ma-2">
 
-        <v-radio-group v-model="ma_units.type" inline hide-details>
-          <v-radio label="Public" value="Public"></v-radio>
-          <v-radio label="Private" value="Private"></v-radio>
-        </v-radio-group>
-        <hr class="my-4">
-        <!-- {{ma_units.number_of_years}} M.A Units Equivalent {{ma_units.years_equivalent}} {{ma_units.type}} -->
-        <v-row>
-
-          <v-col cols="6">
-            <v-text-field v-model="ma_units.number_of_years" label="Number of Years" hide-details /> </v-col>
-          <v-col cols="12"
-            v-if="ma_units.number_of_years <= 2 && ma_units.type === 'Public' || ma_units.number_of_years <= 4 && ma_units.type === 'Private'">
-            <v-alert color="error">
-              {{ cal(ma_units) }}
-            </v-alert>
-          </v-col>
-          <v-col cols="6" class="text-primary " v-else-if="ma_units.number_of_years && ma_units.type">
-            <v-text-field :value="`${cal(ma_units)} is M.A Unit Equivalent`" hide-details readonly />
 
 
-          </v-col>
-        </v-row>
+        <v-text-field v-model="leadership.title" label="Leadership and Potential" />
+
       </v-card-text>
     </commons-dialog>
 
 
-
-    <commons-dialog max-width="40%" v-model="position_dialog" :title="'Position  Form'" @submit="create_position"
+    <commons-dialog width="60%" v-model="position_dialog" :title="'Position  Form'" @submit="create_position"
       :subtitle="'Create position and modify Qualification Standards'" :submitText="'Submit'">
-      <v-card-text class="ma-2">
-        <v-row no-gutters>
-          <v-col cols="6" class="pr-2"> <v-text-field v-model="position.title" label="Position" hide-details
-              prepend-inner-icon="mdi-account-hard-hat" /></v-col>
-          <v-col cols="6"> <v-select v-model="position.education_level" :items="['Elementary', 'Secondary']"
-              label="Education Level" hide-details prepend-inner-icon="mdi-book" /></v-col>
-          <v-col cols="12"> <v-checkbox label="Check if with ERF" v-model="position.with_erf"></v-checkbox></v-col>
-          <v-col cols="12"> <v-select v-model="position.education" :items="education_data" item-value="_id"
-              label="Education" multiple prepend-inner-icon="mdi-school" /></v-col>
-          <v-col cols="12"> <v-text-field v-model="position.ma_units" label="M.A Units" /></v-col>
-          <v-col cols="12"> <v-select v-model="position.experience" item-value="_id" :items="experience_data"
-              label="Experience" multiple prepend-inner-icon="mdi-head-cog-outline" hide-details /></v-col>
-          <v-col cols="12"> <v-checkbox v-model="position.is_experience"
-              label="Check if the experience accepts  less than the specified minimum." /></v-col>
+      <v-card-text>
+        <v-row dense>
+          <v-col cols="7" class="pa-4"> <v-row no-gutters>
+              <v-col cols="7"> <v-text-field v-model="position.title" label="Position" hide-details
+                  prepend-inner-icon="mdi-account-hard-hat" /></v-col>
 
+              <v-col cols="5" class="pl-2"> <v-select v-model="position.education_level"
+                  :items="['Elementary', 'Secondary']" label="Education Level" hide-details
+                  prepend-inner-icon="mdi-book" clearable /></v-col>
+              <v-col cols="12"> <v-checkbox label="Check if with ERF" v-model="position.with_erf"></v-checkbox></v-col>
+              <v-col cols="7"> <v-select v-model="position.education" :items="education_data" item-value="_id"
+                  label="Education" multiple prepend-inner-icon="mdi-school" hide-details clearable /></v-col>
+              <v-col cols="5" class="pl-2"> <v-text-field v-model="position.supplemented_units" label="Graduate Units"
+                  hide-details /></v-col>
+              <v-col cols="12"> <v-checkbox v-model="position.status_of_appointment"
+                  label="Check if appointment must be Permanent Teacher" /></v-col>
+
+              <v-col cols="12"> <v-select v-model="position.experience" item-value="_id" :items="experience_data"
+                  label="Experience" multiple prepend-inner-icon="mdi-head-cog-outline" hide-details
+                  clearable /></v-col>
+              <v-col cols="12"> <v-checkbox v-model="position.is_experience"
+                  label="Check if the experience accepts  less than the specified minimum." hide-details /></v-col>
+              <v-col cols="12"> <v-checkbox v-model="position.or_20_ma_units"
+                  label="Check if the number of experience can be substituted by 20 M.A. Units" /></v-col>
+              <v-col cols="12"> <v-text-field v-model="position.ma_units" label="M.A Units" /></v-col>
+            </v-row>
+          </v-col>
+          <v-col cols="5" class="pa-4">
+            <v-row no-gutters>
+
+              <v-col cols="12"> <v-select v-model="position.rating" :items="rating_data" label="Performance Rating"
+                  multiple item-value="_id" prepend-inner-icon="mdi-star" clearable /></v-col>
+
+              <v-col cols="6"> <v-text-field v-model="position.training_hours" label="Training Number of Hours Required"
+                  prepend-inner-icon="mdi-human-male-board" /></v-col>
+              <v-col cols="6" class="pr-2"> <v-select v-model="position.leadership_points"
+                  label="Leadership ands Potential Points" :items="leadership_data" multiple item-value="_id"
+                  clearable /></v-col>
+              <v-col cols="6" class="pr-2"> <v-select v-model="position.sg" :items="sg_item" label="Salary Grade"
+                  item-value="_id" prepend-inner-icon="mdi-cash" clearable /></v-col>
+              <v-col cols="6"><v-text-field v-model="position.code" label="Position Code" hide-details="auto"
+                  prepend-inner-icon="mdi-codepen" hint="This is for transaction codes for endorsements." /></v-col>
+
+
+              <v-col cols="12">
+                <v-list-subheader class="text-indigo"> <v-icon>mdi-paperclip</v-icon>Required attachments for
+                  applicants.</v-list-subheader>
+                <v-select v-model="position.attachment" :items="attachment_data" label="Select Applicant Attachments"
+                  item-value="_id" multiple clearable chips /> </v-col>
+
+              <v-col cols="12">
+                <v-list-subheader class="text-indigo"> <v-icon>mdi-paperclip</v-icon> Required attachments for
+                  School Division Office.</v-list-subheader>
+                <v-select v-model="position.sdo_attachment" :items="attachment_data" label="SDO Attachments"
+                  item-value="_id" multiple clearable chips /></v-col>
+            </v-row></v-col>
         </v-row>
 
 
-        <v-row no-gutters>
-          <v-col cols="6" class="pr-2"> <v-text-field v-model="position.training_hours"
-              label="Training Number of Hours Required" prepend-inner-icon="mdi-human-male-board" /></v-col>
-          <v-col cols="6"> <v-select v-model="position.rating" :items="rating_data" label="Performance Rating Required"
-              multiple item-value="_id" prepend-inner-icon="mdi-star" /></v-col>
-
-        </v-row>
-        <v-row no-gutters>
-          <v-col cols="6" class="pr-2"> <v-select v-model="position.sg" :items="sg_item" label="Salary Grade"
-              item-value="_id" prepend-inner-icon="mdi-cash" /></v-col>
-          <v-col cols="6"><v-text-field v-model="position.code" label="Position Code" hide-details="auto"
-              prepend-inner-icon="mdi-codepen" hint="This is for transaction codes for endorsements." /></v-col>
-
-        </v-row>
-
-
-        <v-row no-gutters>
-          <v-col cols="12">
-            <v-list-subheader class="text-indigo"> <v-icon>mdi-paperclip</v-icon>Required attachments for
-              applicants.</v-list-subheader>
-            <v-select v-model="position.attachment" :items="attachment_data" label="Select Applicant Attachments"
-              item-value="_id" multiple clearable chips /> </v-col>
-
-          <v-col cols="12">
-            <v-list-subheader class="text-indigo"> <v-icon>mdi-paperclip</v-icon> Required attachments for
-              School Division Office.</v-list-subheader>
-            <v-select v-model="position.sdo_attachment" :items="attachment_data" label="SDO Attachments"
-              item-value="_id" multiple clearable chips /></v-col>
-        </v-row>
       </v-card-text>
     </commons-dialog>
     <commons-dialog max-width="30%" v-model="update_position_dialog" icon="mdi-school" :title="'Update Position'"
@@ -542,8 +534,8 @@ onBeforeMount(() => {
       get_sg(),
       get_qs(),
       get_attachment(),
-      get_ma_units(),
-      get_rd()
+      get_leadership(),
+      get_rd(),
     ]
   ).catch(() => swal({
     title: "Error",
@@ -556,8 +548,10 @@ onBeforeMount(() => {
 const view_qs_dialog = ref(false)
 const tab = ref(null);
 const is_hovered = ref(false)
-const ma_units_dialog = ref(false)
-const inline = ref(null)
+const leaderhip_dialog = ref(false)
+
+
+
 // dialog
 
 const position_dialog = ref(false);
@@ -627,7 +621,7 @@ async function update_education() {
 const experience = ref<Experience>({
 
   title: "",
-  equivalent : 0
+  equivalent: 0
 })
 async function create_experience() {
   const { data, error } = await $rest('sms-experience/create-experience', {
@@ -804,10 +798,14 @@ const position = ref<Position>({
   title: "",
   with_erf: false,
   education: [],
+  supplemented_units: 0,
   education_level: "",
+  status_of_appointment: false,
   ma_units: 0,
+  leadership_points: [],
   experience: [],
   is_experience: false,
+  or_20_ma_units: false,
   training_hours: 0,
   rating: [],
   sg: "",
@@ -947,10 +945,10 @@ async function get_rd() {
 }
 
 
-async function create_ma_units() {
-  const { data, error } = await $rest('sms-ma-units/create-ma-units', {
+async function create_leadership_and_potential() {
+  const { data, error } = await $rest('sms-leadership/create-leadership-and-potential', {
     method: "POST",
-    body: { ...ma_units.value }
+    body: { ...leadership.value }
   });
   if (error) {
     swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
@@ -959,23 +957,22 @@ async function create_ma_units() {
 
 }
 
+const leadership_data = ref<Leadership[]>([]);
 
-async function get_ma_units() {
-  const { data, error } = await $rest('sms-ma-units/get-ma-units', {
+
+async function get_leadership() {
+  const { data, error } = await $rest('sms-leadership/get-leadership-and-potential', {
     method: "GET",
   });
   if (!error && data) {
 
-    ma_units_data.value = data;
+    leadership_data.value = data;
   }
 }
 
-const ma_units_data = ref<Maunits[]>([]);
+const leadership = ref({
+  title: "",
 
-const ma_units = ref({
-  type: "",
-  number_of_years: 0,
-  years_equivalent: 0,
 });
 
 

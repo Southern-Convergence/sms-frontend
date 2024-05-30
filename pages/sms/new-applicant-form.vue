@@ -37,7 +37,7 @@
               </v-card-subtitle>
               <v-divider class="my-2" />
 
-              <v-card-text class="pa-5" style="height:70vh; justify-content: center; align-items: center;">
+              <v-card-text class="pa-5" style="height:75vh; justify-content: center; align-items: center;">
 
                 <v-row dense v-if="!position_form" class="h-100 w-100 d-flex align-center justify-center">
                   <v-col cols="6" class="px-15">
@@ -46,7 +46,7 @@
                       you wish to apply for. Click Apply Now to begin the application process.</h4>
 
                     <v-select class="mt-3" v-model="applicant.qualification.position" label="Select Position"
-                      variant="solo" hide-details item-value="_id" :items="position_data" dense />
+                      variant="solo" hide-details item-value="_id" :items="position_items" dense />
 
                     <v-btn class="mt-2" :disabled="applicant.qualification.position == ''" color="success" rounded="xl"
                       @click="apply_dialog = true">APPLY NOW</v-btn>
@@ -84,130 +84,151 @@
                     </v-card>
                   </v-col>
                 </v-row>
-                <v-row v-if="position_form">
+                <v-row v-if="position_form" dense>
                   <v-col cols="6">
-                    <v-card-text class="overflow-y-auto" style="height: 60vh">
 
-                      <v-list-item class="mx-0 px-0 mb-2" density="compact">
-                        <template v-slot:prepend>
-                          <v-avatar class="mr-1" variant="text">
-                            <v-icon color="amber"> mdi-seal </v-icon>
-                          </v-avatar>
-                        </template>
-                        <v-list-item-title>Individual Qualification</v-list-item-title>
-                        <v-list-item-subtitle> <b>Instruction :</b> Click each of the standard below and select or enter
-                          your appropriate
-                          qualification. Click <b>"cancel"</b> to end the application
-                          process.</v-list-item-subtitle>
-                      </v-list-item>
+                    <v-card flat color="transparent" class="pa-5">
+                      <v-card-text class="overflow-y-auto" style="height: 57vh">
 
-                      <v-row dense>
-                        <v-col cols="12" v-if="selected_qs">
-                          <v-text-field :value="qs.title" variant="underlined" hide-details readonly />
-                        </v-col>
-                        <v-col cols="12" v-if="applicant.qualification.position && !selected_qs?.education_level == ''">
-                          <v-select v-model="applicant.qualification.educ_level" :items="['Elementary', 'Secondary']"
-                            label="Education Level" variant="solo" hide-details prepend-inner-icon="mdi-book" />
-                        </v-col>
+                        <v-list-item class="mx-0 px-0 mb-2" density="compact">
+                          <template v-slot:prepend>
+                            <v-avatar class="mr-1" variant="text">
+                              <v-icon color="amber"> mdi-seal </v-icon>
+                            </v-avatar>
+                          </template>
+                          <v-list-item-title>Individual Qualification</v-list-item-title>
+                          <v-list-item-subtitle> <b>Instruction :</b> Click each standard below and select or
+                            enter
+                            your appropriate
+                            qualification. Click <b>"cancel"</b> to end the application
+                            process.</v-list-item-subtitle>
+                        </v-list-item>
+                        <v-row dense>
 
-                        <v-col cols="12" v-if="applicant.qualification.position">
-                          <v-select v-model="applicant.qualification.education" :items="education_data"
-                            label="Education" variant="solo" hide-details multiple item-value="_id"
-                            prepend-inner-icon="mdi-school" />
-                        </v-col>
-                        <v-col cols="12" v-if="selected_qs?.experience.length">
-                          <v-select v-model="applicant.qualification.experience" :items="experience_data"
-                            label="Experience" variant="solo" hide-details multiple item-value="_id"
-                            prepend-inner-icon="mdi-head-cog-outline" />
-                          <v-checkbox label="Check if you have less than 20 years of experience." v-model="if_20_years"
-                            hide-details />
-                          <v-row dense v-if="if_20_years">
-                            <v-col cols="12"> <b>Indicate the number of years served in each sector</b></v-col>
-                            <v-col cols="6">
-                              <v-select v-model="applicant.qualification.experience_sr_public" label="Public"
-                                :items="unit_items" hide-details clearable />
-                            </v-col>
-                            <v-col cols="6">
-                              <v-text-field label="Equivalent M.A Units" model-value="0" prefix="="
-                                :value="public_equivalent_ma_units" readonly />
+                          <v-col cols="12" class="mt-5" v-if="selected_qs">
+                            Selected Position : <b class="text-uppercase text-primary">{{
+                              qs.title }}</b>
+                            <i v-if="applicant.qualification.position && !selected_qs?.education_level == ''">
+                              ({{selected_qs.education_level }})</i>
 
-                            </v-col>
-                            <v-col cols="6">
-                              <v-select v-model="applicant.qualification.experience_sr_private" label="Private"
-                                :items="unit_items" hide-details clearable />
-                            </v-col>
-
-                            <v-col cols="6">
-                              <v-text-field label="Equivalent M.A Units" model-value="0" prefix="="
-                                :value="private_equivalent_ma_units" readonly />
-                            </v-col>
-
-                            <v-col cols="12">
-                              <v-text-field v-model="applicant.qualification.ma_units" label="Enter Number of M.A Units"
-                                hide-details />
-                            </v-col>
-                            <v-col cols="6" class="text-end mt-4 text-primary font-weight-bold text-subtitle-1">
-                              TOTAL M.A. EQUIVALENT UNITS
-                            </v-col>
-                            <v-col cols="6">
-                              <v-text-field :value="total_ma" bg-color="primary" readonly />
-                            </v-col>
-                          </v-row>
+                          </v-col>
 
 
+                          <v-col cols="12" v-if="applicant.qualification.position">
+                            <v-select v-model="applicant.qualification.education" :items="education_data"
+                              label="Education" variant="solo" hide-details multiple item-value="_id"
+                              prepend-inner-icon="mdi-school" />
+                          </v-col>
+                          <v-col cols="12" v-if="selected_qs?.supplemented_units > 0">
+                            <v-text-field v-model="applicant.qualification.supplemented_units" label="Graduated Units"
+                              variant="solo" hide-details prepend-inner-icon="mdi-account-school" />
+                          </v-col>
+                          <v-col cols="12" v-if="selected_qs?.experience.length">
+                            <v-select v-model="applicant.qualification.experience" :items="experience_data"
+                              label="Experience" variant="solo" hide-details multiple item-value="_id"
+                              prepend-inner-icon="mdi-head-cog-outline" />
+                            <v-checkbox v-if="qs.title === 'Teacher III' || qs.title === 'Teacher II'"
+                              label="Check if you have less than 20 years of experience." v-model="if_20_years"
+                              hide-details />
+                            <v-row dense v-if="if_20_years && qs.title === 'Teacher III'">
+                              <v-col cols="12"> <b>Indicate the number of years served in each sector</b></v-col>
+                              <v-col cols="6">
+                                <v-select v-model="applicant.qualification.experience_sr_public" label="Public"
+                                  :items="unit_items" hide-details clearable />
+                              </v-col>
+                              <v-col cols="6">
+                                <v-text-field label="Equivalent M.A Units" model-value="0" prefix="="
+                                  :value="public_equivalent_ma_units" readonly />
 
-                        </v-col>
-                        <v-col cols="12" v-if="selected_qs?.ma_units > 0">
-                          <v-text-field v-model="applicant.qualification.ma_units" label="Enter M.A. Units"
-                            variant="solo" hide-details type="number" prepend-inner-icon="mdi-book" />
-                        </v-col>
-                        <v-col cols="12" v-if="applicant.qualification.position && selected_qs?.training_hours != 0">
-                          <v-text-field v-model="applicant.qualification.training" label="Enter total training hours"
-                            variant="solo" hide-details type="number" item-value="_id"
-                            prepend-inner-icon="mdi-human-male-board" />
-                        </v-col>
-                        <v-col cols="12" v-if="selected_qs?.rating.length">
-                          <v-select v-model="applicant.qualification.per_rating" :items="rating_data"
-                            label="Performance Rating" variant="solo" hide-details item-value="_id"
-                            prepend-inner-icon="mdi-star" />
-                        </v-col>
+                              </v-col>
+                              <v-col cols="6">
+                                <v-select v-model="applicant.qualification.experience_sr_private" label="Private"
+                                  :items="unit_items" hide-details clearable />
+                              </v-col>
 
-                        <v-col cols="12" v-if="!qs">
-                          <v-text-field v-model="applicant.qualification.sg" variant="solo" hide-details
-                            :value="qs.sg.salary_grade" />
-                          <v-text-field v-model="applicant.qualification.sg_equivalent" variant="solo" hide-details
-                            :value="qs.sg.equivalent" />
-                        </v-col>
-                      </v-row>
-                    </v-card-text>
-                    <v-card-actions class="mx-2">
-                      <v-row dense>
-                        <v-col cols="6"> <v-btn block color="error" variant="tonal"
-                            @click="cancel_dialog = true">CANCEL</v-btn></v-col>
-                        <v-col cols="6"> <v-btn block color="success" variant="tonal"
-                            @click="next_window">SUBMIT</v-btn></v-col>
-                      </v-row>
+                              <v-col cols="6">
+                                <v-text-field label="Equivalent M.A Units" model-value="0" prefix="="
+                                  :value="private_equivalent_ma_units" readonly />
+                              </v-col>
 
-                    </v-card-actions>
+                              <v-col cols="12">
+                                <v-text-field v-model="applicant.qualification.ma_units"
+                                  label="Enter Number of M.A Units" hide-details />
+                              </v-col>
+                              <v-col cols="6" class="text-end mt-4 text-primary font-weight-bold text-subtitle-1">
+                                TOTAL M.A. EQUIVALENT UNITS
+                              </v-col>
+                              <v-col cols="6">
+                                <v-text-field :value="total_ma" bg-color="primary" readonly />
+                              </v-col>
+                            </v-row>
+                          </v-col>
+                          <v-col cols="12" v-if="qs?.status_of_appointment === true"> <v-checkbox
+                              label="Check if permanent teacher."
+                              v-model="applicant.qualification.status_of_appointment" hide-details /></v-col>
+                          <v-col cols="12" v-if="if_20_years && qs.title === 'Teacher II'">
+                            <v-text-field v-model="applicant.qualification.ma_units" label="Enter M.A. Units"
+                              variant="solo" hide-details type="number" prepend-inner-icon="mdi-book" />
+                          </v-col>
+                          <v-col cols="12" v-if="applicant.qualification.position && selected_qs?.training_hours != 0">
+                            <v-text-field v-model="applicant.qualification.training" label="Enter total training hours"
+                              variant="solo" hide-details type="number" item-value="_id"
+                              prepend-inner-icon="mdi-human-male-board" />
+                          </v-col>
+                          <v-col cols="12" v-if="selected_qs?.rating.length">
+                            <v-select v-model="applicant.qualification.per_rating" :items="rating_data"
+                              label="Performance Rating" variant="solo" hide-details item-value="_id"
+                              prepend-inner-icon="mdi-star" />
+                          </v-col>
+                          <v-col cols="12" v-if="qs.leadership_points && qs.leadership_points.length > 0">
+                            <v-select v-model="applicant.qualification.leadership_points" :items="leadership_data"
+                              label="Leadership and Potential" variant="solo" hide-details item-value="_id"
+                              prepend-inner-icon="mdi-star" />
+                          </v-col>
+
+
+
+                          <v-col cols="12" v-if="!qs">
+                            <v-text-field v-model="applicant.qualification.sg" variant="solo" hide-details
+                              :value="qs.sg.salary_grade" />
+                            <v-text-field v-model="applicant.qualification.sg_equivalent" variant="solo" hide-details
+                              :value="qs.sg.equivalent" />
+                          </v-col>
+                        </v-row>
+                      </v-card-text>
+                      <v-card-actions class="mx-2">
+                        <v-row dense>
+                          <v-col cols="6"> <v-btn block color="error" variant="tonal"
+                              @click="cancel_dialog = true">CANCEL</v-btn></v-col>
+
+                          <v-col cols="6" v-if="qs?.title === 'Teacher III'"> <v-btn block color="success"
+                              variant="tonal" @click="next_teacher3">
+                              SUBMIT</v-btn></v-col>
+                          <v-col cols="6" v-else> <v-btn block color="success" variant="tonal" @click="next_window">
+                              SUBMIT</v-btn></v-col>
+                        </v-row>
+
+                      </v-card-actions>
+
+                    </v-card>
                   </v-col>
                   <v-col cols="6" v-if="selected_qs">
-                    <v-card rounded="xl" class="ma-5">
+                    <v-card rounded="xl" class="pa-3" flat>
+                      <v-list-item density="compact" color="blue-darken-4">
+                        <v-list-item-title class="text-primary py-1 text-center  font-weight-bold">QUALIFICATION
+                          STANDARD</v-list-item-title>
 
-
-                      <v-card-text class="px-10 overflow-y-auto" style="height: 60vh">
-                        <v-list-item class="pl-2" density="compact" color="blue-darken-4">
-
-                          <v-list-item-title class="text-primary text-center font-weight-bold">QUALIFICATION
-                            STANDARD</v-list-item-title>
-                          <v-divider class="my-2" />
-                          <v-list-item-subtitle> Here is the defined Qualification Standard of the<b> Department of
-                              Education National Capital Region </b><i>( DepEd NCR)</i> for the
-                            selected
-                            position
-                            which you must meet. </v-list-item-subtitle>
-                        </v-list-item>
-
-                        <v-list-item class="ma-2" variant="tonal" rounded="rounded">
+                        <v-list-item-subtitle> Here are the defined Qualification Standard of the<b> Department of
+                            Education National Capital Region </b><i>( DepEd NCR)</i> for the
+                          selected
+                          position
+                          which you must meet. </v-list-item-subtitle>
+                        <v-list-item-subtitle class="d-flex justify-end mt-1"><v-btn @click="view_qs_dialog = true"
+                            prepend-icon="mdi-eye" density="compact" variant="tonal" color="primary">
+                            View Full QS</v-btn></v-list-item-subtitle>
+                      </v-list-item>
+                      <v-card-text class="overflow-y-auto mt-0 pt-1" style="height: 50vh">
+                        <v-list-item class="mb-2" variant="tonal" rounded="rounded">
                           <template v-slot:prepend>
                             <v-icon color="primary" icon="mdi-account-hard-hat"></v-icon>
                           </template>
@@ -216,7 +237,15 @@
                               qs?.education_level
                               }})</i></b>
                         </v-list-item>
-                        <v-list-item class="ma-2" variant="tonal" rounded="rounded" v-if="qs.education.length">
+                        <v-list-item class="mb-2" variant="tonal" rounded="rounded"
+                          v-if="qs.status_of_appointement === true">
+                          <template v-slot:prepend>
+                            <v-icon color="primary" icon="mdi-school"></v-icon>
+                          </template>
+                          <v-list-item-title>Appointment :</v-list-item-title>
+                          <v-list-item-subtitle>Must be permanent teacher.</v-list-item-subtitle>
+                        </v-list-item>
+                        <v-list-item class="mb-2" variant="tonal" rounded="rounded" v-if="qs.education.length">
                           <template v-slot:prepend>
                             <v-icon color="primary" icon="mdi-school"></v-icon>
                           </template>
@@ -224,16 +253,27 @@
                           <v-list-item-subtitle v-for="(education, index) in qs.education" :key="index">{{
                             education.title }}</v-list-item-subtitle>
                         </v-list-item>
+                        <v-list-item class="mb-2" variant="tonal" rounded="rounded" title="Graduated Units:"
+                          v-if="qs.supplemented_units > 0">
+                          <template v-slot:prepend>
+                            <v-icon color="primary" icon="mdi-account-school"></v-icon>
+                          </template>
+                          <v-list-item-subtitle><b>{{ qs.supplemented_units }}</b>
+                          </v-list-item-subtitle>
+                        </v-list-item>
 
-                        <v-list-item class="ma-2" variant="tonal" rounded="rounded" v-if="qs.experience.length">
+
+                        <v-list-item class="mb-2" variant="tonal" rounded="rounded" v-if="qs.experience.length">
                           <template v-slot:prepend>
                             <v-icon color="primary" icon="mdi-head-cog-outline"></v-icon>
                           </template>
                           <v-list-item-title>Experience :</v-list-item-title>
                           <v-list-item-subtitle v-for="(experience, index) in qs.experience" :key="index">{{
-                            experience.title }}</v-list-item-subtitle>
+                            experience.title }} <span v-if="qs.title === 'Teacher II'"> or 20 M.A
+                              Units</span></v-list-item-subtitle>
                         </v-list-item>
-                        <v-list-item class="ma-2" variant="tonal" rounded="rounded" v-if="qs.ma_units">
+
+                        <v-list-item class="mb-2" variant="tonal" rounded="rounded" v-if="qs.ma_units > 0">
                           <template v-slot:prepend>
                             <v-icon color="primary" icon="mdi-book"></v-icon>
                           </template>
@@ -241,7 +281,7 @@
                           <v-list-item-subtitle>{{
                             qs.ma_units }}</v-list-item-subtitle>
                         </v-list-item>
-                        <v-list-item class="ma-2" variant="tonal" rounded="rounded" v-if="qs.rating.length">
+                        <v-list-item class="mb-2" variant="tonal" rounded="rounded" v-if="qs.rating.length">
                           <template v-slot:prepend>
                             <v-icon color="primary" icon="mdi-human-male-board"></v-icon>
                           </template>
@@ -249,12 +289,25 @@
                           <v-list-item-subtitle v-for="(rating, index) in qs.rating" :key="index">{{
                             rating.title }}</v-list-item-subtitle>
                         </v-list-item>
-                        <v-list-item class="ma-2" variant="tonal" rounded="rounded" title=" Training Hours:"
+                        <v-list-item class="mb-2" variant="tonal" rounded="rounded" title=" Training Hours:"
                           v-if="qs.training_hours != 0">
                           <template v-slot:prepend>
                             <v-icon color="primary" icon="mdi-star"></v-icon>
                           </template>
-                          <v-list-item-subtitle>{{ qs.training_hours }} </v-list-item-subtitle>
+                          <v-list-item-subtitle><b>{{ qs.training_hours }}</b> hours of relevant training initiated,
+                            sactioned,
+                            approved/recognized by DepEd no used in the immediate previous promotion
+                          </v-list-item-subtitle>
+                        </v-list-item>
+                        <v-list-item class="ma-2" variant="tonal" rounded="rounded"
+                          title="Leadership and Potential Points:"
+                          v-if="qs.leadership_points && qs.leadership_points.length > 0">
+                          <template v-slot:prepend>
+                            <v-icon color="primary" icon="mdi-certificate"></v-icon>
+                          </template>
+
+                          <v-list-item-subtitle v-for="(lead, index) in qs.leadership_points" :key="index">{{
+                            lead }}</v-list-item-subtitle>
                         </v-list-item>
 
 
@@ -299,6 +352,22 @@
                   <v-select v-model="applicant.personal_information.gender" label="Gender" :items="['Female', 'Male']"
                     hide-details />
                 </v-col>
+                <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
+                  <v-text-field v-model="applicant.personal_information.contact_number" label="Contact Number"
+                    hide-details />
+                </v-col>
+                <v-col cols="12" xl="4" lg="4" md="4" sm="12" class="px-1 mt-1 ">
+                  <v-btn v-if="!applicant.personal_information.signature" prepend-icon="mdi-upload"
+                    color="grey-darken-2" @click="esig = true">Upload
+                    E-signature</v-btn>
+                  <div v-else class="d-flex"> <b class="text-uppercase text-primary">Signature:</b>
+                    <v-img :width="197" height="10vh" :src="applicant?.personal_information?.signature" />
+
+                  </div>
+
+
+                </v-col>
+
               </v-row>
             </v-card-text>
             <v-card-text>
@@ -610,7 +679,7 @@
           Please enter the email address of your school principal to validate the authenticity of the attached
           document/s.
 
-          <v-text-field v-model="applicant.principal_email" label="Enter Principal's Email Address" />
+          <v-text-field v-model="applicant.principal.email" label="Enter Principal's Email Address" />
         </v-card-text>
       </commons-dialog>
       <commons-dialog max-width="35%" v-model="update_dialog" :icon="'mdi-information'"
@@ -619,13 +688,109 @@
           Please enter the email address of your school principal to validate the authenticity of the attached
           document/s.
 
-          <v-text-field v-model="applicant.principal_email" label="Enter Principal's Email Address" />
+          <v-text-field v-model="applicant.principal.email" label="Enter Principal's Email Address" />
         </v-card-text>
       </commons-dialog>
+      <v-dialog v-model="esig" width="550" height="450">
+
+        <v-toolbar color="indigo" v-if="$attrs['hide-toolbar'] !== ''" border>
+          <v-list-item class="pl-2" density="compact">
+
+
+
+
+            <v-list-item-title class="text-uppercase"> <v-icon
+                class="pr-1">mdi-draw-pen</v-icon>E-signatures</v-list-item-title>
+
+          </v-list-item>
+
+          <v-spacer />
+          <v-btn class="mr-0" @click="esig = false" rounded="0" icon="mdi-close" />
+        </v-toolbar>
+        <v-card>
+          <v-tabs fixed-tabs v-model="tab" color="primary">
+            <v-tab :value="1">Upload E-sig</v-tab>
+            <v-tab :value="2">Signature Pad</v-tab>
+          </v-tabs>
+
+          <v-window v-model="tab">
+            <v-window-item :value="1">
+              <v-card flat height="300">
+                <v-card-text>
+                  <v-row no-gutters justify="center" class="mt-10">
+                    <div class="image-preview" v-if="image_data.length > 0">
+                      <img class="preview" width="200" height="150" :src="image_data">
+                    </div>
+                  </v-row>
+                </v-card-text>
+                <v-card-actions>
+
+                </v-card-actions>
+              </v-card>
+              <v-divider />
+              <v-card-actions>
+                <v-row justify="center" v-if="image_data.length === 0">
+                  <v-btn variant="tonal" color="primary" prepend-icon="mdi-upload" class="custom-file-upload"
+                    onclick="document.getElementById('getFile').click()">
+                    Select File</v-btn>
+                  <input type='file' id="getFile" @change="preview_image" style="display:none">
+                </v-row>
+                <v-row dense justify="center" class="mb-2" v-else>
+                  <v-col cols="3"> <v-btn block variant="tonal" color="error" size="small"
+                      @click="clear_upload">CLear</v-btn></v-col>
+                  <v-col cols="3"> <v-btn block variant="tonal" color="primary" size="small" @click="attached_esig"
+                      v-if="image_data !== ''">Save</v-btn></v-col>
+                </v-row>
+              </v-card-actions>
+            </v-window-item>
+
+            <v-window-item :value="2">
+              <v-card height="300" flat>
+                <v-card-text class="text-center">
+                  <v-row no-gutters justify="center">
+                    <v-sheet>
+                      <Vue3Signature ref="signature_pad" :sigOption="state.option" :w="'800px'" :h="'380px'"
+                        :disabled="state.disabled" />
+                    </v-sheet>
+                  </v-row>
+                </v-card-text>
+              </v-card>
+              <v-divider />
+              <v-card-actions>
+                <v-row dense justify="center" class="mb-2">
+                  <v-col cols="3"> <v-btn block variant="tonal" color="error" size="small"
+                      @click="clear">CLear</v-btn></v-col>
+                  <v-col cols="3"> <v-btn class="custom-file-upload" block variant="tonal" color="primary" size="small"
+                      @click="free_hand_esig">Save</v-btn></v-col>
+
+                </v-row>
+
+              </v-card-actions>
+            </v-window-item>
+          </v-window>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="view_qs_dialog" width="550" height="450">
+        <v-card>
+          <v-toolbar color="indigo" v-if="$attrs['hide-toolbar'] !== ''" border>
+            <v-list-item class="pl-2" density="compact">
+              <v-list-item-title class="text-uppercase"> <v-icon class="pr-1">mdi-draw-pen</v-icon>Qualification
+                Standard
+                of Position</v-list-item-title>
+            </v-list-item>
+            <v-spacer />
+            <v-btn class="mr-0" @click="view_qs_dialog = false" rounded="0" icon="mdi-close" />
+          </v-toolbar>
+          <v-card-text></v-card-text>
+
+        </v-card>
+      </v-dialog>
     </v-sheet>
   </v-sheet>
 </template>
+
 <script setup lang="ts">
+import Vue3Signature from "vue3-signature"
 import swal from 'sweetalert';
 import useAuth from "~/store/auth";
 const user = useAuth().user;
@@ -651,12 +816,11 @@ onBeforeMount(() => {
       get_experience(),
       get_rating(),
       get_sdo(),
-      get_school(),
       get_sg(),
       get_qs(),
       get_applicant_details(),
       get_current_status(),
-       get_ma_units(),
+      get_leadership(),
 
     ]
   ).catch(() => swal({
@@ -676,12 +840,24 @@ const next = () => {
   return step.value++;
 }
 
+const position_items = computed(() => {
+  return position_data.value.map((v: Position) => {
+    const title = v.education_level ? `${v.title} - ${v.education_level}` : v.title;
+    return {
+      ...v,
+      title: title
+    };
+  });
+});
+
+
 
 function position_form_cond() {
   position_form.value = true
   apply_dialog.value = false
 
 }
+const view_qs_dialog = ref(false)
 const apply_dialog = ref(false)
 const next_dialog = ref(false)
 const confirmation_dialog = ref(false)
@@ -694,7 +870,7 @@ const position_form = ref(false)
 const applicant = ref({
   qualification: {
     position: "",
-    educ_level: "",
+    education_level: "",
     education: [],
     experience: [],
     experience_type: '',
@@ -708,6 +884,9 @@ const applicant = ref({
     per_rating: "",
     sg: 0,
     sg_equivalent: 0,
+    supplemented_units: 0,
+    leadership_points: [],
+    status_of_appointment: false,
   },
   personal_information: {
     last_name: "",
@@ -716,7 +895,12 @@ const applicant = ref({
     email: "",
     birthday: new Date,
     gender: "",
-
+    signature: "",
+    contact_number: ""
+  },
+  principal: {
+    email: "",
+    signature: "",
   },
   designation: {
     current_position: "",
@@ -726,7 +910,6 @@ const applicant = ref({
     division: "",
     district: "",
     item_no: "",
-    // school: "",
     ipcrf_rating: "",
   },
   educational_attainment: [],
@@ -755,7 +938,7 @@ const applicant = ref({
     signature: "WARAY PA",
     date: new Date(new Date())
   },
-  principal_email: "",
+
   status: "For Signature",
   created_date: new Date(new Date()),
   request_log: [],
@@ -765,6 +948,64 @@ const applicant = ref({
 
 const show_footer = ref(false)
 
+
+// Start: Esignature
+const esig = ref(false)
+const tab = ref(null)
+const image_src = ref("")
+const image_data = ref("")
+const input_sig = ref()
+const signature_pad = ref(null as any)
+
+function preview_image(event: any) {
+  input_sig.value = event.target
+  if (input_sig.value.files && input_sig.value.files[0]) {
+    const reader = new FileReader()
+    reader.onload = (e: any) => {
+      image_data.value = e.target.result
+    }
+    reader.readAsDataURL(input_sig.value.files[0])
+  }
+}
+
+function attached_esig() {
+  const file = input_sig.value.files[0]
+  if (file) {
+    const reader = new FileReader()
+
+    reader.onload = (event: any) => {
+      applicant.value.personal_information.signature = event?.target.result
+    }
+    reader.readAsDataURL(file)
+  }
+  esig.value = false;
+  swal({ text: "Successfully Uploaded Signature", icon: "success", buttons: { ok: false, cancel: false } })
+
+}
+
+function free_hand_esig() {
+  const file = signature_pad.value.save("image/png")
+  applicant.value.personal_information.signature = file
+
+  esig.value = false;
+  swal({ text: "Successfully Uploaded Signature", icon: "success", buttons: { ok: false, cancel: false } })
+}
+
+function clear() {
+  signature_pad.value.clear()
+}
+
+function clear_upload() {
+  applicant.value.personal_information.signature === ""
+}
+const state = reactive({
+  count: 0,
+  option: {
+    penColor: "rgb(0, 0, 0)",
+    backgroundColor: "rgb(255,255,255)"
+  },
+  disabled: false
+})
 /**
  * START: SERVICE RECORD
  */
@@ -971,44 +1212,7 @@ const sg_item = computed(() => {
 
 
 
-// function next_window() {
 
-//   if (step.value === 2 && !qs.value.with_erf) {
-//     step.value = 4;
-//     confirmation_dialog.value = false
-//   } else {
-//     const selected_position: { _id: string; education: string[] } | undefined = position_data.value.filter((v: any) => v._id == applicant.value.qualification.position)[0];
-//     if (!selected_position) return swal({ title: "Oops!", text: "Select position", icon: "info" });
-//     const applicant_education = applicant.value.qualification.education;
-
-
-//     if (!applicant_education) return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
-//     const applicant_experience = applicant.value.qualification.experience;
-//     if (!applicant_experience) return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
-
-//     const applicant_rating = applicant.value.qualification.per_rating;
-//     if (position_data.value.rating?.length && !applicant_rating) return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
-//     // if (position_data.value.rating?.length && !applicant_rating) return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
-
-//     const applicant_training = applicant.value.qualification.training;
-//     if (position_data.value.training_hours?.length > 0 && !applicant_training) return swal({ title: "Oops!", text: "Training Hours is required", icon: "info" });
-
-
-
-//     const is_yes: boolean[] = [];
-
-//     is_yes.push(education_matching(applicant_education, selected_position.education));
-//     is_yes.push(experience_matching(applicant_experience, selected_position.experience));
-//     is_yes.push(rating_matching(applicant_rating, selected_position.rating));
-//     is_yes.push(training_matching(applicant_training, selected_position.training_hours));
-//     if (is_yes.includes(false)) return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" })
-
-//     confirmation_dialog.value = true
-
-
-
-//   }
-// }
 
 function next_to_step2() {
   step.value++
@@ -1065,10 +1269,12 @@ function training_matching(applicant_training: number, required_training: number
   return applicant_training >= required_training;
 }
 
-function ma_units_matching(applicant_ma_units: number, required_ma_units: number) {
-  applicant_ma_units = parseFloat(applicant_ma_units.toString());
-  required_ma_units = parseFloat(required_ma_units.toString());
-  return applicant_ma_units >= required_ma_units;
+function leadership_points_matching(applicant_lead: any, required_lead: any) {
+  if (!required_lead) {
+    return false;
+  }
+  const [result] = required_lead.map((v: string) => applicant_lead.includes(v));
+  return result;
 }
 
 
@@ -1076,7 +1282,7 @@ function ma_units_matching(applicant_ma_units: number, required_ma_units: number
 
 
 // CREATE 
-const form = ref(true)
+
 async function create_application() {
   applicant.value.sdo_attachments = selected_qs.value.sdo_attachment;
   const { attachments, sdo_attachments } = applicant.value;
@@ -1104,10 +1310,8 @@ async function create_application() {
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 }
 
-const hide_windows = ref(false)
 async function update_applicant() {
   get_applicant_details()
-  hide_windows.value = false
   const payload = {
     applicant,
   }
@@ -1119,35 +1323,20 @@ async function update_applicant() {
   swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } });
 
 }
-async function get_ma_units() {
-  const { data, error } = await $rest('sms-ma-units/get-ma-units', {
+const leadership_data = ref<Leadership[]>([]);
+
+
+async function get_leadership() {
+  const { data, error } = await $rest('sms-leadership/get-leadership-and-potential', {
     method: "GET",
   });
   if (!error && data) {
 
-    ma_units_data.value = data;
+    leadership_data.value = data;
   }
 }
 
-const ma_units_data = ref<Maunits[]>([]);
 
-const filtered_unit = computed(() => {
-  if (applicant.value.experience_type === 'Both') {
-    const public_years = ma_units_data.value
-      .filter(unit => unit.type === 'Public')
-      .map(unit => unit.number_of_years);
-
-    const private_years = ma_units_data.value
-      .filter(unit => unit.type === 'Private')
-      .map(unit => unit.number_of_years);
-
-    return { public_years, private_years };
-  }
-
-  const type = applicant.value.experience_type;
-  const filteredData = ma_units_data.value.filter(unit => unit.type === type);
-  return { public_years: type === 'Public' ? filteredData.map(unit => unit.number_of_years) : [], private_years: type === 'Private' ? filteredData.map(unit => unit.number_of_years) : [] };
-});
 
 
 
@@ -1177,8 +1366,83 @@ const email_rules = computed((v: any) => [
 /**
  * MATCHING
  */
-
 function next_window() {
+  if (step.value === 2 && !qs.value.with_erf) {
+    step.value = 4;
+    confirmation_dialog.value = false
+  } if (qs?.value.title === 'Teacher II') {
+    const selected_position: { _id: string; education: string[] } | undefined = position_data.value.filter((v: any) => v._id == applicant.value.qualification.position)[0];
+    if (!selected_position) return swal({ title: "Oops!", text: "Select position", icon: "info" });
+    const applicant_education = applicant.value.qualification.education;
+    const applicant_experience = applicant.value.qualification.experience;
+
+    const is_yes: boolean[] = [];
+
+    is_yes.push(education_matching(applicant_education, selected_position.education));
+    is_yes.push(applicant.value.qualification.ma_units >= 20 || experience_matching(applicant_experience, selected_position.experience))
+    if (experience_matching(applicant_experience, selected_position.experience) === false && applicant.value.qualification.ma_units < 20) {
+      return swal({ title: "Oops!", text: "The equivalent M.A. units do not meet the requirement.", icon: "info" });
+    }
+
+    if (is_yes.includes(false)) return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" })
+    confirmation_dialog.value = true
+
+
+  } else {
+    const selected_position: { _id: string; education: string[] } | undefined = position_data.value.filter((v: any) => v._id == applicant.value.qualification.position)[0];
+   console.log("SELCTED",selected_position );
+   
+    if (!selected_position) return swal({ title: "Oops!", text: "Select position", icon: "info" });
+
+    const applicant_education = applicant.value.qualification.education;
+    if (!applicant_education) return swal({ title: "Oops!", text: "Education is required", icon: "info" });
+
+    const applicant_experience = applicant.value.qualification.experience;
+    if (!applicant_experience) return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
+
+    const applicant_rating = applicant.value.qualification.per_rating;
+    if (position_data.value.rating?.length && !applicant_rating) return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
+ 
+
+    const applicant_training = applicant.value.qualification.training;
+    if (position_data.value.training_hours?.length > 0 && !applicant_training) return swal({ title: "Oops!", text: "Training Hours is required", icon: "info" });
+
+    const applicant_leadership_points = applicant.value.qualification.leadership_points;
+    const applicant_supplement_units = applicant.value.qualification.supplemented_units;
+    const applicant_education_level = applicant.value.qualification.education_level;
+ 
+
+  
+
+    const is_yes: boolean[] = [];
+
+
+    is_yes.push(education_matching(applicant_education, selected_position.education));
+  // if(selected_position.education_level != ''){
+  //      is_yes.push(applicant_education_level === selected_position.education_level);
+  // }
+    is_yes.push(experience_matching(applicant_experience, selected_position.experience));
+    is_yes.push(rating_matching(applicant_rating, selected_position.rating));
+    is_yes.push(training_matching(applicant_training, selected_position.training_hours));
+    if (selected_position.supplemented_units > 1) {
+    is_yes.push( selected_position.supplemented_units <= applicant_supplement_units);
+    } 
+    if(selected_position.leadership_points){
+      is_yes.push(leadership_points_matching(applicant_leadership_points, selected_position.leadership_points));
+    }
+
+
+    if (is_yes.includes(false)) return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" })
+console.log(is_yes);
+
+    confirmation_dialog.value = true
+
+
+
+  }
+}
+
+function next_teacher3() {
   const selected_position = position_data.value.find(v => v._id === applicant.value.qualification.position);
   if (!selected_position) {
     return swal({ title: "Oops!", text: "Please select a position", icon: "info" });
@@ -1195,116 +1459,51 @@ function next_window() {
   educations.forEach(education => {
     if (!education.high_degree) {
       const applicant_experience = applicant.value.qualification.experience;
-    
-      const applicant_rating = applicant.value.qualification.per_rating;
-      const applicant_training = applicant.value.qualification.training;
-      // const applicant_ma_units = applicant.value.qualification.ma_units;
-
-      if (!applicant_experience && !if_20_years.value ) {
+      if (!applicant_experience && !if_20_years.value) {
         return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
       }
-
+      const applicant_rating = applicant.value.qualification.per_rating;
+      if (position_data.value.rating?.length && !applicant_rating) {
+        return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
+      }
+      const applicant_training = applicant.value.qualification.training;
+      if (position_data.value.training_hours?.length > 0 && !applicant_training) {
+        return swal({ title: "Oops!", text: "Training Hours is required", icon: "info" });
+      }
       if (if_20_years.value && applicant.value.qualification.total_ma < 40) {
         return swal({ title: "Oops!", text: "The equivalent M.A. units do not meet the requirement.", icon: "info" });
       }
 
-    
+      const is_yes: boolean[] = [];
 
-      if (position_data.value.rating?.length && !applicant_rating) {
-        return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
-      }
-
-      if (position_data.value.training_hours?.length > 0 && !applicant_training) {
-        return swal({ title: "Oops!", text: "Training Hours is required", icon: "info" });
-      }
-
-      // if (position_data.value.ma_units?.length > 0 && !applicant_ma_units) {
-      //   return swal({ title: "Oops!", text: "M.A. Units is required", icon: "info" });
-      // }
-
-      const is_yes = [
-        (!if_20_years.value ? experience_matching(applicant_experience, selected_position.experience) : true),
-        rating_matching(applicant_rating, selected_position.rating),
-        training_matching(applicant_training, selected_position.training_hours),
-        // ma_units_matching(applicant_ma_units, selected_position.ma_units)
-      ];
-
+      is_yes.push(applicant.value.qualification.total_ma >= 40 || experience_matching(applicant_experience, selected_position.experience));
+      is_yes.push(rating_matching(applicant_rating, selected_position.rating));
+      is_yes.push(training_matching(applicant_training, selected_position.training_hours));
       if (is_yes.includes(false)) {
         return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" });
       }
-      
-    
+      console.log("iS YESSS", is_yes);
+
       confirmation_dialog.value = true;
-    } else {
-      console.log(`${education.title} is a high degree.`);
+    }
+
+    else {
       confirmation_dialog.value = true;
     }
   });
 }
 
 
-// function next_window() {
-//   const selected_position = position_data.value.find(v => v._id === applicant.value.qualification.position);
-//   if (!selected_position) {
-//     return swal({ title: "Oops!", text: "Please select a position", icon: "info" });
-//   }
-//   const applicant_education_id = applicant.value.qualification.education;
-//   const find_qs_education = qs?.value.education;
-
-//   if (!applicant_education_id || !find_qs_education) {
-//     return swal({ title: "Oops!", text: "Education is required", icon: "info" });
-//   }
-//   const educations = applicant_education_id.map(educ_id => find_qs_education.find(edu => edu._id === educ_id));
-//   educations.forEach(education => {
-//     if (!education.high_degree) {
-//       const applicant_experience = applicant.value.qualification.experience;
-//       const applicant_rating = applicant.value.qualification.per_rating;
-//       const applicant_training = applicant.value.qualification.training;
-
-//       if (!applicant_experience) {
-//         return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
-//       }
-    
-// if (if_20_years.value && applicant.value.qualification.total_ma < 40) {
-//   return swal({ title: "Oops!", text: "Total experience must be 40 or above.", icon: "info" });
-// }
-
-
-//       if (position_data.value.rating?.length && !applicant_rating) {
-//         return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
-//       }
-//       if (position_data.value.training_hours?.length > 0 && !applicant_training) {
-//         return swal({ title: "Oops!", text: "Training Hours is required", icon: "info" });
-//       }
-
-//       const is_yes = [
-//         experience_matching(applicant_experience, selected_position.experience),
-//         rating_matching(applicant_rating, selected_position.rating),
-//         training_matching(applicant_training, selected_position.training_hours)
-//       ];
-
-//       if (is_yes.includes(false)) {
-//         return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" });
-//       }
-//   console.log("YES", is_yes);
-//       confirmation_dialog.value = true;
-//       console.log("YES", is_yes);
-//     } else {
-//       console.log(`${education.title} is a high degree.`);
-//       confirmation_dialog.value = true;
-//     }
-//   });
-// }
 const public_equivalent_ma_units = computed(() => {
   const public_experience = Number(applicant.value.qualification.experience_sr_public);
-  const equivalent = Math.floor(public_experience / 3); 
+  const equivalent = Math.floor(public_experience / 3);
   applicant.value.qualification.experience_sr_public_equivalent = equivalent;
   return equivalent;
 });
 
 const private_equivalent_ma_units = computed(() => {
   const private_experience = Number(applicant.value.qualification.experience_sr_private);
-  const equivalent = Math.floor(private_experience / 5); 
+  const equivalent = Math.floor(private_experience / 5);
   applicant.value.qualification.experience_sr_private_equivalent = equivalent;
   return equivalent;
 });
@@ -1357,24 +1556,7 @@ async function get_sdo() {
 
 }
 
-const school_data = ref<School[]>([]);
 
-async function get_school() {
-
-  const { data, error } = await $rest('sms-school/get-school', {
-    method: "GET",
-  });
-
-
-  school_data.value = data
-}
-
-function get_sdo_school(division) {
-  if (!division || !school_data.value || school_data.value.length === 0) {
-    return [];
-  }
-  return school_data.value.filter(school => school.division === division);
-}
 
 
 // Current status of

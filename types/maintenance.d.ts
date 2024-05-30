@@ -25,10 +25,14 @@ interface Position {
   with_erf: boolean;
   education: string[];
   education_level?: string;
+  supplemented_units?: number;
   ma_units?: number;
+  status_of_appointment?: boolean;
   experience: string[];
   is_experience: boolean;
+  or_20_ma_units: boolean;
   training_hours?: number;
+  leadership_points?: array;
   rating?: array;
   sg?: string;
   attachment?: array;
@@ -54,8 +58,7 @@ interface Rd {
 }
 
 
-interface Maunits {
-  type: string,
-  number_of_years: number,
-  years_equivalent: number,
+interface Leadership {
+  tile: string,
+
 }

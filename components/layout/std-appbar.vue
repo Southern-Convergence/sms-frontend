@@ -61,11 +61,7 @@
                   <v-icon class="mr-1" icon="mdi-key-chain" />
                 </template>
               </v-list-item>
-              <v-list-item title="School Panel" color="primary" :to="{ name: `school`, query: { id: user.school } }">
-                <template v-slot:prepend>
-                  <v-icon class="mr-1" icon="mdi-key-chain" />
-                </template>
-              </v-list-item>
+
             </v-list>
           </v-card-text>
         </v-card>
@@ -139,11 +135,6 @@
                 </template>
               </v-list-item>
 
-              <v-list-item title="School Profile" color="primary" :to="{ name: 'school' }">
-                <template v-slot:prepend>
-                  <v-icon class="mr-1" icon="mdi-school" />
-                </template>
-              </v-list-item>
               <v-list-item title="Settings" color="primary" :to="{ name: 'account-settings' }">
                 <template v-slot:prepend>
                   <v-icon class="mr-1" icon="mdi-cog" />

@@ -3,8 +3,8 @@
 
 
     <v-row no-gutters>
-      <v-col cols="12" xl="8" lg="8" md="12" sm="12"><v-btn prepend-icon="mdi-pencil-plus"
-          @click="user_invite_dialog = true" color="indigo" rounded="0">
+      <v-col cols="12"><v-btn prepend-icon="mdi-pencil-plus" @click="user_invite_dialog = true" color="indigo"
+          rounded="0">
           Invite
           User</v-btn>
         <commons-sms class="my-2 mr-3" title="SDO USER MANAGEMENT" subtitle="A brief overview of users." rounded="lg"
@@ -15,20 +15,20 @@
                 <div class="text-uppercase  text-indigo text-body-1"> {{ value.first_name
                   }}
                   {{
-                    value.last_name }}
+                  value.last_name }}
                 </div>
                 <v-spacer />
                 <div> <v-chip density="compact" class="text-uppercase text-overline" color="success">{{
-                  value.status }}</v-chip></div>
+                    value.status }}</v-chip></div>
               </div>
               <div> {{ value.role }} <span v-if="value.division">
                   {{
-                    value.division.title
+                  value.division.title
                   }}</span>
               </div>
               <div class="text-caption text-capitalize mb-2">{{ value?.side }}</div>
               <div class="text-caption"> <v-icon color="red-lighten-3"> mdi-email</v-icon> <u class="text-blue">{{
-                value.email }}</u>
+                  value.email }}</u>
               </div>
               <div class="text-caption"> <v-icon color="green-lighten-3"> mdi-phone</v-icon> {{
                 value.contact_number }}</div>
@@ -51,41 +51,7 @@
         </commons-sms>
 
       </v-col>
-      <v-col cols="12" xl="4" lg="4" md="12" sm="12" class="mt-15">
 
-        <v-toolbar color="transparent">
-          <span class="ml-2 text-subtitle-1"> School/s</span>
-          <v-spacer />
-          <v-tooltip text="Click to add School" location="top">
-            <template v-slot:activator="{ props }">
-              <v-btn variant="tonal" prepend-icon="mdi-pencil-plus" @click="create_school_dialog = true" v-bind="props"
-                color="indigo">Add SCHOOL</v-btn>
-            </template>
-          </v-tooltip>
-        </v-toolbar>
-
-
-
-        <v-card class="ma-3" v-for="(school, index) in school_data" :key="index">
-          <v-alert class=" maintenance-item" color="white" @click="route_to_school(school._id)"
-            :class="{ 'elevation-4': is_hovered }" border="start" border-color="indigo">
-            <div class=" text-uppercase 
-">{{ school.title }}
-            </div>
-            <div>
-              <v-icon color="blue-lighten-2"> mdi-map-marker</v-icon> {{
-                school.address }}
-            </div>
-            <div class="text-blue font-italic text-decoration-underline">
-              <v-icon color="red"> mdi-email</v-icon> {{ school.email }}
-            </div>
-            <div>
-              <v-icon color="success"> mdi-phone</v-icon> {{ school.telephone }}
-            </div>
-          </v-alert>
-        </v-card>
-
-      </v-col>
     </v-row>
 
 

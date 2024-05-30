@@ -164,12 +164,20 @@
           </v-row>
           <div class="d-flex mt-4">
             <div class="w-50 text-center px-5">
-              <b>Current Principal</b>
+              <div class="w-100" style="display: grid; place-items: center;">
+                <v-img :width="197" height="6vh" :src="erf?.principal?.signature" />
+              </div>
+              <div class="text-center text-uppercase font-weight-bold"> {{ erf?.principal?.name }} </div>
               <v-divider />
               <center> School Principal </center>
 
             </div>
-            <div class="w-50 text-center"> <b>{{ erf?.full_name }}</b>
+
+            <div class="w-50 justify-center  px-5">
+              <div class="w-100" style="display: grid; place-items: center;">
+                <v-img :width="197" height="6vh" :src="erf?.signature" />
+              </div>
+              <div class="text-center text-uppercase font-weight-bold">{{ erf?.full_name }}</div>
               <v-divider />
               <center> Teacher </center>
             </div>

@@ -15,27 +15,28 @@
             </v-col>
           </v-row>
 
-          <v-row dense justify="end" v-if="user.role === 'Administrative Officer V'"><v-col cols="8"
-              class="text-grey d-flex mt-4">
-              <v-select class="pr-2" label="Filter by Position" v-model="selected_position" :items="positions"
-                item-value="_id" persistent-hint clearable />
-              <v-select v-if="user.role === 'Administrative Officer V'" class="pr-2" label="Filter by SDO"
-                v-model="selected_sdo" :items="sdo" item-value="_id" persistent-hint clearable />
-              <v-select v-if="user.role === 'Administrative Officer V'" label="Filter by Status"
+          <v-row justify="end" dense
+            v-if="user.role === 'Administrative Officer V' || user.role === 'Administrative Officer IV'">
+            <v-col cols="2"> <v-select class="pr-2" label="Filter by Position" v-model="selected_position"
+                :items="positions" item-value="_id" persistent-hint clearable /></v-col>
+            <v-col cols="2" v-if="user.role === 'Administrative Officer V'"> <v-select class="pr-2"
+                label="Filter by SDO" v-model="selected_sdo" :items="sdo" item-value="_id" persistent-hint
+                clearable /></v-col>
+            <v-col cols="2" v-if="user.role === 'Administrative Officer V'"> <v-select label="Filter by Status"
                 v-model="selected_status" :items="['Pending', 'Received Printout/s']" persistent-hint clearable />
-
-              <v-btn @click="get_application" class="ml-2 mt-1" color="primary">
+            </v-col>
+            <v-col cols="auto" class="text-grey d-flex">
+              <v-btn @click="get_application" class="mt-1" color="primary">
                 <v-icon class="pr-1">mdi-filter</v-icon>Filter</v-btn>
-
-              <v-btn @click="evaluators_dialog = true" class="ml-2 mt-1" color="primary"
-                v-if="selected_status === 'Pending'">Assign to
+            </v-col>
+            <v-col cols="auto" v-if="selected_status === 'Pending'">
+              <v-btn @click="evaluators_dialog = true" class="mt-1" color="primary">Assign to
                 Evaluator</v-btn>
-              <v-btn @click="endorsement_dialog = true" class="ml-2 mt-1" color="amber"
-                v-if="selected_status === 'Received Printout/s'">Generate
+            </v-col>
+            <v-col cols="auto" v-if="selected_status === 'Received Printout/s'">
+              <v-btn @click="endorsement_dialog = true" class="mt-1" color="amber">Generate
                 Endorsment
               </v-btn>
-
-
             </v-col>
 
           </v-row>
@@ -129,8 +130,8 @@
           <h5 class="text-center">
             1st Indorsement <br />
             {{ new Date().toLocaleDateString('en-US', {
-              month: 'long', day:
-                'numeric', year: 'numeric'
+            month: 'long', day:
+            'numeric', year: 'numeric'
             }) }}
           </h5>
 
@@ -249,12 +250,15 @@ const endorsement_headers = ref([
 
 const selected_status = ref("");
 
+
+
 const application_data = ref([]);
 async function get_application() {
   const payload = {
     position: selected_position.value,
     sdo: selected_sdo.value,
-    status: selected_status.value
+    status: selected_status.value,
+  
   };
 
   const { data, error } = await $rest('new-applicant/get-application', {
