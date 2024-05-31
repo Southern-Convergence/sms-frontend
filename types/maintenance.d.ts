@@ -52,6 +52,7 @@ interface Rd {
     middle_name: string;
     last_name: string;
     government_agency: string;
+    region: string;
     dbm_address: string;
     position: string;
   };

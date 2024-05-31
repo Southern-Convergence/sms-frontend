@@ -16,21 +16,17 @@
           </v-chip></v-col>
       </v-row>
       <v-row no-gutters> <v-col cols="5" class="text-subtitle-2 font-weight-bold"> DIVISION : {{
-          applicant_details?.division }} </v-col>
+        applicant_details?.division }} </v-col>
         <v-col cols="auto"> Control No. : <v-chip class="font-weight-bold" color="orange" density="compact"> {{
-            applicant_details?.control_number }}
+          applicant_details?.control_number }}
           </v-chip></v-col>
         <v-spacer />
 
       </v-row>
       <!-- Application header -->
       <v-row no-gutters>
-        {{ route.query.id }}
-        <h6> {{ applicant_qs_info }}</h6>
 
         <!-- Applicant Personal Information -->
-
-
         <v-col :cols="applicant_details.is_with_erf ? '8' : '12'">
           <v-card class="mx-auto mt-4" rounded="lg">
             <v-card-title class="d-flex  font-weight-bold">
@@ -52,11 +48,11 @@
             <v-card-text>
               <v-row no-gutters class="ma-2">
                 <v-col cols="6" class="text-capitalize">Name : <b> {{
-                    applicant_details?.personal_information?.first_name
-                    }} {{ applicant_details?.personal_information?.last_name }} </b>
+                  applicant_details?.personal_information?.first_name
+                }} {{ applicant_details?.personal_information?.last_name }} </b>
                 </v-col>
                 <v-col cols="6">Date of Birth : <b> {{
-                    applicant_details?.personal_information?.birthday }}
+                  applicant_details?.personal_information?.birthday }}
                   </b>
                 </v-col>
                 <v-col cols="6">Employee Number : <b> {{ applicant_details?.designation?.employee_no }}</b> </v-col>
@@ -99,10 +95,10 @@
                     <v-sheet width="70%">
                       <v-row dense class="pa-2">
                         <v-col cols="6"> Public Schools : <span class="pl-2"> {{
-                            applicant_details?.equivalent_unit?.public_years_teaching }}</span>
+                          applicant_details?.equivalent_unit?.public_years_teaching }}</span>
                         </v-col>
                         <v-col cols="6"> Private Schools : <span class="pl-2"> {{
-                            applicant_details?.equivalent_unit?.yt_equivalent }}
+                          applicant_details?.equivalent_unit?.yt_equivalent }}
                           </span>
                         </v-col>
                       </v-row>
@@ -135,7 +131,7 @@
                     <v-sheet class="ml-15" width="70%">
                       <v-row dense class="pa-2">
                         <v-col cols="6"> Public Schools : <b class="pl-2"> {{
-                            applicant_details?.equivalent_unit?.public_years_teaching }}</b>
+                          applicant_details?.equivalent_unit?.public_years_teaching }}</b>
                         </v-col>
                         <v-col cols="6"> Private Schools : <b class="pl-2"></b>
                         </v-col>
@@ -146,7 +142,7 @@
                   <v-row dense class="ml-15 mt-1">
                     LATEST IPCRF RATING : <div class="px-5 font-weight-bold" style="border-bottom: 1px solid black">
                       {{
-                      applicant_details.designation?.ipcrf_rating }}</div>
+                        applicant_details.designation?.ipcrf_rating }}</div>
                   </v-row>
                 </v-col>
               </v-row>
@@ -332,7 +328,7 @@
                 <hr />
                 <div class="w-100 text-center font-weight-bold text-subtitle-1 text-uppercase"> {{
                   applicant_details?.principal?.name
-                  }}</div>
+                }}</div>
               </div>
             </v-col>
           </v-row>
@@ -549,7 +545,7 @@
                   <b class="text-uppercase mb-2">APPLICANT </b>
                   <p v-for="attach, index in applicant_qs_info?.attachments" :key="attach">
                     <v-icon size="20" color="primary">mdi-circle-small</v-icon> {{
-                    attach }} <br />
+                      attach }} <br />
                   </p>
 
                 </td>

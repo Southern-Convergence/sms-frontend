@@ -11,6 +11,7 @@
           </v-col>
 
         </v-row>
+
         <v-row>
           <v-col cols="12">
 
@@ -18,10 +19,11 @@
 
               <v-data-table :headers="table_headers" :items="endorsement_data">
                 <template v-slot:item.generated_date="{ item }">
-                  <span class="text-primary">{{ new Date(item.selectable.generated_date).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month:
-                    '2-digit', day: '2-digit' }) }}</span>
+
+                  <span class="text-primary"> {{ new Date(item.selectable.generated_date).toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: '2-digit', year: 'numeric'
+                    })}}</span>
                 </template>
                 <template v-slot:item.control_number="{ item }">
                   <span class="text-primary">{{ item.selectable.control_number }}</span>
@@ -60,7 +62,7 @@
 
 
 <script lang="ts" setup>
-
+import swal from 'sweetalert';
 
 const { $rest } = useNuxtApp();
 const user = useAuth().user;
@@ -90,8 +92,9 @@ async function get_endorsement() {
   const { data, error } = await $rest('sms-endorsement/get-endorsement', {
     method: "GET",
   })
+  
   endorsement_data.value = data
-
+ if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
 }
 
 const load_endorsement_letter = (id: any) => {

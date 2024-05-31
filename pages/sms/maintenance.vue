@@ -11,51 +11,29 @@
           Set Up Form</v-tab>
         <v-tab :value="3">
           <v-icon>mdi-human</v-icon>
-          Regional Director Info</v-tab>
+          Regional Director Info</v-tab> <v-spacer /> <v-btn @click="position_dialog = true" color="blue-darken-4"
+          class="mt-7" v-if="tab === 1"> Set
+          Up Position</v-btn>
       </v-tabs>
 
       <v-window v-model="tab">
         <v-window-item :value="1">
-          <v-card-text>
-            <v-row no-gutters>
-              <v-col cols="auto" class="mt-3"> <v-btn @click="position_dialog = true" color="blue-darken-4"> Set
-                  Up Position</v-btn></v-col>
+          <v-card class="mt-3" title="Summary of Set Qualification Standards"
+            subtitle="A brief overview of qualification standards." prepend-icon="mdi-certificate" rounded="lg">
+            <v-divider />
+            <v-card-text>
+              <v-row no-gutters>
+                <v-col cols="4" class="pa-2" v-for="pos, index in position_data" :key="pos">
+                  <v-alert border-color="indigo" class="maintenance-item" append-icon="mdi-open-in-new"
+                    @click="view_pos(pos)">
+                    {{ pos.title
+                    }}
+                  </v-alert>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
 
-              <v-spacer />
-              <v-col cols="3"><v-text-field prepend-inner-icon="mdi-magnify" label="Enter Position Title"
-                  density="compact" hide-details="auto" variant="solo" bg-color="grey-lighten-4" /></v-col>
-            </v-row>
-            <!-- <commons-item-container class="mt-2" title="Qualification Standards"
-              subtitle="A brief overview of qualification standards." :items="position_data" :display_types="['grid']">
-              <template v-slot:item="{ value, index, display }">
-                <v-card class="mx-auto ma-1 elevation-0" append-icon="mdi-open-in-new" rounded="md" border
-                  :title="value.title" @click="view_pos(value)"></v-card>
-                <v-alert class="maintenance-item" append-icon="mdi-open-in-new" border-color="indigo" border
-                  @click="view_pos(value)">
-                  {{ value.title
-                  }}
-
-                </v-alert>
-              </template>
-</commons-item-container> -->
-
-            <v-card class="mt-3" title="Summary of Set Qualification Standards"
-              subtitle="A brief overview of qualification standards." prepend-icon="mdi-certificate" rounded="lg">
-              <v-divider />
-              <v-card-text>
-                <v-row no-gutters>
-                  <v-col cols="4" class="pa-2" v-for="pos, index in position_data" :key="pos">
-                    <v-alert border-color="indigo" class="maintenance-item" append-icon="mdi-open-in-new"
-                      @click="view_pos(pos)">
-                      {{ pos.title
-                      }}
-                    </v-alert>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-            </v-card>
-
-          </v-card-text>
         </v-window-item>
         <v-window-item :value="2" height="80vh">
           <div fluid border class="mt-2">
@@ -163,7 +141,8 @@
                       </template>
                     </v-tooltip>
                   </v-toolbar>
-                  <v-card-text> <v-sheet height="31vh" class="overflow-y-auto pa-2">
+                  <v-card-text>
+                    <v-sheet height="31vh" class="overflow-y-auto pa-2">
                       <v-alert class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="lg"
                         icon="mdi-book" border-color="blue-darken-4" v-for="lead, index in leadership_data"
                         :key="index">
@@ -214,7 +193,7 @@
             <v-card-text>
               <v-row justify="center">
 
-                <v-col cols="6"> <v-row justify="center">
+                <v-col cols="6"> <v-row justify="center" dense>
                     <v-col cols="12" class="text-primary">
                       Regional Director
                     </v-col>
@@ -235,7 +214,7 @@
                       <v-textarea rows="3" v-model="rd.rd.ro_address" label="Regional Office Address" />
                     </v-col>
                   </v-row></v-col>
-                <v-col cols="6"> <v-row justify="center"> <v-col cols="12" class="text-primary">
+                <v-col cols="6"> <v-row justify="center" dense> <v-col cols="12" class="text-primary">
                       DBM
                     </v-col>
                     <v-col cols="4">
@@ -247,11 +226,14 @@
                     <v-col cols="4">
                       <v-text-field v-model="rd.dbm.last_name" label="Last Name" hide-details />
                     </v-col>
-                    <v-col cols="6">
+                    <v-col cols="4">
                       <v-text-field v-model="rd.dbm.government_agency" label="Government Agency" hide-details />
                     </v-col>
-                    <v-col cols="6">
+                    <v-col cols="4">
                       <v-text-field v-model="rd.dbm.position" label="CES Rank" hide-details />
+                    </v-col>
+                    <v-col cols="4">
+                      <v-text-field v-model="rd.dbm.region" label="Region" hide-details />
                     </v-col>
                     <v-col cols="12">
                       <v-textarea rows="3" v-model="rd.dbm.dbm_address" label="Office Address" />
@@ -426,95 +408,121 @@
       </v-card-text>
     </commons-dialog>
 
-    <v-dialog max-width="60%" v-model="view_qs_dialog">
-      <v-card color="#E8EAF6" class="pa-5">
-        <v-card-title> Evaluation Criteria : <span class="text-primary">{{ selected_position.title }}</span>
-        </v-card-title>
+
+
+    <v-dialog v-model="view_qs_dialog" width="70%">
+      <v-card flat class="mx-5">
+        <v-toolbar color="indigo" border>
+          <v-list-item class="pl-7">
+            Evaluation Criteria for <u> {{ selected_position.title }}</u>
+          </v-list-item>
+
+          <v-spacer />
+          <v-btn class="mr-0" @click="view_qs_dialog = false" rounded="0" icon="mdi-close" />
+        </v-toolbar>
         <v-card-text>
-          <v-row>
-            <v-col cols="12" xl="6" lg="6" md="6" sm="12">
-              <v-list class="pa-4" rounded="lg">
-                <v-list-item-title class="text-primary">Education</v-list-item-title>
-                <v-sheet class="overflow-y-auto pa-2" height="22vh">
-                  <v-list-item-subtitle v-for=" educ, index in selected_position.education " :key="index">
-                    <v-icon>mdi-circle-medium</v-icon> {{ educ.text }}</v-list-item-subtitle>
-                </v-sheet>
-              </v-list>
-            </v-col>
-            <v-col cols="12" xl="6" lg="6" md="6" sm="12">
-              <v-list class="pa-4" rounded="lg">
-                <v-list-item-title class="text-primary">Experience</v-list-item-title>
-                <v-sheet class="overflow-y-auto pa-2" height="22vh">
-                  <v-list-item-subtitle v-for=" exp, index in selected_position.experience " :key="index">
-                    <v-icon>mdi-circle-medium</v-icon> {{ selected_position.experience.length ? exp.text : 'N/A'
-                    }}</v-list-item-subtitle>
-                </v-sheet>
-              </v-list>
-            </v-col>
-            <v-col cols="12" xl="6" lg="6" md="6" sm="12">
-              <v-list class="pa-4" rounded="lg">
-                <v-list-item-title class="text-primary">Education Level</v-list-item-title>
-                <v-list-item-subtitle> <v-icon>mdi-circle-medium</v-icon> {{ selected_position.education_level ?
-                  selected_position.education_level : 'N/A'
-                  }}</v-list-item-subtitle>
-              </v-list>
-            </v-col>
-            <v-col cols="12" xl="6" lg="6" md="6" sm="12">
-              <v-list class="pa-4" rounded="lg">
-                <v-list-item-title class="text-primary">Training Hours</v-list-item-title>
-                <v-list-item-subtitle> <v-icon>mdi-circle-medium</v-icon> {{ selected_position.training_hours ?
-                  selected_position.training_hours : 'N/A'
-                  }}</v-list-item-subtitle>
-              </v-list>
-            </v-col>
-            <v-col cols="12" xl="6" lg="6" md="6" sm="12">
-              <v-list class="pa-4" rounded="lg">
-                <v-list-item-title class="text-primary">Salary Grade</v-list-item-title>
-                <v-list-item-subtitle> <v-icon>mdi-circle-medium</v-icon> {{ selected_position.sg.salary_grade ?
-                  selected_position.sg.salary_grade : 'N/A'
-                  }}</v-list-item-subtitle>
-              </v-list>
-            </v-col>
 
-            <v-col cols="12" xl="6" lg="6" md="6" sm="12">
-              <v-list class="pa-4" rounded="lg">
-                <v-list-item-title class="text-primary">Salary Equivalent</v-list-item-title>
-                <v-list-item-subtitle> <v-icon>mdi-circle-medium</v-icon> {{ selected_position.sg.equivalent ?
-                  selected_position.sg.equivalent : 'N/A'
-                  }}</v-list-item-subtitle>
-              </v-list>
-            </v-col>
-            <v-col cols="12" xl="6" lg="6" md="6" sm="12">
-              <v-list class="pa-4" rounded="lg">
-                <v-list-item-title class="text-primary"> Applicant Attachment Requirements</v-list-item-title>
-                <v-sheet class="overflow-y-auto pa-2" height="12vh">
-                  <v-list-item-subtitle v-for=" attach, index in selected_position.attachment " :key="index">
-                    <v-icon>mdi-circle-medium</v-icon> {{ attach.title }}</v-list-item-subtitle>
-                </v-sheet>
-              </v-list>
-            </v-col>
-            <v-col cols="12" xl="6" lg="6" md="6" sm="12">
-              <v-list class="pa-4" rounded="lg">
-                <v-list-item-title class="text-primary"> Applicant Attachment Requirements</v-list-item-title>
-                <v-sheet class="overflow-y-auto pa-2" height="12vh">
-                  <v-list-item-subtitle v-for=" attach, index in selected_position.sdo_attachment " :key="index">
-                    <v-icon>mdi-circle-medium</v-icon> {{ attach.title }}</v-list-item-subtitle>
-                </v-sheet>
-              </v-list>
-            </v-col>
-          </v-row>
+
+          <table>
+            <tbody>
+
+              <tr>
+                <td width="30%"> Position</td>
+                <td class="text-uppercase text-primary font-weight-bold">
+                  {{ selected_position.title }}
+                </td>
+              </tr>
+              <tr>
+                <td> Salary Grade</td>
+                <td>{{selected_position.sg.salary_grade}} </td>
+              </tr>
+              <tr>
+                <td> Salary Equivalent</td>
+                <td>{{selected_position.sg.equivalent.toLocaleString('en-US', {minimumFractionDigits: 2,
+                  maximumFractionDigits: 2}) }} </td>
+              </tr>
+              <tr v-if="selected_position?.education_level">
+                <td> Education Level</td>
+                <td> {{ selected_position?.education_level }}</td>
+              </tr>
+              <tr>
+                <td> Education</td>
+                <td>
+                  <p v-for="educ, index in selected_position?.education" :key="educ"> {{ educ.text }}</p>
+                </td>
+              </tr>
+              <tr v-if="selected_position?.supplemented_units > 0">
+                <td> Graduate Units</td>
+                <td> {{ selected_position?.supplemented_units }}</td>
+              </tr>
+              <tr v-if="selected_position?.ma_units > 0">
+                <td> M.A. Units</td>
+                <td> {{ selected_position?.ma_units }} </td>
+              </tr>
+              <tr v-if="selected_position?.experience.length">
+                <td> Experience</td>
+                <td>
+                  <p v-for="exp, index in selected_position?.experience" :key="exp">
+                    {{ exp.text }}
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td> Performance Rating</td>
+                <td>
+                  <p v-for="rate, index in selected_position?.rating" :key="rate"> {{ rate.title }}</p>
+                </td>
+              </tr>
+              <tr>
+                <td> Training Hours</td>
+                <td> {{ selected_position?.training_hours }}</td>
+              </tr>
+              <tr v-if="selected_position?.leadership_points && selected_position?.leadership_points.length > 0">
+                <td> Leadership and Potention Points</td>
+
+                <td>
+                  <p v-for=" lead, index in selected_position?.leadership_points" :key="lead">{{ lead.title }}</p>
+                </td>
+              </tr>
+              <tr v-if="selected_position.status_of_appointment">
+                <td> Appointment Status</td>
+                <td>
+                  {{ selected_position.status_of_appointment }}
+                  Permarnent teacher
+                </td>
+              </tr>
+
+              <tr>
+                <td width="30%"> Attachments</td>
+                <td>
+                  <b class="text-uppercase mb-2">APPLICANT </b>
+                  <p v-for="attach, index in selected_position.attachment " :key="index"> <v-icon size="20"
+                      color="primary">mdi-circle-small</v-icon> {{ attach.title}} <br /></p>
+
+                </td>
+              </tr>
+              <tr>
+                <td> </td>
+
+                <td>
+                  <b class="text-uppercase mb-2">Schools
+                    Division Office :</b>
+                  <p v-for=" attach, index in selected_position.sdo_attachment " :key="index"> <v-icon size="20"
+                      color="primary">mdi-circle-small</v-icon> {{ attach.title}} <br /></p>
+
+                </td>
+
+              </tr>
+            </tbody>
+          </table>
+
+
+
+
         </v-card-text>
-        <v-card-actions>
-          <v-row justify="center">
-            <v-col cols="4"> <v-btn @click="update_position_dialog = true" block color="primary"
-                variant="tonal">Update</v-btn></v-col>
-            <v-col cols="4"> <v-btn @click="view_qs_dialog = false" block color="primary"
-                variant="tonal">Close</v-btn></v-col>
-          </v-row>
-        </v-card-actions>
       </v-card>
-
     </v-dialog>
+
 
   </v-sheet>
 </template>
@@ -630,7 +638,7 @@ async function create_experience() {
   })
 
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-  experience_dialog.value = ref(false)
+  experience_dialog.value = false
   get_experience()
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 }
@@ -659,16 +667,18 @@ function experience_update_dialog(ex: Experience) {
 }
 
 async function update_experience() {
-  const selectedExperience = experience.value;
-
+  const exp = experience.value;
   const { data, error } = await $rest('sms-experience/update-experience', {
     method: "PUT",
     body: {
-      _id: selectedExperience._id,
-      title: selectedExperience.title
+      _id: exp._id,
+      title: exp.title,
+      equivalent: exp.equivalent
+
     }
   });
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  get_experience()
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 
 }
@@ -724,8 +734,8 @@ async function update_rating() {
     }
   });
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  get_rating()
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
-
 }
 
 
@@ -741,7 +751,7 @@ async function create_sg() {
 
   })
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-  sg_dialog.value = ref(false)
+  sg_dialog.value = false
   get_sg()
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 }
@@ -757,28 +767,29 @@ async function get_sg() {
   })
 
   sg_data.value = data
+   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
 }
 
 const update_sg_dialog = ref(false);
 const selected_sg = ref<SalaryGrade[]>([]);
 
 function update_salary_grade(sg: SalaryGrade) {
-  selected_sg.value = [{ ...sg }];
+  selected_sg.value = { ...sg };
   update_sg_dialog.value = true;
 }
 async function update_sg() {
-  const selectedSG = selected_sg.value[0];
-
+  const sg = selected_sg.value;
   const { data, error } = await $rest('sms-salary-grade/update-sg', {
     method: "PUT",
     body: {
-      _id: selectedSG._id,
-      salary_grade: selectedSG.salary_grade,
-      equivalent: selectedSG.equivalent
+      _id: sg._id,
+      salary_grade: sg.salary_grade,
+      equivalent: sg.equivalent
     }
   });
 
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  get_sg()
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 
 }
@@ -822,7 +833,7 @@ async function create_position() {
   })
 
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-  position_dialog.value = ref(false)
+  position_dialog.value = false
   get_qs()
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 }
@@ -832,6 +843,7 @@ async function get_qs() {
     method: "GET",
   })
   position_data.value = data
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
 }
 
 const selected_position = ref<Position[]>([]);
@@ -842,19 +854,12 @@ function view_pos(position: Position) {
 }
 
 async function update_position() {
-  const selectedPosition = selected_position.value[0];
+  const update_position = selected_position.value[0];
   const { data, error } = await $rest('sms-position/update-position', {
     method: "PUT",
     body: {
-      _id: selectedPosition._id,
-      title: selectedPosition.title,
-      education: selectedPosition.education,
-      education_level: selectedPosition.education_level,
-      experience: selectedPosition.experience,
-      training_hours: selectedPosition.training_hours,
-      rating: selectedPosition.rating,
-      sg: selectedPosition.sg,
-      code: selectedPosition.code
+      _id: update_position._id,
+      position: update_position
     }
   });
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
@@ -895,6 +900,7 @@ async function get_attachment() {
     method: "GET",
   })
   attachment_data.value = data
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
 }
 
 
@@ -914,6 +920,7 @@ const rd = ref<Rd>({
     middle_name: "",
     last_name: "",
     government_agency: "",
+    region: "",
     dbm_address: "",
     position: "",
   }
@@ -942,8 +949,25 @@ async function get_rd() {
   if (data) {
     Object.assign(rd.value, data)
   }
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
 }
 
+async function update_rd() {
+  const { data, error } = await $rest('sms-rd/update-rd', {
+    method: "PUT",
+    body: {
+      _id: rd.value._id,
+      rd: rd.value.rd,
+      dbm: rd.value.dbm
+    }
+  });
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+
+}
+const leadership = ref({
+  title: "",
+});
 
 async function create_leadership_and_potential() {
   const { data, error } = await $rest('sms-leadership/create-leadership-and-potential', {
@@ -965,72 +989,38 @@ async function get_leadership() {
     method: "GET",
   });
   if (!error && data) {
-
     leadership_data.value = data;
   }
+  if (error) return swal({ title: data, icon: "No leadership and potential found" })
 }
 
-const leadership = ref({
-  title: "",
+const selected_leadership = ref<Position[]>([]);
 
-});
+function view_leadership(leadership: Leadership) {
+  selected_leadership.value = { ...leadership };
+  leaderhip_dialog.value = true;
+}
 
-
-const public_ranges = [
-  { min: 3, max: 5, equivalent: 1 },
-  { min: 6, max: 8, equivalent: 2 },
-  { min: 9, max: 11, equivalent: 3 },
-  { min: 12, max: 14, equivalent: 4 },
-  { min: 15, max: 17, equivalent: 5 },
-  { min: 18, max: 20, equivalent: 6 },
-  { min: 21, max: 23, equivalent: 7 },
-  { min: 24, max: 26, equivalent: 8 },
-  { min: 27, max: 30, equivalent: 7 },
-];
-const private_ranges = [
-  { min: 5, max: 9, equivalent: 1 },
-  { min: 10, max: 14, equivalent: 2 },
-  { min: 15, max: 19, equivalent: 3 },
-  { min: 20, max: 24, equivalent: 4 },
-  { min: 25, max: 29, equivalent: 5 },
-  { min: 30, max: 34, equivalent: 6 },
-  { min: 35, max: 39, equivalent: 7 },
-  { min: 40, max: 44, equivalent: 8 },
-  { min: 45, max: 49, equivalent: 9 },
-  { min: 50, max: 54, equivalent: 10 },
-  { min: 55, max: 59, equivalent: 11 },
-];
-
-function cal(unit) {
-  const mathing_public_range = public_ranges.find(range =>
-    unit.type === 'Public' && unit.number_of_years >= range.min && unit.number_of_years <= range.max
-  );
-  const mathing_private_range = private_ranges.find(range =>
-    unit.type === 'Private' && unit.number_of_years >= range.min && unit.number_of_years <= range.max
-  );
-  if (mathing_public_range) {
-    return unit.years_equivalent = mathing_public_range.equivalent;
-  } if (mathing_private_range) {
-    return unit.years_equivalent = mathing_private_range.equivalent;
-  } else {
-    if (unit.type === 'Public' && unit.number_of_years < 3) {
-      return unit.years_equivalent = 'Sorry, the minimum requirement is 3 years of experience.';
-    } else {
-      return unit.years_equivalent = 'Sorry, the minimum requirement is 5 years of experience.';
+async function update_leadership() {
+  const update_position = selected_position.value[0];
+  const { data, error } = await $rest('sms-position/update-position', {
+    method: "PUT",
+    body: {
+      _id: update_position._id,
+      position: update_position
     }
+  });
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 
-  }
 }
 
 
-// function cal(unit){
-// if (unit.type === 'Public' && unit.number_of_years >= 3 && unit.number_of_years <= 5) {
-//     return unit.years_equivalent = 1;  
-//   } 
-//   else {
-//      return unit.years_equivalent = 'Not valid';  
-//   } 
-// }
+
+
+
+
+
 
 
 

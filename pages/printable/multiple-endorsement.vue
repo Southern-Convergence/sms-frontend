@@ -14,13 +14,14 @@
             </center>
             <center>{{ new Date(endorsement_data?.generated_date).toLocaleDateString('en-US', {
               month: 'long', day:
-                'numeric', year: 'numeric'
-            }) }}</center>
+              'numeric', year: 'numeric'
+              }) }}</center>
           </div>
 
+
           <div class="py-10" style="text-align: justify;    text-indent: 50px">
-            Respectfully transmitted to the <b>Regional Director, Department of Budget and Management, National Capital
-              Region, 2nd Floor, Arcache Building, Gen. Solano corner Nepomuceno St., San Miguel, Manila </b>
+            Respectfully transmitted to the <b> {{ rd.dbm.first_name }} {{ rd.dbm.last_name }}, {{
+              rd.dbm.government_agency }}, {{ rd.dbm.region }},</b> {{ rd.dbm.dbm_address }}
             enclosing herewith copies of the Plantilla Allocation List covering the implementing approved Equivalent
             Record Forms (ERF) of the following {{ endorsement_data.position }}, <b> Schools Division of {{
               endorsement_data.division }}</b>, this
@@ -58,8 +59,8 @@
             </div>
 
             <div style="width: 45%; margin-left: auto; text-align: center; padding-top: 20mm">
-              <div class="font-weight-bold"> JOCELYN DR ANDAYA</div>
-              <div> Director IV</div>
+              <div class="font-weight-bold"> {{ rd.rd.first_name }} {{ rd.rd.last_name }}</div>
+              <div> {{rd.rd.position }}</div>
             </div>
           </div>
 
@@ -73,8 +74,8 @@
           <div class="py-5">
             <div>Copy furnished: (1st Indorsement dated {{ new
               Date(endorsement_data?.generated_date).toLocaleDateString('en-US', {
-                month: 'long', day:
-                  'numeric', year: 'numeric'
+              month: 'long', day:
+              'numeric', year: 'numeric'
               }) }} </div>
             <div style="padding-left: 30mm;">with original copy of ERF )</div>
 
@@ -136,7 +137,8 @@ const { $rest } = useNuxtApp();
 
 onBeforeMount(() => {
   Promise.all([
-    get_endorsement()
+    get_endorsement(),
+    get_rd()
   ])
 });
 
@@ -154,15 +156,14 @@ async function get_endorsement() {
 }
 
 
-// const rd = ref({} as Rd)
-// async function get_rd() {
-//   const { data, error } = await $rest('sms-rd/get-rd', {
-//     method: "GET",
-//   })
-//   if (data) {
-//     Object.assign(rd.value, data)
-//   }
-// }
+const rd = ref({} as Rd)
+async function get_rd() {
+  const { data, error } = await $rest('sms-rd/get-rd', {
+    method: "GET",
+  })
+ rd.value = data
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+}
 function print() {
   window.print();
 }
