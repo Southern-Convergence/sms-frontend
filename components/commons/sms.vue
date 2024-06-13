@@ -1,6 +1,7 @@
 <template>
-  <v-sheet id="item-container" class="h-100" color="transparent" rounded="0" border>
-    <v-toolbar class="d-block border-b" extension-height="64" color="grey-lighten-4" :extended="Boolean($attrs.extended)">
+  <v-card id="item-container" class="h-100" color="grey-lighten-5" rounded="0">
+    <v-toolbar class="d-block border-b" extension-height="64" color="grey-lighten-2"
+      :extended="Boolean($attrs.extended)">
       <v-toolbar-title>
 
         <v-list-item class="pl-0" :title="title" :subtitle="subtitle">
@@ -34,8 +35,8 @@
 
     <slot name="prepend-body" />
 
-    <v-sheet class="rounded-b-lg" :height="Number($attrs.height)" :max-height="Number($attrs['max-height'])"
-      style="overflow-y : auto">
+    <v-sheet class="rounded-b-lg" color="transparent" :height="Number($attrs.height)"
+      :max-height="Number($attrs['max-height'])" style="overflow-y : auto">
       <v-card-text>
         <v-row v-if="!items.length && $attrs['display-type'] !== 'table'" justify="center" align="center" dense>
           No Item Found
@@ -50,8 +51,8 @@
             <slot name="table" :items="items" :headers="$attrs.headers" />
           </v-col>
 
-          <v-col v-for="(item, i) in items" :key="i" v-else :cols="cols.default" :xl="cols.xl" :lg="cols.lg" :md="cols.md"
-            :sm="cols.sm">
+          <v-col v-for="(item, i) in items" :key="i" v-else :cols="cols.default" :xl="cols.xl" :lg="cols.lg"
+            :md="cols.md" :sm="cols.sm">
             <v-skeleton-loader class="mx-auto border" v-if="loading" type="card, actions" rounded="lg">
 
             </v-skeleton-loader>
@@ -63,7 +64,7 @@
     </v-sheet>
 
     <slot name="default" />
-  </v-sheet>
+  </v-card>
 </template>
 <script lang="ts">
 export default {

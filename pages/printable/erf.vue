@@ -4,19 +4,21 @@
     <body class="printable-page">
       <div class="content">
         <commons-header />
+
+
         <v-sheet class="mx-5" v-if="erf">
 
           <v-row no-gutters class="ma-2">
             <v-col cols="6">Name : <b>{{ erf.full_name }} </b>
             </v-col>
             <v-col cols="6">Date of Birth : <b>
-                {{ erf.birthday }}
+                {{ erf?.personal_information?.birthday }}
               </b>
             </v-col>
-            <v-col cols="6">Employee Number : <b>{{ erf.plantilla_no }} </b></v-col>
-            <v-col cols="6">Authorized Position Title : <b> {{ erf.current_position }}
+            <v-col cols="6">Employee Number : <b>{{ erf?.designation?.plantilla_no }} </b></v-col>
+            <v-col cols="6">Authorized Position Title : <b> {{ erf?.designation?.current_position }}
               </b></v-col>
-            <v-col cols="6">Item Number : <b>{{ erf.item_no }} </b> </v-col>
+            <v-col cols="6">Item Number : <b>{{ erf?.designation?.item_no }} </b> </v-col>
             <v-col cols="6">Authorized Salary : <b></b></v-col>
           </v-row>
 
@@ -38,7 +40,7 @@
 
                 </thead>
                 <tbody>
-                  <tr v-for="educ, index in erf.educational_attainment" :key="index">
+                  <tr v-for="educ, index in erf?.educational_attainment" :key="index">
                     <td>{{ educ.degree }}</td>
                     <td>{{ educ.institution }}</td>
                     <td>{{ educ.year_received }}</td>
@@ -65,7 +67,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="sr, index in erf.service_record" :key="index">
+                  <tr v-for="sr, index in erf?.service_record" :key="index">
                     <td>{{ sr.designation }}</td>
                     <td>{{ sr.from }}</td>
                     <td>{{ sr.to }}</td>
@@ -93,7 +95,7 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td> {{ erf.public_years_teaching }}</td>
+                    <td> {{ erf?.equivalent_unit?.public_years_teaching }}</td>
                     <td></td>
                   </tr>
                 </tbody>
@@ -125,7 +127,7 @@
                 </thead>
 
                 <tbody>
-                  <tr v-for="(prof, index) in erf.professional_study" :key="index">
+                  <tr v-for="(prof, index) in erf?.professional_study" :key="index">
                     <td>{{ prof.sy ? prof.sy : '&nbsp;' }} </td>
                     <td>{{ prof.unit_no }} </td>
                     <td>{{ prof.description }} </td>
@@ -150,7 +152,7 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td> {{ erf.yt_equivalent }}</td>
+                    <td> {{ erf?.yt_equivalent }}</td>
                     <td></td>
                   </tr>
                 </tbody>
@@ -159,13 +161,15 @@
 
           </v-sheet>
           <v-row no-gutters class="ml-15 mt-1">
-            LATEST IPCRF RATING : <div style="border-bottom: 1.5px solid black" class="px-2"> {{ erf.ipcrf_rating }}
+            LATEST IPCRF RATING : <div style="border-bottom: 1.5px solid black" class="px-2"> {{
+              erf?.designation?.ipcrf_rating }}
             </div>
           </v-row>
           <div class="d-flex mt-4">
             <div class="w-50 text-center px-5">
+
               <div class="w-100" style="display: grid; place-items: center;">
-                <v-img :width="197" height="6vh" :src="erf?.principal?.signature" />
+                <v-img :width="197" height="5vh" :src="erf?.principal?.signature" />
               </div>
               <div class="text-center text-uppercase font-weight-bold"> {{ erf?.principal?.name }} </div>
               <v-divider />
@@ -175,7 +179,7 @@
 
             <div class="w-50 justify-center  px-5">
               <div class="w-100" style="display: grid; place-items: center;">
-                <v-img :width="197" height="6vh" :src="erf?.signature" />
+                <v-img :width="197" height="5vh" :src="erf?.personal_information?.signature" />
               </div>
               <div class="text-center text-uppercase font-weight-bold">{{ erf?.full_name }}</div>
               <v-divider />
@@ -210,8 +214,12 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>{{ erf?.qualification?.sg }}</td>
-                  <td v-if="annual_sg">{{ annual_sg }}</td>
+
+                  <td>{{ erf?.current_sg }}</td>
+                  <td v-if="annual_sg">{{ annual_sg.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' }) }}
+                  </td>
+
+
                   <td></td>
                 </tr>
               </tbody>
@@ -219,13 +227,13 @@
 
           </div>
           <div class="d-flex my-5">
-            <div class="w-50 text-center">
-              <b>Current SDO Approver</b>
+            <div class="w-50 text-center px-5 ">
+              <v-sheet height="4vh"></v-sheet>
               <v-divider />
               <center> School Division Superintendent </center>
 
             </div>
-            <div class="w-50 text-center"> <b>Current Evaluator</b>
+            <div class="w-50 text-center px-5"> <v-sheet height="4vh"></v-sheet>
               <v-divider />
               <center> Evaluator </center>
             </div>
@@ -276,21 +284,41 @@ import useAuth from "~/store/auth";
 const { $rest } = useNuxtApp()
 const route = useRoute();
 onBeforeMount(() => {
-  get_erf();
+  Promise.all([
+ get_erf()
+  ]);
+
+  
 });
+
 // Table headers start
-const erf = ref({} as Applicant)
-async function get_erf() {
-  const { data, error } = await $rest('new-applicant/get-erf', {
+const erf = ref({})
+async function get_erf(){
+  const { data, error } = await $rest('new-applicant/get-applicant-erf', {
     method: 'GET',
     query: {
       id: route.query.id
     }
   })
-  erf.value = data
-}
+  erf.value = data}
+
+// const erf = ref({});
+
+
+// async function get_erf() {
+//   const { data, error } = await $rest('sms-position/get-applicant-details', {
+//     method: 'GET',
+//     query: { id: route.query.id }
+//   });
+
+//   erf.value = data;
+//    if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+// }
+
+// }
+
 const annual_sg = computed(() => {
-  return erf?.value.qualification?.sg_equivalent ? erf.value.qualification.sg_equivalent * 12 : null;
+  return erf?.value?.current_sg_equivalent ? erf.value.current_sg_equivalent * 12 : null;
 });
 function print() {
   window.print();

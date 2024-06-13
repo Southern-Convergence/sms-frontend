@@ -4,10 +4,6 @@
 
     <v-btn @click="view_applicant_info = true">Hi</v-btn>
 
-
-
-
-
     <v-dialog v-model="view_applicant_info" width="60%">
       <v-card flat class="mx-5">
         <v-toolbar color="indigo" v-if="$attrs['hide-toolbar'] !== ''" border>
@@ -21,7 +17,9 @@
           <v-spacer />
           <v-btn class="mr-0" @click="view_applicant_info = false" rounded="0" icon="mdi-close" />
         </v-toolbar>
-        <v-card-text class="mx-2 ml-5">
+
+        {{ applicant_qs }}
+        <!-- <v-card-text class="mx-2 ml-5">
 
           <table>
 
@@ -73,7 +71,7 @@
                   <b class="text-uppercase mb-2">Attachments :</b>
                   <p v-for="attach, index in applicant_qs.attachments" :key="attach">
                     <v-icon size="20" color="primary">mdi-circle-small</v-icon> {{
-                      attach }} <br />
+                    attach }} <br />
                   </p>
 
                 </td>
@@ -93,7 +91,7 @@
 
 
 
-        </v-card-text>
+        </v-card-text> -->
       </v-card>
     </v-dialog>
   </div>
@@ -113,14 +111,14 @@ const view_applicant_info = ref(false)
 // Table headers start
 const applicant_qs = ref([] as Applicant[]);
 
-
-async function get_applicant_details() {
-  const { data, error } = await $rest('new-applicant/get-erf', {
+async function get_applicant_details(){
+  const { data, error } = await $rest('new-applicant/get-applicant-erf', {
     method: 'GET',
-    query: { id: route.query.id }
-  });
-
-  applicant_qs.value = data;
+    query: {
+      id: route.query.id
+    }
+  })
+  applicant_qs.value = data
 }
 
 </script>

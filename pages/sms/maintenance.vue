@@ -422,14 +422,18 @@
         </v-toolbar>
         <v-card-text>
 
-
           <table>
             <tbody>
-
               <tr>
-                <td width="30%"> Position</td>
+                <td width="30%"> Position </td>
+
                 <td class="text-uppercase text-primary font-weight-bold">
-                  {{ selected_position.title }}
+                  {{ selected_position?.title}}
+                  <i class="font-weigth-thin text-body-2 text-grey"> {{
+                    selected_position.with_erf
+                    ? '(with Equivalent Record Form)'
+                    : ''}}
+                  </i>
                 </td>
               </tr>
               <tr>
@@ -448,12 +452,15 @@
               <tr>
                 <td> Education</td>
                 <td>
-                  <p v-for="educ, index in selected_position?.education" :key="educ"> {{ educ.text }}</p>
+                  <p class="text-primary" v-for="educ, index in selected_position?.education" :key="educ"> {{ educ.text
+                    }}
+                  </p>
+                  <i v-if="selected_position?.is_experience">High Degree overrides experience and Master's Degree</i>
                 </td>
               </tr>
               <tr v-if="selected_position?.supplemented_units > 0">
                 <td> Graduate Units</td>
-                <td> {{ selected_position?.supplemented_units }}</td>
+                <td> {{ selected_position?.supplemented_units }} graduate units in Special Education</td>
               </tr>
               <tr v-if="selected_position?.ma_units > 0">
                 <td> M.A. Units</td>
@@ -462,20 +469,28 @@
               <tr v-if="selected_position?.experience.length">
                 <td> Experience</td>
                 <td>
-                  <p v-for="exp, index in selected_position?.experience" :key="exp">
-                    {{ exp.text }}
+                  <p class="text-primary" v-for="exp, index in selected_position?.experience" :key="exp">
+                    {{ exp.text }} <span v-if="selected_position.or_20_ma_units">or 20 M.A. Units</span>
+                  </p>
+                  <i v-if="selected_position?.is_experience"> or if less than 20 years in service :
+                    M.A. units + years in service (3 years in public or 5 years in private is equivalent to 1 M.A.
+                    unit) =
+                    Total curriculum in M.A.
+                  </i>
+                </td>
+              </tr>
+              <tr v-if="selected_position?.training_hours > 0">
+                <td> Performance Rating</td>
+                <td>
+                  <p class="text-primary" v-for="rate, index in selected_position?.rating" :key="rate"> {{ rate.title }}
                   </p>
                 </td>
               </tr>
-              <tr>
-                <td> Performance Rating</td>
-                <td>
-                  <p v-for="rate, index in selected_position?.rating" :key="rate"> {{ rate.title }}</p>
-                </td>
-              </tr>
-              <tr>
+              <tr v-if="selected_position?.training_hours > 0">
                 <td> Training Hours</td>
-                <td> {{ selected_position?.training_hours }}</td>
+                <td class="text-primary"> {{ selected_position?.training_hours }} hours of relevant training initiated,
+                  sactioned,
+                  approved/recognized by DepEd no used in the immediate previous promotion</td>
               </tr>
               <tr v-if="selected_position?.leadership_points && selected_position?.leadership_points.length > 0">
                 <td> Leadership and Potention Points</td>
@@ -487,10 +502,11 @@
               <tr v-if="selected_position.status_of_appointment">
                 <td> Appointment Status</td>
                 <td>
-                  {{ selected_position.status_of_appointment }}
+
                   Permarnent teacher
                 </td>
               </tr>
+
 
               <tr>
                 <td width="30%"> Attachments</td>
@@ -515,10 +531,6 @@
               </tr>
             </tbody>
           </table>
-
-
-
-
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -1033,5 +1045,31 @@ async function update_leadership() {
 
 .maintenance-item:hover {
   background-color: #E8EAF6;
+}
+
+
+
+
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+
+}
+
+td,
+th {
+  border: none;
+  padding: 6px;
+  font-size: 12px;
+  line-height: normal;
+  word-break: break-word;
+  font-weight: normal;
+}
+
+tr,
+th {
+  font-weight: bold;
 }
 </style>

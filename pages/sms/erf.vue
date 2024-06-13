@@ -16,9 +16,9 @@
           </v-chip></v-col>
       </v-row>
       <v-row no-gutters> <v-col cols="5" class="text-subtitle-2 font-weight-bold"> DIVISION : {{
-        applicant_details?.division }} </v-col>
+          applicant_details?.division }} </v-col>
         <v-col cols="auto"> Control No. : <v-chip class="font-weight-bold" color="orange" density="compact"> {{
-          applicant_details?.control_number }}
+            applicant_details?.control_number }}
           </v-chip></v-col>
         <v-spacer />
 
@@ -35,10 +35,10 @@
                   @click="applicant_history(applicant_details._id)" class="font-weight-bold" prepend-icon="mdi-history"
                   color="primary" block density="compact">View
                   HISTORY</v-btn></span>
-              <span> <v-btn v-if="applicant_details?.status != 'For Signature'"
+              <!-- <span> <v-btn v-if="applicant_details?.status != 'For Signature'"
                   @click="view_applicant_info_dialog = true" class="font-weight-bold " prepend-icon="mdi-book"
                   color="primary" block density="compact">View
-                  Applicant QS</v-btn></span>
+                  Applicant QS</v-btn></span> -->
               <span>
                 <v-btn v-if="applicant_details.is_with_erf" @click="applicant_erf(applicant_details._id)"
                   class="font-weight-bold ml-2" prepend-icon="mdi-printer" color="primary" block density="compact">
@@ -48,11 +48,11 @@
             <v-card-text>
               <v-row no-gutters class="ma-2">
                 <v-col cols="6" class="text-capitalize">Name : <b> {{
-                  applicant_details?.personal_information?.first_name
-                }} {{ applicant_details?.personal_information?.last_name }} </b>
+                    applicant_details?.personal_information?.first_name
+                    }} {{ applicant_details?.personal_information?.last_name }} </b>
                 </v-col>
                 <v-col cols="6">Date of Birth : <b> {{
-                  applicant_details?.personal_information?.birthday }}
+                    applicant_details?.personal_information?.birthday }}
                   </b>
                 </v-col>
                 <v-col cols="6">Employee Number : <b> {{ applicant_details?.designation?.employee_no }}</b> </v-col>
@@ -95,10 +95,10 @@
                     <v-sheet width="70%">
                       <v-row dense class="pa-2">
                         <v-col cols="6"> Public Schools : <span class="pl-2"> {{
-                          applicant_details?.equivalent_unit?.public_years_teaching }}</span>
+                            applicant_details?.equivalent_unit?.public_years_teaching }}</span>
                         </v-col>
                         <v-col cols="6"> Private Schools : <span class="pl-2"> {{
-                          applicant_details?.equivalent_unit?.yt_equivalent }}
+                            applicant_details?.equivalent_unit?.yt_equivalent }}
                           </span>
                         </v-col>
                       </v-row>
@@ -131,7 +131,7 @@
                     <v-sheet class="ml-15" width="70%">
                       <v-row dense class="pa-2">
                         <v-col cols="6"> Public Schools : <b class="pl-2"> {{
-                          applicant_details?.equivalent_unit?.public_years_teaching }}</b>
+                            applicant_details?.equivalent_unit?.public_years_teaching }}</b>
                         </v-col>
                         <v-col cols="6"> Private Schools : <b class="pl-2"></b>
                         </v-col>
@@ -142,7 +142,7 @@
                   <v-row dense class="ml-15 mt-1">
                     LATEST IPCRF RATING : <div class="px-5 font-weight-bold" style="border-bottom: 1px solid black">
                       {{
-                        applicant_details.designation?.ipcrf_rating }}</div>
+                      applicant_details.designation?.ipcrf_rating }}</div>
                   </v-row>
                 </v-col>
               </v-row>
@@ -328,7 +328,7 @@
                 <hr />
                 <div class="w-100 text-center font-weight-bold text-subtitle-1 text-uppercase"> {{
                   applicant_details?.principal?.name
-                }}</div>
+                  }}</div>
               </div>
             </v-col>
           </v-row>
@@ -484,7 +484,7 @@
         </v-window>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="view_applicant_info_dialog" width="60%">
+    <!-- <v-dialog v-model="view_applicant_info_dialog" width="60%">
       <v-card flat class="mx-5">
         <v-toolbar color="indigo" v-if="$attrs['hide-toolbar'] !== ''" border>
           <v-list-item class="pl-2" density="compact">
@@ -501,7 +501,7 @@
           <table>
             <tbody>
               <tr>
-                <td width="25%"> Position</td>
+                <td width="30%"> Position</td>
                 <td class="text-uppercase text-primary font-weight-bold">
 
                   {{ applicant_qs_info?.position }}
@@ -515,27 +515,52 @@
                 <td> Education</td>
                 <td v-for="educ, index in applicant_qs_info?.education" :key="educ">{{ educ }}</td>
               </tr>
-              <tr>
+              <tr v-if="applicant_qs_info?.qualification?.graduate_units">
                 <td> Graduate Units</td>
-                <td> {{ applicant_qs_info?.graduate_units }}</td>
+                <td> {{ applicant_qs_info?.qualification?.graduate_units }}</td>
               </tr>
+
               <tr>
                 <td> M.A. Units</td>
-                <td> {{ applicant_qs_info?.ma_units }} {{ applicant_qs_info?.total_ma }}</td>
+                <td> {{ applicant_qs_info?.qualification?.ma_units }}
+                </td>
               </tr>
-              <tr>
+              <tr v-if=" applicant_qs_info?.qualification?.experience_sr_public > 0">
+                <td> Public </td>
+                <td> {{ applicant_qs_info?.qualification?.experience_sr_public }} years
+                </td>
+                <td> Equivalent</td>
+                <td> {{ applicant_qs_info?.qualification?.experience_sr_public_equivalent }} M.A. Units
+                </td>
+
+              </tr>
+              <tr v-if="applicant_qs_info?.qualification?.experience_sr_private  > 0">
+                <td> Private </td>
+                <td> {{ applicant_qs_info?.qualification?.experience_sr_private }} years
+                </td>
+                <td> Equivalent </td>
+                <td> {{ applicant_qs_info?.qualification?.experience_sr_private_equivalent }} M.A. Units
+                </td>
+
+              </tr>
+              <tr v-if="applicant_qs_info?.qualification?.total_ma > 0">
+                <td class="text-primary font-weight-bold"> Total M.A. Units</td>
+                <td>{{ applicant_qs_info?.qualification?.total_ma }}</td>
+              </tr>
+
+              <tr v-if="applicant_qs_info?.experience.length > 0">
                 <td> Experience</td>
                 <td v-for="exp, index in applicant_qs_info?.experience" :key="exp">{{ exp }}</td>
               </tr>
-              <tr>
+              <tr v-if="applicant_qs_info?.rating">
                 <td> Performance Rating</td>
                 <td>{{ applicant_qs_info?.rating }}</td>
               </tr>
               <tr>
                 <td> Training Hours</td>
-                <td> {{ applicant_qs_info?.training_hours }}</td>
+                <td> {{ applicant_qs_info?.qualification?.training_hours }}</td>
               </tr>
-              <tr>
+              <tr v-if="applicant_qs_info?.leadership?.length > 0">
                 <td> Leadership and Potention Points</td>
                 <td v-for="lead, index in applicant_qs_info?.leadership" :key="lead">{{ lead }} </td>
               </tr>
@@ -545,7 +570,7 @@
                   <b class="text-uppercase mb-2">APPLICANT </b>
                   <p v-for="attach, index in applicant_qs_info?.attachments" :key="attach">
                     <v-icon size="20" color="primary">mdi-circle-small</v-icon> {{
-                      attach }} <br />
+                    attach }} <br />
                   </p>
 
                 </td>
@@ -569,7 +594,7 @@
 
         </v-card-text>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
 
   </div>
 
@@ -592,8 +617,8 @@ onBeforeMount(() => {
   Promise.all([
     get_applicant_details(),
     get_evaluators(),
-    get_ro_evaluators(),
-    get_applicant_qs()
+    get_ro_evaluators()
+    // get_applicant_qs()
   ]);
 
   if (user) setPageLayout("barren");
@@ -798,17 +823,17 @@ const handle_application = async () => {
   }
 }
 
-const applicant_qs_info = ref([] as Applicant[]);
+// const applicant_qs_info = ref([] as Applicant[]);
 
 
-async function get_applicant_qs() {
-  const { data, error } = await $rest('new-applicant/get-erf', {
-    method: 'GET',
-    query: { id: route.query.id }
-  });
+// async function get_applicant_qs() {
+//   const { data, error } = await $rest('new-applicant/get-applicant-erf', {
+//     method: 'GET',
+//     query: { id: route.query.id }
+//   });
 
-  applicant_qs_info.value = data;
-}
+//   applicant_qs_info.value = data;
+// }
 
 const is_render_sdo_attachment = computed(() => {
   if (!user) return false;
