@@ -23,7 +23,7 @@ export const useGlobalConfig = defineStore("config", {
       //for i18n adherence
       langs: ["EN (Philippines)", "Tagalog", "Waray"],
       ready: false,
-      referrer : "",
+      referrer: "",
 
       preferences,
     };
@@ -39,11 +39,11 @@ export const useGlobalConfig = defineStore("config", {
       storage.setItem("preferences", JSON.stringify(this.preferences));
     },
 
-    set_referrer(referrer : string){
+    set_referrer(referrer: string) {
       this.referrer = referrer;
     },
 
-    clear_referrer(referrer : string){
+    clear_referrer(referrer: string) {
       this.referrer = "";
     }
   },
@@ -144,15 +144,15 @@ export const useDomains = defineStore("domains", {
     async hydrate(data: any[]) {
       this.domains = Object.fromEntries(data.map((v: any) => {
         let temp = v;
-        const count_offset = (v.administrators||[]).reduce((a: number, b : any)=> a + b.users, 0);
-        v.administrators.push({name : "Regular User", users : v.users - count_offset});
+        const count_offset = (v.administrators || []).reduce((a: number, b: any) => a + b.users, 0);
+        v.administrators.push({ name: "Regular User", users: v.users - count_offset });
 
         const user_groups = v.administrators;
 
         delete temp.administrators;
         delete temp.users;
 
-        return [v.name, {...temp, user_groups : Object.fromEntries(user_groups.map((u : any)=> [u.name, u.users]))}];
+        return [v.name, { ...temp, user_groups: Object.fromEntries(user_groups.map((u: any) => [u.name, u.users])) }];
       }));
     },
 
@@ -161,21 +161,21 @@ export const useDomains = defineStore("domains", {
       this.active_domain = this.domains[domain_name];
     },
 
-    
+
   },
 });
 
 export const useService = defineStore("service", {
-  state : ()=> ({}) as any,
+  state: () => ({}) as any,
 
-  actions : {
-    hydrate(data : any){
+  actions: {
+    hydrate(data: any) {
       this.$state = data;
     }
   },
 
-  getters : {
-    get_service():any{
+  getters: {
+    get_service(): any {
       return this.$state;
     }
   }
@@ -292,7 +292,7 @@ export const useExport = defineStore("export", {
 export const useNotifications = defineStore("notifications", {
   state: () => ({
     public_key: "",
-    endpoint : "",
+    endpoint: "",
     subscriptions: {
       "hris-approval-queue-updates": {
         title: "Approval Queue Updates",
@@ -339,10 +339,10 @@ export const useNotifications = defineStore("notifications", {
 
       this.public_key = vapid_key;
       //Hydrate subscriptions state based off of user subscription data.
-      if(active_subs.data){
+      if (active_subs.data) {
         Object.entries(active_subs.namespaces).forEach(([k, v]: any) => {
           const matched_sub = this.subscriptions[k];
-  
+
           Object.entries(v).forEach(([_k, _v]) => {
             if (matched_sub) this.subscriptions[k].channels[_k] = _v;
           });
@@ -350,9 +350,9 @@ export const useNotifications = defineStore("notifications", {
       }
 
       manage_permission(urlBase64ToUint8Array(vapid_key))
-      .then((sub)=> {
-        this.submit_preference("allow", sub)
-      });
+        .then((sub) => {
+          this.submit_preference("allow", sub)
+        });
     },
 
     async subscribe(namespace: string, channel: string, value: boolean) {
@@ -362,7 +362,7 @@ export const useNotifications = defineStore("notifications", {
       this.load_map[`${namespace}-${channel}`] = true;
       this.subscriptions[namespace].channels[channel] = value;
 
-      const { data, error } = await $rest(`notification/${value ? "subscribe" : "unsubscribe"}`,{ method: "POST", body : { namespace, channel }});
+      const { data, error } = await $rest(`notification/${value ? "subscribe" : "unsubscribe"}`, { method: "POST", body: { namespace, channel } });
       if (value) this.sample(`Notification about ${namespace}-${channel}.`);
 
       snackbar.set_message(error ? error : data, error ? "error" : "success");
@@ -370,11 +370,11 @@ export const useNotifications = defineStore("notifications", {
       this.load_map[`${namespace}-${channel}`] = false;
     },
 
-    async submit_preference(permission : string, subscription? : any){
+    async submit_preference(permission: string, subscription?: any) {
       const { $rest } = useNuxtApp();
       $rest("notification/toggle", {
-        method : "POST",
-        body : { permission, subscription }
+        method: "POST",
+        body: { permission, subscription }
       });
     },
 
@@ -395,16 +395,16 @@ export const useNotifications = defineStore("notifications", {
   getters: {
     get_subscriptions(): any[] {
       //@ts-ignore mahubya pag surat types yaering
-      return Object.entries(this.subscriptions).map(([k, v]) => ({...v, namespace: k}));
+      return Object.entries(this.subscriptions).map(([k, v]) => ({ ...v, namespace: k }));
     },
   },
 });
 
-async function manage_permission(vapid_key : Uint8Array ) {
+async function manage_permission(vapid_key: Uint8Array) {
   const registration = await navigator.serviceWorker.ready;
   return registration.pushManager.getSubscription()
-    .then((sub)=> {
-      if(sub)return sub;
+    .then((sub) => {
+      if (sub) return sub;
 
       return registration.pushManager.subscribe({
         userVisibleOnly: true,
@@ -413,15 +413,18 @@ async function manage_permission(vapid_key : Uint8Array ) {
     });
 }
 
-function urlBase64ToUint8Array(str : string) {
+function urlBase64ToUint8Array(str: string) {
+
+  console.log("VAPID SHIT", str);
+
   var padding = '='.repeat((4 - str.length % 4) % 4);
   var base64 = (str + padding)
     .replace(/\-/g, '+')
     .replace(/_/g, '/');
- 
+
   var rawData = window.atob(base64);
   var outputArray = new Uint8Array(rawData.length);
- 
+
   for (var i = 0; i < rawData.length; ++i) {
     outputArray[i] = rawData.charCodeAt(i);
   }

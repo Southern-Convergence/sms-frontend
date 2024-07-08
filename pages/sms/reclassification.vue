@@ -12,11 +12,25 @@
               <div class="w-100 text-subtitle-2 text-grey mt-0 mb-2">A brief overview of reclassification applications.
 
               </div>
+
             </v-col>
+
           </v-row>
 
-          <v-row justify="end" dense
-            v-if="user.role === 'Administrative Officer V' || user.role === 'Administrative Officer IV'">
+          <v-row dense v-if="user.role === 'Administrative Officer V' || user.role === 'Administrative Officer IV'">
+            <v-col cols="6" class="mb-2" v-if="user.role === 'Administrative Officer IV'">
+              <v-alert closable icon="mdi-information" variant="tonal" color="primary"> Reclass application with status
+                <b>Approval
+                  for
+                  Printing</b> or marked with a <b>with ERF</b>, please proceed to print the Applicant Equivalent Record
+                Form.
+                Obtain
+                the signature of your Schools Division Superintendent and send the completed form along with the
+                applicant's original documents.</v-alert>
+
+            </v-col>
+
+            <v-spacer />
             <v-col cols="2"> <v-select class="pr-2" label="Filter by Position" v-model="selected_position"
                 :items="positions" item-value="_id" persistent-hint clearable /></v-col>
             <v-col cols="2" v-if="user.role === 'Administrative Officer V'"> <v-select class="pr-2"
@@ -43,12 +57,14 @@
 
           <commons-item-container title="Reclass Application/s" icon="mdi-note-text-outline"
             :items="get_applicant_by_status(status.value)" :display_types="['grid', 'table']">
+
             <template v-slot:item="{ value, index, display }">
+
               <v-card @click="load_erf_form(value._id)" class="mx-auto reclass-item" rounded="lg" border
                 :class="{ 'elevation-4': is_hovered }"
                 v-if="get_applicant_by_status(status.value).some(applicant => Object.keys(applicant).length > 0)">
-                <v-card-text>
 
+                <v-card-text>
                   <div class="d-flex mt-1">
                     <div class="pr-3">
                       <v-img :width="80" aspect-ratio="4/3" cover>
@@ -58,8 +74,15 @@
                       </v-img>
                     </div>
                     <div>
-                      <div class="w-40 text-body-1 font-weight-bold d-flex">{{ value.full_name }}</div>
-                      <div class="mb-1 text-body-2 text-grey">{{ value.position }}</div>
+                      <div class="w-40 text-body-1 font-weight-bold d-flex">
+                        {{ value.full_name }}
+
+                      </div>
+
+                      <div class="mb-1 text-body-2 text-grey">{{ value.position }}
+                        <i class="font-weight-regular text-primary" v-if="value.is_with_erf" color="primary">(with
+                          ERF)</i>
+                      </div>
 
                       <div class="text-body-2">Division: {{ value.division }}</div>
                       <div class="text-body-2" v-if="typeof value.approved === 'boolean'"> This
@@ -68,6 +91,7 @@
                           <i>{{ value.approved === true ? 'approved' : 'disapproved' }}</i>
                         </span> by DBM.
                       </div>
+
                     </div>
                   </div>
                   <div class="d-flex">
@@ -130,8 +154,8 @@
           <h5 class="text-center">
             1st Indorsement <br />
             {{ new Date().toLocaleDateString('en-US', {
-            month: 'long', day:
-            'numeric', year: 'numeric'
+              month: 'long', day:
+                'numeric', year: 'numeric'
             }) }}
           </h5>
 
@@ -258,7 +282,7 @@ async function get_application() {
     position: selected_position.value,
     sdo: selected_sdo.value,
     status: selected_status.value,
-  
+
   };
 
   const { data, error } = await $rest('new-applicant/get-application', {
@@ -334,11 +358,17 @@ async function assign_evaluator() {
 }
 
 async function generate_endorsement() {
+
+
+
   const all_id = application_data.value.map((item: any) => item._id);
   const payload = {
     applicants: all_id,
     division: selected_sdo.value,
-    position: selected_position.value
+    position: selected_position.value,
+    generated_by: user?._id,
+    genarated_date: new Date()
+
   };
 
   const { data, error } = await $rest('sms-endorsement/generate-endorsement', {

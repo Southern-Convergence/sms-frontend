@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="pa-10">
+  <v-sheet>
     <v-card class="pa-10 " rounded="lg" flat>
       <v-card-text> <v-row :class="`${$vuetify.display.mobile ? 'text-center' : ''}`" justify="center" dense>
           <v-col cols="12">
@@ -14,16 +14,17 @@
 
         <v-row>
           <v-col cols="12">
-
             <v-sheet border>
 
+
               <v-data-table :headers="table_headers" :items="endorsement_data">
+
                 <template v-slot:item.generated_date="{ item }">
 
                   <span class="text-primary"> {{ new Date(item.selectable.generated_date).toLocaleDateString('en-US', {
                     month: 'long',
                     day: '2-digit', year: 'numeric'
-                    })}}</span>
+                  }) }}</span>
                 </template>
                 <template v-slot:item.control_number="{ item }">
                   <span class="text-primary">{{ item.selectable.control_number }}</span>
@@ -31,32 +32,100 @@
                 <template v-slot:item.status="{ item }">
                   <v-chip color="success" variant="text">{{ item.selectable.status }}</v-chip>
                 </template>
+
                 <template v-slot:item.actions="{ item }">
-                  <v-btn @click="load_endorsement_letter(item.selectable._id)" density="compact" color="primary">
-                    <!-- {{
-                      item.selectable.status === 'Verified' ? 'Print' : (item.selectable.status === 'Discrepancy' ||
-                        (item.selectable.status === 'For Verification' && user.role === 'Administrative Officer V') ? 'View'
-                        : 'Verify')
-                    }} -->
-                    {{
-                    item.selectable.status === 'Verified' && user.role === 'Verifier' ? 'View' : (
-                    item.selectable.status === 'Verified' ? 'Print' : (
-                    item.selectable.status === 'Discrepancy' ||
-                    (item.selectable.status === 'For Verification' && user.role === 'Administrative Officer V')
-                    ? 'View'
-                    : 'Verify'
-                    )
-                    )
-                    }}
+                  <v-menu v-model="item.selectable.actions" :close-on-content-click="false" location="end">
+                    <template v-slot:activator="{ props }">
+                      <v-btn color="indigo" v-bind="props"> Actions </v-btn>
+                    </template>
 
+                    <v-card min-width="300">
+                      <v-list>
+                        <v-list-item title="Endorsement Letter">
+                          <template v-slot:append>
+                            <v-icon>mdi-book</v-icon>
+                          </template>
+                        </v-list-item>
+                      </v-list>
 
-                  </v-btn>
+                      <v-divider></v-divider>
+
+                      <v-list>
+                        <v-list-item @click="load_endorsement_letter(item.selectable._id)"
+                          v-if="item.selectable.status === 'For Verification' && user.role === 'Verifier'">
+                          <v-icon class="px-4" color="primary"> Verify</v-icon>
+
+                          {{ item.selectable.status === 'For Verification' ? 'Verify' : 'View' }}
+                        </v-list-item>
+
+                        <v-list-item v-else @click="load_endorsement_letter(item.selectable._id)">
+                          <v-icon class="px-4" color="primary"> {{ item.selectable.status === 'Verified' && user.role
+                            ===
+                            'Administrative Officer V' ? 'mdi-printer' :
+                            'mdi-file-eye-outline' }}</v-icon>
+                          {{
+                            item.selectable.status === 'Verified' && user.role === 'Administrative Officer V' ? 'Print' :
+                              'View'
+                          }} </v-list-item>
+
+                        <v-list-item @click="view_history(item)"> <v-icon class="px-4"
+                            color="success">mdi-history</v-icon>
+                          View
+                          Log </v-list-item>
+                      </v-list>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn variant="text" color="error" @click="item.selectable.actions = false"> Close </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-menu>
                 </template>
               </v-data-table>
             </v-sheet>
           </v-col>
-        </v-row></v-card-text>
+        </v-row>
+      </v-card-text>
     </v-card>
+    <v-dialog v-model="endorsement_log_dialog" title="Endorsement Letter History" width="40%">
+      <v-card>
+        <v-toolbar color="indigo" border>
+          <v-list-item class="pl-2" density="compact">
+            <template v-slot:prepend>
+              <v-avatar class="mr-1" variant="text">
+                <v-icon icon="mdi-history" dark />
+              </v-avatar>
+            </template>
+            <v-list-item-title>Endorsement Letter History</v-list-item-title>
+          </v-list-item>
+          <v-spacer>
+          </v-spacer>
+        </v-toolbar>
+
+        <v-card-text>
+          <v-alert class="pa-5 ma-5" border variant="outlined" color="primary"
+            v-for="log in logs_data.selectable.endorsement_log" :key="log">
+            <v-card-subtitle>
+              Status : <b class="text-uppercase"> {{ log.status }}</b>
+            </v-card-subtitle>
+            <v-card-subtitle>
+              Generated by : <b> {{ log.signatory }}</b>
+            </v-card-subtitle>
+
+            <v-card-subtitle class="text-caption">Date <span class="text-blue"> : {{ log.timestamp }}
+              </span>
+            </v-card-subtitle>
+            <!-- <v-card-subtitle>
+            <v-chip class="mt-2" density="compact" color="error">
+              Reason/Remarks :
+            </v-chip>
+
+          </v-card-subtitle> -->
+          </v-alert>
+
+        </v-card-text>
+
+      </v-card>
+    </v-dialog>
   </v-sheet>
 </template>
 
@@ -66,6 +135,7 @@ import swal from 'sweetalert';
 
 const { $rest } = useNuxtApp();
 const user = useAuth().user;
+
 import useAuth from "~/store/auth";
 const router = useRouter();
 
@@ -76,10 +146,10 @@ onBeforeMount(async () => {
 });
 
 
-
-
+const menu = ref(false)
+const endorsement_log_dialog = ref(false)
 const table_headers = ref([
-    { title: "Generated Date", key: "generated_date", sortable: false },
+  { title: "Generated Date", key: "generated_date", sortable: false },
   { title: "Schools Division Office", key: "division", sortable: false },
   { title: "Applied Position", key: "position", sortable: false },
   { title: "Transaction Code", key: "batch_code", sortable: false },
@@ -92,9 +162,9 @@ async function get_endorsement() {
   const { data, error } = await $rest('sms-endorsement/get-endorsement', {
     method: "GET",
   })
-  
+
   endorsement_data.value = data
- if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
 }
 
 const load_endorsement_letter = (id: any) => {
@@ -105,7 +175,11 @@ const load_endorsement_letter = (id: any) => {
     }
   });
 }
-
+const logs_data = ref([])
+function view_history(item: any) {
+  logs_data.value = { ...item };
+  endorsement_log_dialog.value = true;
+}
 
 
 </script>

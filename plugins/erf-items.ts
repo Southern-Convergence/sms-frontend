@@ -2,7 +2,7 @@ export default defineNuxtPlugin(() => {
   const sex = ['Male', 'Female']
   const school_type = ['Private', 'Public']
   // USER TYPE
-  const user_type = ['School Division Office', 'Regional Office', 'School']
+  const user_type = ['School Division Office', 'Regional Office']
   // USER ROLES
   const school_roles = ['Teacher', 'Principal', 'Admin']
   const sdo_roles = ['Administrative Officer IV', 'Evaluator', 'Verifier', 'Recommending Approver', 'Approver', 'Admin',]

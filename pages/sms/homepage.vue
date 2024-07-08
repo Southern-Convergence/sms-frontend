@@ -8,6 +8,7 @@
             <h6 class="text-subtitle-2 text-medium-emphasis  ">Manage reclassification applicantions.
             </h6>
             <v-divider class="mt-4 mb-2" />
+            {{ user }}
           </v-col>
 
         </v-row>
@@ -15,6 +16,8 @@
           <v-col cols="12" xl="6" lg="6">
             <v-card class="pa-3" color="primary" variant="tonal" rounded="lg">
               <div class="d-flex flex-no-wrap justify-space-between py-4 pl-4">
+
+
                 <div>
                   <h6 class="text-h6 font-weight-bold">
                     INTRODUCTION

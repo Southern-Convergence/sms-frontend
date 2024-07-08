@@ -10,29 +10,74 @@
         <commons-sms class="my-2 mr-3" title="SDO USER MANAGEMENT" subtitle="A brief overview of users." rounded="lg"
           :items="users_data" :display_types="['grid', 'table']">
           <template v-slot:item="{ value, index, display }">
-            <v-sheet :key="index" border class="pa-2">
+            <v-card :key="index" border class="pa-2 ma-1" rounded="lg">
               <div class="d-flex mb-1">
                 <div class="text-uppercase  text-indigo text-body-1"> {{ value.first_name
                   }}
                   {{
-                  value.last_name }}
+                    value.last_name }}
                 </div>
                 <v-spacer />
                 <div> <v-chip density="compact" class="text-uppercase text-overline" color="success">{{
-                    value.status }}</v-chip></div>
+                  value.status }}</v-chip></div>
               </div>
               <div> {{ value.role }} <span v-if="value.division">
                   {{
-                  value.division.title
+                    value.division.title
                   }}</span>
               </div>
               <div class="text-caption text-capitalize mb-2">{{ value?.side }}</div>
               <div class="text-caption"> <v-icon color="red-lighten-3"> mdi-email</v-icon> <u class="text-blue">{{
-                  value.email }}</u>
+                value.email }}</u>
               </div>
-              <div class="text-caption"> <v-icon color="green-lighten-3"> mdi-phone</v-icon> {{
-                value.contact_number }}</div>
-            </v-sheet>
+              <div class="text-caption d-flex">
+                <div class="w-70"> <v-icon color="green-lighten-3"> mdi-phone</v-icon> {{
+                  value.contact_number }}098765432456</div>
+                <v-spacer />
+                <div class="w-30">
+                  <v-menu :close-on-content-click="false" location="end">
+                    <template v-slot:activator="{ props }">
+                      <v-btn v-bind="props" density="compact" color="primary">
+                        Manage</v-btn>
+                    </template>
+
+                    <v-card min-width="300">
+                      <v-list>
+                        <v-list-item title="Manage SDO User">
+                          <template v-slot:append>
+                            <v-icon color="indigo" size="24">mdi-human</v-icon>
+                          </template>
+                        </v-list-item>
+                      </v-list>
+
+                      <v-divider></v-divider>
+
+                      <v-list lines="two">
+                        <v-list-item title="Update Account" subtitle="Update and modify an account."
+                          @click="update_invite_dialog = true">
+                          <template v-slot:prepend>
+                            <v-icon color="primary" size="22">mdi-account-edit-outline</v-icon>
+                          </template>
+                        </v-list-item>
+                        <v-list-item title="Suspend Account" subtitle="Suspend account for a soecific reason.">
+                          <template v-slot:prepend>
+                            <v-icon color="primary" size="22">mdi-account-off</v-icon>
+                          </template>
+                        </v-list-item>
+
+
+
+                      </v-list>
+                      <v-card-actions>
+                        <v-spacer />
+                        <v-btn variant="text" color="error">
+                          Close </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-menu>
+                </div>
+              </div>
+            </v-card>
           </template>
 
           <template v-slot:table="{ items }">
@@ -42,9 +87,48 @@
                     }}
                   </span>
                 </template>
-                <!-- <template v-slot:item.actions="{ item }">
-                  <v-btn color="primary" density="compact" variant="tonal">Actions</v-btn>
-                </template> -->
+                <template v-slot:item.actions="{ item }">
+                  <v-menu :close-on-content-click="false" location="end">
+                    <template v-slot:activator="{ props }">
+                      <v-btn v-bind="props" density="compact" color="primary">
+                        Manage</v-btn>
+                    </template>
+
+                    <v-card min-width="300">
+                      <v-list>
+                        <v-list-item title="Manage User">
+                          <template v-slot:append>
+                            <v-icon color="indigo" size="24">mdi-human</v-icon>
+                          </template>
+                        </v-list-item>
+                      </v-list>
+
+                      <v-divider></v-divider>
+
+                      <v-list lines="two">
+                        <v-list-item title="Update Account" subtitle="Update and modify an account."
+                          @click="update_invite_dialog = true">
+                          <template v-slot:prepend>
+                            <v-icon color="primary" size="22">mdi-account-edit-outline</v-icon>
+                          </template>
+                        </v-list-item>
+                        <v-list-item title="Suspend Account" subtitle="Suspend account for a soecific reason.">
+                          <template v-slot:prepend>
+                            <v-icon color="primary" size="22">mdi-account-off</v-icon>
+                          </template>
+                        </v-list-item>
+
+
+
+                      </v-list>
+                      <v-card-actions>
+                        <v-spacer />
+                        <v-btn variant="text" color="error">
+                          Close </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-menu>
+                </template>
 
               </v-data-table></v-sheet>
           </template>
@@ -164,7 +248,7 @@ const user_headers = ref([
   { title: "Side", key: "side" },
   { title: "Email Address", key: "email" },
   { title: "Conatact Number", key: "contact_number" },
-  // { title: "Actions", key: "actions" },
+  { title: "Actions", key: "actions" },
 ])
 
 const sdo_user = ref<SmsUser>({

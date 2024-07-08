@@ -24,22 +24,19 @@
               Control Number : <b class="text-indigo">{{ applicant_history.control_number }}</b>
             </v-card-subtitle>
             <v-card-subtitle class="text-caption pl-5">Application Date : <b> {{ new
-                Date(applicant_history.created_date).toLocaleString() }}</b></v-card-subtitle>
+              Date(applicant_history.created_date).toLocaleString() }}</b></v-card-subtitle>
           </v-sheet>
 
           <v-card class="overflow-y-auto py-4" height="70vh" width="100%">
 
             <v-card-text>
 
-              <v-btn v-if=" applicant_history.request_log && applicant_history.request_log.length &&
-            applicant_history.request_log[0].remarks.length" class="ml-5" rounded="md"
-                @click="update_applicant(applicant_history._id)" color="primary" density="compact">
-                Update
-                Application
-              </v-btn>
+
+
+
               <v-alert v-if="applicant_history?.request_log && applicant_history.request_log.length > 0"
-                class="pa-5 ma-5" border rounded="lg" v-for="(att, index) in applicant_history?.request_log.reverse()"
-                :key="index">
+                class="pa-5 ma-5 elevation-3" rounded="lg"
+                v-for="(att, index) in applicant_history?.request_log.reverse()" :key="index">
                 <v-card-subtitle>
                   Status : <span class="text-uppercase"> {{ att.status }} </span>
                 </v-card-subtitle>
@@ -50,24 +47,35 @@
                   Office :
                   <b>
                     {{ att.side === 'SDO' ? 'Schools Division Office'
-                    : (att.side === 'School' ? 'School' : 'Regional Office') }}
+                      : (att.side === 'School' ? 'School' : 'Regional Office') }}
                   </b>
 
                 </v-card-subtitle>
                 <v-card-subtitle class="text-caption" v-if="user">Date <span class="text-blue"> :
                     {{ new
-                    Date(att?.timestamp).toLocaleString() }}</span>
+                      Date(att?.timestamp).toLocaleString() }}</span>
                 </v-card-subtitle>
                 <v-card-subtitle v-if="att?.remarks?.length">
                   <v-chip class="mt-2" density="compact" color="error">
-                    Reason/Remarks :
+                    Reason/Remarks : {{ }}
                   </v-chip>
-                  <v-card border class="ma-2 pa-2" v-for="(remarks, index) in att.remarks" :key="index">
-                    <v-card-subtitle> Attachment : {{ remarks.description }} <br /> Reason : {{
-                      remarks.remarks }} <br /> Date Disapproved : <span class="text-red text-caption"> {{ new
+
+
+                  <v-sheet border variant="tonal" class="ma-2 pa-2" v-for="(remarks, index) in att.remarks"
+                    :key="index">
+
+
+                    <v-card-subtitle> Attachment : <b class="text-error">{{ remarks.description }} </b><br /> Reason :
+                      {{
+                        remarks.remarks }} <br /> Date Disapproved : <span class="text-blue text-caption"> {{ new
                         Date(remarks?.timestamp).toLocaleString() }}</span>
                     </v-card-subtitle>
-                  </v-card>
+                  </v-sheet>
+                  <v-btn class="ml-2" v-if="att.role === 'Principal'" rounded="md"
+                    @click="update_applicant(applicant_history._id)" color="primary" density="compact">
+                    Update
+                    Application
+                  </v-btn>
                 </v-card-subtitle>
               </v-alert>
 

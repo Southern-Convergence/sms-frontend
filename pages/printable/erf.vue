@@ -8,18 +8,23 @@
 
         <v-sheet class="mx-5" v-if="erf">
 
+
           <v-row no-gutters class="ma-2">
             <v-col cols="6">Name : <b>{{ erf.full_name }} </b>
             </v-col>
             <v-col cols="6">Date of Birth : <b>
-                {{ erf?.personal_information?.birthday }}
+                {{ new Date(erf?.personal_information?.birthday).toLocaleDateString('en-US', {
+                  month: 'long',
+                  day: '2-digit',
+                  year: 'numeric'
+                }) }}
               </b>
             </v-col>
             <v-col cols="6">Employee Number : <b>{{ erf?.designation?.plantilla_no }} </b></v-col>
             <v-col cols="6">Authorized Position Title : <b> {{ erf?.designation?.current_position }}
               </b></v-col>
             <v-col cols="6">Item Number : <b>{{ erf?.designation?.item_no }} </b> </v-col>
-            <v-col cols="6">Authorized Salary : <b></b></v-col>
+            <v-col cols="6">Authorized Salary : <b> {{ erf?.current_sg }}</b></v-col>
           </v-row>
 
           <v-sheet class="mx-2 ml-5">
@@ -165,24 +170,25 @@
               erf?.designation?.ipcrf_rating }}
             </div>
           </v-row>
+
           <div class="d-flex mt-4">
             <div class="w-50 text-center px-5">
 
               <div class="w-100" style="display: grid; place-items: center;">
-                <v-img :width="197" height="5vh" :src="erf?.principal?.signature" />
+                <v-img :width="197" height="3vh" :src="erf?.principal?.signature" />
               </div>
               <div class="text-center text-uppercase font-weight-bold"> {{ erf?.principal?.name }} </div>
-              <v-divider />
+              <hr />
               <center> School Principal </center>
 
             </div>
 
             <div class="w-50 justify-center  px-5">
               <div class="w-100" style="display: grid; place-items: center;">
-                <v-img :width="197" height="5vh" :src="erf?.personal_information?.signature" />
+                <v-img :width="197" height="3vh" :src="erf?.personal_information?.signature" />
               </div>
               <div class="text-center text-uppercase font-weight-bold">{{ erf?.full_name }}</div>
-              <v-divider />
+              <hr />
               <center> Teacher </center>
             </div>
           </div>
@@ -198,9 +204,13 @@
               </thead>
               <tbody>
                 <tr>
-                  <td></td>
-                  <td>
-                  </td>
+                  <td> {{ erf?.position }}</td>
+                  <td> {{ erf?.assignees && erf.assignees.length ?
+                    new Date(erf.assignees[2].timestamp).toLocaleDateString('en-US', {
+                      month: 'long',
+                      day: '2-digit',
+                      year: 'numeric'
+                    }) : '' }}</td>
                   <td></td>
                 </tr>
               </tbody>
@@ -226,15 +236,25 @@
             </table>
 
           </div>
-          <div class="d-flex my-5">
-            <div class="w-50 text-center px-5 ">
-              <v-sheet height="4vh"></v-sheet>
-              <v-divider />
-              <center> School Division Superintendent </center>
+          <div class="d-flex my-2">
 
+            <div class="w-50 justify-center  px-5">
+              <div class="w-100" style="display: grid; place-items: center;">
+                <v-img :width="197" height="3vh" />
+              </div>
+              <v-sheet class="text-center text-uppercase font-weight-bold" height="2vh"></v-sheet>
+              <hr />
+              <center> School Division Superintendent </center>
             </div>
-            <div class="w-50 text-center px-5"> <v-sheet height="4vh"></v-sheet>
-              <v-divider />
+
+            <div class="w-50 justify-center  px-5">
+              <div class="w-100" style="display: grid; place-items: center;">
+                <v-img :width="197" height="3vh" />
+              </div>
+              <div class="text-center text-uppercase font-weight-bold">{{ erf?.assignees && erf.assignees.length ?
+                erf.assignees[2].name : ''
+                }}</div>
+              <hr />
               <center> Evaluator </center>
             </div>
           </div>
@@ -248,17 +268,45 @@
                   <th>Salary Grade</th>
                 </tr>
               </thead>
+
               <tbody>
                 <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+                  <td> {{ erf?.position }}</td>
+                  <td> {{ erf?.assignees && erf.assignees.length ?
+                    new Date(erf.assignees[4].timestamp).toLocaleDateString('en-US', {
+                      month: 'long',
+                      day: '2-digit',
+                      year: 'numeric'
+                    }) : '' }}</td>
+                  <td> {{ erf?.qs_sg }}</td>
                 </tr>
               </tbody>
 
 
             </table>
 
+          </div>
+          <div class="d-flex mt-2">
+
+            <div class="w-50 justify-center  px-5">
+              <div class="w-100" style="display: grid; place-items: center;">
+                <v-img :width="197" height="3vh" />
+              </div>
+              <v-sheet class="text-center text-uppercase font-weight-bold" height="2vh"></v-sheet>
+              <hr />
+              <center> Regional Director </center>
+            </div>
+
+            <div class="w-50 justify-center  px-5">
+              <div class="w-100" style="display: grid; place-items: center;">
+                <v-img :width="197" height="3vh" />
+              </div>
+              <div class="text-center text-uppercase font-weight-bold">{{ erf?.assignees && erf.assignees.length ?
+                erf.assignees[4].name : ''
+                }}</div>
+              <hr />
+              <center> Evaluator </center>
+            </div>
           </div>
 
         </v-sheet>
@@ -267,7 +315,7 @@
 
       </div>
     </body>
-    <div style="position: fixed; bottom: 20px; right: 20px;" class="d-print-none">
+    <div style=" position: fixed; bottom: 20px; right: 20px;" class="d-print-none">
       <v-btn color="primary" icon="mdi-printer" size="large" class="mb-2" @click="print()">
       </v-btn> <br />
       <v-btn icon="mdi-keyboard-return" size="large" @click="$router.back()">
@@ -285,22 +333,23 @@ const { $rest } = useNuxtApp()
 const route = useRoute();
 onBeforeMount(() => {
   Promise.all([
- get_erf()
+    get_erf()
   ]);
 
-  
+
 });
 
 // Table headers start
 const erf = ref({})
-async function get_erf(){
+async function get_erf() {
   const { data, error } = await $rest('new-applicant/get-applicant-erf', {
     method: 'GET',
     query: {
       id: route.query.id
     }
   })
-  erf.value = data}
+  erf.value = data
+}
 
 // const erf = ref({});
 
@@ -350,7 +399,7 @@ table {
 td,
 th {
   border: 1px solid black;
-  padding: 6px;
+  padding: 3px;
   font-size: 12px;
   line-height: normal;
   word-break: break-word;

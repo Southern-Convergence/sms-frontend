@@ -1,5 +1,5 @@
 <template>
-  <v-sheet color="#E8EAF6" height="96vh">
+  <v-sheet height="96vh">
     <v-card-text>
       <v-tabs v-model="tab" color="blue-darken-4" align-tabs="start" centered stacked>
 
@@ -11,23 +11,40 @@
           Set Up Form</v-tab>
         <v-tab :value="3">
           <v-icon>mdi-human</v-icon>
-          Regional Director Info</v-tab> <v-spacer /> <v-btn @click="position_dialog = true" color="blue-darken-4"
-          class="mt-7" v-if="tab === 1"> Set
-          Up Position</v-btn>
+          Regional Director Info</v-tab>
       </v-tabs>
 
       <v-window v-model="tab">
         <v-window-item :value="1">
-          <v-card class="mt-3" title="Summary of Set Qualification Standards"
-            subtitle="A brief overview of qualification standards." prepend-icon="mdi-certificate" rounded="lg">
+          <v-card color="transparent" flat>
+            <v-list-item class="px-6" height="88">
+              <template v-slot:prepend>
+                <v-icon color="primary" size="32">mdi-certificate</v-icon>
+              </template>
+
+              <template v-slot:title>
+                <h3 class="text-primary font-weight-medium">Summary of Set Qualification Standards</h3>
+                <h5 class="text-grey font-weight-regular">A brief overview of qualification standards.</h5>
+              </template>
+
+              <template v-slot:append>
+                <v-btn @click="position_dialog = true" prepend-icon="mdi-pen-plus" color="amber" slim> Set Up
+                  Position</v-btn>
+              </template>
+            </v-list-item>
             <v-divider />
             <v-card-text>
               <v-row no-gutters>
                 <v-col cols="4" class="pa-2" v-for="pos, index in position_data" :key="pos">
-                  <v-alert border-color="indigo" class="maintenance-item" append-icon="mdi-open-in-new"
-                    @click="view_pos(pos)">
-                    {{ pos.title
-                    }}
+                  <v-alert color="indigo" variant="tonal" class="maintenance-item">
+                    <h4> {{ pos.title
+                      }} <i v-if="pos.education_level"> ({{ pos.education_level }})</i></h4>
+
+
+                    <div class="w-100 align-end mt-4">
+                      <v-btn density="compact" color="primary" class="mr-2" @click="pos(pos)">Update</v-btn>
+                      <v-btn density="compact" color="amber" @click="view_pos(pos)">View</v-btn>
+                    </div>
                   </v-alert>
                 </v-col>
               </v-row>
@@ -124,7 +141,10 @@
                         class="my-2 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="lg"
                         icon="mdi-cash">
                         <div> Salary Grade : <b> {{ sg.salary_grade }} </b></div>
-                        <div> Equivalent : <b> {{ sg.equivalent }} </b></div>
+                        <div> Equivalent : <b>{{ sg.equivalent.toLocaleString('en-US', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2
+                        }) }} </b></div>
                       </v-alert>
                     </v-sheet></v-card-text>
                 </v-card>
@@ -143,9 +163,10 @@
                   </v-toolbar>
                   <v-card-text>
                     <v-sheet height="31vh" class="overflow-y-auto pa-2">
+
                       <v-alert class="my-1 maintenance-item" :class="{ 'elevation-4': is_hovered }" rounded="lg"
-                        icon="mdi-book" border-color="blue-darken-4" v-for="lead, index in leadership_data"
-                        :key="index">
+                        icon="mdi-book" border-color="blue-darken-4" v-for="lead, index in leadership_data" :key="index"
+                        @click="view_leadership(lead)">
                         {{ lead.title }}
 
                       </v-alert>
@@ -167,10 +188,10 @@
                   </v-toolbar>
                   <v-card-text>
                     <v-sheet height="31vh" class="overflow-y-auto pa-2">
-                      <v-alert v-for=" attachment, index in attachment_data " :key="index"
-                        @click="update_attachment(attachment)" class="my-2 maintenance-item"
-                        :class="{ 'elevation-4': is_hovered }" rounded="lg" icon="mdi-paperclip">
-                        {{ attachment.title }}
+                      <v-alert v-for=" att, index in attachment_data " :key="index" class="my-2 maintenance-item"
+                        :class="{ 'elevation-4': is_hovered }" rounded="lg" icon="mdi-paperclip"
+                        @click="view_attachment(att)">
+                        {{ att.title }}
                       </v-alert>
                     </v-sheet>
                   </v-card-text>
@@ -180,7 +201,7 @@
           </div>
         </v-window-item>
         <v-window-item :value="3" height="80vh">
-          <v-card class="mx-auto mt-10" elevation="2" max-width="80%">
+          <v-card class="mx-auto mt-10" elevation="2" max-width="80%" border>
             <v-card-item>
               <v-card-title class="text-primary">
                 Set Up RD and DBM Information
@@ -242,10 +263,10 @@
 
 
                 <v-col cols="4" v-if="!rd._id">
-                  <v-btn block @click="create_rd">SUBMIT</v-btn>
+                  <v-btn block color="primary" @click="create_rd">SUBMIT</v-btn>
                 </v-col>
                 <v-col cols="4" v-else>
-                  <v-btn block @click="update_rd">UPDATE</v-btn>
+                  <v-btn block color="primary" @click="update_rd">UPDATE</v-btn>
                 </v-col>
               </v-row>
 
@@ -308,101 +329,71 @@
 
     <commons-dialog max-width="35%" v-model="leaderhip_dialog" icon="mdi-school"
       :title="status === 'create' ? 'Create  Leadership and Potential to Experience Ratio' : 'Update  Leadership and Potential'"
-      @submit="create_leadership_and_potential" :subtitle="'Enter or modify details Leadership and Potential.'"
+      @submit="submit_leadership" :subtitle="'Enter or modify details Leadership and Potential.'"
       :submitText="status === 'create' ? 'Submit' : 'Update'">
       <v-card-text class="ma-2">
 
-
-
-        <v-text-field v-model="leadership.title" label="Leadership and Potential" />
+        <v-textarea v-model="leadership.title" label="Leadership and Potential" />
 
       </v-card-text>
     </commons-dialog>
 
 
-    <commons-dialog width="60%" v-model="position_dialog" :title="'Position  Form'" @submit="create_position"
-      :subtitle="'Create position and modify Qualification Standards'" :submitText="'Submit'">
-      <v-card-text>
+    <commons-dialog width="60%" icon="mdi-school" v-model="position_dialog" :title="'Position Form'"
+      @submit="submit_position" :subtitle="'Create position and modify Qualification Standards'" :submitText="'Submit'">
+      <v-card-text class="overflow-y-auto" style="height: 60vh">
         <v-row dense>
-          <v-col cols="7" class="pa-4"> <v-row no-gutters>
-              <v-col cols="7"> <v-text-field v-model="position.title" label="Position" hide-details
-                  prepend-inner-icon="mdi-account-hard-hat" /></v-col>
+          <v-col cols="7">
+            <v-text-field v-model="position.title" label="Position" hide-details
+              prepend-inner-icon="mdi-account-hard-hat" /></v-col>
 
-              <v-col cols="5" class="pl-2"> <v-select v-model="position.education_level"
-                  :items="['Elementary', 'Secondary']" label="Education Level" hide-details
-                  prepend-inner-icon="mdi-book" clearable /></v-col>
-              <v-col cols="12"> <v-checkbox label="Check if with ERF" v-model="position.with_erf"></v-checkbox></v-col>
-              <v-col cols="7"> <v-select v-model="position.education" :items="education_data" item-value="_id"
-                  label="Education" multiple prepend-inner-icon="mdi-school" hide-details clearable /></v-col>
-              <v-col cols="5" class="pl-2"> <v-text-field v-model="position.supplemented_units" label="Graduate Units"
-                  hide-details /></v-col>
-              <v-col cols="12"> <v-checkbox v-model="position.status_of_appointment"
-                  label="Check if appointment must be Permanent Teacher" /></v-col>
+          <v-col cols="5" class="pl-2"> <v-select v-model="position.education_level"
+              :items="['Elementary', 'Secondary']" label="Education Level" hide-details prepend-inner-icon="mdi-book"
+              clearable /></v-col>
+          <v-col cols="12"> <v-checkbox label="Check if with ERF" v-model="position.with_erf" hide-details /></v-col>
+          <v-col cols="7"> <v-select v-model="position.education" :items="education_data" item-value="_id"
+              label="Education" multiple prepend-inner-icon="mdi-school" hide-details clearable /></v-col>
+          <v-col cols="5" class="pl-2"> <v-text-field v-model="position.supplemented_units" label="Graduate Units"
+              hide-details /></v-col>
+          <v-col cols="12"> <v-checkbox v-model="position.status_of_appointment"
+              label="Check if appointment must be Permanent Teacher" /></v-col>
 
-              <v-col cols="12"> <v-select v-model="position.experience" item-value="_id" :items="experience_data"
-                  label="Experience" multiple prepend-inner-icon="mdi-head-cog-outline" hide-details
-                  clearable /></v-col>
-              <v-col cols="12"> <v-checkbox v-model="position.is_experience"
-                  label="Check if the experience accepts  less than the specified minimum." hide-details /></v-col>
-              <v-col cols="12"> <v-checkbox v-model="position.or_20_ma_units"
-                  label="Check if the number of experience can be substituted by 20 M.A. Units" /></v-col>
-              <v-col cols="12"> <v-text-field v-model="position.ma_units" label="M.A Units" /></v-col>
-            </v-row>
-          </v-col>
-          <v-col cols="5" class="pa-4">
-            <v-row no-gutters>
-
-              <v-col cols="12"> <v-select v-model="position.rating" :items="rating_data" label="Performance Rating"
-                  multiple item-value="_id" prepend-inner-icon="mdi-star" clearable /></v-col>
-
-              <v-col cols="6"> <v-text-field v-model="position.training_hours" label="Training Number of Hours Required"
-                  prepend-inner-icon="mdi-human-male-board" /></v-col>
-              <v-col cols="6" class="pr-2"> <v-select v-model="position.leadership_points"
-                  label="Leadership ands Potential Points" :items="leadership_data" multiple item-value="_id"
-                  clearable /></v-col>
-              <v-col cols="6" class="pr-2"> <v-select v-model="position.sg" :items="sg_item" label="Salary Grade"
-                  item-value="_id" prepend-inner-icon="mdi-cash" clearable /></v-col>
-              <v-col cols="6"><v-text-field v-model="position.code" label="Position Code" hide-details="auto"
-                  prepend-inner-icon="mdi-codepen" hint="This is for transaction codes for endorsements." /></v-col>
+          <v-col cols="12"> <v-select v-model="position.experience" item-value="_id" :items="experience_data"
+              label="Experience" multiple prepend-inner-icon="mdi-head-cog-outline" hide-details clearable /></v-col>
+          <v-col cols="12"> <v-checkbox v-model="position.is_experience"
+              label="Check if the experience accepts  less than the specified minimum." hide-details /></v-col>
+          <v-col cols="12"> <v-checkbox v-model="position.or_20_ma_units"
+              label="Check if the number of experience can be substituted by 20 M.A. Units" /></v-col>
+          <v-col cols="12"> <v-text-field v-model="position.ma_units" label="M.A Units" /></v-col>
 
 
-              <v-col cols="12">
-                <v-list-subheader class="text-indigo"> <v-icon>mdi-paperclip</v-icon>Required attachments for
-                  applicants.</v-list-subheader>
-                <v-select v-model="position.attachment" :items="attachment_data" label="Select Applicant Attachments"
-                  item-value="_id" multiple clearable chips /> </v-col>
+          <v-col cols="12"> <v-select v-model="position.rating" :items="rating_data" label="Performance Rating" multiple
+              item-value="_id" prepend-inner-icon="mdi-star" clearable /></v-col>
 
-              <v-col cols="12">
-                <v-list-subheader class="text-indigo"> <v-icon>mdi-paperclip</v-icon> Required attachments for
-                  School Division Office.</v-list-subheader>
-                <v-select v-model="position.sdo_attachment" :items="attachment_data" label="SDO Attachments"
-                  item-value="_id" multiple clearable chips /></v-col>
-            </v-row></v-col>
+          <v-col cols="6"> <v-text-field v-model="position.training_hours" label="Training Number of Hours Required"
+              prepend-inner-icon="mdi-human-male-board" /></v-col>
+          <v-col cols="6" class="pr-2"> <v-select v-model="position.leadership_points"
+              label="Leadership ands Potential Points" :items="leadership_data" multiple item-value="_id"
+              clearable /></v-col>
+          <v-col cols="6" class="pr-2"> <v-select v-model="position.sg" :items="sg_item" label="Salary Grade"
+              item-value="_id" prepend-inner-icon="mdi-cash" clearable /></v-col>
+          <v-col cols="6"><v-text-field v-model="position.code" label="Position Code" hide-details="auto"
+              prepend-inner-icon="mdi-codepen" hint="This is for transaction codes for endorsements." /></v-col>
+
+          <v-col cols="12">
+            <v-list-subheader class="text-indigo"> <v-icon>mdi-paperclip</v-icon>Required attachments for
+              applicants.</v-list-subheader>
+            <v-select v-model="position.attachment" :items="attachment_data" label="Select Applicant Attachments"
+              item-value="_id" multiple clearable chips /> </v-col>
+
         </v-row>
 
-
-      </v-card-text>
-    </commons-dialog>
-    <commons-dialog max-width="30%" v-model="update_position_dialog" icon="mdi-school" :title="'Update Position'"
-      @submit="update_position" :subtitle="'Modify Qualification Standards'" :submitText="'Update'">
-      <v-card-text>
-        <v-text-field v-model="selected_position[0].title" label="Position" />
-        <v-select v-model="selected_position[0].education" :items="education_data" item-value="_id" label="Education"
-          multiple />
-        <v-select v-model="selected_position[0].education_level" :items="['Elementary', 'Secondary']"
-          label="Education Level" />
-        <v-select v-model="selected_position[0].experience" item-value="_id" :items="experience_data" label="Experience"
-          rows="4" multiple />
-        <v-text-field v-model="selected_position[0].training_hours" label="Training Number of Hours Required" />
-        <v-select v-model="selected_position[0].rating" :items="rating_data" label="Performance Rating Required"
-          multiple item-value="_id" />
-        <v-select v-model="selected_position[0].sg" :items="sg_item" label="Salary Grade" item-value="_id" />
       </v-card-text>
     </commons-dialog>
 
 
     <commons-dialog max-width="35%" v-model="attachment_dialog" icon="mdi-school" title="Create Attachment"
-      @submit="create_attachment" submitText="Submit">
+      @submit="submit_attachment" submitText="Submit">
       <v-card-text>
         <v-textarea v-model="attachment.title" rows="3" label="Enter attachment Title" />
       </v-card-text>
@@ -428,22 +419,24 @@
                 <td width="30%"> Position </td>
 
                 <td class="text-uppercase text-primary font-weight-bold">
-                  {{ selected_position?.title}}
+                  {{ selected_position?.title }}
                   <i class="font-weigth-thin text-body-2 text-grey"> {{
                     selected_position.with_erf
-                    ? '(with Equivalent Record Form)'
-                    : ''}}
+                      ? '(with Equivalent Record Form)'
+                      : '' }}
                   </i>
                 </td>
               </tr>
               <tr>
                 <td> Salary Grade</td>
-                <td>{{selected_position.sg.salary_grade}} </td>
+                <td>{{ selected_position.sg.salary_grade }} </td>
               </tr>
               <tr>
                 <td> Salary Equivalent</td>
-                <td>{{selected_position.sg.equivalent.toLocaleString('en-US', {minimumFractionDigits: 2,
-                  maximumFractionDigits: 2}) }} </td>
+                <td>{{ selected_position.sg.equivalent.toLocaleString('en-US', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                }) }} </td>
               </tr>
               <tr v-if="selected_position?.education_level">
                 <td> Education Level</td>
@@ -509,15 +502,15 @@
 
 
               <tr>
-                <td width="30%"> Attachments</td>
+                <td width="30%">Applicant Attachments</td>
                 <td>
-                  <b class="text-uppercase mb-2">APPLICANT </b>
+
                   <p v-for="attach, index in selected_position.attachment " :key="index"> <v-icon size="20"
-                      color="primary">mdi-circle-small</v-icon> {{ attach.title}} <br /></p>
+                      color="primary">mdi-circle-small</v-icon> {{ attach.title }} <br /></p>
 
                 </td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td> </td>
 
                 <td>
@@ -528,10 +521,11 @@
 
                 </td>
 
-              </tr>
+              </tr> -->
             </tbody>
           </table>
         </v-card-text>
+
       </v-card>
     </v-dialog>
 
@@ -576,7 +570,7 @@ const leaderhip_dialog = ref(false)
 
 const position_dialog = ref(false);
 const model = ref(true)
-const update_position_dialog = ref(false);
+
 // CREATE EDUCATION
 const education = ref<Education>({
   title: "",
@@ -636,7 +630,9 @@ async function update_education() {
   return swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } });
 }
 
-
+/**
+ * EXPERIENCE
+ */
 
 const experience = ref<Experience>({
 
@@ -654,9 +650,7 @@ async function create_experience() {
   get_experience()
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 }
-/**
- * EXPERIENCE
- */
+
 const experience_data = ref<Experience[]>([]);
 async function get_experience() {
   const { data, error } = await $rest('sms-experience/get-experience', {
@@ -672,6 +666,7 @@ async function submit_experience() {
     return update_experience();
   }
 }
+// UPDATE EXPERIENCE
 function experience_update_dialog(ex: Experience) {
   experience.value = { ...ex };
   status.value = 'update';
@@ -695,7 +690,7 @@ async function update_experience() {
 
 }
 
-
+// PERFORMANCE RATING
 const performance_rating = ref<PerformanceRating>({
   title: "",
 });
@@ -779,11 +774,13 @@ async function get_sg() {
   })
 
   sg_data.value = data
-   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
 }
 
 const update_sg_dialog = ref(false);
 const selected_sg = ref<SalaryGrade[]>([]);
+
+// UPDATE SG
 
 function update_salary_grade(sg: SalaryGrade) {
   selected_sg.value = { ...sg };
@@ -850,6 +847,7 @@ async function create_position() {
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 }
 
+
 async function get_qs() {
   const { data, error } = await $rest('sms-position/get-qs', {
     method: "GET",
@@ -865,13 +863,13 @@ function view_pos(position: Position) {
   view_qs_dialog.value = true;
 }
 
+
 async function update_position() {
-  const update_position = selected_position.value[0];
   const { data, error } = await $rest('sms-position/update-position', {
     method: "PUT",
     body: {
-      _id: update_position._id,
-      position: update_position
+      _id: position.value._id,
+      position: position.value
     }
   });
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
@@ -879,7 +877,18 @@ async function update_position() {
 
 }
 
-
+async function submit_position() {
+  if (status.value === 'create') {
+    return create_position();
+  } else if (status.value === 'update') {
+    return update_position();
+  }
+}
+function pos(pos: Experience) {
+  position.value = { ...pos };
+  status.value = 'update';
+  position_dialog.value = true;
+}
 
 // Attachment
 const attachment_dialog = ref(false);
@@ -915,6 +924,37 @@ async function get_attachment() {
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
 }
 
+const selected_attachment = ref<Position[]>([]);
+
+function view_attachment(att: Attachment) {
+  selected_attachment.value = { ...att };
+  status.value = 'update';
+  attachment_dialog.value = true;
+}
+
+async function submit_attachment() {
+  if (status.value === 'create') {
+    return create_attachment();
+  } else if (status.value === 'update') {
+    return update_attachment();
+  }
+}
+// UPDATE LEADERSHIP
+async function update_attachment() {
+  const { data, error } = await $rest('sms-attachment/update-attachment', {
+    method: "PUT",
+    body: {
+      _id: selected_attachment.value._id,
+      title: attachment.value.title
+    }
+  });
+  if (error) {
+    return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
+  }
+  get_attachment()
+  return swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } });
+}
+
 
 
 
@@ -945,9 +985,8 @@ async function create_rd() {
     method: "POST",
     body: { rd: rd.value.rd, dbm: rd.value.dbm }
   });
-  if (error) {
-    return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
-  }
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
+  get_rd()
   return swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } });
 }
 
@@ -974,9 +1013,13 @@ async function update_rd() {
     }
   });
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  get_rd()
   return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
 
 }
+
+// LEADERSHIP
+
 const leadership = ref({
   title: "",
 });
@@ -986,10 +1029,10 @@ async function create_leadership_and_potential() {
     method: "POST",
     body: { ...leadership.value }
   });
-  if (error) {
-    swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
-  }
-  swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } });
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
+  get_leadership()
+  return swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } });
+
 
 }
 
@@ -1008,24 +1051,35 @@ async function get_leadership() {
 
 const selected_leadership = ref<Position[]>([]);
 
-function view_leadership(leadership: Leadership) {
-  selected_leadership.value = { ...leadership };
+function view_leadership(lead: Leadership) {
+  selected_leadership.value = { ...lead };
+  status.value = 'update';
   leaderhip_dialog.value = true;
 }
 
-async function update_leadership() {
-  const update_position = selected_position.value[0];
-  const { data, error } = await $rest('sms-position/update-position', {
+
+async function submit_leadership() {
+  if (status.value === 'create') {
+    return create_leadership_and_potential();
+  } else if (status.value === 'update') {
+    return update_leadership_and_potential();
+  }
+}
+// UPDATE LEADERSHIP
+async function update_leadership_and_potential() {
+  const { data, error } = await $rest('sms-leadership/update-leadership-and-potential', {
     method: "PUT",
     body: {
-      _id: update_position._id,
-      position: update_position
+      _id: selected_leadership.value._id,
+      title: leadership.value.title
     }
   });
-  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
-
+  if (error)
+    return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
+  get_leadership()
+  return swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } });
 }
+
 
 
 

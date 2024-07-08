@@ -1,5 +1,5 @@
 <template>
-  <v-app style="border: red 1px solid">
+  <v-app>
     <layout-std-appbar appbar_title="Appllicant Equvalent Record Form" :fluid="true">
       <template v-slot:nav-icon>
         <v-app-bar-nav-icon class="mr-4" expand-on-hover variant="text" />

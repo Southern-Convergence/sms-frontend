@@ -2,9 +2,9 @@
   <v-container>
     <div class="d-print-none">
       <v-row>
-        <v-col cols="6" class="d-flex ">
-          <v-select label="Filter by SDO" v-model="selected_sdo" :items="sdo" item-value="_id" persistent-hint clearable
-            class="pr-2" />
+        <v-col cols="4" class="d-flex ">
+          <v-select v-if="user.side === 'RO'" label="Filter by SDO" v-model="selected_sdo" :items="sdo" item-value="_id"
+            persistent-hint clearable class="pr-2" />
           <v-select label="Filter by year" persistent-hint clearable />
           <v-btn @click="get_dashboard" class="ml-2 mt-1" color="primary">
             <v-icon class="pr-1">mdi-filter</v-icon>Filter</v-btn>
@@ -68,10 +68,12 @@
 </template>
 
 <script lang="ts" setup>
+import useAuth from "~/store/auth";
+const { $rest } = useNuxtApp();
+const auth = useAuth();
+const user = useAuth().user;
 const router = useRouter();
 
-
-const { $rest } = useNuxtApp()
 onBeforeMount(() => {
 
   get_sdo();
@@ -80,6 +82,9 @@ onBeforeMount(() => {
 
 const applicants = ref([]);
 async function get_dashboard() {
+  if (user.side === 'SDO') {
+    user.division = selected_sdo.value
+  }
   const payload = {
     sdo: selected_sdo.value
   };

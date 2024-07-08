@@ -14,8 +14,8 @@
             </center>
             <center>{{ new Date(endorsement_data?.generated_date).toLocaleDateString('en-US', {
               month: 'long', day:
-              'numeric', year: 'numeric'
-              }) }}</center>
+                'numeric', year: 'numeric'
+            }) }}</center>
           </div>
 
 
@@ -60,7 +60,7 @@
 
             <div style="width: 45%; margin-left: auto; text-align: center; padding-top: 20mm">
               <div class="font-weight-bold"> {{ rd.rd.first_name }} {{ rd.rd.last_name }}</div>
-              <div> {{rd.rd.position }}</div>
+              <div> {{ rd.rd.position }}</div>
             </div>
           </div>
 
@@ -74,8 +74,8 @@
           <div class="py-5">
             <div>Copy furnished: (1st Indorsement dated {{ new
               Date(endorsement_data?.generated_date).toLocaleDateString('en-US', {
-              month: 'long', day:
-              'numeric', year: 'numeric'
+                month: 'long', day:
+                  'numeric', year: 'numeric'
               }) }} </div>
             <div style="padding-left: 30mm;">with original copy of ERF )</div>
 
@@ -161,7 +161,7 @@ async function get_rd() {
   const { data, error } = await $rest('sms-rd/get-rd', {
     method: "GET",
   })
- rd.value = data
+  rd.value = data
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
 }
 function print() {
@@ -197,7 +197,7 @@ async function update_endorsement_letter() {
 }
 const chunkArray = (array: any[] | undefined, size: number) => {
   if (!array || array.length === 0) {
-    return []; // Return an empty array if input array is undefined or empty
+    return [];
   }
 
   const chunkedArray: any[][] = [];

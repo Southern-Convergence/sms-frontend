@@ -10,8 +10,8 @@
           </v-col>
         </v-row>
         <v-row dense>
-          <v-col cols="3" class="d-flex"> <v-select label="Filter by SDO" v-model="selected_sdo" :items="sdo"
-              item-value="_id" persistent-hint clearable />
+          <v-col cols="3" class="d-flex" v-if="user.side === 'RO'"> <v-select label="Filter by SDO"
+              v-model="selected_sdo" :items="sdo" item-value="_id" persistent-hint clearable />
             <v-btn @click="get_dashboard" class="ml-2 mt-1" color="primary">
               <v-icon class="pr-1">mdi-filter</v-icon>Filter</v-btn>
           </v-col>
@@ -48,7 +48,7 @@
                           {{ for_evaluation_applicant }}
                         </h6>
                         <h3 class="text-white text-caption font-weight-thin"> {{ for_evaluation_applicant }} of of {{
-            applicants.length }} applications </h3>
+                          applicants.length }} applications </h3>
                       </div>
                     </div>
                   </v-card-text>
@@ -65,7 +65,7 @@
                           {{ for_dbm_applicant }}
                         </h6>
                         <h3 class="text-white text-caption font-weight-thin"> {{ for_dbm_applicant }} of {{
-            applicants.length }} applications
+                          applicants.length }} applications
                         </h3>
                       </div>
                     </div>
@@ -83,7 +83,7 @@
                           {{ completed_applicant }}
                         </h6>
                         <h3 class="text-white text-caption font-weight-thin"> {{ completed_applicant }} of {{
-            applicants.length }} applications
+                          applicants.length }} applications
                         </h3>
                       </div>
                     </div>
@@ -120,8 +120,12 @@
 
 
 <script lang="ts" setup>
+import useAuth from "~/store/auth";
 const router = useRouter();
 const { $rest } = useNuxtApp();
+const auth = useAuth();
+const user = useAuth().user;
+
 onBeforeMount(() => {
 
   get_sdo();
@@ -142,6 +146,11 @@ async function get_sdo() {
 
 const applicants = ref([]);
 async function get_dashboard() {
+
+  if (user.side === 'SDO') {
+    user.division = selected_sdo.value
+  }
+
   const payload = {
     sdo: selected_sdo.value
   };

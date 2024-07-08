@@ -7,12 +7,12 @@ const IS_DEV = NODE_ENV === "development";
 export default defineNuxtConfig({
   ssr: false,
   app: {
-    pageTransition : {
-      name : "page"
+    pageTransition: {
+      name: "page"
     },
 
-    layoutTransition : {
-      name : "rotate",
+    layoutTransition: {
+      name: "rotate",
     },
 
     head: {
@@ -24,8 +24,8 @@ export default defineNuxtConfig({
     },
   },
 
-  vite : {
-    plugins : [
+  vite: {
+    plugins: [
       vuetify()
     ]
   },
@@ -38,34 +38,34 @@ export default defineNuxtConfig({
     "~/assets/main.css",
   ],
 
-  modules: ["@pinia/nuxt", "@vite-pwa/nuxt", "modules/uac-integration",  ['@nuxtjs/google-fonts', {
+  modules: ["@pinia/nuxt", "@vite-pwa/nuxt", "modules/uac-integration", ['@nuxtjs/google-fonts', {
     families: {
       Roboto: true,
       Inter: [400, 700],
-       'Josefin+Sans': true,
+      'Josefin+Sans': true,
       Lato: [100, 300],
       Raleway: {
         wght: [100, 400],
         ital: [100]
       },
-      Ubuntu : true
+      Ubuntu: true
     }
   }]],
-  
+
   pwa: {
-    mode : IS_DEV ? "development" : "production",
+    mode: IS_DEV ? "development" : "production",
     registerType: "autoUpdate",
-    strategies : "injectManifest",
-    scope : "./",
-    srcDir : "service-worker",
-    filename : "sw.ts",   
+    strategies: "injectManifest",
+    scope: "./",
+    srcDir: "service-worker",
+    filename: "sw.ts",
 
     manifest: {
       name: "UAC",
       short_name: "uac",
-      description : "YAGNI ABAC UAC",
+      description: "YAGNI ABAC UAC",
       theme_color: "#0D47A1",
-      id : "/",
+      id: "/",
 
       icons: [
         {
@@ -93,7 +93,7 @@ export default defineNuxtConfig({
     workbox: {
       navigateFallback: "/",
       globPatterns: ["**/*.{js}"],
-      cacheId : "cyka blyat"
+      cacheId: "cyka blyat"
     },
     client: {
       installPrompt: true
@@ -105,7 +105,7 @@ export default defineNuxtConfig({
     },
   },
 
-  routeRules : {
+  routeRules: {
     "/manifest.webmanifest": {
       headers: {
         "Content-Type": "application/manifest+json",
@@ -129,12 +129,12 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      PORT   : process.env.PORT,
-      API    : process.env.API,
-      DOMAIN : process.env.DOMAIN,
+      PORT: process.env.PORT,
+      API: process.env.API,
+      DOMAIN: process.env.DOMAIN,
 
-      CDN_ENDPOINT : process.env.CDN_ENDPOINT,
-      VERSIONING_ENABLED_CDN_ENDPOINT : process.env.VERSIONING_ENABLED_CDN_ENDPOINT
+      CDN_ENDPOINT: process.env.CDN_ENDPOINT,
+      VERSIONING_ENABLED_CDN_ENDPOINT: process.env.VERSIONING_ENABLED_CDN_ENDPOINT
     },
   }
 });

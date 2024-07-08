@@ -1,7 +1,7 @@
 <template>
-  <v-sheet class="pa-5">
-    <v-card rounded="lg" flat>
-      <v-card-text> <v-row :class="`${$vuetify.display.mobile ? 'text-center' : ''}`" justify="center" dense>
+  <v-sheet>
+    <v-card class="pa-10 " rounded="lg" flat>
+      <v-card-text> <v-row :class="`${$vuetify.display.mobile ? 'text-center' : ''}`" dense>
           <v-col cols="12">
             <h6 class="text-h5 text-primary">Summary of Reclassification Application/s</h6>
 
@@ -9,9 +9,14 @@
             </h6>
             <v-divider class="mt-4 mb-2" />
           </v-col>
-
+          <v-col cols="3" v-if="user.side === 'RO'" class="d-flex"> <v-select label="Filter by SDO"
+              v-model="selected_sdo" :items="sdo" item-value="_id" persistent-hint clearable />
+            <v-btn @click="get_applicants" class="ml-2 mt-1" color="primary">
+              <v-icon class="pr-1">mdi-filter</v-icon>Filter</v-btn>
+          </v-col>
         </v-row>
-        <v-row>
+
+        <v-row dense>
 
           <v-col cols="12">
             <v-sheet border>
@@ -19,7 +24,8 @@
                 <template v-slot:item.created_date="{ item }">
                   <span class="text-primary">{{ new Date(item.selectable.created_date).toLocaleDateString('en-US', {
                     year: 'numeric', month:
-                    '2-digit', day: '2-digit' }) }}</span>
+                      '2-digit', day: '2-digit'
+                  }) }}</span>
                 </template>
                 <template v-slot:item.control_number="{ item }">
                   <span class="text-primary">{{ item.selectable.control_number }}</span>
@@ -32,7 +38,7 @@
                     :color="item.selectable.approved === true ? 'success' : (item.selectable.approved === false ? 'red' : 'amber')"
                     variant="outlined">
                     {{ item.selectable.approved === true ? 'Approved' : (item.selectable.approved === false ?
-                    'Disapproved' : 'Pending') }}
+                      'Disapproved' : 'Pending') }}
                   </v-chip>
                 </template>
                 <template v-slot:item.actions="{ item }">
@@ -56,14 +62,12 @@ const router = useRouter();
 
 definePageMeta({ layout: "std-systems" });
 onBeforeMount(async () => {
-  get_applicants()
+  get_applicants();
+  get_sdo();
 });
 
-
-
-
 const table_headers = ref([
-    { title: "Date Applied", key: "created_date", sortable: false },
+  { title: "Date Applied", key: "created_date", sortable: false },
   { title: "Applicant Name", key: "full_name", sortable: false },
   { title: "Division", key: "division", sortable: false },
   { title: "Position", key: "position", sortable: false },
@@ -76,14 +80,20 @@ const table_headers = ref([
 
 const applicants = ref([]);
 async function get_applicants() {
+
+  if (user.side === 'SDO') {
+    user.division = selected_sdo.value
+  }
+
   const payload = {
-    sdo: user.division
+    sdo: selected_sdo.value
   };
   const { data, error } = await $rest('new-applicant/get-dashboard', {
     method: "GET",
     query: payload,
   });
   applicants.value = data;
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
 }
 const load_erf_form = (id: any) => {
   router.push({
@@ -93,6 +103,14 @@ const load_erf_form = (id: any) => {
     }
   });
 }
+const sdo = ref([]);
+const selected_sdo = ref("");
+async function get_sdo() {
+  const { data, error } = await $rest('new-applicant/get-all-sdo', {
+    method: "GET"
+  });
+  sdo.value = data;
 
+};
 
 </script>

@@ -1,12 +1,13 @@
 <template>
-  <v-sheet height="100vh" class="d-flex align-center justify-center">
+  <v-sheet height="100vh" class="d-flex align-center justify-center ">
     <v-sheet v-if="!model" class="h-100 w-100 d-flex align-center justify-center">
-      <v-card class=" mx-auto" color="indigo-lighten-5" width="800px">
+      <v-card color="indigo-lighten-5">
         <v-card-title class="mt-7 ml-10 text-title">
           <v-icon color="amber" class="pr-2">mdi-hand-wave</v-icon>
           WELCOME to DepEd NCR Staffing Modification System
         </v-card-title>
-        <v-card-subtitle class="text-grey pl-13 ml-10">Elevate Your Career: A Guide to the Staffing Modification System
+        <v-card-subtitle class="text-grey pl-13 ml-10">Elevate Your Career: A Guide to the Staffing Modification
+          System
         </v-card-subtitle>
         <v-divider class="mt-3"></v-divider>
         <v-card-item class="text-center my-10">
@@ -20,14 +21,39 @@
           </v-card-subtitle>
         </v-card-item>
       </v-card>
-
-
     </v-sheet>
-    <v-sheet v-else class="h-100 w-100 d-flex align-center justify-center">
+    <v-sheet v-else class="w-100 d-flex align-center justify-center">
       <v-sheet width="88%" :border="step != 1">
         <v-window v-model="step">
           <v-window-item :value="1">
-            <v-card color="indigo-lighten-5">
+
+            <v-card v-if="applicant.status === 'Disapproved'" border="md" class="pa-6 text-white mx-auto"
+              color="primary" max-width="400">
+              <h4 class="text-h5 font-weight-bold mb-4">Returned Application</h4>
+
+              <p class="mb-8">
+                Your reclassification application has been denied by the Principal at your School. Please address the
+                following deficiencies and resubmit your application.
+                <br />
+                <br />
+
+                Below are the attachments that require action:
+                <v-list>
+                  <v-list-item v-for="att, index in filter_difecint_attachment" :key="index">
+                    <v-list-title> {{ index + 1 }}. {{ att.description }} </v-list-title> <br />
+                    <v-list-sub-title class="text-red"> Reason : {{ att.remarks }}</v-list-sub-title>
+                  </v-list-item>
+                </v-list>
+              </p>
+
+              <v-btn @click="step++" class="text-none text-black mb-4" color="red-accent-2" size="x-large"
+                variant="flat" block>
+                NEXT
+              </v-btn>
+
+
+            </v-card>
+            <v-card v-else color="indigo-lighten-5">
               <v-card-title class="pt-5  text-title">
                 <v-icon class="pr-2" color="amber" size="46">mdi-hand-wave</v-icon> WELCOME to DepEd NCR Staffing
                 Modification
@@ -43,6 +69,7 @@
                   <v-col cols="5">
                     <v-card-text class="text-indigo"
                       style="font-family: Century Gothic; font-size:25px ; line-height: 30px;text-align: justify">
+                      {{ applicant.status }}
                       The Staffing Modification System automates reclassification requests for school
                       personnel
                       (T2, T3, MT, HT, and Principal) from application to approval, providing real-time status
@@ -104,7 +131,7 @@
                           </template>
                           <v-list-item-title> Position : <b>{{ qs.title }} <i class="font-weight-thin"
                                 v-if="qs?.education_level"> ({{
-                                qs?.education_level
+                                  qs?.education_level
                                 }})</i></b></v-list-item-title>
 
                         </v-list-item>
@@ -125,6 +152,7 @@
                             education.title }}
                           </v-list-item-subtitle>
 
+                          {{ qs.high_degree }}
                           <v-list-item-subtitle class="text-primary font-weight-bold" v-if="qs.high_degree === true">
                             High Degree
                             overrides
@@ -176,14 +204,7 @@
                           <v-list-item-subtitle>{{
                             qs.ma_units }}</v-list-item-subtitle>
                         </v-list-item>
-                        <v-list-item class="mb-2" color=" white" rounded="rounded" v-if="qs.rating.length">
-                          <template v-slot:prepend>
-                            <v-icon color="primary" icon="mdi-human-male-board"></v-icon>
-                          </template>
-                          <v-list-item-title>Performance Rating :</v-list-item-title>
-                          <v-list-item-subtitle v-for="(rating, index) in qs.rating" :key="index">{{
-                            rating.title }}</v-list-item-subtitle>
-                        </v-list-item>
+
                         <v-list-item class="mb-2" color=" white" rounded="rounded" title=" Training Hours:"
                           v-if="qs.training_hours != 0">
                           <template v-slot:prepend>
@@ -194,15 +215,24 @@
                             approved/recognized by DepEd no used in the immediate previous promotion
                           </v-list-item-subtitle>
                         </v-list-item>
-                        <v-list-item class="ma-2" color=" white" rounded="rounded"
-                          title="Leadership and Potential Points:"
-                          v-if="qs.leadership_points && qs.leadership_points.length > 0">
+                        <v-list-item class="mb-2" color=" white" rounded="rounded" v-if="qs.rating.length">
+                          <template v-slot:prepend>
+                            <v-icon color="primary" icon="mdi-human-male-board"></v-icon>
+                          </template>
+                          <v-list-item-title>Performance Rating :</v-list-item-title>
+                          <v-list-item-subtitle v-for="(rating, index) in qs.rating" :key="index">{{
+                            rating.title }}</v-list-item-subtitle>
+                        </v-list-item>
+
+
+                        <v-list-item v-if="qs.leadership && qs.leadership.length > 0" class=" ma-2" color=" white"
+                          rounded="rounded" title="Leadership and Potential Points:">
                           <template v-slot:prepend>
                             <v-icon color="primary" icon="mdi-certificate"></v-icon>
                           </template>
 
-                          <v-list-item-subtitle v-for="(lead, index) in qs.leadership_points" :key="index">{{
-                            lead }}</v-list-item-subtitle>
+                          <v-list-item-subtitle v-for="(lead, index) in qs.leadership" :key="index">{{
+                            lead.title }}</v-list-item-subtitle>
                         </v-list-item>
 
 
@@ -308,7 +338,7 @@
                             <v-select v-model="applicant.qualification.per_rating" :items="rating_data"
                               label="Performance Rating" hide-details item-value="_id" prepend-inner-icon="mdi-star" />
                           </v-col>
-                          <v-col cols="12" v-if="qs.leadership_points && qs.leadership_points.length > 0">
+                          <v-col cols="12" v-if="qs.leadership && qs.leadership.length > 0">
                             <v-select v-model="applicant.qualification.leadership_points" :items="leadership_data"
                               label="Leadership and Potential" hide-details item-value="_id"
                               prepend-inner-icon="mdi-star" />
@@ -344,8 +374,6 @@
               </v-card-text>
 
             </v-card>
-
-
           </v-window-item>
           <v-window-item :value="2">
             <v-card-text>
@@ -417,11 +445,7 @@
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
                   <v-text-field v-model="applicant.designation.district" label="District" hide-details />
                 </v-col>
-                <!-- <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                  <v-select v-model="applicant.designation.school"
-                    :items="get_sdo_school(applicant.designation.division)" label="School" hide-details
-                    item-value="_id" />
-                </v-col> -->
+
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
                   <v-text-field v-model="applicant.designation.current_position" label="Current Position" hide-details
                     item-value="_id" />
@@ -431,7 +455,7 @@
                     hide-details item-value="_id" />
                 </v-col>
 
-                <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1" v-if="qs.with_erf">
+                <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1" v-if="qs?.with_erf">
                   <v-select v-model="applicant.designation.ipcrf_rating" label="IPCRF rating" hide-details
                     :items="['Satisfactory', 'Very Satisfactory', 'Outstanding', 'Unsatifactory', 'Poor']" />
                 </v-col>
@@ -562,9 +586,13 @@
 
                     <v-col cols="12" xl="6" lg="6" md="6" sm="12"
                       v-for="( attachment_title, index )  in selected_qs?.attachment">
+
                       <v-file-input variant="underlined" :label="attachment_title" :key="index"
-                        @update:model-value="shet_so_hard($event, attachment_title)" />
+                        @update:model-value="uploading_attachment($event, attachment_title)"
+                        :disabled="marianne[attachment_title]?.valid" />
+                      <span v-if="marianne[attachment_title]?.remarks">{{ marianne[attachment_title]?.remarks }}</span>
                     </v-col>
+
                   </v-row>
                 </v-card-text>
 
@@ -573,7 +601,7 @@
 
           </v-window-item>
         </v-window>
-        <v-divider />
+
         <v-card-actions>
           <v-btn v-if="step > 1" variant="text" @click="back"> Back </v-btn>
           <v-spacer></v-spacer>
@@ -583,219 +611,219 @@
           <v-btn @click="principal_dialog = true" v-if="step === 4 && !applicant._id" color="success" variant="flat">
             SUBMIT
           </v-btn>
-          <v-btn v-if="step === 4 && applicant?._id" @click="update_dialog = true" color="primary" variant="flat">
-            UPDATE</v-btn>
+          <v-btn v-if="step === 4 && applicant?._id" @click="update_applicant" color="primary" variant="flat">
+            RE-APPLY</v-btn>
         </v-card-actions>
 
       </v-sheet>
-
-      <commons-dialog max-width="35%" v-model="service_record_dialog" :icon="'mdi-face-agent'"
-        :title="'Service Record Form'" :subtitle="'Employment History'" @submit="add_service_record"
-        :submitText="'Add'">
-        <v-card-text class="my-2">
-          <v-form ref="service_record_form">
-            <v-row dense>
-              <v-col cols="12"> <v-text-field v-model="service_record.designation" label="Position/Designation"
-                  hide-details /></v-col>
-              <v-col cols="6"> <v-text-field v-model="service_record.from" label="From" hide-details
-                  type="date" /></v-col>
-              <v-col cols="6"> <v-text-field v-model="service_record.to" label="To" hide-details type="date" /></v-col>
-
-            </v-row>
-          </v-form>
-        </v-card-text>
-
-      </commons-dialog>
-
-      <commons-dialog max-width="40%" v-model="education_attainment_dialog" icon="'mdi-school'"
-        :title="'Education Attainment and Civil Service Eligibility'"
-        :subtitle="'Your educational background and civil service information'" @submit="add_education_attainment"
-        :submitText="'Add'">
-        <v-card-text class="ma-3">
-          <v-row dense>
-            <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field v-model="education_attainment.date"
-                label="Date" hide-details type="date" /></v-col>
-            <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field v-model="education_attainment.degree"
-                label="Title, Degree Highest Grade Attained" hide-details /></v-col>
-            <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field
-                v-model="education_attainment.institution" label="Name of Institution" hide-details /></v-col>
-            <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field
-                v-model="education_attainment.year_received" label="Year Received" hide-details type="number" /></v-col>
-            <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field
-                v-model="education_attainment.board_exam" label="Board Examination" hide-details /></v-col>
-            <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field v-model="education_attainment.rating"
-                label="Rating" hide-details type="number" /></v-col>
-          </v-row>
-        </v-card-text>
-      </commons-dialog>
-
-      <commons-dialog max-width="35%" v-model="professional_study_dialog" :icon="'mdi-face-agent'"
-        :title="'Professional Study Form'" :subtitle="'Employment History'" @submit="add_professional_study"
-        :submitText="'Add'">
-        <v-card-text class="my-2">
-          <v-row dense>
-            <v-col cols="12"> <v-text-field v-model="professional_study.sy" label="School Year" type="number"
-                hide-details /></v-col>
-            <v-col cols="6"> <v-text-field v-model="professional_study.unit_no" label="Unit Number"
-                hide-details /></v-col>
-            <v-col cols="6"> <v-text-field v-model="professional_study.description" label="Description"
-                hide-details /></v-col>
-          </v-row>
-        </v-card-text>
-      </commons-dialog>
-
-
-      <commons-dialog max-width="35%" v-model="apply_dialog" :icon="'mdi-information'" :title="'Confirmation!'"
-        @submit="position_form_cond" :submitText="'Confirm'">
-        <v-card-text v-if="selected_qs" class="ma-4">
-          You are applying for the reclassification of the <b class="text-primary">{{ qs.title
-            }}</b>.
-          Click <b class="text-primary">cancel</b> to
-          select a different position.
-        </v-card-text>
-      </commons-dialog>
-
-      <commons-dialog max-width="35%" v-model="next_dialog" :icon="'mdi-information'" :title="'Confirmation!'"
-        @submit="position_form_cond" :submitText="'SUBMIT'">
-        <v-card-text class="my
-      -2">
-          <v-row dense>
-            <v-col cols="12"> Are you sure you want to proceed?</v-col>
-            <v-col cols="12"> <v-text-field variant="underlined" value="Selected position" hide-details /></v-col>
-          </v-row>
-        </v-card-text>
-      </commons-dialog>
-
-      <commons-dialog max-width="35%" v-model="confirmation_dialog" :icon="'mdi-information'" :title="'Confirmation!'"
-        @submit="next_to_step2" :submitText="'Ok'">
-        <v-card-text v-if="selected_qs" class="ma-4">
-          <h5> You are qualified for your applied position <b class="text-primary text-subtitle-1">{{ qs.title }}</b>.
-          </h5>
-          <h5 class="mt-5">Download the
-            <a href="https://dev-hris.sgp1.cdn.digitaloceanspaces.com/sms-assets/Omnibus_Certification_of_Authenticity_and_Veracity_of_Documents.pdf"
-              download>
-              <i>Omnibus
-                Certification of
-                Authenticity and
-                Veracity of
-                Documents</i>.
-            </a> A notarized copy must be submitted in the Attachments page.
-
-          </h5>
-
-          <h5 class="mt-5">Clicking <b>cancel</b> will terminate the entire process.</h5>
-        </v-card-text>
-      </commons-dialog>
-
-      <commons-dialog max-width="35%" v-model="cancel_dialog" :icon="'mdi-information'" :title="'Confirmation!'"
-        :submitText="'Ok'" @submit="cancel_application">
-        <v-card-text v-if="selected_qs" class="ma-4 text-center">
-          Are you sure you want to end applying for this position ?
-        </v-card-text>
-      </commons-dialog>
-
-
-      <commons-dialog max-width="35%" v-model="principal_dialog" :icon="'mdi-information'"
-        :title="'Principal Email Address is required!'" :submitText="'Submit'" @submit="create_application">
-        <v-card-text class="ma-4 ">
-
-
-          Please enter the email address of your school principal to validate the authenticity of the attached
-          document/s.
-
-          <v-text-field v-model="applicant.principal.email" label="Enter Principal's Email Address" />
-        </v-card-text>
-      </commons-dialog>
-      <commons-dialog max-width="35%" v-model="update_dialog" :icon="'mdi-information'"
-        :title="'Principal Email Address is required!'" :submitText="'Submit'" @submit="update_applicant">
-        <v-card-text class="ma-4 ">
-          Please enter the email address of your school principal to validate the authenticity of the attached
-          document/s.
-
-          <v-text-field v-model="applicant.principal.email" label="Enter Principal's Email Address" />
-        </v-card-text>
-      </commons-dialog>
-      <v-dialog v-model="esig" width="550" height="450">
-
-        <v-toolbar color="indigo" v-if="$attrs['hide-toolbar'] !== ''" border>
-          <v-list-item class="pl-2" density="compact">
-
-
-
-
-            <v-list-item-title class="text-uppercase"> <v-icon
-                class="pr-1">mdi-draw-pen</v-icon>E-signatures</v-list-item-title>
-
-          </v-list-item>
-
-          <v-spacer />
-          <v-btn class="mr-0" @click="esig = false" rounded="0" icon="mdi-close" />
-        </v-toolbar>
-        <v-card>
-          <v-tabs fixed-tabs v-model="tab" color="primary">
-            <v-tab :value="1">Upload E-sig</v-tab>
-            <v-tab :value="2">Signature Pad</v-tab>
-          </v-tabs>
-
-          <v-window v-model="tab">
-            <v-window-item :value="1">
-              <v-card flat height="300">
-                <v-card-text>
-                  <v-row no-gutters justify="center" class="mt-10">
-                    <div class="image-preview" v-if="image_data.length > 0">
-                      <img class="preview" width="200" height="150" :src="image_data">
-                    </div>
-                  </v-row>
-                </v-card-text>
-                <v-card-actions>
-
-                </v-card-actions>
-              </v-card>
-              <v-divider />
-              <v-card-actions>
-                <v-row justify="center" v-if="image_data.length === 0">
-                  <v-btn variant="tonal" color="primary" prepend-icon="mdi-upload" class="custom-file-upload"
-                    onclick="document.getElementById('getFile').click()">
-                    Select File</v-btn>
-                  <input type='file' id="getFile" @change="preview_image" style="display:none">
-                </v-row>
-                <v-row dense justify="center" class="mb-2" v-else>
-                  <v-col cols="3"> <v-btn block variant="tonal" color="error" size="small"
-                      @click="clear_upload">CLear</v-btn></v-col>
-                  <v-col cols="3"> <v-btn block variant="tonal" color="primary" size="small" @click="attached_esig"
-                      v-if="image_data !== ''">Save</v-btn></v-col>
-                </v-row>
-              </v-card-actions>
-            </v-window-item>
-
-            <v-window-item :value="2">
-              <v-card height="300" flat>
-                <v-card-text class="text-center">
-                  <v-row no-gutters justify="center">
-                    <v-sheet>
-                      <Vue3Signature ref="signature_pad" :sigOption="state.option" :w="'800px'" :h="'380px'"
-                        :disabled="state.disabled" />
-                    </v-sheet>
-                  </v-row>
-                </v-card-text>
-              </v-card>
-              <v-divider />
-              <v-card-actions>
-                <v-row dense justify="center" class="mb-2">
-                  <v-col cols="3"> <v-btn block variant="tonal" color="error" size="small"
-                      @click="clear">CLear</v-btn></v-col>
-                  <v-col cols="3"> <v-btn class="custom-file-upload" block variant="tonal" color="primary" size="small"
-                      @click="free_hand_esig">Save</v-btn></v-col>
-
-                </v-row>
-
-              </v-card-actions>
-            </v-window-item>
-          </v-window>
-        </v-card>
-      </v-dialog>
-
     </v-sheet>
+
+    <commons-dialog max-width="35%" v-model="service_record_dialog" :icon="'mdi-face-agent'"
+      :title="'Service Record Form'" :subtitle="'Employment History'" @submit="add_service_record" :submitText="'Add'">
+      <v-card-text class="my-2">
+        <v-form ref="service_record_form">
+          <v-row dense>
+            <v-col cols="12"> <v-text-field v-model="service_record.designation" label="Position/Designation"
+                hide-details /></v-col>
+            <v-col cols="6"> <v-text-field v-model="service_record.from" label="From" hide-details
+                type="date" /></v-col>
+            <v-col cols="6"> <v-text-field v-model="service_record.to" label="To" hide-details type="date" /></v-col>
+
+          </v-row>
+        </v-form>
+      </v-card-text>
+
+    </commons-dialog>
+
+    <commons-dialog max-width="40%" v-model="education_attainment_dialog" icon="'mdi-school'"
+      :title="'Education Attainment and Civil Service Eligibility'"
+      :subtitle="'Your educational background and civil service information'" @submit="add_education_attainment"
+      :submitText="'Add'">
+      <v-card-text class="ma-3">
+        <v-row dense>
+          <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field v-model="education_attainment.date"
+              label="Date" hide-details type="date" /></v-col>
+          <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field v-model="education_attainment.degree"
+              label="Title, Degree Highest Grade Attained" hide-details /></v-col>
+          <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field
+              v-model="education_attainment.institution" label="Name of Institution" hide-details /></v-col>
+          <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field
+              v-model="education_attainment.year_received" label="Year Received" hide-details type="number" /></v-col>
+          <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field v-model="education_attainment.board_exam"
+              label="Board Examination" hide-details /></v-col>
+          <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field v-model="education_attainment.rating"
+              label="Rating" hide-details type="number" /></v-col>
+        </v-row>
+      </v-card-text>
+    </commons-dialog>
+
+    <commons-dialog max-width="35%" v-model="professional_study_dialog" :icon="'mdi-face-agent'"
+      :title="'Professional Study Form'" :subtitle="'Employment History'" @submit="add_professional_study"
+      :submitText="'Add'">
+      <v-card-text class="my-2">
+        <v-row dense>
+          <v-col cols="12"> <v-text-field v-model="professional_study.sy" label="School Year" type="number"
+              hide-details /></v-col>
+          <v-col cols="6"> <v-text-field v-model="professional_study.unit_no" label="Unit Number"
+              hide-details /></v-col>
+          <v-col cols="6"> <v-text-field v-model="professional_study.description" label="Description"
+              hide-details /></v-col>
+        </v-row>
+      </v-card-text>
+    </commons-dialog>
+
+
+    <commons-dialog max-width="35%" v-model="apply_dialog" :icon="'mdi-information'" :title="'Confirmation!'"
+      @submit="position_form_cond" :submitText="'Confirm'">
+      <v-card-text v-if="selected_qs" class="ma-4">
+        You are applying for the reclassification of the <b class="text-primary">{{ qs.title
+          }}</b>.
+        Click <b class="text-primary">cancel</b> to
+        select a different position.
+      </v-card-text>
+    </commons-dialog>
+
+    <commons-dialog max-width="35%" v-model="next_dialog" :icon="'mdi-information'" :title="'Confirmation!'"
+      @submit="position_form_cond" :submitText="'SUBMIT'">
+      <v-card-text class="my
+      -2">
+        <v-row dense>
+          <v-col cols="12"> Are you sure you want to proceed?</v-col>
+          <v-col cols="12"> <v-text-field variant="underlined" value="Selected position" hide-details /></v-col>
+        </v-row>
+      </v-card-text>
+    </commons-dialog>
+
+    <commons-dialog max-width="35%" v-model="confirmation_dialog" :icon="'mdi-information'" :title="'Confirmation!'"
+      @submit="next_to_step2" :submitText="'Ok'">
+      <v-card-text v-if="selected_qs" class="ma-4">
+        <h5> You are qualified for your applied position <b class="text-primary text-subtitle-1">{{ qs.title }}</b>.
+        </h5>
+        <h5 class="mt-5">Download the
+          <a href="https://dev-hris.sgp1.cdn.digitaloceanspaces.com/sms-assets/Omnibus_Certification_of_Authenticity_and_Veracity_of_Documents.pdf"
+            download>
+            <i>Omnibus
+              Certification of
+              Authenticity and
+              Veracity of
+              Documents</i>.
+          </a> A notarized copy must be submitted in the Attachments page.
+
+        </h5>
+
+        <h5 class="mt-5">Clicking <b>cancel</b> will terminate the entire process.</h5>
+      </v-card-text>
+    </commons-dialog>
+
+    <commons-dialog max-width="35%" v-model="cancel_dialog" :icon="'mdi-information'" :title="'Confirmation!'"
+      :submitText="'Ok'" @submit="cancel_application">
+      <v-card-text v-if="selected_qs" class="ma-4 text-center">
+        Are you sure you want to end applying for this position ?
+      </v-card-text>
+    </commons-dialog>
+
+
+    <commons-dialog max-width="35%" v-model="principal_dialog" :icon="'mdi-information'"
+      :title="'Principal Email Address is required!'" :submitText="'Submit'" @submit="create_application">
+      <v-card-text class="ma-4 ">
+
+
+        Please enter the email address of your school principal to validate the authenticity of the attached
+        document/s.
+
+        <v-text-field v-model="applicant.principal.email" label="Enter Principal's Email Address" />
+      </v-card-text>
+    </commons-dialog>
+    <commons-dialog max-width="35%" v-model="update_dialog" :icon="'mdi-information'"
+      :title="'Principal Email Address is required!'" :submitText="'Submit'" @submit="update_applicant">
+      <v-card-text class="ma-4 ">
+        Please enter the email address of your school principal to validate the authenticity of the attached
+        document/s.
+
+        <v-text-field v-model="applicant.principal.email" label="Enter Principal's Email Address" />
+      </v-card-text>
+    </commons-dialog>
+    <v-dialog v-model="esig" width="550" height="450">
+
+      <v-toolbar color="indigo" v-if="$attrs['hide-toolbar'] !== ''" border>
+        <v-list-item class="pl-2" density="compact">
+
+
+
+
+          <v-list-item-title class="text-uppercase"> <v-icon
+              class="pr-1">mdi-draw-pen</v-icon>E-signatures</v-list-item-title>
+
+        </v-list-item>
+
+        <v-spacer />
+        <v-btn class="mr-0" @click="esig = false" rounded="0" icon="mdi-close" />
+      </v-toolbar>
+      <v-card>
+        <v-tabs fixed-tabs v-model="tab" color="primary">
+          <v-tab :value="1">Upload E-sig</v-tab>
+          <v-tab :value="2">Signature Pad</v-tab>
+        </v-tabs>
+
+        <v-window v-model="tab">
+          <v-window-item :value="1">
+            <v-card flat height="300">
+              <v-card-text>
+                <v-row no-gutters justify="center" class="mt-10">
+                  <div class="image-preview" v-if="image_data.length > 0">
+                    <img class="preview" width="200" height="150" :src="image_data">
+                  </div>
+                </v-row>
+              </v-card-text>
+              <v-card-actions>
+
+              </v-card-actions>
+            </v-card>
+            <v-divider />
+            <v-card-actions>
+              <v-row justify="center" v-if="image_data.length === 0">
+                <v-btn variant="tonal" color="primary" prepend-icon="mdi-upload" class="custom-file-upload"
+                  onclick="document.getElementById('getFile').click()">
+                  Select File</v-btn>
+                <input type='file' id="getFile" @change="preview_image" style="display:none">
+              </v-row>
+              <v-row dense justify="center" class="mb-2" v-else>
+                <v-col cols="3"> <v-btn block variant="tonal" color="error" size="small"
+                    @click="clear_upload">CLear</v-btn></v-col>
+                <v-col cols="3"> <v-btn block variant="tonal" color="primary" size="small" @click="attached_esig"
+                    v-if="image_data !== ''">Save</v-btn></v-col>
+              </v-row>
+            </v-card-actions>
+          </v-window-item>
+
+          <v-window-item :value="2">
+            <v-card height="300" flat>
+              <v-card-text class="text-center">
+                <v-row no-gutters justify="center">
+                  <v-sheet>
+                    <Vue3Signature ref="signature_pad" :sigOption="state.option" :w="'800px'" :h="'380px'"
+                      :disabled="state.disabled" />
+                  </v-sheet>
+                </v-row>
+              </v-card-text>
+            </v-card>
+            <v-divider />
+            <v-card-actions>
+              <v-row dense justify="center" class="mb-2">
+                <v-col cols="3"> <v-btn block variant="tonal" color="error" size="small"
+                    @click="clear">CLear</v-btn></v-col>
+                <v-col cols="3"> <v-btn class="custom-file-upload" block variant="tonal" color="primary" size="small"
+                    @click="free_hand_esig">Save</v-btn></v-col>
+
+              </v-row>
+
+            </v-card-actions>
+          </v-window-item>
+        </v-window>
+      </v-card>
+    </v-dialog>
+
+
   </v-sheet>
 </template>
 
@@ -806,7 +834,7 @@ import useAuth from "~/store/auth";
 const user = useAuth().user;
 const cfg = useRuntimeConfig();
 const { $rest } = useNuxtApp();
-const step = ref(1)
+
 const route = useRoute();
 
 const router = useRouter();
@@ -814,10 +842,17 @@ const router = useRouter();
 const { CDN_ENDPOINT, DEV_CDN_ENDPOINT } = cfg.public;
 const CDN = cfg.public.NODE_ENV === "development" ? DEV_CDN_ENDPOINT : CDN_ENDPOINT;
 
-const shet_so_hard = (data: any, title: string) => {
+const uploading_attachment = (data: any, title: string) => {
   applicant.value.attachments[title] = data
-  console.log(applicant.value.attachments)
 }
+
+/**
+ * START: BUNGOO BUNGGO
+ */
+
+
+
+
 onBeforeMount(() => {
   Promise.all(
     [
@@ -948,7 +983,7 @@ const applicant = ref({
     signature: "WARAY PA",
     date: new Date(new Date())
   },
-
+  display: true,
   status: "For Signature",
   created_date: new Date(new Date()),
   request_log: [],
@@ -956,8 +991,10 @@ const applicant = ref({
   approved: null,
 })
 
+
 const show_footer = ref(false)
 
+const step = ref(1);
 
 // Start: Esignature
 const esig = ref(false)
@@ -1016,6 +1053,13 @@ const state = reactive({
   },
   disabled: false
 })
+
+
+const filter_difecint_attachment = computed(() =>
+  Object.values(applicant.value.attachments).filter(
+    attachment => attachment.valid === false
+  )
+);
 /**
  * START: SERVICE RECORD
  */
@@ -1329,8 +1373,8 @@ async function update_applicant() {
     method: "PUT",
     body: payload
   });
-  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
-  swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } });
+  if (!error) return swal({ title: "Oops!", text: "Failed to re-apply!", icon: "info" });
+  return swal({ title: "Sucess", text: 'Successfully re-apply', icon: "success", buttons: { ok: false, cancel: false } })
 
 }
 const leadership_data = ref<Leadership[]>([]);
@@ -1377,6 +1421,7 @@ const email_rules = computed((v: any) => [
  * MATCHING
  */
 function next_window() {
+
   if (step.value === 2 && !qs.value.with_erf) {
     step.value = 4;
     confirmation_dialog.value = false
@@ -1591,7 +1636,17 @@ async function get_current_status() {
 
 
 
+const marianne = computed(() => {
 
+  const x: { [key: string]: { valid: string, remarks: string } } = {}
+  Object.entries(applicant.value.attachments).forEach(([key, value]) => {
+    if (x[key]) return;
+    const { valid, remarks } = value;
+    x[key] = { valid, remarks }
+  });
+
+  return x
+})
 
 </script>
 <style scoped>
