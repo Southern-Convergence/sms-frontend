@@ -14,7 +14,6 @@ interface Sdo {
   title: String;
   address: string;
   email: string;
-  telephone: string;
   code: string;
 }
 

@@ -10,7 +10,7 @@
           </template>
 
           <h6 class="text-h4 text-medium-emphasis text-primary">Staffing Modification System</h6>
-          {{ form }}
+
         </v-list-item>
       </v-sheet>
       <v-card class="pa-6 py-8" id="onboarding-card" v-if="!link_error" width="420" elevation="2" min-height="480">
@@ -228,13 +228,17 @@ onBeforeMount(async () => {
     if (error) link_error.value = error.error;
 
     const { first_name, middle_name, last_name, email, id, apts, side } = data.user;
+    console.log("DATATATTA", data.user);
 
     active_user.value = id;
+    form.value.role = apts[0]._id;
     form.value.first_name = first_name;
     form.value.middle_name = middle_name;
     form.value.last_name = last_name;
     form.value.email = email;
-    form.value.role = apts[0]._id;
+
+
+
     form.value.side = side;
     input_windows.value[0].valid = true;
 

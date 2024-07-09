@@ -31,7 +31,7 @@
               color="primary" max-width="400">
               <h4 class="text-h5 font-weight-bold mb-4">Returned Application</h4>
 
-              <p class="mb-8">
+              <!-- <p class="mb-8">
                 Your reclassification application has been denied by the Principal at your School. Please address the
                 following deficiencies and resubmit your application.
                 <br />
@@ -41,10 +41,10 @@
                 <v-list>
                   <v-list-item v-for="att, index in filter_difecint_attachment" :key="index">
                     <v-list-title> {{ index + 1 }}. {{ att.description }} </v-list-title> <br />
-                    <v-list-sub-title class="text-red"> Reason : {{ att.remarks }}</v-list-sub-title>
+                    <p> Reason : {{ att.remarks }}</p>
                   </v-list-item>
                 </v-list>
-              </p>
+              </p> -->
 
               <v-btn @click="step++" class="text-none text-black mb-4" color="red-accent-2" size="x-large"
                 variant="flat" block>
@@ -1395,17 +1395,26 @@ async function get_leadership() {
 
 
 async function get_applicant_details() {
+  if (!route.query.id) {
+
+
+    return;
+  }
+
   const { data, error } = await $rest('new-applicant/get-applicant', {
     method: 'GET',
     query: {
       id: route.query.id
     }
-  })
+  });
+
   if (data) {
-    Object.assign(applicant.value, data)
+    Object.assign(applicant.value, data);
   }
+  if (!error) return swal({ title: "Oops!", text: "Failed to fetch data!", icon: "info" });
 
 }
+
 
 
 const is_email_valid = (email: string) => {

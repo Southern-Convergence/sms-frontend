@@ -6,6 +6,7 @@
                 <v-btn prepend-icon="mdi-pencil-plus" @click="user_invite_dialog = true" color="primary">
                     Invite
                     User</v-btn>
+
                 <commons-sms class="my-2 mr-3 " title="USER MANAGEMENT" subtitle="A brief overview of users."
                     rounded="lg" :items="users_data" :display_types="['grid', 'table']">
                     <template v-slot:item="{ value, index, display }">
@@ -17,8 +18,9 @@
                                         value.last_name }}
                                 </div>
                                 <v-spacer />
-                                <div> <v-chip density="compact" class="text-uppercase text-overline" color="success">{{
-                                    value.status }}</v-chip></div>
+                                <div> <v-chip density="compact" class="text-uppercase text-overline"
+                                        :color="value.status === 'invited' ? 'error' : 'success'">{{
+                                            value.status }}</v-chip></div>
                             </div>
                             <div> {{ value.role }} <span v-if="value.division"> of
                                     {{
@@ -26,13 +28,12 @@
                                     }}</span>
                             </div>
                             <div class="text-caption text-capitalize mb-2">{{ value.side }}</div>
-                            <div class="text-caption"> <v-icon color="red-lighten-3"> mdi-email</v-icon> <u
-                                    class="text-blue">{{
-                                        value.email }}</u>
-                            </div>
+
                             <div class="text-caption d-flex">
-                                <div class="w-70"> <v-icon color="green-lighten-3"> mdi-phone</v-icon> {{
-                                    value.contact_number }}098765432456</div>
+                                <div class="text-caption w-70"> <v-icon color="red-lighten-3"> mdi-email</v-icon> <u
+                                        class="text-blue">{{
+                                            value.email }}</u>
+                                </div>
                                 <v-spacer />
                                 <div class="w-30">
                                     <v-menu :close-on-content-click="false" location="end">
@@ -95,8 +96,9 @@
                                     </i>
                                 </template>
                                 <template v-slot:item.status="{ item }">
-                                    <p density="compact" class="text-uppercase text-overline text-success">{{
-                                        item.selectable.status }}</p>
+                                    <p density="compact" class="text-uppercase text-overline"
+                                        :class="value.status === 'invited' ? 'text-error' : 'text-success'">{{
+                                            item.selectable.status }}</p>
                                 </template>
                                 <template v-slot:item.actions="{ item }">
                                     <v-menu :close-on-content-click="false" location="end">
@@ -175,11 +177,11 @@
                                 <v-icon color="blue-lighten-2"> mdi-map-marker</v-icon> {{
                                     sdo.address }}
                             </div>
-                            <div class="text-blue font-italic text-decoration-underline">
-                                <v-icon color="red"> mdi-email</v-icon> {{ sdo.email }}
-                            </div>
+
                             <div class="text-caption d-flex">
-                                <div class="w-70"> <v-icon color="success"> mdi-phone</v-icon> {{ sdo.telephone }}</div>
+                                <div class="w-70 text-blue font-italic text-decoration-underline">
+                                    <v-icon color="red"> mdi-email</v-icon> {{ sdo.email }}
+                                </div>
                                 <v-spacer />
                                 <div class="w-30"> <v-menu :close-on-content-click="false" location="end">
                                         <template v-slot:activator="{ props }">
@@ -250,7 +252,7 @@
                 <v-card-text>
                     <v-form ref="user_form">
                         <v-row dense>
-                            {{ user }}
+
                             <v-col cols="12"><v-text-field v-model="invitation_form.email" density="compact"
                                     label="Email address" prepend-inner-icon="mdi-email-outline" required
                                     :rules="[(v) => /.+@.+/.test(v) || 'Invalid Email address']" /></v-col>
@@ -262,18 +264,16 @@
                             <v-col cols="4"><v-text-field v-model="invitation_form.last_name" density="compact"
                                     hide-details="auto" label="Lastname" required
                                     :rules="[v => !!v || 'Lastname is required']" /></v-col>
-                            <v-col cols="4"><v-text-field v-model="invitation_form.contact_number" density="compact"
-                                    hide-details="auto" label="Contact Number" type="tel"
-                                    :rules="[v => !!v || 'Contact Number is required']" /></v-col>
                             <v-col cols="12"> Roles and Designation </v-col>
                             <v-col cols="6"><v-select v-model="invitation_form.side" label="Type" :items="['SDO', 'RO']"
                                     hide-details="auto" required :rules="[v => !!v || 'Type is required']" /></v-col>
                             <v-col cols="6" v-if="invitation_form.side === 'SDO'">
                                 <v-select v-model="invitation_form.designation.division" :items="sdo_data"
                                     label="Division" item-value="_id" hide-details="auto" /></v-col>
-                            <v-col cols="6">
-                                <v-select v-model="invitation_form.apts" :items="roles" item-title="name" return-object
-                                    label="Role" hide-details="auto" :rules="[v => !!v || 'Role is required']" />
+                            <v-col cols="6">{{ invitation_form.apts }}
+                                <v-select v-model="invitation_form.apts" :items="ro_roles" item-title="name"
+                                    return-object label="Role" hide-details="auto" item-value="_id"
+                                    :rules="[v => !!v || 'Role is required']" />
                             </v-col>
 
 
@@ -376,8 +376,6 @@
                     <v-text-field class="mt-2" v-model="sdo.email" label="Email Address" hide-details="auto"
                         prepend-inner-icon="mdi-email-outline" required
                         :rules="[(v) => /.+@.+/.test(v) || 'Invalid Email address']" />
-                    <v-text-field class="mt-2" v-model="sdo.telephone" type="tel" label="Telephone Number"
-                        hide-details="auto" prepend-inner-icon="mdi-phone" />
                     <v-text-field class="mt-2" v-model="sdo.code" label="SDO Code" hide-details="auto"
                         prepend-inner-icon="mdi-codepen" hint="This is for transaction codes for endorsements." />
                 </v-form>
@@ -483,7 +481,6 @@ const invitation_form = ref({
     middle_name: "",
     last_name: "",
     appellation: "",
-    contact_number: "",
     email: "",
 
     apts: [],
@@ -540,7 +537,7 @@ const get_apts = async () => {
     const { data, error } = await $rest("admin/policy-authority/get-apts", { method: "GET", query: { domain_id: domain } });
 
     const apts = data.filter((v: any) => v.internal === false);
-    roles.value = apts;
+    roles.value = apts.filter(role => need_roles.includes(role.name))
 }
 
 const user_headers = ref([
@@ -549,7 +546,6 @@ const user_headers = ref([
 
     { title: "Side", key: "side", sortable: false },
     { title: "Email Address", key: "email", sortable: false },
-    { title: "Conatact Number", key: "contact_number", sortable: false },
     { title: "Status", key: "status", sortable: false },
     { title: "", key: "actions" },
 ])
@@ -579,7 +575,7 @@ async function get_users() {
         method: "GET",
     });
 
-    users_data.value = data.filter((v) => !!v.role && v.role !== 'School Admin');
+    users_data.value = data.filter((v: any) => !!v.role && v.side === 'RO' || v.role === 'SDO Admin');
 }
 
 
@@ -587,7 +583,6 @@ const sdo = ref<Sdo>({
     title: "",
     address: "",
     email: "",
-    telephone: "",
     code: ""
 })
 
@@ -627,6 +622,12 @@ async function get_sdo() {
     sdo_data.value = data
 }
 
+
+const need_roles = ["Administrative Officer V", "Evaluator", "Verifier", "SDO Admin", "RO Admin"]
+
+const ro_roles = computed(() => {
+    return roles.value.filter(role => need_roles.includes(role.name))
+})
 </script>
 <style scoped>
 * {

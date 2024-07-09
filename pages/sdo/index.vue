@@ -7,6 +7,8 @@
           rounded="0">
           Invite
           User</v-btn>
+
+
         <commons-sms class="my-2 mr-3" title="SDO USER MANAGEMENT" subtitle="A brief overview of users." rounded="lg"
           :items="users_data" :display_types="['grid', 'table']">
           <template v-slot:item="{ value, index, display }">
@@ -18,21 +20,21 @@
                     value.last_name }}
                 </div>
                 <v-spacer />
-                <div> <v-chip density="compact" class="text-uppercase text-overline" color="success">{{
-                  value.status }}</v-chip></div>
+                <div> <v-chip density="compact" class="text-uppercase text-overline"
+                    :color="value.status === 'invited' ? 'error' : 'success'">{{
+                      value.status }}</v-chip></div>
               </div>
-              <div> {{ value.role }} <span v-if="value.division">
+              <div> {{ value.role ? value.role : 'Pending' }} <span v-if="value.division">
                   {{
                     value.division.title
-                  }}</span>
+                  }}
+                </span>
               </div>
-              <div class="text-caption text-capitalize mb-2">{{ value?.side }}</div>
-              <div class="text-caption"> <v-icon color="red-lighten-3"> mdi-email</v-icon> <u class="text-blue">{{
-                value.email }}</u>
-              </div>
+              <div class="text-caption text-capitalize mb-2">{{ value?.side ? value?.side : 'SDO' }}</div>
+
               <div class="text-caption d-flex">
-                <div class="w-70"> <v-icon color="green-lighten-3"> mdi-phone</v-icon> {{
-                  value.contact_number }}098765432456</div>
+                <div class="w-70"><v-icon color="red-lighten-3"> mdi-email</v-icon> <u class="text-blue">{{
+                  value.email }}</u> </div>
                 <v-spacer />
                 <div class="w-30">
                   <v-menu :close-on-content-click="false" location="end">
@@ -87,6 +89,11 @@
                     }}
                   </span>
                 </template>
+                <template v-slot:item.status="{ item }">
+                  <p density="compact" class="text-uppercase text-overline"
+                    :class="item.status === 'invited' ? 'text-error' : 'text-success'">{{
+                      item.selectable.status }}</p>
+                </template>
                 <template v-slot:item.actions="{ item }">
                   <v-menu :close-on-content-click="false" location="end">
                     <template v-slot:activator="{ props }">
@@ -136,6 +143,8 @@
 
       </v-col>
 
+
+
     </v-row>
 
 
@@ -161,31 +170,28 @@
         <v-card-text>
           <v-form ref="sdo_user_form">
             <v-row dense>
-              <v-col cols="12"><v-text-field v-model="sdo_user.email" density="compact" label="Email address"
+
+              <v-col cols="12"><v-text-field v-model="invitation_form.email" density="compact" label="Email address"
                   prepend-inner-icon="mdi-email-outline" required
                   :rules="[(v) => /.+@.+/.test(v) || 'Invalid Email address']" /></v-col>
-              <v-col cols="4"><v-text-field v-model="sdo_user.first_name" density="compact" hide-details="auto"
+              <v-col cols="4"><v-text-field v-model="invitation_form.first_name" density="compact" hide-details="auto"
                   label="Firstname" required :rules="[v => !!v || 'Firstname is required']" /></v-col>
-              <v-col cols="4"><v-text-field v-model="sdo_user.middle_name" density="compact" hide-details
+              <v-col cols="4"><v-text-field v-model="invitation_form.middle_name" density="compact" hide-details="auto"
                   label="Middlename" /></v-col>
-              <v-col cols="4"><v-text-field v-model="sdo_user.last_name" density="compact" hide-details
-                  label="Lastname" /></v-col>
-              <v-col cols="4"><v-text-field v-model="sdo_user.contact_number" density="compact" hide-details
-                  label="Contact Number" /></v-col>
-              <v-col cols="12"> Roles and Designation </v-col>
-              <v-col cols="6"><v-select v-model="sdo_user.side" label="Type"
-                  :items="['School Division Office', 'School']" hide-details /></v-col>
+              <v-col cols="4"><v-text-field v-model="invitation_form.last_name" density="compact" hide-details="auto"
+                  label="Lastname" required :rules="[v => !!v || 'Lastname is required']" /></v-col>
 
 
-              <v-col cols="6">
-                <v-select v-model="sdo_user.role" :items="roles" item-title="name" item-value="_id" label="Role"
-                  hide-details />
+
+
+              <v-col cols="6">{{ invitation_form.apts }}
+                <v-select v-model="invitation_form.apts" :items="sdo_roles" item-title="name" label="Role"
+                  hide-details="auto" item-value="_id" :rules="[v => !!v || 'Role is required']" />
               </v-col>
-              <v-col cols="6" v-if="sdo_user.side == 'School'">
-                <v-select v-model="sdo_user.designation_information.school" label="School" :items="school_data"
-                  item-value="_id" hide-details /></v-col>
 
-            </v-row> </v-form>
+
+            </v-row>
+          </v-form>
 
 
         </v-card-text>
@@ -193,7 +199,7 @@
         <v-card-actions>
           <v-row dense justify="center">
             <v-col cols="4">
-              <v-btn @click="create_user" variant="tonal" color="indigo" block>
+              <v-btn @click="invite_user" variant="tonal" color="indigo" block>
                 <v-icon class="pr-2" size="28"> mdi-message-text-fast</v-icon> Send Invite
               </v-btn>
             </v-col>
@@ -202,44 +208,61 @@
       </v-sheet>
     </v-dialog>
 
-    <commons-dialog v-model="create_school_dialog" max-width="35%" icon="mdi-school" title="Create School"
-      @submit="create_school" submitText="Submit">
-      <v-card-text>
-        <v-text-field v-model="school.title" label=" School" hide-details />
-        <v-textarea class="mt-2" v-model="school.address" rows="3" label="School Address" hide-details
-          prepend-inner-icon="mdi-map-marker" />
-        <v-text-field class="mt-2" v-model="school.email" label="Email Address" hide-details
-          prepend-inner-icon="mdi-email-outline" />
-        <v-text-field class="mt-2" v-model="school.telephone" label="Telephone Number" hide-details
-          prepend-inner-icon="mdi-phone" />
-      </v-card-text>
-    </commons-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 
-const router = useRouter();
 const route = useRoute();
-
+const router = useRouter();
 import { ref } from 'vue';
 import swal from 'sweetalert';
+
 import useAuth from "~/store/auth";
+import { useAPTs, useDomains, useLoader } from '~/store/index';
+
+const apts = useAPTs();
+const loader = useLoader();
+const domains = useDomains();
 
 definePageMeta({ layout: "barren" })
+
 
 onBeforeMount(() => {
   Promise.all([
     get_users(),
+
     get_apts(),
-    get_school(),
+    load_resources()
   ])
 })
 
 const auth = useAuth().user;
+
 const { $rest } = useNuxtApp();
 
-const is_hovered = ref(false);
+
+
+const DEFAULT_DOMAIN = "Southern Convergence"; //Until We perfect the microservices based approach,
+
+const domain = computed(() => domains.active_domain) as any;
+const user_groups = ref([]);
+async function load_resources() {
+  const domain_res = await $rest("admin/policy-authority/get-domains", { method: "GET" });
+  domains.hydrate(domain_res.data);
+  /* @ts-ignore */
+  if (!domain.value) domains.set_active_domain(DEFAULT_DOMAIN);
+
+  const query = { domain_id: domain.value._id };
+  const [apt_res, user_group_res] = await Promise.all([
+    $rest("admin/policy-authority/get-apts", { method: "GET", query }),
+    $rest("admin/subject-authority/get-user-groups", { method: "GET", query })
+  ]);
+  console.log(apt_res.data, domain.value.access_policies);
+  apts.hydrate(apt_res.data, domain.value.access_policies);
+  user_groups.value = user_group_res.data.map((v: any) => ({ title: v.name, value: v }));
+}
+
 
 
 const user_headers = ref([
@@ -247,113 +270,94 @@ const user_headers = ref([
   { title: "Role", key: "role" },
   { title: "Side", key: "side" },
   { title: "Email Address", key: "email" },
-  { title: "Conatact Number", key: "contact_number" },
+  { title: "Status", key: "status" },
   { title: "Actions", key: "actions" },
 ])
 
-const sdo_user = ref<SmsUser>({
-  username: "",
-  password: "",
-  admin: false,
-  email: "",
-  last_name: "",
-  middle_name: "",
-  first_name: "",
-  contact_number: "",
-  side: "",
-  role: "",
-  designation_information: {
-    division: route.query.id,
-    school: "",
-  },
-  status: "pending",
-});
 
-const route_to_school = (id: string) => {
-  router.push({
-    name: 'school',
-    query: {
-      id: id
-    }
-  });
-}
+
+
 /**
  * 
  */
 
-const roles = ref([]);
-const get_apts = async () => {
 
-  const domain = auth.access[0].domain_id;
-  if (!domain) return swal({ title: "Fuck" })
-  const { data, error } = await $rest("admin/policy-authority/get-apts", { method: "GET", query: { domain_id: domain } });
+const invitation_form = ref({
+  first_name: "",
+  middle_name: "",
+  last_name: "",
+  appellation: "",
+  contact_number: "",
+  email: "",
 
-  const apts = data.filter((v: any) => v.internal === false);
-  roles.value = apts;
-}
-
+  apts: [],
+  group: "",
+  designation: {
+    division: route.query.id
+  },
+  side: "SDO"
+} as any);
 
 
 
 const user_invite_dialog = ref(false);
 const sdo_user_form = ref()
-async function create_user() {
-  const { data, error } = await $rest('sms-sdo/create-sdo-user', {
-    method: "POST",
-    body: { ...sdo_user.value }
-  });
-  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-  user_invite_dialog.value = ref(false)
-  get_users()
-  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
-}
+
 const users_data = ref<SmsUser[]>([])
 async function get_users() {
   const { data, error } = await $rest('sms-sdo/get-sdo-users', {
     method: "GET",
     query: { id: route.query.id }
   });
-  users_data.value = data;
-
+  users_data.value = data
 }
 
-const school = ref<School>({
-  title: "",
-  address: "",
-  email: "",
-  telephone: "",
-  division: route.query.id
+
+
+
+
+async function invite_user() {
+  loader.set("Sending out invitation form...");
+
+  invitation_form.value.apts = [invitation_form.value.apts];
+  const { data, error } = await $rest("auth/invite-user", {
+    method: "POST",
+    body: {
+      domain: {
+        id: domain.value._id,
+        name: domain.value.name,
+      },
+      ...invitation_form.value
+    }
+  });
+
+  loader.set(false);
+  const success = Boolean(data);
+  swal({
+    title: success ? "Success" : "Request Failed",
+    icon: success ? "success" : "error",
+    text: data || (error || "Failed to reach server"),
+  });
+}
+const roles = ref([]);
+
+const get_apts = async () => {
+  const domain = auth.access[0].domain_id;
+  if (!domain) return swal({ title: "Role is required" })
+  const { data, error } = await $rest("admin/policy-authority/get-apts", { method: "GET", query: { domain_id: domain } });
+
+  const apts = data.filter((v: any) => v.internal === false);
+  roles.value = apts.filter(role => need_roles.includes(role.name))
+}
+
+
+
+const need_roles = ["Administrative Officer IV", "Evaluator", "SDO Admin"]
+
+const sdo_roles = computed(() => {
+  return roles.value.filter(role => need_roles.includes(role.name))
 })
 
-const create_school_dialog = ref(false)
-async function create_school() {
-  const { data, error } = await $rest('sms-school/create-school', {
-    method: "POST",
-    body: { ...school.value }
-
-  })
-
-  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-  get_school();
-  create_school_dialog.value = false;
-  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
-}
-const school_data = ref<School[]>([]);
-async function get_school() {
-  const division_id = route.query.id;
-  const { data, error } = await $rest('sms-school/get-school', {
-    method: "GET",
-  })
-  if (error) return swal({
-    title: "Error",
-    text: error,
-    icon: "error",
-    buttons: { ok: false, cancel: false }
-  })
-
-  school_data.value = data.filter(school => school.division === division_id);
-
-}
 
 
 
