@@ -264,13 +264,16 @@
                             <v-col cols="4"><v-text-field v-model="invitation_form.last_name" density="compact"
                                     hide-details="auto" label="Lastname" required
                                     :rules="[v => !!v || 'Lastname is required']" /></v-col>
+                            <!-- <v-col cols="4"><v-text-field v-model="invitation_form.contact_number" density="compact"
+                                    hide-details="auto" label="Num" required
+                                    :rules="[v => !!v || 'Num is required']" /></v-col> -->
                             <v-col cols="12"> Roles and Designation </v-col>
                             <v-col cols="6"><v-select v-model="invitation_form.side" label="Type" :items="['SDO', 'RO']"
                                     hide-details="auto" required :rules="[v => !!v || 'Type is required']" /></v-col>
                             <v-col cols="6" v-if="invitation_form.side === 'SDO'">
                                 <v-select v-model="invitation_form.designation.division" :items="sdo_data"
                                     label="Division" item-value="_id" hide-details="auto" /></v-col>
-                            <v-col cols="6">{{ invitation_form.apts }}
+                            <v-col cols="6">
                                 <v-select v-model="invitation_form.apts" :items="ro_roles" item-title="name"
                                     return-object label="Role" hide-details="auto" item-value="_id"
                                     :rules="[v => !!v || 'Role is required']" />
@@ -449,7 +452,6 @@ async function load_resources() {
         $rest("admin/policy-authority/get-apts", { method: "GET", query }),
         $rest("admin/subject-authority/get-user-groups", { method: "GET", query })
     ]);
-    console.log(apt_res.data, domain.value.access_policies);
     apts.hydrate(apt_res.data, domain.value.access_policies);
     user_groups.value = user_group_res.data.map((v: any) => ({ title: v.name, value: v }));
 }
@@ -482,6 +484,7 @@ const invitation_form = ref({
     last_name: "",
     appellation: "",
     email: "",
+    // contact_number: "",
 
     apts: [],
     group: "",
@@ -502,10 +505,14 @@ const deactivation_types = ref([
     "Deceased",
     "Others"
 ]);
+
 async function invite_user() {
+
+
     loader.set("Sending out invitation form...");
 
     invitation_form.value.apts = [invitation_form.value.apts];
+
     const { data, error } = await $rest("auth/invite-user", {
         method: "POST",
         body: {
@@ -519,6 +526,7 @@ async function invite_user() {
 
     loader.set(false);
     const success = Boolean(data);
+    user_form.value.reset();
     swal({
         title: success ? "Success" : "Request Failed",
         icon: success ? "success" : "error",
@@ -540,6 +548,11 @@ const get_apts = async () => {
     roles.value = apts.filter(role => need_roles.includes(role.name))
 }
 
+const need_roles = ["Administrative Officer V", "Evaluator", "Verifier", "SDO Admin", "RO Admin"]
+
+const ro_roles = computed(() => {
+    return roles.value.filter(role => need_roles.includes(role.name))
+})
 const user_headers = ref([
     { title: "Full Name", key: "full_name", sortable: false },
     { title: "Role", key: "role", sortable: false },
@@ -623,11 +636,7 @@ async function get_sdo() {
 }
 
 
-const need_roles = ["Administrative Officer V", "Evaluator", "Verifier", "SDO Admin", "RO Admin"]
 
-const ro_roles = computed(() => {
-    return roles.value.filter(role => need_roles.includes(role.name))
-})
 </script>
 <style scoped>
 * {

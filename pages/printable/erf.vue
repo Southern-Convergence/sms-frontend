@@ -248,11 +248,13 @@
             </div>
 
             <div class="w-50 justify-center  px-5">
+              <!-- {{ erf.assignees[2] }} -->
+
               <div class="w-100" style="display: grid; place-items: center;">
-                <v-img :width="197" height="3vh" />
+                <v-img :width="197" height="3vh" :src="erf.sdo_evaluator_signature" />
               </div>
               <div class="text-center text-uppercase font-weight-bold">{{ erf?.assignees && erf.assignees.length ?
-                erf.assignees[2].name : ''
+                erf.sdo_evaluator : ''
                 }}</div>
               <hr />
               <center> Evaluator </center>
@@ -299,10 +301,10 @@
 
             <div class="w-50 justify-center  px-5">
               <div class="w-100" style="display: grid; place-items: center;">
-                <v-img :width="197" height="3vh" />
+                <v-img :width="197" height="3vh" :src="erf.ro_evaluator_signature" />
               </div>
               <div class="text-center text-uppercase font-weight-bold">{{ erf?.assignees && erf.assignees.length ?
-                erf.assignees[4].name : ''
+                erf.ro_evaluator : ''
                 }}</div>
               <hr />
               <center> Evaluator </center>

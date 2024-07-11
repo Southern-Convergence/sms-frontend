@@ -184,8 +184,8 @@
 
 
 
-              <v-col cols="6">{{ invitation_form.apts }}
-                <v-select v-model="invitation_form.apts" :items="sdo_roles" item-title="name" label="Role"
+              <v-col cols="6">
+                <v-select v-model="invitation_form.apts" :items="sdo_roles" item-title="name" return-object label="Role"
                   hide-details="auto" item-value="_id" :rules="[v => !!v || 'Role is required']" />
               </v-col>
 
@@ -287,7 +287,7 @@ const invitation_form = ref({
   middle_name: "",
   last_name: "",
   appellation: "",
-  contact_number: "",
+
   email: "",
 
   apts: [],
@@ -333,6 +333,7 @@ async function invite_user() {
 
   loader.set(false);
   const success = Boolean(data);
+  // user_form.value.reset();
   swal({
     title: success ? "Success" : "Request Failed",
     icon: success ? "success" : "error",
@@ -343,13 +344,12 @@ const roles = ref([]);
 
 const get_apts = async () => {
   const domain = auth.access[0].domain_id;
-  if (!domain) return swal({ title: "Role is required" })
+  if (!domain) return swal({ title: "Fuck" })
   const { data, error } = await $rest("admin/policy-authority/get-apts", { method: "GET", query: { domain_id: domain } });
 
   const apts = data.filter((v: any) => v.internal === false);
-  roles.value = apts.filter(role => need_roles.includes(role.name))
+  roles.value = apts.filter((role: any) => need_roles.includes(role.name))
 }
-
 
 
 const need_roles = ["Administrative Officer IV", "Evaluator", "SDO Admin"]

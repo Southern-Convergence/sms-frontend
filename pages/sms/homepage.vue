@@ -8,7 +8,7 @@
             <h6 class="text-subtitle-2 text-medium-emphasis  ">Manage reclassification applicantions.
             </h6>
             <v-divider class="mt-4 mb-2" />
-            {{ user }}
+
           </v-col>
 
         </v-row>

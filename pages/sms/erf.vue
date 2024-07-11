@@ -9,9 +9,9 @@
         <v-col cols="5" class="text-subtitle-2 font-weight-bold"> TO : REGIONAL DIRECTOR
           <p class="pl-7 font-weight-regular">Regional Director/DepEd - NCR
           </p>
-
+          {{ user }}
         </v-col>
-        {{ evaluators }}
+
         <v-col cols="auto"> Application Date : <v-chip color="primary" density="compact">
             {{ new Date(applicant_details.created_date).toLocaleString() }}
           </v-chip></v-col>
@@ -50,7 +50,7 @@
               <v-row no-gutters class="ma-2" justify="center">
                 <v-col cols="6" class="text-capitalize">Name : <b> {{
                   applicant_details?.personal_information?.first_name
-                    }} {{ applicant_details?.personal_information?.last_name }} </b>
+                }} {{ applicant_details?.personal_information?.last_name }} </b>
                 </v-col>
                 <v-col cols="6">Date of Birth : <b> {{
                   applicant_details?.personal_information?.birthday }}
@@ -180,23 +180,27 @@
                   <v-icon class="mr-2">mdi-attachment</v-icon>
                   <span>View Attachment</span>
                 </v-btn>
-                <v-row dense v-if="sdo_attachment_evaluator_condition">
-                  <v-col cols="auto" class="mt-3 font-weight-bold text-grey "> Evaluation :</v-col>
-                  <v-col cols="auto">
-                    <v-checkbox color="success" label="Valid" @click="evaluate_attachment(key, true)" hide-details
-                      density="compact" :model-value="getCheckboxValue(key, true)" />
-                  </v-col>
-                  <v-col cols="auto">
-                    <v-checkbox color="error" label="Invalid" @click="evaluate_attachment(key, false)" hide-details
-                      density="compact" :model-value="getCheckboxValue(key, false)" />
-                  </v-col>
-                  <v-col cols="12" v-if="applicant_details.attachments[key].valid == false">
-                    <v-textarea label="Specify reason" v-model="remarks" rows="2" hide-details="auto"
-                      @update:model-value="remarks_attachment(key)"
-                      :model-value="applicant_details.attachments[key].remarks" bg-color="#E8EAF6"
-                      :rules="[v => !!v || 'Reason is required']" required />
-                  </v-col>
-                </v-row>
+                <v-form ref="erf_form">
+                  <v-row dense v-if="sdo_attachment_evaluator_condition">
+                    <v-col cols="auto" class="mt-3 font-weight-bold text-grey "> Evaluation :</v-col>
+                    <v-col cols="auto">
+                      <v-checkbox color="success" label="Valid" @click="evaluate_attachment(key, true)" hide-details
+                        density="compact" :model-value="getCheckboxValue(key, true)"
+                        :rules="[v => !!v || 'Reason is required']" required />
+                    </v-col>
+                    <v-col cols="auto">
+                      <v-checkbox color="error" label="Invalid" @click="evaluate_attachment(key, false)" hide-details
+                        density="compact" :model-value="getCheckboxValue(key, false)"
+                        :rules="[v => !!v || 'Reason is required']" required />
+                    </v-col>
+                    <v-col cols="12" v-if="applicant_details.attachments[key].valid == false">
+                      <v-textarea label="Specify reason" v-model="remarks" rows="2" hide-details="auto"
+                        @update:model-value="remarks_attachment(key)"
+                        :model-value="applicant_details.attachments[key].remarks" bg-color="#E8EAF6"
+                        :rules="[v => !!v || 'Reason is required']" required />
+                    </v-col>
+                  </v-row>
+                </v-form>
 
               </v-card-text>
             </v-card>
@@ -210,117 +214,37 @@
               Attachments</h5>
             <v-card class="mb-3" rounded="lg" border>
               <v-card-text>
-                <v-sheet height="7vh"><b>{{ index + 1 }}. {{ value.description }} </b></v-sheet>
-                <v-btn size="small" color="primary" class="d-flex " variant="tonal"
-                  @click="open_attachment_dialog(key)">
-                  <v-icon class="mr-2">mdi-attachment</v-icon>
-                  <span>View Attachment</span>
-                </v-btn>
-                <v-row dense v-if="sdo_attachment_evaluator_condition">
-                  <v-col cols="auto" class="mt-3 font-weight-bold text-grey "> Evaluation :</v-col>
-                  <v-col cols="auto">
-                    <v-checkbox color="success" label="Valid" @click="evaluate_attachment(key, true)" hide-details
-                      density="compact" :model-value="getCheckboxValue(key, true)" />
-                  </v-col>
-                  <v-col cols="auto">
-                    <v-checkbox color="error" label="Invalid" @click="evaluate_attachment(key, false)" hide-details
-                      density="compact" :model-value="getCheckboxValue(key, false)" />
-                  </v-col>
-                  <v-col cols="12" v-if="applicant_details.attachments[key].valid == false">
-                    <v-textarea label="Specify reason" v-model="remarks" rows="2" hide-details="auto"
-                      @update:model-value="remarks_attachment(key)"
-                      :model-value="applicant_details.attachments[key].remarks" bg-color="#E8EAF6"
-                      :rules="[v => !!v || 'Reason is required']" required />
-                  </v-col>
-                </v-row>
-
+                <v-form ref="erf_form">
+                  <v-sheet height="7vh"><b>{{ index + 1 }}. {{ value.description }} </b></v-sheet>
+                  <v-btn size="small" color="primary" class="d-flex " variant="tonal"
+                    @click="open_attachment_dialog(key)">
+                    <v-icon class="mr-2">mdi-attachment</v-icon>
+                    <span>View Attachment</span>
+                  </v-btn>
+                  <v-row dense v-if="sdo_attachment_evaluator_condition">
+                    <v-col cols="auto" class="mt-3 font-weight-bold text-grey "> Evaluation :</v-col>
+                    <v-col cols="auto">
+                      <v-checkbox color="success" label="Valid" @click="evaluate_attachment(key, true)" hide-details
+                        density="compact" :model-value="getCheckboxValue(key, true)"
+                        :rules="[v => !!v || 'Reason is required']" />
+                    </v-col>
+                    <v-col cols="auto">
+                      <v-checkbox color="error" label="Invalid" @click="evaluate_attachment(key, false)" hide-details
+                        density="compact" :model-value="getCheckboxValue(key, false)"
+                        :rules="[v => !!v || 'Reason is required']" />
+                    </v-col>
+                    <v-col cols="12" v-if="applicant_details.attachments[key].valid == false">
+                      <v-textarea label="Specify reason" v-model="remarks" rows="2" hide-details="auto"
+                        @update:model-value="remarks_attachment(key)"
+                        :model-value="applicant_details.attachments[key].remarks" bg-color="#E8EAF6"
+                        :rules="[v => !!v || 'Reason is required']" required />
+                    </v-col>
+                  </v-row>
+                </v-form>
               </v-card-text>
             </v-card>
           </div>
         </v-col>
-
-
-        <v-col cols="12" class="d-flex justify-center"
-          v-if="applicant_details.status === 'For Evaluation' || applicant_details.status === 'For Checking'">
-          <v-sheet height="17vh" class="text-center w-50  justify-center">
-            <div v-show="evaluator_signature_cond">
-              <div class=" d-flex align-center justify-center "> <v-img :width="200" height="7vh"
-                  :src="user?.e_signature" />
-              </div>
-              <div class="text-center text-uppercase font-weight-bold mt-2">{{
-                user.first_name }} {{ user.last_name }}
-              </div>
-            </div>
-            <v-divider />
-            <div class="text-center">{{ user?.access[0]?.name }}</div>
-
-            <div class="d-flex justify-center">
-              <div class="w-30"><v-btn variant="text" color="error" @click="evaluator_clear_signature">Clear</v-btn>
-              </div>
-              <div class="w-30"><v-btn variant="text" color="primary" @click="evaluator_signature">Sign</v-btn>
-              </div>
-            </div>
-          </v-sheet>
-        </v-col>
-
-        <!-- SDO Attachment Form-->
-        <!-- SDO Attachments -->
-        <!-- 
-            <v-col :cols="applicant_details.is_with_erf ? '12' : '6'" v-if="!display_sdo_attachment_conditon">
-              <h5 class="pa-2 font-weight-bold text-subtitle-2 text-indigo"> School Division Office</h5>
-              <v-card class="mb-3" rounded="lg" v-if="Object.keys(applicant_details).length"
-                v-for="  [key, value], index in Object.entries(applicant_details?.sdo_attachments)  ">
-                <v-sheet class="pa-4">
-                  <h6> {{ index + 1 }}.
-                    {{ value?.description }}
-                  </h6>
-                  <v-btn size="small" color="primary" class="d-flex " variant="tonal"
-                    @click="open_sdo_attachment_dialog(key)">
-                    <v-icon class="mr-2">mdi-attachment</v-icon>
-                    <span>View Attachment</span>
-                  </v-btn>
-
-                  <v-row dense v-if="sdo_attachment_evaluator_condition">
-                    <v-col cols="auto" class="mt-3 font-weight-bold text-grey "> Evaluation :</v-col>
-                    <v-col cols="auto">
-                      <v-checkbox color="success" label="Valid" @click="evaluate_sdo_attachment(key, true)" hide-details
-                        density="compact" :model-value="getsdoCheckboxValue(key, true)" />
-                    </v-col>
-                    <v-col cols="auto">
-                      <v-checkbox color="error" label="Invalid" @click="evaluate_sdo_attachment(key, false)"
-                        hide-details density="compact" :model-value="getsdoCheckboxValue(key, false)" />
-                    </v-col>
-
-                    <v-col cols="12" v-if="applicant_details?.sdo_attachments[key]?.valid == false">
-                      <v-textarea label="Specify reason" v-model="remarks" rows="2" hide-details="auto"
-                        @update:model-value="sdo_remarks_attachment(key)"
-                        :model-value="applicant_details.sdo_attachments[key].remarks" bg-color="#E8EAF6"
-                        :rules="[v => !!v || 'Reason is required']" required />
-                    </v-col>
-                  </v-row>
-                </v-sheet>
-              </v-card>
-            </v-col> -->
-        <!-- SDO Attachments -->
-        <!-- <v-col :cols="applicant_details.is_with_erf ? '12' : '6'"
-              :class="applicant_details.is_with_erf ? '' : 'mt-7 pl-4'" v-if="is_render_sdo_attachment">
-
-              <v-card class="my-2" rounded="lg">
-                <v-card-text>
-                  <v-alert density="compact" variant="tonal" type="info" closable>Attachments to be provided by the SDO
-                    evaluator
-                  </v-alert>
-                  <div class="ma-3" v-for=" [name, value] in Object.entries(applicant_details.sdo_attachments) "
-                    :key="name">
-                    <h6 class="pl-10"> {{ name }}</h6>
-                    <v-file-input class="mt-2" @update:model-value="sdo_evaluator_attach($event, name)" />
-                  </div>
-                </v-card-text>
-
-
-              </v-card>
-            </v-col> -->
-        <!-- SDO Attachment Form-->
 
 
 
@@ -352,37 +276,40 @@
       </v-row>
 
 
-      <!-- <v-row dense justify="center">
-        <v-col cols="4">
-          <div class="w-100 d-flex align-center justify-center "> <v-img :width="197" height="10vh"
-              :src="applicant_details?.principal.signature" />
+      <v-col cols="12" class="d-flex justify-center"
+        v-if="applicant_details.status === 'For Evaluation' || applicant_details.status === 'For Checking'">
+        <v-sheet height="17vh" class="text-center w-50  justify-center">
+          <div>
+            <v-sheet class="d-flex align-center justify-center" min-height="7vh">
+              <div v-show="evaluator_signature_cond">
+                <v-img :width="247" aspect-ratio="16/9" cover :src="user?.e_signature" />
+              </div>
+            </v-sheet>
+            <div class="text-center text-uppercase font-weight-bold mt-2">{{
+              user.first_name }} {{ user.last_name }}
+            </div>
           </div>
-          <div class="w-100 text-center font-weight-bold text-subtitle-1 "> MARIANNE MAE PACLIAN</div>
           <hr />
-          <div class="d-flex justify-between">
-            <div class="w-50 text-end"><v-btn density="compact" variant="text"
-                class="font-weight-bold text-error justify-end">
-                Clear</v-btn></div>
-            <div class="w-50"> <v-btn variant="text" density="compact"
-                class="font-weight-bold text-primary justify-start">
-                Sign</v-btn></div>
+          <div class="text-center">{{ user?.access[0]?.name }}</div>
+
+          <div class="d-flex justify-center">
+            <div class="w-30"><v-btn variant="text" color="error" @click="evaluator_clear_signature">Clear</v-btn>
+            </div>
+            <div class="w-30"><v-btn variant="text" color="primary" @click="evaluator_signature">Sign</v-btn>
+            </div>
           </div>
-        </v-col>
-      </v-row> -->
+        </v-sheet>
+      </v-col>
+
 
     </v-card-text>
     <v-card-actions>
-
       <v-row justify="center">
         <v-col cols="6"
           v-if="user && user.role === 'Administrative Officer IV' && applicant_details.status === 'Pending'">
           <v-btn @click="evaluator_dialog = true" block variant="tonal" color="indigo"> Assign to Evaluator</v-btn>
         </v-col>
-        <!-- <v-col cols="6"
-          v-else-if="user && user.role === 'Administrative Officer V' && applicant_details.status === 'Pending'">
-          <v-btn @click="ro_evaluator_dialog = true" block variant="tonal" color="indigo"> Assign to RO
-            Evaluator</v-btn>
-        </v-col> -->
+
         <v-col cols="6"
           v-else-if="user && user.role === ROLES.EVALUATOR && applicant_details?.status === 'Approved for Printing'">
           <v-btn variant="tonal" color="success" block @click="attach_output_requirement">
@@ -729,9 +656,6 @@ const remarks_attachment = (key: string) => {
 }
 
 
-
-
-
 const view_applicant_info_dialog = ref(false)
 /**
  * start: evaluator
@@ -873,6 +797,9 @@ const handle_application = async () => {
     case "Administrative Officer V":
       handle_admin5(payload);
       break;
+    case "Evaluator":
+      handle_evaluator(payload);
+      break;
     default:
       break;
   }
@@ -922,7 +849,15 @@ const sdo_attachment_evaluator_condition = computed(() => {
  * APPROVAL PROCCESS
  */
 
-
+const erf_form = ref();
+// const clear_attachment = () => {
+//   const attachments = applicant_details.value.attachments;
+//   Object.values(attachments).forEach(attachment => {
+//     attachment.valid = null;
+//     attachment.remarks = null;
+//     attachment.timestamp = null;
+//   });
+// };
 
 
 const handle_principal = async () => {
@@ -964,6 +899,8 @@ const handle_evaluator = async (payload: any) => {
   const { data, error } = await $rest('new-applicant/handle-evaluator', { method: "PUT", body: payload })
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
   swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+  erf_form.value.reset()
+  console.log(applicant_details);
 
   router.push({ name: 'sms-reclassification' });
 

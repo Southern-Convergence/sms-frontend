@@ -25,7 +25,7 @@
     <v-sheet v-else class="w-100 d-flex align-center justify-center">
       <v-sheet width="88%" :border="step != 1">
         <v-window v-model="step">
-          <v-window-item :value="1">
+          <v-window-item :value="1" v-model="step_windows[1].valid">
 
             <v-card v-if="applicant.status === 'Disapproved'" border="md" class="pa-6 text-white mx-auto"
               color="primary" max-width="400">
@@ -384,21 +384,24 @@
                   Information </v-col>
 
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                  <v-text-field v-model="applicant.personal_information.last_name" label="Surname" hide-details />
+                  <v-text-field v-model="applicant.personal_information.last_name" label="Surname" hide-details
+                    :rules="[$validator.required]" />
                 </v-col>
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                  <v-text-field v-model="applicant.personal_information.first_name" label="Given Name" hide-details />
+                  <v-text-field v-model="applicant.personal_information.first_name" label="Given Name" hide-details
+                    :rules="[$validator.required]" />
                 </v-col>
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                  <v-text-field v-model="applicant.personal_information.middle_name" label="Middle Name" hide-details />
+                  <v-text-field v-model="applicant.personal_information.middle_name" label="Middle Name" hide-details
+                    :rules="[$validator.required]" />
                 </v-col>
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                  <v-text-field v-model="applicant.personal_information.email" :rules="email_rules" label="Email"
-                    hide-details />
+                  <v-text-field v-model="applicant.personal_information.email" label="Email" hide-details
+                    :rules="[$validator.required]" />
                 </v-col>
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
                   <v-text-field v-model="applicant.personal_information.birthday" label="Birthday" type="date"
-                    hide-details />
+                    hide-details :rules="[$validator.required]" />
                 </v-col>
                 <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
                   <v-select v-model="applicant.personal_information.gender" label="Gender" :items="['Female', 'Male']"
@@ -975,14 +978,8 @@ const applicant = ref({
   ],
   attachments: {
   },
-  sdo_attachments: {},
-  signatory: {
-    name: "Marianne Mae Paclian",
-    position: "Principal",
-    role: "principal",
-    signature: "WARAY PA",
-    date: new Date(new Date())
-  },
+
+
   display: true,
   status: "For Signature",
   created_date: new Date(new Date()),
@@ -995,6 +992,33 @@ const applicant = ref({
 const show_footer = ref(false)
 
 const step = ref(1);
+
+// const disable_next = computed(() => {
+//   const form_validity = !step_windows.value[step.value].valid;
+//   const attachment = !step_windows.value[step.value].valid;
+//   const temp = step.value;
+//   switch (temp) {
+//     case 0: return form_validity;
+//     case 1: return form_validity;
+//     case 1: return attachment;
+//   }
+// });
+
+
+const step_windows = ref([
+  {
+    name: "Personal Information",
+    valid: false
+  },
+  {
+    name: "Designatuon",
+    valid: false
+  },
+  {
+    name: "Attachment",
+    valid: false
+  }
+]);
 
 // Start: Esignature
 const esig = ref(false)
@@ -1361,7 +1385,7 @@ async function create_application() {
   })
 
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+  return swal({ title: "Sucess", text: data, icon: "success" })
 }
 
 async function update_applicant() {

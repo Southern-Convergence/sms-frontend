@@ -128,6 +128,7 @@
     <v-dialog width="500" v-model="evaluators_dialog">
       <v-card title="Select an RO Evaluator">
         <v-card-text>
+          {{ selected_ro_evaluator }}
           <v-select :items="evaluators" item-value="_id" item-title="title" v-model="selected_ro_evaluator" />
         </v-card-text>
         <v-card-actions class="">
