@@ -286,9 +286,12 @@
       @submit="submit_education" :subtitle="'Enter or modify details for the education qualification.'"
       :submitText="status === 'create' ? 'Submit' : 'Update'">
       <v-card-text>
-        <v-textarea v-model="education.title" rows="3" label="Enter Education Title" hide-details />
-        <v-checkbox v-model="education.high_degree"
-          label="Check this if obtain a higher degree. This will override experience and Master's degree units." />
+        <v-form ref="maintenance_form">
+          <v-textarea v-model="education.title" rows="3" label="Enter Education Title" hide-details
+            :rules="[$validator.required]" />
+          <v-checkbox v-model="education.high_degree"
+            label="Check this if obtain a higher degree. This will override experience and Master's degree units." />
+        </v-form>
 
         <!-- <v-text-field label=" Master Arts Degree Units" v-model="education.units" /> -->
       </v-card-text>
@@ -298,8 +301,12 @@
       @submit="submit_experience" :subtitle="'Enter or modify details for the experience qualification.'"
       :submitText="status === 'create' ? 'Submit' : 'Update'">
       <v-card-text>
-        <v-textarea v-model="experience.title" rows="3" label="Enter experience Title" /> <br />
-        <v-text-field label="Equivalent" v-model="experience.equivalent" />
+        <v-form ref="maintenance_form">
+          <v-textarea v-model="experience.title" rows="3" label="Enter experience Title"
+            :rules="[$validator.required]" />
+          <br />
+          <v-text-field label="Equivalent" v-model="experience.equivalent" :rules="[$validator.required]" />
+        </v-form>
       </v-card-text>
     </commons-dialog>
 
@@ -308,15 +315,21 @@
       :subtitle="'Enter or modify details for the rating qualification.'"
       :submitText="status === 'create' ? 'Submit' : 'Update'">
       <v-card-text>
-        <v-textarea v-model="performance_rating.title" rows="3" label="Enter rating Title" />
+        <v-form ref="maintenance_form">
+
+          <v-textarea v-model="performance_rating.title" rows="3" label="Enter rating Title"
+            :rules="[$validator.required]" />
+        </v-form>
       </v-card-text>
     </commons-dialog>
 
     <commons-dialog max-width="35%" v-model="sg_dialog" icon="mdi-school" :title="'Create Salary Grade'"
       @submit="create_sg" :subtitle="'Enter or modify details for the rating qualification.'" :submitText="'SUBMIT'">
       <v-card-text>
-        <v-text-field v-model="sg.salary_grade" label="Salary Grade" />
-        <v-text-field v-model="sg.equivalent" label="Equivalent" />
+        <v-form ref="maintenance_form">
+          <v-text-field v-model="sg.salary_grade" label="Salary Grade" :rules="[$validator.required]" />
+          <v-text-field v-model="sg.equivalent" label="Equivalent" :rules="[$validator.required]" />
+        </v-form>
       </v-card-text>
     </commons-dialog>
     <commons-dialog max-width="35%" v-model="update_sg_dialog" icon="mdi-school" @submit="update_sg"
@@ -332,9 +345,9 @@
       @submit="submit_leadership" :subtitle="'Enter or modify details Leadership and Potential.'"
       :submitText="status === 'create' ? 'Submit' : 'Update'">
       <v-card-text class="ma-2">
-
-        <v-textarea v-model="leadership.title" label="Leadership and Potential" />
-
+        <v-form ref="maintenance_form">
+          <v-textarea v-model="leadership.title" label="Leadership and Potential" :rules="[$validator.required]" />
+        </v-form>
       </v-card-text>
     </commons-dialog>
 
@@ -342,51 +355,54 @@
     <commons-dialog width="60%" icon="mdi-school" v-model="position_dialog" :title="'Position Form'"
       @submit="submit_position" :subtitle="'Create position and modify Qualification Standards'" :submitText="'Submit'">
       <v-card-text class="overflow-y-auto" style="height: 60vh">
-        <v-row dense>
-          <v-col cols="7">
-            <v-text-field v-model="position.title" label="Position" hide-details
-              prepend-inner-icon="mdi-account-hard-hat" /></v-col>
+        <v-form ref="maintenance_form">
+          <v-row dense>
+            <v-col cols="7">
+              <v-text-field v-model="position.title" label="Position" hide-details
+                prepend-inner-icon="mdi-account-hard-hat" :rules="[$validator.required]" /></v-col>
 
-          <v-col cols="5" class="pl-2"> <v-select v-model="position.education_level"
-              :items="['Elementary', 'Secondary']" label="Education Level" hide-details prepend-inner-icon="mdi-book"
-              clearable /></v-col>
-          <v-col cols="12"> <v-checkbox label="Check if with ERF" v-model="position.with_erf" hide-details /></v-col>
-          <v-col cols="7"> <v-select v-model="position.education" :items="education_data" item-value="_id"
-              label="Education" multiple prepend-inner-icon="mdi-school" hide-details clearable /></v-col>
-          <v-col cols="5" class="pl-2"> <v-text-field v-model="position.supplemented_units" label="Graduate Units"
-              hide-details /></v-col>
-          <v-col cols="12"> <v-checkbox v-model="position.status_of_appointment"
-              label="Check if appointment must be Permanent Teacher" /></v-col>
+            <v-col cols="5" class="pl-2"> <v-select v-model="position.education_level"
+                :items="['Elementary', 'Secondary']" label="Education Level" hide-details prepend-inner-icon="mdi-book"
+                clearable /></v-col>
+            <v-col cols="12"> <v-checkbox label="Check if with ERF" v-model="position.with_erf" hide-details /></v-col>
+            <v-col cols="7"> <v-select v-model="position.education" :items="education_data" item-value="_id"
+                label="Education" multiple prepend-inner-icon="mdi-school" hide-details clearable /></v-col>
+            <v-col cols="5" class="pl-2"> <v-text-field v-model="position.supplemented_units" label="Graduate Units"
+                hide-details /></v-col>
+            <v-col cols="12"> <v-checkbox v-model="position.status_of_appointment"
+                label="Check if appointment must be Permanent Teacher" /></v-col>
 
-          <v-col cols="12"> <v-select v-model="position.experience" item-value="_id" :items="experience_data"
-              label="Experience" multiple prepend-inner-icon="mdi-head-cog-outline" hide-details clearable /></v-col>
-          <v-col cols="12"> <v-checkbox v-model="position.is_experience"
-              label="Check if the experience accepts  less than the specified minimum." hide-details /></v-col>
-          <v-col cols="12"> <v-checkbox v-model="position.or_20_ma_units"
-              label="Check if the number of experience can be substituted by 20 M.A. Units" /></v-col>
-          <v-col cols="12"> <v-text-field v-model="position.ma_units" label="M.A Units" /></v-col>
+            <v-col cols="12"> <v-select v-model="position.experience" item-value="_id" :items="experience_data"
+                label="Experience" multiple prepend-inner-icon="mdi-head-cog-outline" hide-details clearable /></v-col>
+            <v-col cols="12"> <v-checkbox v-model="position.is_experience"
+                label="Check if the experience accepts  less than the specified minimum." hide-details /></v-col>
+            <v-col cols="12"> <v-checkbox v-model="position.or_20_ma_units"
+                label="Check if the number of experience can be substituted by 20 M.A. Units" /></v-col>
+            <v-col cols="12"> <v-text-field v-model="position.ma_units" label="M.A Units" /></v-col>
 
 
-          <v-col cols="12"> <v-select v-model="position.rating" :items="rating_data" label="Performance Rating" multiple
-              item-value="_id" prepend-inner-icon="mdi-star" clearable /></v-col>
+            <v-col cols="12"> <v-select v-model="position.rating" :items="rating_data" label="Performance Rating"
+                multiple item-value="_id" prepend-inner-icon="mdi-star" clearable /></v-col>
 
-          <v-col cols="6"> <v-text-field v-model="position.training_hours" label="Training Number of Hours Required"
-              prepend-inner-icon="mdi-human-male-board" /></v-col>
-          <v-col cols="6" class="pr-2"> <v-select v-model="position.leadership_points"
-              label="Leadership ands Potential Points" :items="leadership_data" multiple item-value="_id"
-              clearable /></v-col>
-          <v-col cols="6" class="pr-2"> <v-select v-model="position.sg" :items="sg_item" label="Salary Grade"
-              item-value="_id" prepend-inner-icon="mdi-cash" clearable /></v-col>
-          <v-col cols="6"><v-text-field v-model="position.code" label="Position Code" hide-details="auto"
-              prepend-inner-icon="mdi-codepen" hint="This is for transaction codes for endorsements." /></v-col>
+            <v-col cols="6"> <v-text-field v-model="position.training_hours" label="Training Number of Hours Required"
+                prepend-inner-icon="mdi-human-male-board" /></v-col>
+            <v-col cols="6" class="pr-2"> <v-select v-model="position.leadership_points"
+                label="Leadership ands Potential Points" :items="leadership_data" multiple item-value="_id"
+                clearable /></v-col>
+            <v-col cols="6" class="pr-2"> <v-select v-model="position.sg" :items="sg_item" label="Salary Grade"
+                item-value="_id" prepend-inner-icon="mdi-cash" clearable :rules="[$validator.required]" /></v-col>
+            <v-col cols="6"><v-text-field v-model="position.code" label="Position Code" hide-details="auto"
+                prepend-inner-icon="mdi-codepen" hint="This is for transaction codes for endorsements."
+                :rules="[$validator.required]" /></v-col>
 
-          <v-col cols="12">
-            <v-list-subheader class="text-indigo"> <v-icon>mdi-paperclip</v-icon>Required attachments for
-              applicants.</v-list-subheader>
-            <v-select v-model="position.attachment" :items="attachment_data" label="Select Applicant Attachments"
-              item-value="_id" multiple clearable chips /> </v-col>
+            <v-col cols="12">
+              <v-list-subheader class="text-indigo"> <v-icon>mdi-paperclip</v-icon>Required attachments for
+                applicants.</v-list-subheader>
+              <v-select v-model="position.attachment" :items="attachment_data" label="Select Applicant Attachments"
+                item-value="_id" multiple clearable chips :rules="[$validator.required]" /> </v-col>
 
-        </v-row>
+          </v-row>
+        </v-form>
 
       </v-card-text>
     </commons-dialog>
@@ -395,7 +411,10 @@
     <commons-dialog max-width="35%" v-model="attachment_dialog" icon="mdi-school" title="Create Attachment"
       @submit="submit_attachment" submitText="Submit">
       <v-card-text>
-        <v-textarea v-model="attachment.title" rows="3" label="Enter attachment Title" />
+        <v-form ref="maintenance_form">
+          <v-textarea v-model="attachment.title" rows="3" label="Enter attachment Title"
+            :rules="[$validator.required]" />
+        </v-form>
       </v-card-text>
     </commons-dialog>
 
@@ -563,7 +582,7 @@ const view_qs_dialog = ref(false)
 const tab = ref(null);
 const is_hovered = ref(false)
 const leaderhip_dialog = ref(false)
-
+const maintenance_form = ref()
 
 
 // dialog
@@ -577,10 +596,12 @@ const education = ref<Education>({
   high_degree: false,
 })
 async function create_education() {
+  if (!maintenance_form.value.isValid) {
+    return swal({ text: "Education title is required!", icon: "info" })
+  }
   const { data, error } = await $rest('sms-education/create-education', {
     method: "POST",
     body: { ...education.value }
-
   })
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
   education_dialog.value = ref(false)
@@ -635,11 +656,13 @@ async function update_education() {
  */
 
 const experience = ref<Experience>({
-
   title: "",
   equivalent: 0
 })
 async function create_experience() {
+  if (!maintenance_form.value.isValid) {
+    return swal({ text: "Complete required fields!", icon: "info" })
+  }
   const { data, error } = await $rest('sms-experience/create-experience', {
     method: "POST",
     body: { ...experience.value }
@@ -695,6 +718,9 @@ const performance_rating = ref<PerformanceRating>({
   title: "",
 });
 async function create_rating() {
+  if (!maintenance_form.value.isValid) {
+    return swal({ text: "Perfomance rating title is required!", icon: "info" })
+  }
   const { data, error } = await $rest('sms-rating/create-rating', {
     method: "POST",
     body: { ...performance_rating.value }
@@ -752,6 +778,9 @@ const sg = ref<SalaryGrade>({
   equivalent: 0
 });
 async function create_sg() {
+  if (!maintenance_form.value.isValid) {
+    return swal({ text: "Complete required fields!", icon: "info" })
+  }
   const { data, error } = await $rest('sms-salary-grade/create-sg', {
     method: "POST",
     body: { ...sg.value }
@@ -835,6 +864,9 @@ const position = ref<Position>({
 });
 
 async function create_position() {
+  if (!maintenance_form.value.isValid) {
+    return swal({ text: "Complete required fields", icon: "info" })
+  }
   const { data, error } = await $rest('sms-position/create-position', {
     method: "POST",
     body: { ...position.value }
@@ -902,6 +934,9 @@ const attachment = ref<Attachment>({
 
 })
 async function create_attachment() {
+  if (!maintenance_form.value.isValid) {
+    return swal({ text: "Attachment title is required!", icon: "info" })
+  }
   const { data, error } = await $rest('sms-attachment/create-attachment', {
     method: "POST",
     body: { ...attachment.value }
@@ -1025,6 +1060,9 @@ const leadership = ref({
 });
 
 async function create_leadership_and_potential() {
+  if (!maintenance_form.value.isValid) {
+    return swal({ text: "Leadership and potential title is required!", icon: "info" })
+  }
   const { data, error } = await $rest('sms-leadership/create-leadership-and-potential', {
     method: "POST",
     body: { ...leadership.value }

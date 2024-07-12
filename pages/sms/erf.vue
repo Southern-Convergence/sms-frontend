@@ -9,15 +9,16 @@
         <v-col cols="5" class="text-subtitle-2 font-weight-bold"> TO : REGIONAL DIRECTOR
           <p class="pl-7 font-weight-regular">Regional Director/DepEd - NCR
           </p>
-          {{ user }}
+
         </v-col>
 
         <v-col cols="auto"> Application Date : <v-chip color="primary" density="compact">
             {{ new Date(applicant_details.created_date).toLocaleString() }}
           </v-chip></v-col>
       </v-row>
-      <v-row no-gutters> <v-col cols="5" class="text-subtitle-2 font-weight-bold"> DIVISION : {{
-        applicant_details?.division }} </v-col>
+      <v-row no-gutters>
+        <v-col cols="5" class="text-subtitle-2 font-weight-bold"> DIVISION : {{
+          applicant_details?.division }} </v-col>
         <v-col cols="auto"> Control No. : <v-chip class="font-weight-bold" color="orange" density="compact"> {{
           applicant_details?.control_number }}
           </v-chip></v-col>
@@ -155,10 +156,10 @@
 
 
         <!-- Applicant Personal Information -->
-        <v-col cols="12" v-if="!applicant_details.is_with_erf">
+        <!-- <v-col cols="12" v-if="!applicant_details.is_with_erf">
           <h4 class="pa-2 font-weight-bold text-subtitle-1 text-indigo"> Applicant
             Attachments</h4>
-        </v-col>
+        </v-col> -->
         <!-- Applicant Attachment -->
         <v-col cols="4" v-if="applicant_details.is_with_erf && Object.keys(applicant_details).length">
           <div v-for="[key, value], index in Object.entries(applicant_details.attachments) ">
@@ -166,6 +167,7 @@
               v-if="applicant_details.is_with_erf && index === 0"> Applicant
               Attachments</h5>
             <v-card class="mb-3" rounded="lg" border>
+
               <v-card-text>
                 <v-sheet height="7vh">
                   <b>
@@ -185,28 +187,27 @@
                     <v-col cols="auto" class="mt-3 font-weight-bold text-grey "> Evaluation :</v-col>
                     <v-col cols="auto">
                       <v-checkbox color="success" label="Valid" @click="evaluate_attachment(key, true)" hide-details
-                        density="compact" :model-value="getCheckboxValue(key, true)"
-                        :rules="[v => !!v || 'Reason is required']" required />
+                        density="compact" :model-value="getCheckboxValue(key, true)" />
                     </v-col>
                     <v-col cols="auto">
                       <v-checkbox color="error" label="Invalid" @click="evaluate_attachment(key, false)" hide-details
-                        density="compact" :model-value="getCheckboxValue(key, false)"
-                        :rules="[v => !!v || 'Reason is required']" required />
+                        density="compact" :model-value="getCheckboxValue(key, false)" />
                     </v-col>
                     <v-col cols="12" v-if="applicant_details.attachments[key].valid == false">
                       <v-textarea label="Specify reason" v-model="remarks" rows="2" hide-details="auto"
                         @update:model-value="remarks_attachment(key)"
-                        :model-value="applicant_details.attachments[key].remarks" bg-color="#E8EAF6"
-                        :rules="[v => !!v || 'Reason is required']" required />
+                        :model-value="applicant_details.attachments[key].remarks" bg-color="#E8EAF6" :rules="v => !!v"
+                        required />
                     </v-col>
                   </v-row>
                 </v-form>
 
               </v-card-text>
+
             </v-card>
           </div>
         </v-col>
-        <v-col cols="6" v-if="!applicant_details.is_with_erf && Object.keys(applicant_details).length"
+        <!-- <v-col cols="6" v-if="!applicant_details.is_with_erf && Object.keys(applicant_details).length"
           v-for="[key, value], index in Object.entries(applicant_details.attachments) ">
           <div>
             <h5 class="pa-2 font-weight-bold text-subtitle-1 text-indigo"
@@ -244,7 +245,7 @@
               </v-card-text>
             </v-card>
           </div>
-        </v-col>
+        </v-col> -->
 
 
 
@@ -274,8 +275,6 @@
           </v-alert>
         </v-col>
       </v-row>
-
-
       <v-col cols="12" class="d-flex justify-center"
         v-if="applicant_details.status === 'For Evaluation' || applicant_details.status === 'For Checking'">
         <v-sheet height="17vh" class="text-center w-50  justify-center">
@@ -355,7 +354,7 @@
         </v-col>
 
         <v-col cols="6"
-          v-else-if="applicant_details?.status != 'Completed' && applicant_details?.status != 'Pending' && applicant_details?.status != 'Received Printout/s'">
+          v-else-if="applicant_details?.status != 'Completed' && applicant_details?.status != 'Pending' && applicant_details?.status != 'Received Printout/s' && (applicant_details?.status != 'Approved for Printing' && user.side === 'SDO')">
           <v-btn @click="handle_application" block variant="tonal"
             :color="applicant_details?.status === 'Disapproved' ? 'error' : 'success'">
             {{ applicant_details?.status === 'Disapproved' ? 'Return to Principal' : 'Submit' }}
@@ -610,6 +609,7 @@ const router = useRouter();
 import Vue3Signature from "vue3-signature"
 import swal from 'sweetalert';
 import useAuth from "~/store/auth";
+import { ref } from 'vue';
 const user = useAuth().user;
 const { $rest } = useNuxtApp()
 const route = useRoute();
@@ -797,9 +797,7 @@ const handle_application = async () => {
     case "Administrative Officer V":
       handle_admin5(payload);
       break;
-    case "Evaluator":
-      handle_evaluator(payload);
-      break;
+
     default:
       break;
   }
@@ -850,15 +848,6 @@ const sdo_attachment_evaluator_condition = computed(() => {
  */
 
 const erf_form = ref();
-// const clear_attachment = () => {
-//   const attachments = applicant_details.value.attachments;
-//   Object.values(attachments).forEach(attachment => {
-//     attachment.valid = null;
-//     attachment.remarks = null;
-//     attachment.timestamp = null;
-//   });
-// };
-
 
 const handle_principal = async () => {
   const principal_name = applicant_details.value.principal.name
@@ -898,11 +887,14 @@ const handle_admin4 = async (payload: any) => {
 const handle_evaluator = async (payload: any) => {
   const { data, error } = await $rest('new-applicant/handle-evaluator', { method: "PUT", body: payload })
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
-  swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
-  erf_form.value.reset()
-  console.log(applicant_details);
+  // erf_form.value.forEach((item: any) => {
+  //   item.reset();
+  // });
 
-  router.push({ name: 'sms-reclassification' });
+  swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+
+
+
 
 }
 // const handle_evaluator = async (payload: any) => {
@@ -940,6 +932,8 @@ const handle_admin5 = async (payload: any) => {
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
   swal({ text: data, icon: "success", buttons: { ok: false, cancel: false } })
   router.push({ name: 'sms-reclassification' })
+
+
 };
 
 

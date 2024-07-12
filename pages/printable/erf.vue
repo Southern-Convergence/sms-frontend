@@ -21,7 +21,8 @@
               </b>
             </v-col>
             <v-col cols="6">Employee Number : <b>{{ erf?.designation?.plantilla_no }} </b></v-col>
-            <v-col cols="6">Authorized Position Title : <b> {{ erf?.designation?.current_position }}
+            <v-col cols="6">Authorized Position Title : <b>
+                {{ erf?.designation?.current_position }}
               </b></v-col>
             <v-col cols="6">Item Number : <b>{{ erf?.designation?.item_no }} </b> </v-col>
             <v-col cols="6">Authorized Salary : <b> {{ erf?.current_sg }}</b></v-col>
@@ -251,11 +252,10 @@
               <!-- {{ erf.assignees[2] }} -->
 
               <div class="w-100" style="display: grid; place-items: center;">
-                <v-img :width="197" height="3vh" :src="erf.sdo_evaluator_signature" />
+                <v-img :width="197" height="3vh" :src="erf?.sdo_evaluator_esig" />
               </div>
-              <div class="text-center text-uppercase font-weight-bold">{{ erf?.assignees && erf.assignees.length ?
-                erf.sdo_evaluator : ''
-                }}</div>
+              <div class="text-center text-uppercase font-weight-bold"> {{ erf?.sdo_evaluator_name ?
+                erf?.sdo_evaluator_name : '' }}</div>
               <hr />
               <center> Evaluator </center>
             </div>
@@ -301,11 +301,10 @@
 
             <div class="w-50 justify-center  px-5">
               <div class="w-100" style="display: grid; place-items: center;">
-                <v-img :width="197" height="3vh" :src="erf.ro_evaluator_signature" />
+                <v-img :width="197" height="3vh" :src="erf?.ro_evaluator_esig" />
               </div>
-              <div class="text-center text-uppercase font-weight-bold">{{ erf?.assignees && erf.assignees.length ?
-                erf.ro_evaluator : ''
-                }}</div>
+              <div class="text-center text-uppercase font-weight-bold"> {{ erf?.ro_evaluator_name ?
+                erf?.ro_evaluator_name : '' }}</div>
               <hr />
               <center> Evaluator </center>
             </div>

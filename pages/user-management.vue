@@ -264,9 +264,7 @@
                             <v-col cols="4"><v-text-field v-model="invitation_form.last_name" density="compact"
                                     hide-details="auto" label="Lastname" required
                                     :rules="[v => !!v || 'Lastname is required']" /></v-col>
-                            <!-- <v-col cols="4"><v-text-field v-model="invitation_form.contact_number" density="compact"
-                                    hide-details="auto" label="Num" required
-                                    :rules="[v => !!v || 'Num is required']" /></v-col> -->
+
                             <v-col cols="12"> Roles and Designation </v-col>
                             <v-col cols="6"><v-select v-model="invitation_form.side" label="Type" :items="['SDO', 'RO']"
                                     hide-details="auto" required :rules="[v => !!v || 'Type is required']" /></v-col>
@@ -527,6 +525,9 @@ async function invite_user() {
     loader.set(false);
     const success = Boolean(data);
     user_form.value.reset();
+
+
+
     swal({
         title: success ? "Success" : "Request Failed",
         icon: success ? "success" : "error",
