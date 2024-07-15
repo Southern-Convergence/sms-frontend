@@ -1,369 +1,377 @@
 <template>
   <div>
-    <v-card-title class="font-weight-bold text-h6"> EVALUATION /
-      LIST OF
-      REQUIREMENTS FORM</v-card-title>
-    <v-card-text>
-      <!-- Application header -->
-      <v-row no-gutters>
-        <v-col cols="5" class="text-subtitle-2 font-weight-bold"> TO : REGIONAL DIRECTOR
-          <p class="pl-7 font-weight-regular">Regional Director/DepEd - NCR
-          </p>
+    <v-card flat class="w-100">
+      <v-card-title> <v-row dense>
+          <v-col cols="8" class="font-weight-bold text-h6"> EVALUATION /
+            LIST OF
+            REQUIREMENTS FORM</v-col>
+          <v-col cols="4"> <v-btn v-if="applicant_details?.status != 'For Signature'"
+              @click="view_applicant_info_dialog = true" class="font-weight-bold " prepend-icon="mdi-book" color="amber"
+              block density="compact">View
+              Applicant QS</v-btn></v-col>
+        </v-row></v-card-title>
 
-        </v-col>
+      <v-card-text>
 
-        <v-col cols="auto"> Application Date : <v-chip color="primary" density="compact">
-            {{ new Date(applicant_details.created_date).toLocaleString() }}
-          </v-chip></v-col>
-      </v-row>
-      <v-row no-gutters>
-        <v-col cols="5" class="text-subtitle-2 font-weight-bold"> DIVISION : {{
-          applicant_details?.division }} </v-col>
-        <v-col cols="auto"> Control No. : <v-chip class="font-weight-bold" color="orange" density="compact"> {{
-          applicant_details?.control_number }}
-          </v-chip></v-col>
-        <v-spacer />
+        <!-- Application header -->
+        <v-row no-gutters>
+          <v-col cols="5" class="text-subtitle-2 font-weight-bold"> TO : REGIONAL DIRECTOR
+            <p class="pl-7 font-weight-regular">Regional Director/DepEd - NCR
+            </p>
 
-      </v-row>
-      <!-- Application header -->
-      <v-row dense>
+          </v-col>
 
-        <!-- Applicant Personal Information -->
-        <v-col :cols="applicant_details.is_with_erf ? '8' : '12'">
-          <v-card class="mx-auto mt-4" rounded="lg" border>
-            <v-card-title class="d-flex  font-weight-bold">
-              {{ applicant_details.is_with_erf === true ? '1. EQUIVALENT RECORD FORM ' : 'Applicant Details'
-              }}<v-spacer /><span class="pr-2"> <v-btn v-if="applicant_details?.status != 'For Signature'"
-                  @click="applicant_history(applicant_details._id)" class="font-weight-bold" prepend-icon="mdi-history"
-                  color="primary" block density="compact">View
-                  HISTORY</v-btn></span>
-              <!-- <span> <v-btn v-if="applicant_details?.status != 'For Signature'"
-                  @click="view_applicant_info_dialog = true" class="font-weight-bold " prepend-icon="mdi-book"
-                  color="primary" block density="compact">View
-                  Applicant QS</v-btn></span> -->
-              <span>
-                <v-btn v-if="applicant_details.is_with_erf" @click="applicant_erf(applicant_details._id)"
-                  class="font-weight-bold ml-2" prepend-icon="mdi-printer" color="primary" block density="compact">
-                  Print
-                  ERF</v-btn></span>
-            </v-card-title>
-            <v-card-text>
-              <v-row no-gutters class="ma-2" justify="center">
-                <v-col cols="6" class="text-capitalize">Name : <b> {{
-                  applicant_details?.personal_information?.first_name
-                }} {{ applicant_details?.personal_information?.last_name }} </b>
-                </v-col>
-                <v-col cols="6">Date of Birth : <b> {{
-                  applicant_details?.personal_information?.birthday }}
-                  </b>
-                </v-col>
-                <v-col cols="6">Employee Number : <b> {{ applicant_details?.designation?.employee_no }}</b> </v-col>
-                <v-col cols="6">Authorized Position Title : <b>{{ applicant_details?.designation?.current_position }}
-                  </b></v-col>
-                <v-col cols="6">Item Number : <b>{{ applicant_details?.designation?.item_no }}</b> </v-col>
-                <v-col cols="6">Authorized Salary : <b>{{ applicant_details?.current_sg }}</b></v-col>
-              </v-row>
-              <!-- ERF -->
-              <v-row no-gutters v-if="applicant_details.is_with_erf">
-                <v-col cols="12">
-                  <v-sheet class="mx-2 ml-5">
-                    <span class="font-weight-bold  text-uppercase text-caption" density="compact">
-                      I. Education Attainment and Civil Service Eligibility
-                    </span>
-                    <v-sheet border>
-                      <v-data-table :headers="attainment_headers" :items="applicant_details.educational_attainment"
-                        density="compact"> <template #bottom v-if="!show_footer" /> </v-data-table> </v-sheet>
-                  </v-sheet>
+          <v-col cols="auto"> Application Date : <v-chip color="primary" density="compact">
+              {{ new Date(applicant_details.created_date).toLocaleString() }}
+            </v-chip></v-col>
+        </v-row>
+        <v-row no-gutters>
+          <v-col cols="5" class="text-subtitle-2 font-weight-bold"> DIVISION : {{
+            applicant_details?.division }} </v-col>
+          <v-col cols="auto"> Control No. : <v-chip class="font-weight-bold" color="orange" density="compact"> {{
+            applicant_details?.control_number }}
+            </v-chip></v-col>
+          <v-spacer />
 
-                  <v-sheet class="ma-2 ml-5">
-                    <span class="font-weight-bold  text-uppercase text-caption" density="compact">
-                      II. Service Record
-                    </span>
-                    <v-sheet class="mb-2" border width="70%">
-                      <v-data-table :headers="service_record_headers" :items="applicant_details.service_record"
-                        density="compact"> <template #bottom v-if="!show_footer" />
-                      </v-data-table>
+        </v-row>
+        <!-- Application header -->
+        <v-row dense>
+
+          <!-- Applicant Personal Information -->
+          <v-col :cols="applicant_details.is_with_erf ? '8' : '12'">
+            <v-card class="mx-auto mt-4" rounded="lg" border>
+              <v-card-title class="d-flex  font-weight-bold">
+                {{ applicant_details.is_with_erf === true ? '1. EQUIVALENT RECORD FORM ' : 'Applicant Details'
+                }}<v-spacer /><span class="pr-2"> <v-btn v-if="applicant_details?.status != 'For Signature'"
+                    @click="applicant_history(applicant_details._id)" class="font-weight-bold"
+                    prepend-icon="mdi-history" color="primary" block density="compact">View
+                    HISTORY</v-btn></span>
+
+                <span>
+                  <v-btn v-if="applicant_details.is_with_erf" @click="applicant_erf(applicant_details._id)"
+                    class="font-weight-bold ml-2" prepend-icon="mdi-printer" color="primary" block density="compact">
+                    Print
+                    ERF</v-btn></span>
+              </v-card-title>
+              <v-card-text>
+                <v-row no-gutters class="ma-2" justify="center">
+                  <v-col cols="6" class="text-capitalize">Name : <b> {{
+                    applicant_details?.personal_information?.first_name
+                  }} {{ applicant_details?.personal_information?.last_name }} </b>
+                  </v-col>
+                  <v-col cols="6">Date of Birth : <b> {{
+                    applicant_details?.personal_information?.birthday }}
+                    </b>
+                  </v-col>
+                  <v-col cols="6">Employee Number : <b> {{ applicant_details?.designation?.employee_no }}</b> </v-col>
+                  <v-col cols="6">Authorized Position Title : <b>{{ applicant_details?.designation?.current_position
+                      }}
+                    </b></v-col>
+                  <v-col cols="6">Item Number : <b>{{ applicant_details?.designation?.item_no }}</b> </v-col>
+                  <v-col cols="6">Authorized Salary : <b>{{ applicant_details?.current_sg }}</b></v-col>
+                </v-row>
+                <!-- ERF -->
+                <v-row no-gutters v-if="applicant_details.is_with_erf">
+                  <v-col cols="12">
+                    <v-sheet class="mx-2 ml-5">
+                      <span class="font-weight-bold  text-uppercase text-caption" density="compact">
+                        I. Education Attainment and Civil Service Eligibility
+                      </span>
+                      <v-sheet border>
+                        <v-data-table :headers="attainment_headers" :items="applicant_details.educational_attainment"
+                          density="compact"> <template #bottom v-if="!show_footer" /> </v-data-table> </v-sheet>
                     </v-sheet>
-                    <span class="font-weight-bold text-uppercase text-caption">
-                      III. EQUIVALENT UNITS
-                    </span>
-                  </v-sheet>
 
-                  <v-sheet class="ma-2 ml-15">
-
-                    <span class="font-weight-bold text-grey text-caption" density="compact">
-                      A. Total Number of Years Teaching
-                    </span>
-                    <v-sheet width="70%">
-                      <v-row dense class="pa-2">
-                        <v-col cols="6"> Public Schools : <span class="pl-2"> {{
-                          applicant_details?.equivalent_unit?.public_years_teaching }}</span>
-                        </v-col>
-                        <v-col cols="6"> Private Schools : <span class="pl-2"> {{
-                          applicant_details?.equivalent_unit?.yt_equivalent }}
-                          </span>
-                        </v-col>
-                      </v-row>
-
+                    <v-sheet class="ma-2 ml-5">
+                      <span class="font-weight-bold  text-uppercase text-caption" density="compact">
+                        II. Service Record
+                      </span>
+                      <v-sheet class="mb-2" border width="70%">
+                        <v-data-table :headers="service_record_headers" :items="applicant_details.service_record"
+                          density="compact"> <template #bottom v-if="!show_footer" />
+                        </v-data-table>
+                      </v-sheet>
+                      <span class="font-weight-bold text-uppercase text-caption">
+                        III. EQUIVALENT UNITS
+                      </span>
                     </v-sheet>
-                  </v-sheet>
-                  <v-sheet class="ma-2 ml-15">
-                    <span class="font-weight-bold text-grey text-caption">
-                      B. Degree to Degree Equivalent
-                    </span>
-                    <v-sheet width="70%">
 
+                    <v-sheet class="ma-2 ml-15">
+
+                      <span class="font-weight-bold text-grey text-caption" density="compact">
+                        A. Total Number of Years Teaching
+                      </span>
+                      <v-sheet width="70%">
+                        <v-row dense class="pa-2">
+                          <v-col cols="6"> Public Schools : <span class="pl-2"> {{
+                            applicant_details?.equivalent_unit?.public_years_teaching }}</span>
+                          </v-col>
+                          <v-col cols="6"> Private Schools : <span class="pl-2"> {{
+                            applicant_details?.equivalent_unit?.yt_equivalent }}
+                            </span>
+                          </v-col>
+                        </v-row>
+
+                      </v-sheet>
                     </v-sheet>
-                  </v-sheet>
-                  <v-sheet class="ma-2 ml-15">
-                    <span class="font-weight-bold text-grey text-caption"> C. Areas of Equivalent</span> <br />
-                    <span class="ml-15 text-caption">
-                      1. Professional Study :
-                    </span>
-                    <v-sheet class="ml-15" border width="70%">
-                      <v-data-table :headers="professional_study_headers" :items="applicant_details.professional_study"
-                        density="compact">
-                        <template #bottom v-if="!show_footer" /></v-data-table>
+                    <v-sheet class="ma-2 ml-15">
+                      <span class="font-weight-bold text-grey text-caption">
+                        B. Degree to Degree Equivalent
+                      </span>
+                      <v-sheet width="70%">
+
+                      </v-sheet>
                     </v-sheet>
-                  </v-sheet>
-                  <v-sheet class="ma-2 ml-15 ">
-                    <span class="ml-15 text-caption">
-                      2. Teaching Experience :
-                    </span>
-                    <v-sheet class="ml-15" width="70%">
-                      <v-row dense class="pa-2">
-                        <v-col cols="6"> Public Schools : <b class="pl-2"> {{
-                          applicant_details?.equivalent_unit?.public_years_teaching }}</b>
-                        </v-col>
-                        <v-col cols="6"> Private Schools : <b class="pl-2"></b>
-                        </v-col>
-                      </v-row>
-
+                    <v-sheet class="ma-2 ml-15">
+                      <span class="font-weight-bold text-grey text-caption"> C. Areas of Equivalent</span> <br />
+                      <span class="ml-15 text-caption">
+                        1. Professional Study :
+                      </span>
+                      <v-sheet class="ml-15" border width="70%">
+                        <v-data-table :headers="professional_study_headers"
+                          :items="applicant_details.professional_study" density="compact">
+                          <template #bottom v-if="!show_footer" /></v-data-table>
+                      </v-sheet>
                     </v-sheet>
-                  </v-sheet>
-                  <v-row dense class="ml-15 mt-1">
-                    LATEST IPCRF RATING : <div class="px-5 font-weight-bold" style="border-bottom: 1px solid black">
-                      {{
-                        applicant_details.designation?.ipcrf_rating }}</div>
-                  </v-row>
-                </v-col>
-              </v-row>
-            </v-card-text>
-          </v-card>
+                    <v-sheet class="ma-2 ml-15 ">
+                      <span class="ml-15 text-caption">
+                        2. Teaching Experience :
+                      </span>
+                      <v-sheet class="ml-15" width="70%">
+                        <v-row dense class="pa-2">
+                          <v-col cols="6"> Public Schools : <b class="pl-2"> {{
+                            applicant_details?.equivalent_unit?.public_years_teaching }}</b>
+                          </v-col>
+                          <v-col cols="6"> Private Schools : <b class="pl-2"></b>
+                          </v-col>
+                        </v-row>
+
+                      </v-sheet>
+                    </v-sheet>
+                    <v-row dense class="ml-15 mt-1">
+                      LATEST IPCRF RATING : <div class="px-5 font-weight-bold" style="border-bottom: 1px solid black">
+                        {{
+                          applicant_details.designation?.ipcrf_rating }}</div>
+                    </v-row>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
 
 
-        </v-col>
+          </v-col>
 
 
-        <!-- Applicant Personal Information -->
-        <!-- <v-col cols="12" v-if="!applicant_details.is_with_erf">
+          <!-- Applicant Personal Information -->
+          <!-- <v-col cols="12" v-if="!applicant_details.is_with_erf">
           <h4 class="pa-2 font-weight-bold text-subtitle-1 text-indigo"> Applicant
             Attachments</h4>
         </v-col> -->
-        <!-- Applicant Attachment -->
-        <v-col cols="4" v-if="applicant_details.is_with_erf && Object.keys(applicant_details).length">
-          <div v-for="[key, value], index in Object.entries(applicant_details.attachments) ">
-            <h5 class="pa-2 font-weight-bold text-subtitle-1 text-indigo"
-              v-if="applicant_details.is_with_erf && index === 0"> Applicant
-              Attachments</h5>
-            <v-card class="mb-3" rounded="lg" border>
+          <!-- Applicant Attachment -->
+          <v-col cols="4" v-if="applicant_details.is_with_erf && Object.keys(applicant_details).length">
+            <div v-for="[key, value], index in Object.entries(applicant_details.attachments) ">
+              <h5 class="pa-2 font-weight-bold text-subtitle-1 text-indigo"
+                v-if="applicant_details.is_with_erf && index === 0"> Applicant
+                Attachments</h5>
+              <v-card class="mb-3" rounded="lg" border>
 
-              <v-card-text>
-                <v-sheet height="7vh">
-                  <b>
-                    {{ (index + 1) }}. {{ value.description }}
+                <v-card-text>
+                  <v-sheet height="7vh">
+                    <b>
+                      {{ (index + 1) }}. {{ value.description }}
 
-                  </b>
+                    </b>
 
-                </v-sheet>
+                  </v-sheet>
 
-                <v-btn size="small" color="primary" class="d-flex " variant="tonal"
-                  @click="open_attachment_dialog(key)">
-                  <v-icon class="mr-2">mdi-attachment</v-icon>
-                  <span>View Attachment</span>
-                </v-btn>
-                <v-form ref="erf_form">
-                  <v-row dense v-if="sdo_attachment_evaluator_condition">
-                    <v-col cols="auto" class="mt-3 font-weight-bold text-grey "> Evaluation :</v-col>
-                    <v-col cols="auto">
-                      <v-checkbox color="success" label="Valid" @click="evaluate_attachment(key, true)" hide-details
-                        density="compact" :model-value="getCheckboxValue(key, true)" />
-                    </v-col>
-                    <v-col cols="auto">
-                      <v-checkbox color="error" label="Invalid" @click="evaluate_attachment(key, false)" hide-details
-                        density="compact" :model-value="getCheckboxValue(key, false)" />
-                    </v-col>
-                    <v-col cols="12" v-if="applicant_details.attachments[key].valid == false">
-                      <v-textarea label="Specify reason" v-model="remarks" rows="2" hide-details="auto"
-                        @update:model-value="remarks_attachment(key)"
-                        :model-value="applicant_details.attachments[key].remarks" bg-color="#E8EAF6" :rules="v => !!v"
-                        required />
-                    </v-col>
-                  </v-row>
-                </v-form>
-
-              </v-card-text>
-
-            </v-card>
-          </div>
-        </v-col>
-        <!-- <v-col cols="6" v-if="!applicant_details.is_with_erf && Object.keys(applicant_details).length"
-          v-for="[key, value], index in Object.entries(applicant_details.attachments) ">
-          <div>
-            <h5 class="pa-2 font-weight-bold text-subtitle-1 text-indigo"
-              v-if="applicant_details.is_with_erf && index === 0"> Applicant
-              Attachments</h5>
-            <v-card class="mb-3" rounded="lg" border>
-              <v-card-text>
-                <v-form ref="erf_form">
-                  <v-sheet height="7vh"><b>{{ index + 1 }}. {{ value.description }} </b></v-sheet>
                   <v-btn size="small" color="primary" class="d-flex " variant="tonal"
                     @click="open_attachment_dialog(key)">
                     <v-icon class="mr-2">mdi-attachment</v-icon>
                     <span>View Attachment</span>
                   </v-btn>
-                  <v-row dense v-if="sdo_attachment_evaluator_condition">
-                    <v-col cols="auto" class="mt-3 font-weight-bold text-grey "> Evaluation :</v-col>
-                    <v-col cols="auto">
-                      <v-checkbox color="success" label="Valid" @click="evaluate_attachment(key, true)" hide-details
-                        density="compact" :model-value="getCheckboxValue(key, true)"
-                        :rules="[v => !!v || 'Reason is required']" />
-                    </v-col>
-                    <v-col cols="auto">
-                      <v-checkbox color="error" label="Invalid" @click="evaluate_attachment(key, false)" hide-details
-                        density="compact" :model-value="getCheckboxValue(key, false)"
-                        :rules="[v => !!v || 'Reason is required']" />
-                    </v-col>
-                    <v-col cols="12" v-if="applicant_details.attachments[key].valid == false">
-                      <v-textarea label="Specify reason" v-model="remarks" rows="2" hide-details="auto"
-                        @update:model-value="remarks_attachment(key)"
-                        :model-value="applicant_details.attachments[key].remarks" bg-color="#E8EAF6"
-                        :rules="[v => !!v || 'Reason is required']" required />
-                    </v-col>
-                  </v-row>
-                </v-form>
-              </v-card-text>
-            </v-card>
-          </div>
-        </v-col> -->
+                  <v-form ref="erf_form">
+                    <v-row dense v-if="sdo_attachment_evaluator_condition">
+                      <v-col cols="auto" class="mt-3 font-weight-bold text-grey "> Evaluation :</v-col>
+                      <v-col cols="auto">
+                        <v-checkbox color="success" label="Valid" @click="evaluate_attachment(key, true)" hide-details
+                          density="compact" :model-value="getCheckboxValue(key, true)" />
+                      </v-col>
+                      <v-col cols="auto">
+                        <v-checkbox color="error" label="Invalid" @click="evaluate_attachment(key, false)" hide-details
+                          density="compact" :model-value="getCheckboxValue(key, false)" />
+                      </v-col>
+                      <v-col cols="12" v-if="applicant_details.attachments[key].valid == false">
+                        <v-textarea label="Specify reason" v-model="remarks" rows="2" hide-details="auto"
+                          @update:model-value="remarks_attachment(key)"
+                          :model-value="applicant_details.attachments[key].remarks" bg-color="#E8EAF6" :rules="v => !!v"
+                          required />
+                      </v-col>
+                    </v-row>
+                  </v-form>
 
+                </v-card-text>
 
-
-
-        <!-- Applicant Attachment -->
-
-        <v-col cols="12" class="my-2"
-          v-if="user && user.role === 'Evaluator' && applicant_details?.status === 'Approved for Printing'">
-          <v-alert border="start" close-label="Close Alert" color="primary"
-            title="Attach the Output Requirement for DBM." variant="outlined">
-            <v-file-input class="mt-3" variant="solo" v-model="applicant_details.output_requirement"
-              label="Output Requirement" />
-          </v-alert>
-        </v-col>
-
-
-        <v-col cols="12" class="my-5" v-if="applicant_details.status === 'For DBM' && user.side == 'SDO'">
-
-          <v-alert color="primary" border="start" variant="outlined" density="compact">
-            <div>Is the reclassification approved by DBM?</div>
-            <div class="d-flex w-50">
-              <v-checkbox label="Yes" color="info" @click="is_approved(true)" hide-details
-                :model-value="getapprvo(true)" />
-              <v-checkbox label="No" color="error" @click="is_approved(false)" hide-details
-                :model-value="getapprvo(false)" />
+              </v-card>
             </div>
-          </v-alert>
-        </v-col>
-      </v-row>
-      <v-col cols="12" class="d-flex justify-center"
-        v-if="applicant_details.status === 'For Evaluation' || applicant_details.status === 'For Checking'">
-        <v-sheet height="17vh" class="text-center w-50  justify-center">
-          <div>
-            <v-sheet class="d-flex align-center justify-center" min-height="7vh">
-              <div v-show="evaluator_signature_cond">
-                <v-img :width="247" aspect-ratio="16/9" cover :src="user?.e_signature" />
+          </v-col>
+          <v-col cols="6" v-if="!applicant_details.is_with_erf && Object.keys(applicant_details).length"
+            v-for="[key, value], index in Object.entries(applicant_details.attachments) ">
+            <div>
+              <h5 class="pa-2 font-weight-bold text-subtitle-1 text-indigo"
+                v-if="applicant_details.is_with_erf && index === 0"> Applicant
+                Attachments</h5>
+              <v-card class="mb-3" rounded="lg" border>
+                <v-card-text>
+                  <v-form ref="erf_form">
+                    <v-sheet height="7vh"><b>{{ index + 1 }}. {{ value.description }} </b></v-sheet>
+                    <v-btn size="small" color="primary" class="d-flex " variant="tonal"
+                      @click="open_attachment_dialog(key)">
+                      <v-icon class="mr-2">mdi-attachment</v-icon>
+                      <span>View Attachment</span>
+                    </v-btn>
+                    <v-row dense v-if="sdo_attachment_evaluator_condition">
+                      <v-col cols="auto" class="mt-3 font-weight-bold text-grey "> Evaluation :</v-col>
+                      <v-col cols="auto">
+                        <v-checkbox color="success" label="Valid" @click="evaluate_attachment(key, true)" hide-details
+                          density="compact" :model-value="getCheckboxValue(key, true)"
+                          :rules="[v => !!v || 'Reason is required']" />
+                      </v-col>
+                      <v-col cols="auto">
+                        <v-checkbox color="error" label="Invalid" @click="evaluate_attachment(key, false)" hide-details
+                          density="compact" :model-value="getCheckboxValue(key, false)"
+                          :rules="[v => !!v || 'Reason is required']" />
+                      </v-col>
+                      <v-col cols="12" v-if="applicant_details.attachments[key].valid == false">
+                        <v-textarea label="Specify reason" v-model="remarks" rows="2" hide-details="auto"
+                          @update:model-value="remarks_attachment(key)"
+                          :model-value="applicant_details.attachments[key].remarks" bg-color="#E8EAF6"
+                          :rules="[v => !!v || 'Reason is required']" required />
+                      </v-col>
+                    </v-row>
+                  </v-form>
+                </v-card-text>
+              </v-card>
+            </div>
+          </v-col>
+
+
+
+
+          <!-- Applicant Attachment -->
+
+          <v-col cols="12" class="my-2"
+            v-if="user && user.role === 'Evaluator' && applicant_details?.status === 'Approved for Printing'">
+            <v-alert border="start" close-label="Close Alert" color="primary"
+              title="Attach the Output Requirement for DBM." variant="outlined">
+              <v-file-input class="mt-3" variant="solo" v-model="applicant_details.output_requirement"
+                label="Output Requirement" />
+            </v-alert>
+          </v-col>
+
+
+          <v-col cols="12" class="my-5" v-if="applicant_details.status === 'For DBM' && user.side == 'SDO'">
+
+            <v-alert color="primary" border="start" variant="outlined" density="compact">
+              <div>Is the reclassification approved by DBM?</div>
+              <div class="d-flex w-50">
+                <v-checkbox label="Yes" color="info" @click="is_approved(true)" hide-details
+                  :model-value="getapprvo(true)" />
+                <v-checkbox label="No" color="error" @click="is_approved(false)" hide-details
+                  :model-value="getapprvo(false)" />
               </div>
-            </v-sheet>
-            <div class="text-center text-uppercase font-weight-bold mt-2">{{
-              user.first_name }} {{ user.last_name }}
-            </div>
-          </div>
-          <hr />
-          <div class="text-center">{{ user?.access[0]?.name }}</div>
-
-          <div class="d-flex justify-center">
-            <div class="w-30"><v-btn variant="text" color="error" @click="evaluator_clear_signature">Clear</v-btn>
-            </div>
-            <div class="w-30"><v-btn variant="text" color="primary" @click="evaluator_signature">Sign</v-btn>
-            </div>
-          </div>
-        </v-sheet>
-      </v-col>
-
-
-    </v-card-text>
-    <v-card-actions>
-      <v-row justify="center">
-        <v-col cols="6"
-          v-if="user && user.role === 'Administrative Officer IV' && applicant_details.status === 'Pending'">
-          <v-btn @click="evaluator_dialog = true" block variant="tonal" color="indigo"> Assign to Evaluator</v-btn>
-        </v-col>
-
-        <v-col cols="6"
-          v-else-if="user && user.role === ROLES.EVALUATOR && applicant_details?.status === 'Approved for Printing'">
-          <v-btn variant="tonal" color="success" block @click="attach_output_requirement">
-            SUBMIT
-          </v-btn>
-        </v-col>
-        <v-col cols="6" v-else-if="user && applicant_details?.status === 'For DBM' && user.side === 'SDO'"><v-btn
-            color="success" variant="tonal" block @click="complete_reclass" prepend-icon="mdi-check">Complete
-            Reclassification</v-btn></v-col>
-        <v-col cols="12" v-else-if="!user">
-          <v-row justify="center" v-if="applicant_details?.principal?.signature">
-            <v-col cols="5">
-              <div>
-                <div class="w-100 d-flex align-center justify-center "> <v-img :width="197" height="10vh"
-                    :src="applicant_details?.principal?.signature" />
+            </v-alert>
+          </v-col>
+        </v-row>
+        <v-col cols="12" class="d-flex justify-center"
+          v-if="applicant_details.status === 'For Evaluation' || applicant_details.status === 'For Checking'">
+          <v-sheet height="17vh" class="text-center w-50  justify-center">
+            <div>
+              <v-sheet class="d-flex align-center justify-center" min-height="7vh">
+                <div v-show="evaluator_signature_cond">
+                  <v-img :width="247" aspect-ratio="16/9" cover :src="user?.e_signature" />
                 </div>
-
-                <div class="w-100 text-center font-weight-bold text-subtitle-1 text-uppercase"> {{
-                  applicant_details?.principal?.name
-                }}</div>
-                <hr />
-                <div class="text-center">Principal</div>
+              </v-sheet>
+              <div class="text-center text-uppercase font-weight-bold mt-2">{{
+                user.first_name }} {{ user.last_name }}
               </div>
-            </v-col>
-          </v-row>
+            </div>
+            <hr />
+            <div class="text-center">{{ user?.access[0]?.name }}</div>
 
-          <v-row dense justify="center">
-
-            <v-col cols="5" v-if="applicant_details?.principal?.signature"> <v-btn @click="handle_principal" block
-                variant="tonal" color="success">
-                AUTHENTICATE
-              </v-btn></v-col>
-            <v-col cols="5" v-else>
-              <v-btn @click="esig = true" variant="tonal" block prepend-icon="mdi-upload" color="black">
-                <b>Upload Signature</b>
-              </v-btn>
-            </v-col>
-
-          </v-row>
-
-
-
+            <div class="d-flex justify-center">
+              <div class="w-30"><v-btn variant="text" color="error" @click="evaluator_clear_signature">Clear</v-btn>
+              </div>
+              <div class="w-30"><v-btn variant="text" color="primary" @click="evaluator_signature">Sign</v-btn>
+              </div>
+            </div>
+          </v-sheet>
         </v-col>
 
-        <v-col cols="6"
-          v-else-if="applicant_details?.status != 'Completed' && applicant_details?.status != 'Pending' && applicant_details?.status != 'Received Printout/s' && (applicant_details?.status != 'Approved for Printing' && user.side === 'SDO')">
-          <v-btn @click="handle_application" block variant="tonal"
-            :color="applicant_details?.status === 'Disapproved' ? 'error' : 'success'">
-            {{ applicant_details?.status === 'Disapproved' ? 'Return to Principal' : 'Submit' }}
-          </v-btn>
-        </v-col>
-      </v-row>
-    </v-card-actions>
 
 
+      </v-card-text>
+      <v-card-actions>
+        <v-row justify="center">
+          <v-col cols="6"
+            v-if="user && user.role === 'Administrative Officer IV' && applicant_details.status === 'Pending'">
+            <v-btn @click="evaluator_dialog = true" block variant="tonal" color="indigo"> Assign to Evaluator</v-btn>
+          </v-col>
+
+          <v-col cols="6"
+            v-else-if="user && user.role === ROLES.EVALUATOR && applicant_details?.status === 'Approved for Printing'">
+            <v-btn variant="tonal" color="success" block @click="attach_output_requirement">
+              SUBMIT
+            </v-btn>
+          </v-col>
+          <v-col cols="6" v-else-if="user && applicant_details?.status === 'For DBM' && user.side === 'SDO'"><v-btn
+              color="success" variant="tonal" block @click="complete_reclass" prepend-icon="mdi-check">Complete
+              Reclassification</v-btn></v-col>
+          <v-col cols="12" v-else-if="!user">
+            <v-row justify="center" v-if="applicant_details?.principal?.signature">
+              <v-col cols="5">
+                <div>
+                  <div class="w-100 d-flex align-center justify-center "> <v-img :width="197" height="10vh"
+                      :src="applicant_details?.principal?.signature" />
+                  </div>
+
+                  <div class="w-100 text-center font-weight-bold text-subtitle-1 text-uppercase"> {{
+                    applicant_details?.principal?.name
+                  }}</div>
+                  <hr />
+                  <div class="text-center">Principal</div>
+                </div>
+              </v-col>
+            </v-row>
+
+            <v-row dense justify="center">
+
+              <v-col cols="5" v-if="applicant_details?.principal?.signature"> <v-btn @click="handle_principal" block
+                  variant="tonal" color="success">
+                  AUTHENTICATE
+                </v-btn></v-col>
+              <v-col cols="5" v-else>
+                <v-btn @click="esig = true" variant="tonal" block prepend-icon="mdi-upload" color="black">
+                  <b>Upload Signature</b>
+                </v-btn>
+              </v-col>
+
+            </v-row>
+
+
+
+          </v-col>
+
+          <v-col cols="6"
+            v-else-if="applicant_details?.status != 'Completed' && applicant_details?.status != 'Pending' && applicant_details?.status != 'Received Printout/s' && (applicant_details?.status != 'Approved for Printing' && user.side === 'SDO')">
+            <v-btn @click="handle_application" block variant="tonal"
+              :color="applicant_details?.status === 'Disapproved' ? 'error' : 'success'">
+              {{ applicant_details?.status === 'Disapproved' ? 'Return to Principal' : 'Submit' }}
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-card-actions>
+
+    </v-card>
 
     <v-dialog width="500" v-model="evaluator_dialog">
       <v-card title="Select an Evaluator">
@@ -488,7 +496,7 @@
         </v-window>
       </v-card>
     </v-dialog>
-    <!-- <v-dialog v-model="view_applicant_info_dialog" width="60%">
+    <v-dialog v-model="view_applicant_info_dialog" width="60%">
       <v-card flat class="mx-5">
         <v-toolbar color="indigo" v-if="$attrs['hide-toolbar'] !== ''" border>
           <v-list-item class="pl-2" density="compact">
@@ -529,7 +537,7 @@
                 <td> {{ applicant_qs_info?.qualification?.ma_units }}
                 </td>
               </tr>
-              <tr v-if=" applicant_qs_info?.qualification?.experience_sr_public > 0">
+              <tr v-if="applicant_qs_info?.qualification?.experience_sr_public > 0">
                 <td> Public </td>
                 <td> {{ applicant_qs_info?.qualification?.experience_sr_public }} years
                 </td>
@@ -538,7 +546,7 @@
                 </td>
 
               </tr>
-              <tr v-if="applicant_qs_info?.qualification?.experience_sr_private  > 0">
+              <tr v-if="applicant_qs_info?.qualification?.experience_sr_private > 0">
                 <td> Private </td>
                 <td> {{ applicant_qs_info?.qualification?.experience_sr_private }} years
                 </td>
@@ -574,23 +582,13 @@
                   <b class="text-uppercase mb-2">APPLICANT </b>
                   <p v-for="attach, index in applicant_qs_info?.attachments" :key="attach">
                     <v-icon size="20" color="primary">mdi-circle-small</v-icon> {{
-                    attach }} <br />
+                      attach.description }} <br />
                   </p>
 
                 </td>
               </tr>
-              <tr>
-                <td> </td>
 
-                <td>
-                  <b class="text-uppercase mb-2">Schools
-                    Division Office :</b>
-                  <p v-for="attach, index in applicant_qs_info?.sdo_attachments" :key="attach"> <v-icon size="20"
-                      color="primary">mdi-circle-small</v-icon> {{ attach }} <br /></p>
 
-                </td>
-
-              </tr>
             </tbody>
           </table>
 
@@ -598,7 +596,8 @@
 
         </v-card-text>
       </v-card>
-    </v-dialog> -->
+    </v-dialog>
+
 
   </div>
 
@@ -622,8 +621,8 @@ onBeforeMount(() => {
   Promise.all([
     get_applicant_details(),
     get_evaluators(),
-    get_ro_evaluators()
-    // get_applicant_qs()
+    get_ro_evaluators(),
+    get_applicant_qs()
   ]);
 
   if (user) setPageLayout("barren");
@@ -1065,7 +1064,17 @@ const state = reactive({
 })
 
 
+const applicant_qs_info = ref([] as Applicant[]);
 
+
+async function get_applicant_qs() {
+  const { data, error } = await $rest('new-applicant/get-applicant-erf', {
+    method: 'GET',
+    query: { id: route.query.id }
+  });
+
+  applicant_qs_info.value = data;
+}
 
 
 </script>
