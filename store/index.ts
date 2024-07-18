@@ -415,7 +415,7 @@ async function manage_permission(vapid_key: Uint8Array) {
 
 function urlBase64ToUint8Array(str: string) {
 
-  console.log("VAPID SHIT", str);
+
 
   var padding = '='.repeat((4 - str.length % 4) % 4);
   var base64 = (str + padding)

@@ -5,10 +5,7 @@
       <div class="content">
         <commons-header />
 
-
         <v-sheet class="mx-5" v-if="erf">
-
-
           <v-row no-gutters class="ma-2">
             <v-col cols="6">Name : <b>{{ erf.full_name }} </b>
             </v-col>

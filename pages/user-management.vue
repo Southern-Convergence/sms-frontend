@@ -506,7 +506,6 @@ const deactivation_types = ref([
 
 async function invite_user() {
 
-
     loader.set("Sending out invitation form...");
 
     invitation_form.value.apts = [invitation_form.value.apts];

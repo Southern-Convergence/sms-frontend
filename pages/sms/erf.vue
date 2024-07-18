@@ -57,7 +57,7 @@
                 <v-row no-gutters class="ma-2" justify="center">
                   <v-col cols="6" class="text-capitalize">Name : <b> {{
                     applicant_details?.personal_information?.first_name
-                  }} {{ applicant_details?.personal_information?.last_name }} </b>
+                      }} {{ applicant_details?.personal_information?.last_name }} </b>
                   </v-col>
                   <v-col cols="6">Date of Birth : <b> {{
                     applicant_details?.personal_information?.birthday }}
