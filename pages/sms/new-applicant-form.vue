@@ -342,7 +342,7 @@
                                 variant="tonal" @click="next_teacher3">
                                 SUBMIT</v-btn></v-col>
                             <v-col cols="5" v-else> <v-btn block color="success" variant="tonal" @click="next_window">
-                                SUBMIT</v-btn></v-col>
+                                SUBMIT Ok</v-btn></v-col>
                           </v-row>
 
                         </v-card-actions>
@@ -1264,18 +1264,65 @@ const unit_items = Array.from({ length: 19 }, (_, index) => index + 1);
 
 
 
-function education_matching(applicant_education: any, required_education: any) {
-  if (!required_education) {
+// function education_matching(applicant_education: any, required_education: any) {
+//   if (!required_education) {
+//     return false;
+//   }
+//   console.log("applicant_education", applicant_education);
+//   console.log("required_education", required_education);
+//   const [result] = required_education.map((v: string) =>
+//     applicant_education.includes(v)
+//   );
+
+//   console.log("result", result);
+
+//   return result;
+// }
+function education_matching(applicant_education: string[], required_education: string[]): boolean {
+  if (!required_education || !applicant_education) {
     return false;
   }
-  const [result] = required_education.map((v: string) => applicant_education.includes(v));
+
+  const result = required_education.some((reqEdu: string) =>
+    applicant_education.includes(reqEdu)
+  );
+
   return result;
 }
-function experience_matching(applicant_experience: any, required_experience: any) {
+
+
+// function education_matching(applicant_education: string, required_education: string[]) {
+//   if (!required_education || required_education.length === 0) {
+//     return false;
+//   }
+//   console.log("required_education", required_education);
+//   console.log("applicant_education", applicant_education);
+
+
+//   const result = required_education.includes(applicant_education);
+//   console.log("RESULLTT ", result);
+
+//   return result;
+// }
+// function experience_matching(applicant_experience: any, required_experience: any) {
+//   if (!required_experience) {
+//     return false;
+//   }
+//   console.log("applicant_experience", applicant_experience);
+//   console.log("required_experience", required_experience);
+
+//   const [result] = required_experience.map((v: string) => applicant_experience.includes(v));
+//   console.log("result", result);
+
+//   return result;
+// }
+
+
+function experience_matching(applicant_experience: any[], required_experience: any[]) {
   if (!required_experience) {
     return false;
   }
-  const [result] = required_experience.map((v: string) => applicant_experience.includes(v));
+  const result = required_experience.some((exp: string) => applicant_experience.includes(exp));
   return result;
 }
 
@@ -1283,14 +1330,28 @@ function experience_matching(applicant_experience: any, required_experience: any
 //   if (!required_rating) return true;
 //   return applicant_rating == required_rating;
 // };
-
-function rating_matching(applicant_rating: any, required_rating: any) {
-  if (!required_rating) {
+function rating_matching(applicant_rating: string, required_rating: string[]) {
+  if (!required_rating || required_rating.length === 0) {
     return false;
   }
-  const [result] = required_rating.map((v: string) => applicant_rating.includes(v));
+
+  const result = required_rating.includes(applicant_rating);
+
   return result;
 }
+// function rating_matching(applicant_rating: any, required_rating: any) {
+//   if (!required_rating) {
+//     return false;
+//   }
+//   console.log("required_rating", required_rating);
+
+//   const [result] = required_rating.map((v: string) => applicant_rating.includes(v));
+//   console.log("applicant_rating", applicant_rating);
+
+//   console.log("resssullllt", result);
+
+//   return result;
+// }
 
 function training_matching(applicant_training: number, required_training: number) {
   applicant_training = parseFloat(applicant_training.toString());
@@ -1298,12 +1359,19 @@ function training_matching(applicant_training: number, required_training: number
   return applicant_training >= required_training;
 }
 
-function leadership_points_matching(applicant_lead: any, required_lead: any) {
+function leadership_points_matching(applicant_lead: any[], required_lead: any[]) {
   if (!required_lead) {
     return false;
   }
-  const [result] = required_lead.map((v: string) => applicant_lead.includes(v));
+  console.log("applicant_lead", applicant_lead);
+  console.log("required_lead", required_lead);
+
+  const result = required_lead.some((exp: string) => applicant_lead.includes(exp));
+  console.log("result", result);
   return result;
+
+
+
 }
 
 const principal_form = ref()
@@ -1391,10 +1459,14 @@ async function get_applicant_details() {
  * MATCHING
  */
 function next_window() {
+
+
+
   if (step.value === 2 && !qs.value.with_erf) {
     step.value = 4;
     confirmation_dialog.value = false
   } if (qs?.value.title === 'Teacher II') {
+
     const selected_position: { _id: string; education: string[] } | undefined = position_data.value.filter((v: any) => v._id == applicant.value.qualification.position)[0];
     if (!selected_position) return swal({ title: "Oops!", text: "Select position", icon: "info" });
     const applicant_education = applicant.value.qualification.education;
@@ -1411,8 +1483,10 @@ function next_window() {
     if (is_yes.includes(false)) return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" })
     confirmation_dialog.value = true
 
+    console.log("ISSSS YESSSSSSS", is_yes);
 
   } else {
+
     const selected_position: { _id: string; education: string[] } | undefined = position_data.value.filter((v: any) => v._id == applicant.value.qualification.position)[0];
 
 
@@ -1433,12 +1507,13 @@ function next_window() {
 
     const applicant_leadership_points = applicant.value.qualification.leadership_points;
     const applicant_supplement_units = applicant.value.qualification.supplemented_units;
-    const applicant_education_level = applicant.value.qualification.education_level;
+
 
 
 
 
     const is_yes: boolean[] = [];
+    console.log("ISSSSSS", is_yes);
 
 
     is_yes.push(education_matching(applicant_education, selected_position.education));
@@ -1446,18 +1521,25 @@ function next_window() {
     //      is_yes.push(applicant_education_level === selected_position.education_level);
     // }
     is_yes.push(experience_matching(applicant_experience, selected_position.experience));
-    is_yes.push(rating_matching(applicant_rating, selected_position.rating));
+
+    if (selected_position.rating && selected_position.rating.length) {
+      is_yes.push(rating_matching(applicant_rating, selected_position.rating));
+    }
+
     is_yes.push(training_matching(applicant_training, selected_position.training_hours));
+
     if (selected_position.supplemented_units > 1) {
       is_yes.push(selected_position.supplemented_units <= applicant_supplement_units);
     }
-    if (selected_position.leadership_points) {
+    if (selected_position.leadership_points && selected_position.leadership_points.length) {
       is_yes.push(leadership_points_matching(applicant_leadership_points, selected_position.leadership_points));
     }
 
 
+
+
+    console.log("ISSSSS111S", is_yes);
     if (is_yes.includes(false)) return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" })
-    console.log(is_yes);
 
     confirmation_dialog.value = true
 
