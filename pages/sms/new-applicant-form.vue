@@ -99,7 +99,7 @@
 
                         <v-card-text class="overflow-y-auto mt-0 pt-1" style="height: 55vh">
 
-
+                          {{ qs.status_of_appointment }}
                           <v-list-item class="mb-2" color=" white" rounded="rounded">
                             <template v-slot:prepend>
                               <v-icon color="primary" icon="mdi-account-hard-hat"></v-icon>
@@ -110,8 +110,9 @@
                                   }})</i></b></v-list-item-title>
 
                           </v-list-item>
+
                           <v-list-item class="mb-2" color=" white" rounded="rounded"
-                            v-if="qs.status_of_appointement === true">
+                            v-if="qs.status_of_appointment === true">
                             <template v-slot:prepend>
                               <v-icon color="primary" icon="mdi-school"></v-icon>
                             </template>
@@ -235,6 +236,7 @@
                             process.</v-list-item-subtitle>
                         </v-list-item>
                         <v-card-text class="overflow-y-auto" style="height: 50vh">
+
                           <v-row dense>
                             <v-col cols="12" v-if="selected_qs">
                               SELECTED POSITION: <b class="text-uppercase text-primary">{{
@@ -243,6 +245,8 @@
                                 ({{ selected_qs.education_level }})</i>
 
                             </v-col>
+
+
 
                             <v-col cols="12" v-if="applicant.qualification.position">
                               <v-select v-model="applicant.qualification.education" :items="education_data"
@@ -299,6 +303,7 @@
                               <v-text-field v-model="applicant.qualification.ma_units" label="Enter Number of M.A Units"
                                 hide-detailsprepend-inner-icon="mdi-certificate" />
                             </v-col>
+
                             <v-col cols="12" v-if="qs?.status_of_appointment === true"> <v-checkbox
                                 label="Check if permanent teacher."
                                 v-model="applicant.qualification.status_of_appointment" hide-details /></v-col>
@@ -1383,8 +1388,7 @@ async function create_application() {
   if (!principal_form.value.isValid) return swal({ text: "Principal Email is requried!", icon: "info" })
   loader.set("Sending application form...");
 
-  applicant.value.sdo_attachments = selected_qs.value.sdo_attachment;
-  const { attachments, sdo_attachments } = applicant.value;
+  const { attachments } = applicant.value;
   const temp = new FormData();
 
   Object.entries(attachments).forEach(([title, file]) => {
@@ -1404,8 +1408,7 @@ async function create_application() {
   })
 
   loader.set(false);
-  const success = Boolean(data);
-  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  if (error) return swal({ title: "Error", text: error, icon: "error" })
   return swal({ title: "Sucess", text: data, icon: "success" })
 }
 
@@ -1460,8 +1463,6 @@ async function get_applicant_details() {
  */
 function next_window() {
 
-
-
   if (step.value === 2 && !qs.value.with_erf) {
     step.value = 4;
     confirmation_dialog.value = false
@@ -1507,13 +1508,15 @@ function next_window() {
 
     const applicant_leadership_points = applicant.value.qualification.leadership_points;
     const applicant_supplement_units = applicant.value.qualification.supplemented_units;
-
+    const applicant_status_of_appointment = applicant.value.qualification.status_of_appointment
 
 
 
 
     const is_yes: boolean[] = [];
     console.log("ISSSSSS", is_yes);
+
+
 
 
     is_yes.push(education_matching(applicant_education, selected_position.education));
@@ -1534,6 +1537,17 @@ function next_window() {
     if (selected_position.leadership_points && selected_position.leadership_points.length) {
       is_yes.push(leadership_points_matching(applicant_leadership_points, selected_position.leadership_points));
     }
+    // console.log("ITSSS TRUEE I MEAN IT", selected_position.leadership_points);
+
+    if (selected_position?.status_of_appointment === true) {
+      if (applicant_status_of_appointment === true) {
+        is_yes.push(true);
+      } else {
+        is_yes.push(false);
+      }
+    }
+
+
 
 
 
@@ -1550,6 +1564,7 @@ function next_window() {
 
 function next_teacher3() {
   const selected_position = position_data.value.find(v => v._id === applicant.value.qualification.position);
+
   if (!selected_position) {
     return swal({ title: "Oops!", text: "Please select a position", icon: "info" });
   }
@@ -1563,48 +1578,41 @@ function next_teacher3() {
 
   const educations = applicant_education_id.map(educ_id => find_qs_education.find(edu => edu._id === educ_id));
   educations.forEach(education => {
+    if (!education) {
+      console.error("Education not found for the given ID.");
+      return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" });
+    }
     if (!education.high_degree) {
+      const applicant_education = applicant.value.qualification.education;
+      if (!applicant_education) return swal({ title: "Oops!", text: "Education is required", icon: "info" });
+
       const applicant_experience = applicant.value.qualification.experience;
       if (!applicant_experience && !if_20_years.value) {
         return swal({ title: "Oops!", text: "Experience is required", icon: "info" });
       }
-      const applicant_rating = applicant.value.qualification.per_rating;
-      if (position_data.value.rating?.length && !applicant_rating) {
-        return swal({ title: "Oops!", text: "Rating is required", icon: "info" });
-      }
-      const applicant_training = applicant.value.qualification.training;
-      if (position_data.value.training_hours?.length > 0 && !applicant_training) {
-        return swal({ title: "Oops!", text: "Training Hours is required", icon: "info" });
-      }
-      //       if (if_20_years.value === true){
-      // if(applicant.value.qualification.total_ma < 40) {
-      //     return swal({ title: "Oops!", text: "The equivalent M.A. units do not meet the requirement.", icon: "info" });
-      // } else if (applicant.value.qualification.ma_units < 20){
-      // return swal({ title: "Oops!", text: "The equivalent M.A. units do not meet the requirement.", icon: "info" });
-      // }
-      // }
+
       if (if_20_years.value && applicant.value.qualification.total_ma < 40) {
         return swal({ title: "Oops!", text: "The equivalent M.A. units do not meet the requirement.", icon: "info" });
       }
 
       const is_yes: boolean[] = [];
+      is_yes.push(education_matching(applicant_education, selected_position.education));
 
       is_yes.push(applicant.value.qualification.total_ma >= 40 || experience_matching(applicant_experience, selected_position.experience));
-      is_yes.push(rating_matching(applicant_rating, selected_position.rating));
+
       if (if_20_years.value === false) {
         is_yes.push(applicant.value.qualification.ma_units >= 20);
       };
-      is_yes.push(training_matching(applicant_training, selected_position.training_hours));
 
+
+      console.log("iS YESSS", is_yes);
       if (is_yes.includes(false)) {
         return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" });
       }
-      console.log("iS YESSS", is_yes);
+
 
       confirmation_dialog.value = true;
-    }
-
-    else {
+    } else {
       confirmation_dialog.value = true;
     }
   });
