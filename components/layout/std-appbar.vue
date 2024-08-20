@@ -228,10 +228,9 @@ const cancelUpdate = () => {
 
 const model = ref();
 async function get_current_status() {
-  const { data, error } = await $rest('sms-position/get-submission-status', {
-    method: 'GET',
-  })
-  model.value = data.enable_application
+  const { data, error } = await $rest('sms-position/get-submission-status', { method: 'GET', });
+  if (error) return swal({ title: "NO application" });
+  model.value = data?.enable_application
 }
 
 const notification_menu = ref(false);
