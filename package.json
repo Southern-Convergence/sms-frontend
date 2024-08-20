@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "build": "nuxi generate",
+    "build": "nuxt generate",
     "dev": "nuxt dev --devtools --port=PORT",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
