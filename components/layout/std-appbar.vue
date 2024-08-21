@@ -43,20 +43,22 @@
 
             <v-list class="pt-0 pb-2 ma-4">
               <v-list-item title="Maintenance Panel" color="primary"
-                :to="{ name: `sms-maintenance`, params: account_params }">
+                :to="{ name: `sms-maintenance`, params: account_params }" v-if="user.side == 'RO'">
                 <template v-slot:prepend>
                   <v-icon class="mr-1" icon="mdi-tools" />
                 </template>
               </v-list-item>
 
               <v-list-item title="User Management" color="primary"
-                :to="{ name: `user-management`, params: account_params }">
+                :to="{ name: `user-management`, params: account_params }" v-if="user.side == 'RO'">
+
                 <template v-slot:prepend>
                   <v-icon class="mr-1" icon="mdi-account" />
                 </template>
               </v-list-item>
 
-              <v-list-item title="SDO Panel" color="primary" :to="{ name: `sdo`, query: { id: user.division } }">
+              <v-list-item title="SDO Panel" color="primary" :to="{ name: `sdo`, query: { id: user.division } }"
+                v-if="user.side == 'SDO'">
                 <template v-slot:prepend>
                   <v-icon class="mr-1" icon="mdi-key-chain" />
                 </template>

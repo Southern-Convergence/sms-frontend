@@ -48,8 +48,9 @@
                     HISTORY</v-btn></span>
 
                 <span>
-                  <v-btn v-if="applicant_details.is_with_erf" @click="applicant_erf(applicant_details._id)"
-                    class="font-weight-bold ml-2" prepend-icon="mdi-printer" color="primary" block density="compact">
+                  <v-btn v-if="applicant_details.is_with_erf && applicant_details?.status != 'For Signature'"
+                    @click="applicant_erf(applicant_details._id)" class="font-weight-bold ml-2"
+                    prepend-icon="mdi-printer" color="primary" block density="compact">
                     Print
                     ERF</v-btn></span>
               </v-card-title>
@@ -296,7 +297,7 @@
               </div>
             </div>
             <hr />
-            <div class="text-center">{{ user?.access[0]?.name }}</div>
+            <div class="text-center">{{ user?.role }}</div>
 
             <div class="d-flex justify-center">
               <div class="w-30"><v-btn variant="text" color="error" @click="evaluator_clear_signature">Clear</v-btn>
@@ -360,9 +361,11 @@
 
 
           </v-col>
-
-          <v-col cols="6"
-            v-else-if="applicant_details?.status != 'Completed' && applicant_details?.status != 'Pending' && applicant_details?.status != 'Received Printout/s' && (applicant_details?.status != 'Approved for Printing' && user.side === 'SDO')">
+          <!-- applicant_details?.status != 'Completed' && applicant_details?.status != 'Pending' &&
+          applicant_details?.status != 'Received Printout/s' && (applicant_details?.status != 'Approved for Printing' &&
+          user.side === 'SDO') || applicant_details?.status === 'For Evaluation' || applicant_details?.status === 'For
+          Checking'" -->
+          <v-col cols="6" v-else-if="submit_display">
             <v-btn @click="handle_application" block variant="tonal"
               :color="applicant_details?.status === 'Disapproved' ? 'error' : 'success'">
               {{ applicant_details?.status === 'Disapproved' ? 'Return to Principal' : 'Submit' }}
@@ -761,7 +764,7 @@ async function assign_ro_evaluator_applicant() {
 
 
 const handle_application = async () => {
-  const role = user && user.access[0].name;
+  const role = user && user.role;
   const side = user && user.side;
   const status = applicant_details.value.status;
   const attachment = applicant_details.value.attachments;
@@ -1019,6 +1022,20 @@ function preview_image(event: any) {
     reader.readAsDataURL(input_sig.value.files[0])
   }
 }
+
+const submit_display = computed(() => {
+  const status = applicant_details.value?.status;
+  const isSDO = user.value?.side === 'SDO';
+
+  return (
+    status !== 'Completed' &&
+    status !== 'Pending' &&
+    status !== 'Received Printout/s' &&
+    (status !== 'Approved for Printing' && isSDO) ||
+    status === 'For Evaluation' ||
+    status === 'For Checking'
+  );
+});
 
 function attached_esig() {
   const file = input_sig.value.files[0]

@@ -29,58 +29,56 @@
                             </div>
                             <div class="text-caption text-capitalize mb-2">{{ value.side }}</div>
 
-                            <div class="text-caption d-flex">
-                                <div class="text-caption w-70"> <v-icon color="red-lighten-3"> mdi-email</v-icon> <u
-                                        class="text-blue">{{
-                                            value.email }}</u>
-                                </div>
-                                <v-spacer />
-                                <div class="w-30">
-                                    <v-menu :close-on-content-click="false" location="end">
-                                        <template v-slot:activator="{ props }">
-                                            <v-btn v-bind="props" density="compact" color="primary">
-                                                Manage</v-btn>
-                                        </template>
 
-                                        <v-card min-width="300">
-                                            <v-list>
-                                                <v-list-item title="Manage User">
-                                                    <template v-slot:append>
-                                                        <v-icon color="indigo" size="24">mdi-human</v-icon>
-                                                    </template>
-                                                </v-list-item>
-                                            </v-list>
-
-                                            <v-divider></v-divider>
-
-                                            <v-list lines="two">
-                                                <v-list-item title="Update Account"
-                                                    subtitle="Update and modify an account."
-                                                    @click="update_invite_dialog = true">
-                                                    <template v-slot:prepend>
-                                                        <v-icon color="primary"
-                                                            size="22">mdi-account-edit-outline</v-icon>
-                                                    </template>
-                                                </v-list-item>
-                                                <v-list-item title="Suspend Account"
-                                                    subtitle="Suspend account for a soecific reason.">
-                                                    <template v-slot:prepend>
-                                                        <v-icon color="primary" size="22">mdi-account-off</v-icon>
-                                                    </template>
-                                                </v-list-item>
-
-
-
-                                            </v-list>
-                                            <v-card-actions>
-                                                <v-spacer />
-                                                <v-btn variant="text" color="error">
-                                                    Close </v-btn>
-                                            </v-card-actions>
-                                        </v-card>
-                                    </v-menu>
-                                </div>
+                            <div class="text-caption "> <v-icon color="red-lighten-3"> mdi-email</v-icon> <u
+                                    class="text-blue">{{
+                                        value.email }}</u>
                             </div>
+
+                            <div class="mt-2">
+                                <v-menu :close-on-content-click="false" location="end">
+                                    <template v-slot:activator="{ props }">
+                                        <v-btn v-bind="props" density="compact" color="primary">
+                                            Manage</v-btn>
+                                    </template>
+
+                                    <v-card min-width="300">
+                                        <v-list>
+                                            <v-list-item title="Manage User">
+                                                <template v-slot:append>
+                                                    <v-icon color="indigo" size="24">mdi-human</v-icon>
+                                                </template>
+                                            </v-list-item>
+                                        </v-list>
+
+                                        <v-divider></v-divider>
+
+                                        <v-list lines="two">
+                                            <v-list-item title="Update Account" subtitle="Update and modify an account."
+                                                @click="update_invite_dialog = true">
+                                                <template v-slot:prepend>
+                                                    <v-icon color="primary" size="22">mdi-account-edit-outline</v-icon>
+                                                </template>
+                                            </v-list-item>
+                                            <v-list-item title="Suspend Account"
+                                                subtitle="Suspend account for a soecific reason.">
+                                                <template v-slot:prepend>
+                                                    <v-icon color="primary" size="22">mdi-account-off</v-icon>
+                                                </template>
+                                            </v-list-item>
+
+
+
+                                        </v-list>
+                                        <v-card-actions>
+                                            <v-spacer />
+                                            <v-btn variant="text" color="error">
+                                                Close </v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-menu>
+                            </div>
+
                         </v-card>
                     </template>
                     <template v-slot:table="{ items }">
@@ -178,45 +176,45 @@
                                     sdo.address }}
                             </div>
 
-                            <div class="text-caption d-flex">
-                                <div class="w-70 text-blue font-italic text-decoration-underline">
-                                    <v-icon color="red"> mdi-email</v-icon> {{ sdo.email }}
-                                </div>
-                                <v-spacer />
-                                <div class="w-30"> <v-menu :close-on-content-click="false" location="end">
-                                        <template v-slot:activator="{ props }">
-                                            <v-btn v-bind="props" density="compact" color="amber">
-                                                Manage</v-btn>
-                                        </template>
-                                        <v-card min-width="300">
-                                            <v-list>
-                                                <v-list-item title="Manage School Division Office" />
-                                            </v-list>
 
-                                            <v-divider></v-divider>
-
-                                            <v-list lines="two">
-                                                <v-list-item title="View" subtitle="View sdo users."
-                                                    @click="route_to_sdo(sdo._id)">
-                                                    <template v-slot:prepend>
-                                                        <v-icon color="primary" size="22">mdi-eye-outline</v-icon>
-                                                    </template>
-                                                </v-list-item>
-                                                <v-list-item title="Update/Suspend" subtitle="Modify and suspend sdo."
-                                                    @click="update_sdo_dialog = true">
-                                                    <template v-slot:prepend>
-                                                        <v-icon color="primary" size="22">mdi-account-off</v-icon>
-                                                    </template>
-                                                </v-list-item>
-                                            </v-list>
-                                            <v-card-actions>
-                                                <v-spacer />
-                                                <v-btn variant="text" color="error">
-                                                    Close </v-btn>
-                                            </v-card-actions>
-                                        </v-card>
-                                    </v-menu></div>
+                            <div class=" text-blue font-italic text-decoration-underline">
+                                <v-icon color="red"> mdi-email</v-icon> {{ sdo.email }}
                             </div>
+
+                            <div class="mt-2"> <v-menu :close-on-content-click="false" location="end">
+                                    <template v-slot:activator="{ props }">
+                                        <v-btn v-bind="props" density="compact" color="amber">
+                                            Manage</v-btn>
+                                    </template>
+                                    <v-card min-width="300">
+                                        <v-list>
+                                            <v-list-item title="Manage School Division Office" />
+                                        </v-list>
+
+                                        <v-divider></v-divider>
+
+                                        <v-list lines="two">
+                                            <v-list-item title="View" subtitle="View sdo users."
+                                                @click="route_to_sdo(sdo._id)">
+                                                <template v-slot:prepend>
+                                                    <v-icon color="primary" size="22">mdi-eye-outline</v-icon>
+                                                </template>
+                                            </v-list-item>
+                                            <v-list-item title="Update/Suspend" subtitle="Modify and suspend sdo."
+                                                @click="update_sdo_dialog = true">
+                                                <template v-slot:prepend>
+                                                    <v-icon color="primary" size="22">mdi-account-off</v-icon>
+                                                </template>
+                                            </v-list-item>
+                                        </v-list>
+                                        <v-card-actions>
+                                            <v-spacer />
+                                            <v-btn variant="text" color="error">
+                                                Close </v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-menu></div>
+
 
                         </v-alert>
                     </v-card-text>
