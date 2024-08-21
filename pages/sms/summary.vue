@@ -75,7 +75,7 @@ const table_headers = ref([
 
   { title: "Status", key: "status", sortable: false },
   { title: "DBM Status", key: "approved", sortable: false },
-  { title: "Actions", key: "actions", sortable: false },
+  // { title: "Actions", key: "actions", sortable: false },
 ]);
 
 const applicants = ref([]);
