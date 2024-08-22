@@ -37,13 +37,13 @@
                 label="Filter by SDO" v-model="selected_sdo" :items="sdo" item-value="_id" persistent-hint
                 clearable /></v-col>
             <v-col cols="2" v-if="user.role === 'Administrative Officer V'"> <v-select label="Filter by Status"
-                v-model="selected_status" :items="['Pending', 'Received Printout/s']" persistent-hint clearable />
+                v-model="selected_status" :items="['RO Pending', 'Received Printout/s']" persistent-hint clearable />
             </v-col>
             <v-col cols="auto" class="text-grey d-flex">
               <v-btn @click="get_application" class="mt-1" color="primary">
                 <v-icon class="pr-1">mdi-filter</v-icon>Filter</v-btn>
             </v-col>
-            <v-col cols="auto" v-if="selected_status === 'Pending'">
+            <v-col cols="auto" v-if="selected_status === 'RO Pending'">
               <v-btn @click="evaluators_dialog = true" class="mt-1" color="primary">Assign to
                 Evaluator</v-btn>
             </v-col>
@@ -91,6 +91,7 @@
                           <i>{{ value.approved === true ? 'approved' : 'disapproved' }}</i>
                         </span> by DBM.
                       </div>
+                      <div v-else class="mt-5"></div>
 
                     </div>
                   </div>
@@ -258,7 +259,6 @@ const tabItems = ref([
 
 const table_headers = ref([
   { title: "Applicant Name", key: "full_name", sortable: false },
-  { title: "School", key: "school", sortable: false },
   { title: "Division", key: "division", sortable: false },
   { title: "Position", key: "position", sortable: false },
   { title: "Control Number", key: "control_number", sortable: false },
@@ -359,8 +359,6 @@ async function assign_evaluator() {
 }
 
 async function generate_endorsement() {
-
-
 
   const all_id = application_data.value.map((item: any) => item._id);
   const payload = {

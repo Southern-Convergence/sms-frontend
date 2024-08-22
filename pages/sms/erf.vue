@@ -320,8 +320,8 @@
 
           <v-col cols="6"
             v-else-if="user && user.role === ROLES.EVALUATOR && applicant_details?.status === 'Approved for Printing'">
-            <v-btn variant="tonal" color="success" block @click="attach_output_requirement">
-              SUBMIT
+            <v-btn variant="tonal" color="primary" block @click="attach_output_requirement">
+              Received Hard Copies
             </v-btn>
           </v-col>
           <v-col cols="6" v-else-if="user && applicant_details?.status === 'For DBM' && user.side === 'SDO'"><v-btn

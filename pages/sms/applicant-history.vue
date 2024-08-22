@@ -32,8 +32,6 @@
             <v-card-text>
 
 
-
-
               <v-alert v-if="applicant_history?.request_log && applicant_history.request_log.length > 0"
                 class="pa-5 ma-5 elevation-3" rounded="lg"
                 v-for="(att, index) in applicant_history?.request_log.reverse()" :key="index">
@@ -57,7 +55,7 @@
                 </v-card-subtitle>
                 <v-card-subtitle v-if="att?.remarks?.length">
                   <v-chip class="mt-2" density="compact" color="error">
-                    Reason/Remarks : {{ }}
+                    Reason/Remarks :
                   </v-chip>
 
 

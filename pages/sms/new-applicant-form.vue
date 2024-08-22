@@ -1388,7 +1388,7 @@ async function create_application() {
   if (!principal_form.value.isValid) return swal({ text: "Principal Email is requried!", icon: "info" })
   loader.set("Sending application form...");
 
-  const { attachments } = applicant.value;
+  const { attachments, request_log } = applicant.value;
   const temp = new FormData();
 
   Object.entries(attachments).forEach(([title, file]) => {
