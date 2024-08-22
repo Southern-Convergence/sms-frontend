@@ -32,11 +32,8 @@
             <v-card-text>
 
 
-
-
               <v-alert v-if="applicant_history?.request_log && applicant_history.request_log.length > 0"
-                class="pa-5 ma-5 elevation-3" rounded="lg"
-                v-for="(att, index) in applicant_history?.request_log.reverse()" :key="index">
+                class="pa-5 ma-5 elevation-3" rounded="lg" v-for="(att, index) in reverse_logs" :key="index">
                 <v-card-subtitle>
                   Status : <span class="text-uppercase"> {{ att.status }} </span>
                 </v-card-subtitle>
@@ -57,7 +54,7 @@
                 </v-card-subtitle>
                 <v-card-subtitle v-if="att?.remarks?.length">
                   <v-chip class="mt-2" density="compact" color="error">
-                    Reason/Remarks : {{ }}
+                    Reason/Remarks :
                   </v-chip>
 
 
@@ -118,7 +115,7 @@ async function get_signatory() {
   applicant_history.value = data
 }
 
-const update_applicant = (id) => {
+const update_applicant = (id: any) => {
   router.push({
     name: 'sms-new-applicant-form',
     query: {
@@ -127,7 +124,9 @@ const update_applicant = (id) => {
   });
 }
 
-
+const reverse_logs = computed(() => {
+  return applicant_history.value.request_log?.slice().reverse() || [];
+});
 
 
 </script>
