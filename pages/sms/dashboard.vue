@@ -147,12 +147,17 @@ async function get_sdo() {
 const applicants = ref([]);
 async function get_dashboard() {
 
-  if (user.side === 'SDO') {
-    user.division = selected_sdo.value
+  let division = user.division;
+  const side = user.side;
+
+  if (side === 'SDO') {
+    division = user.division;
+  } else {
+    division = selected_sdo.value;
   }
 
   const payload = {
-    sdo: selected_sdo.value
+    sdo: division,
   };
   const { data, error } = await $rest('new-applicant/get-dashboard', {
     method: "GET",

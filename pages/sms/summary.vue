@@ -9,16 +9,21 @@
             </h6>
             <v-divider class="mt-4 mb-2" />
           </v-col>
-          <v-col cols="3" v-if="user.side === 'RO'" class="d-flex"> <v-select label="Filter by SDO"
-              v-model="selected_sdo" :items="sdo" item-value="_id" persistent-hint clearable />
-            <v-btn @click="get_applicants" class="ml-2 mt-1" color="primary">
-              <v-icon class="pr-1">mdi-filter</v-icon>Filter</v-btn>
+          <v-col cols="2" v-if="user.side === 'RO'" class="d-flex">
+            <v-select label="Filter by SDO" v-model="selected_sdo" :items="sdo" item-value="_id" persistent-hint
+              clearable />
+
           </v-col>
+          <v-col cols="2"> <v-select label="Filter by status" v-model="selected_status" :items="statuses"
+              persistent-hint clearable /></v-col>
+          <v-col cols="2"> <v-btn @click="get_applicants" class="ml-2 mt-1" color="primary">
+              <v-icon class="pr-1">mdi-filter</v-icon>Filter</v-btn></v-col>
         </v-row>
 
         <v-row dense>
 
           <v-col cols="12">
+
             <v-sheet border>
               <v-data-table :headers="table_headers" :items="applicants">
                 <template v-slot:item.created_date="{ item }">
@@ -42,7 +47,9 @@
                   </v-chip>
                 </template>
                 <template v-slot:item.actions="{ item }">
-                  <v-btn color="primary" density="compact" @click="load_erf_form(item.selectable._id)"> View</v-btn>
+                  <v-btn color="teal" density="compact" @click="load_erf_form(item.selectable._id)"
+                    append-icon="mdi-history"> History
+                  </v-btn>
                 </template>
               </v-data-table>
             </v-sheet>
@@ -66,6 +73,7 @@ onBeforeMount(async () => {
   get_sdo();
 });
 
+const statuses = ref(["For Signature", "Pending", "For Evaluation", "For Checking", "RO Pending", "Approved for Printing", "Received Printout/s", "For DBM", "Completed"])
 const table_headers = ref([
   { title: "Date Applied", key: "created_date", sortable: false },
   { title: "Applicant Name", key: "full_name", sortable: false },
@@ -79,32 +87,10 @@ const table_headers = ref([
 ]);
 
 const applicants = ref([]);
-async function get_applicants() {
 
-  if (user.side === 'SDO') {
-    user.division = selected_sdo.value
-  }
-
-  const payload = {
-    sdo: selected_sdo.value
-  };
-  const { data, error } = await $rest('new-applicant/get-dashboard', {
-    method: "GET",
-    query: payload,
-  });
-  applicants.value = data;
-  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
-}
-const load_erf_form = (id: any) => {
-  router.push({
-    name: 'sms-erf',
-    query: {
-      id: id
-    }
-  });
-}
 const sdo = ref([]);
 const selected_sdo = ref("");
+const selected_status = ref("")
 async function get_sdo() {
   const { data, error } = await $rest('new-applicant/get-all-sdo', {
     method: "GET"
@@ -112,5 +98,38 @@ async function get_sdo() {
   sdo.value = data;
 
 };
+
+async function get_applicants() {
+  let division = user.division;
+  const side = user.side;
+
+  if (side === 'SDO') {
+    division = user.division;
+  } else {
+    division = selected_sdo.value;
+  }
+
+  const payload = {
+    sdo: division,
+    status: selected_status.value,
+  };
+
+  const { data, error } = await $rest('new-applicant/get-dashboard', {
+    method: "GET",
+    query: payload,
+  });
+  applicants.value = data.slice().reverse()
+
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+}
+const load_erf_form = (id: any) => {
+  router.push({
+    name: 'sms-applicant-history',
+    query: {
+      id: id
+    }
+  });
+}
+
 
 </script>
