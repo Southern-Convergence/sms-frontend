@@ -1,24 +1,31 @@
 <template>
   <v-sheet>
     <v-card class="pa-10 " rounded="lg" flat>
-      <v-card-text> <v-row :class="`${$vuetify.display.mobile ? 'text-center' : ''}`" justify="center" dense>
+      <v-card-text> <v-row :class="`${$vuetify.display.mobile ? 'text-center' : ''}`" dense>
           <v-col cols="12">
             <h6 class="text-h5 reclass-title">Summary of Endorsement Letter</h6>
-
             <h6 class="text-subtitle-2 text-medium-emphasis  "> View and verify endorsement letter.
             </h6>
             <v-divider class="mt-4 mb-2" />
           </v-col>
 
+          <v-col cols="2" v-if="user.side === 'RO'" class="d-flex">
+            <v-select label="Filter by SDO" v-model="selected_sdo" :items="sdo" item-value="_id" persistent-hint
+              clearable />
+
+          </v-col>
+
+          <v-col cols="2"> <v-select label="Filter by position" v-model="selected_position" :items="positions"
+              item-value="_id" persistent-hint clearable /></v-col>
+          <v-col cols="2">
+            <v-btn class="ml-2 mt-1" @click="get_endorsement" color="primary">
+              <v-icon class="pr-1">mdi-filter</v-icon>Filter</v-btn></v-col>
         </v-row>
 
-        <v-row>
+        <v-row dense>
           <v-col cols="12">
             <v-sheet border>
-
-
               <v-data-table :headers="table_headers" :items="endorsement_data">
-
                 <template v-slot:item.generated_date="{ item }">
 
                   <span class="text-primary"> {{ new Date(item.selectable.generated_date).toLocaleDateString('en-US', {
@@ -36,7 +43,7 @@
                 <template v-slot:item.actions="{ item }">
                   <v-menu v-model="item.selectable.actions" :close-on-content-click="false" location="end">
                     <template v-slot:activator="{ props }">
-                      <v-btn color="indigo" v-bind="props"> Actions </v-btn>
+                      <v-btn color="indigo" v-bind="props" density="compact"> Actions </v-btn>
                     </template>
 
                     <v-card min-width="300">
@@ -53,7 +60,7 @@
                       <v-list>
                         <v-list-item @click="load_endorsement_letter(item.selectable._id)"
                           v-if="item.selectable.status === 'For Verification' && user.role === 'Verifier'">
-                          <v-icon class="px-4" color="primary"> Verify</v-icon>
+                          <v-icon class="px-4" color="primary"> mdi-magnify</v-icon>
 
                           {{ item.selectable.status === 'For Verification' ? 'Verify' : 'View' }}
                         </v-list-item>
@@ -142,7 +149,9 @@ const router = useRouter();
 definePageMeta({ layout: "std-systems" });
 
 onBeforeMount(async () => {
-  get_endorsement()
+  get_endorsement(),
+    get_sdo(),
+    get_position()
 });
 
 
@@ -157,13 +166,41 @@ const table_headers = ref([
   { title: "Action", key: "actions", sortable: false },
 ]);
 
+
+const sdo = ref([]);
+const selected_sdo = ref("");
+
+
+async function get_sdo() {
+  const { data, error } = await $rest('new-applicant/get-all-sdo', {
+    method: "GET"
+  });
+  sdo.value = data;
+}
+
+
+const positions = ref([]);
+const selected_position = ref("");
+async function get_position() {
+  const { data, error } = await $rest('new-applicant/get-all-position', {
+    method: "GET"
+  });
+
+  positions.value = data;
+
+}
 const endorsement_data = ref([]);
 async function get_endorsement() {
+  const payload = {
+    sdo: selected_sdo.value,
+    position: selected_position.value,
+  };
   const { data, error } = await $rest('sms-endorsement/get-endorsement', {
     method: "GET",
+    query: payload,
   })
 
-  endorsement_data.value = data
+  endorsement_data.value = data.slice().reverse()
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
 }
 

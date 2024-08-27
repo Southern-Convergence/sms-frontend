@@ -228,7 +228,7 @@ onBeforeMount(async () => {
     if (error) link_error.value = error.error;
 
     const { first_name, middle_name, last_name, email, id, apts, side } = data.user;
-    console.log("DATATATTA", data.user);
+
 
     active_user.value = id;
     form.value.role = apts[0]._id;

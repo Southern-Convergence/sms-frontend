@@ -395,13 +395,29 @@
                       hide-details />
                   </v-col>
                   <v-col cols="12" xl="4" lg="4" md="4" sm="12" class="px-1 mt-1 ">
-                    <v-btn v-if="!applicant.personal_information.signature" prepend-icon="mdi-upload"
-                      color="grey-darken-2" @click="esig = true">Upload
+                    <v-btn v-if="!applicant.personal_information.signature" prepend-icon="mdi-upload" color="primary"
+                      @click="esig = true">Upload
                       E-signature</v-btn>
-                    <div v-else class="d-flex"> <b class="text-uppercase text-primary">Signature:</b>
-                      <v-img :width="197" height="10vh" :src="applicant?.personal_information?.signature" />
+                    <div v-else>
 
+                      <div class="text-uppercase text-primary font-weight-bold mb-2">
+                        Signature :
+                      </div>
+                      <div class="d-flex justify-center mb-2">
+                        <v-img height="10vh" :src="applicant?.personal_information?.signature" contain
+                          class="border rounded-lg" />
+                      </div>
+                      <div class="text-center">
+                        <v-btn density="compact" color="red lighten-1" @click="clear_upload">
+                          <v-icon left>mdi-delete</v-icon>
+                          Clear
+                        </v-btn>
+                      </div>
                     </div>
+
+
+
+
 
 
                   </v-col>
@@ -708,25 +724,65 @@
     </commons-dialog>
 
 
-    <commons-dialog max-width="35%" v-model="principal_dialog" :icon="'mdi-information'"
-      :title="'Principal Email Address is required!'" :submitText="'Submit'" @submit="create_application">
-      <v-card-text class="ma-4 ">
 
+    <v-dialog max-width="35%" v-model="principal_dialog" :icon="'mdi-information'">
+      <v-card width="100%" v-if="loading" class="pa-15" color="white" elevation="2">
+        <v-card-title class="text-center">
+          <v-icon x-large class="mr-2" color="primary">mdi-loader</v-icon>
+          <h4 class="text-center">Submitting your application...</h4>
+        </v-card-title>
+        <v-progress-linear color="blue darken-4" indeterminate reverse height="6" class="my-4"></v-progress-linear>
+        <v-card-subtitle class="text-center">
+          <span class="text-body-2">Please wait while we process your submission.</span>
+        </v-card-subtitle>
+      </v-card>
+      <v-card rounded="lg" v-else>
+        <v-toolbar color="indigo" border>
+          <v-list-item class="pl-2" density="compact">
+            <template>
+              <v-avatar class="mr-1" variant="text">
+                <v-icon icon="mdi-human" dark />
+              </v-avatar>
+            </template>
 
-        Please enter the email address of your school principal to validate the authenticity of the attached
-        document/s.
-        <v-form ref="principal_form">
-          <v-text-field v-model="applicant.principal.email" :rules="[(v) => /.+@.+/.test(v) || 'Invalid Email address']"
-            label="Enter Principal's Email Address" />
-        </v-form>
-      </v-card-text>
-    </commons-dialog>
+            <v-list-item-title>Principal Email is required!</v-list-item-title>
+
+          </v-list-item>
+
+          <v-spacer />
+          <v-btn class="mr-0" @click="principal_dialog = false" rounded="0" icon="mdi-close" />
+        </v-toolbar>
+
+        <v-card-text class="ma-4">
+          <p class="mb-3"> Please enter the email address of your school principal to validate the authenticity of the
+            attached
+            document/s.</p>
+          <v-form ref="principal_form">
+            <v-text-field v-model="applicant.principal.email"
+              :rules="[(v) => /.+@.+/.test(v) || 'Invalid Email address']" label="Enter Principal's Email Address" />
+          </v-form>
+        </v-card-text>
+        <v-divider />
+        <v-card-actions>
+          <v-row dense justify="center">
+            <v-col cols="5">
+              <v-btn variant="tonal" color="error" @click="principal_dialog = false" block>CANCEL</v-btn>
+            </v-col>
+            <v-col cols="5">
+              <v-btn variant="tonal" color="success" @click="create_application" block>
+                Submit
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <commons-dialog max-width="35%" v-model="update_dialog" :icon="'mdi-information'"
       :title="'Principal Email Address is required!'" :submitText="'Submit'" @submit="update_applicant">
       <v-card-text class="ma-4 ">
         Please enter the email address of your school principal to validate the authenticity of the attached
         document/s.
-
         <v-text-field v-model="applicant.principal.email" label="Enter Principal's Email Address" />
       </v-card-text>
     </commons-dialog>
@@ -734,10 +790,6 @@
 
       <v-toolbar color="indigo" v-if="$attrs['hide-toolbar'] !== ''" border>
         <v-list-item class="pl-2" density="compact">
-
-
-
-
           <v-list-item-title class="text-uppercase"> <v-icon
               class="pr-1">mdi-draw-pen</v-icon>E-signatures</v-list-item-title>
 
@@ -801,15 +853,12 @@
                     @click="clear">CLear</v-btn></v-col>
                 <v-col cols="3"> <v-btn class="custom-file-upload" block variant="tonal" color="primary" size="small"
                     @click="free_hand_esig">Save</v-btn></v-col>
-
               </v-row>
-
             </v-card-actions>
           </v-window-item>
         </v-window>
       </v-card>
     </v-dialog>
-
 
   </v-sheet>
 </template>
@@ -834,6 +883,7 @@ const CDN = cfg.public.NODE_ENV === "development" ? DEV_CDN_ENDPOINT : CDN_ENDPO
 const uploading_attachment = (data: any, title: string) => {
   applicant.value.attachments[title] = data
 }
+
 
 /**
  * START: BUNGOO BUNGGO
@@ -947,7 +997,6 @@ const next = () => {
   return step.value++;
 }
 const attachment_rules = ref([
-  // (v: any) => !!v || 'File is required',
   (v: any) => (v && v.length > 0) || 'File is required',
 ]);
 
@@ -969,7 +1018,7 @@ function position_form_cond() {
   apply_dialog.value = false
 
 }
-const view_qs_dialog = ref(false)
+
 const apply_dialog = ref(false)
 const next_dialog = ref(false)
 const confirmation_dialog = ref(false)
@@ -978,21 +1027,14 @@ const principal_dialog = ref(false)
 const update_dialog = ref(false)
 const if_20_years = ref(false)
 
-
-
-
-
-
-
 const show_footer = ref(false)
 
 const step = ref(1);
 
-
 // Start: Esignature
 const esig = ref(false)
 const tab = ref(null)
-const image_src = ref("")
+
 const image_data = ref("")
 const input_sig = ref()
 const signature_pad = ref(null as any)
@@ -1020,7 +1062,6 @@ function attached_esig() {
   }
   esig.value = false;
   swal({ text: "Successfully Uploaded Signature", icon: "success", buttons: { ok: false, cancel: false } })
-
 }
 
 function free_hand_esig() {
@@ -1036,7 +1077,9 @@ function clear() {
 }
 
 function clear_upload() {
-  applicant.value.personal_information.signature === ""
+  if (applicant.value && applicant.value.personal_information) {
+    applicant.value.personal_information.signature = "";
+  }
 }
 const state = reactive({
   count: 0,
@@ -1046,8 +1089,6 @@ const state = reactive({
   },
   disabled: false
 })
-
-
 
 /**
  * START: SERVICE RECORD
@@ -1204,7 +1245,6 @@ async function get_position() {
   position_data.value = data
 }
 
-
 // Education data
 const education_data = ref([])
 async function get_education() {
@@ -1231,7 +1271,6 @@ async function get_rating() {
   rating_data.value = data
 }
 
-
 const sg_data = ref<SalaryGrade[]>([]);
 async function get_sg() {
   const { data, error } = await $rest('sms-salary-grade/get-sg', {
@@ -1257,32 +1296,12 @@ function next_to_step2() {
   }
 }
 
-
-
 function cancel_application() {
   location.reload();
 }
 
-
 const unit_items = Array.from({ length: 19 }, (_, index) => index + 1);
 
-
-
-
-// function education_matching(applicant_education: any, required_education: any) {
-//   if (!required_education) {
-//     return false;
-//   }
-//   console.log("applicant_education", applicant_education);
-//   console.log("required_education", required_education);
-//   const [result] = required_education.map((v: string) =>
-//     applicant_education.includes(v)
-//   );
-
-//   console.log("result", result);
-
-//   return result;
-// }
 function education_matching(applicant_education: string[], required_education: string[]): boolean {
   if (!required_education || !applicant_education) {
     return false;
@@ -1295,34 +1314,6 @@ function education_matching(applicant_education: string[], required_education: s
   return result;
 }
 
-
-// function education_matching(applicant_education: string, required_education: string[]) {
-//   if (!required_education || required_education.length === 0) {
-//     return false;
-//   }
-//   console.log("required_education", required_education);
-//   console.log("applicant_education", applicant_education);
-
-
-//   const result = required_education.includes(applicant_education);
-//   console.log("RESULLTT ", result);
-
-//   return result;
-// }
-// function experience_matching(applicant_experience: any, required_experience: any) {
-//   if (!required_experience) {
-//     return false;
-//   }
-//   console.log("applicant_experience", applicant_experience);
-//   console.log("required_experience", required_experience);
-
-//   const [result] = required_experience.map((v: string) => applicant_experience.includes(v));
-//   console.log("result", result);
-
-//   return result;
-// }
-
-
 function experience_matching(applicant_experience: any[], required_experience: any[]) {
   if (!required_experience) {
     return false;
@@ -1331,32 +1322,13 @@ function experience_matching(applicant_experience: any[], required_experience: a
   return result;
 }
 
-// function rating_matching(applicant_rating: string, required_rating: string) {
-//   if (!required_rating) return true;
-//   return applicant_rating == required_rating;
-// };
 function rating_matching(applicant_rating: string, required_rating: string[]) {
   if (!required_rating || required_rating.length === 0) {
     return false;
   }
-
   const result = required_rating.includes(applicant_rating);
-
   return result;
 }
-// function rating_matching(applicant_rating: any, required_rating: any) {
-//   if (!required_rating) {
-//     return false;
-//   }
-//   console.log("required_rating", required_rating);
-
-//   const [result] = required_rating.map((v: string) => applicant_rating.includes(v));
-//   console.log("applicant_rating", applicant_rating);
-
-//   console.log("resssullllt", result);
-
-//   return result;
-// }
 
 function training_matching(applicant_training: number, required_training: number) {
   applicant_training = parseFloat(applicant_training.toString());
@@ -1368,49 +1340,45 @@ function leadership_points_matching(applicant_lead: any[], required_lead: any[])
   if (!required_lead) {
     return false;
   }
-  console.log("applicant_lead", applicant_lead);
-  console.log("required_lead", required_lead);
-
   const result = required_lead.some((exp: string) => applicant_lead.includes(exp));
-  console.log("result", result);
   return result;
-
-
 
 }
 
 const principal_form = ref()
-
+const loading = ref(false)
 
 // CREATE 
-
 async function create_application() {
-  if (!principal_form.value.isValid) return swal({ text: "Principal Email is requried!", icon: "info" })
-  loader.set("Sending application form...");
-
-  const { attachments, request_log } = applicant.value;
+  if (!principal_form.value.isValid) {
+    return swal({ text: "Principal Email is required!", icon: "info" });
+  }
+  const { attachments } = applicant.value;
   const temp = new FormData();
 
   Object.entries(attachments).forEach(([title, file]) => {
     file.forEach((v: any) => {
-      const key = `${title}-${v.name}`
-      temp.append(key, v)
+      const key = `${title}-${v.name}`;
+      temp.append(key, v);
     });
   });
   const temp2 = Object.assign({}, applicant.value);
   delete temp2.attachments;
   temp.append("form", JSON.stringify(temp2));
-
-
+  loading.value = true
   const { data, error } = await $rest('new-applicant/create-application', {
     method: "POST",
     body: temp
-  })
+  });
 
-  loader.set(false);
-  if (error) return swal({ title: "Error", text: error, icon: "error" })
-  return swal({ title: "Sucess", text: data, icon: "success" })
+  loading.value = false
+  applicant_form.value.reset()
+  if (error) return swal({ title: "Error", text: error, icon: "error" });
+  return swal({ title: "Success", text: data, icon: "success" });
+
 }
+
+
 
 async function update_applicant() {
   get_applicant_details()
@@ -1442,7 +1410,6 @@ async function get_applicant_details() {
   if (!route.query.id) {
     return;
   }
-
   const { data, error } = await $rest('new-applicant/get-applicant', {
     method: 'GET',
     query: {
@@ -1456,7 +1423,6 @@ async function get_applicant_details() {
   if (!error) return swal({ title: "Oops!", text: "Failed to fetch data!", icon: "info" });
 
 }
-
 
 /**
  * MATCHING
@@ -1484,13 +1450,9 @@ function next_window() {
     if (is_yes.includes(false)) return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" })
     confirmation_dialog.value = true
 
-    console.log("ISSSS YESSSSSSS", is_yes);
-
   } else {
 
     const selected_position: { _id: string; education: string[] } | undefined = position_data.value.filter((v: any) => v._id == applicant.value.qualification.position)[0];
-
-
     if (!selected_position) return swal({ title: "Oops!", text: "Select position", icon: "info" });
 
     const applicant_education = applicant.value.qualification.education;
@@ -1511,18 +1473,10 @@ function next_window() {
     const applicant_status_of_appointment = applicant.value.qualification.status_of_appointment
 
 
-
-
     const is_yes: boolean[] = [];
-    console.log("ISSSSSS", is_yes);
-
-
-
 
     is_yes.push(education_matching(applicant_education, selected_position.education));
-    // if(selected_position.education_level != ''){
-    //      is_yes.push(applicant_education_level === selected_position.education_level);
-    // }
+
     is_yes.push(experience_matching(applicant_experience, selected_position.experience));
 
     if (selected_position.rating && selected_position.rating.length) {
@@ -1537,8 +1491,6 @@ function next_window() {
     if (selected_position.leadership_points && selected_position.leadership_points.length) {
       is_yes.push(leadership_points_matching(applicant_leadership_points, selected_position.leadership_points));
     }
-    // console.log("ITSSS TRUEE I MEAN IT", selected_position.leadership_points);
-
     if (selected_position?.status_of_appointment === true) {
       if (applicant_status_of_appointment === true) {
         is_yes.push(true);
@@ -1546,19 +1498,8 @@ function next_window() {
         is_yes.push(false);
       }
     }
-
-
-
-
-
-
-    console.log("ISSSSS111S", is_yes);
     if (is_yes.includes(false)) return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" })
-
     confirmation_dialog.value = true
-
-
-
   }
 }
 
@@ -1604,23 +1545,15 @@ function next_teacher3() {
         is_yes.push(applicant.value.qualification.ma_units >= 20);
       };
 
-
-      console.log("iS YESSS", is_yes);
       if (is_yes.includes(false)) {
         return swal({ title: "ALERT!", text: "Sorry, you are not qualified for this position.", icon: "info" });
       }
-
-
       confirmation_dialog.value = true;
     } else {
       confirmation_dialog.value = true;
     }
   });
 }
-
-
-
-
 
 const public_equivalent_ma_units = computed(() => {
   const public_experience = Number(applicant.value.qualification.experience_sr_public);
