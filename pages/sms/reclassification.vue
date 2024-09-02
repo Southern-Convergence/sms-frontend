@@ -55,6 +55,14 @@
 
           </v-row>
 
+          <v-row dense v-if="user.role === 'Evaluator' && user.side === 'RO'">
+            <v-col cols="3">
+              <v-select label="Filter per School" v-model="selected_school" :items="school_name" />
+            </v-col>
+            <v-col cols="auto"> <v-btn @click="get_application" class="mt-1" color="primary">
+                <v-icon class="pr-1">mdi-filter</v-icon>Filter</v-btn></v-col>
+          </v-row>
+
           <commons-item-container title="Reclass Application/s" icon="mdi-note-text-outline"
             :items="get_applicant_by_status(status.value)" :display_types="['grid', 'table']">
 
@@ -237,6 +245,7 @@ onBeforeMount(() => {
     get_sdo(),
     get_position(),
     get_ro_evaluators(),
+    get_school()
 
   ]);
 
@@ -283,6 +292,7 @@ async function get_application() {
     position: selected_position.value,
     sdo: selected_sdo.value,
     status: selected_status.value,
+    school: selected_school.value
 
   };
 
@@ -381,7 +391,20 @@ async function generate_endorsement() {
 
 
 
+const schools = ref<School[]>([]);
+const school_name = ref<string[]>([]);
+const selected_school = ref<string>("");
 
+async function get_school() {
+  const { data, error } = await $rest('new-applicant/get-school', {
+    method: "GET"
+  });
+
+  if (data) {
+    schools.value = data;
+    school_name.value = schools.value.map(school => school.name);
+  }
+}
 
 </script>
 

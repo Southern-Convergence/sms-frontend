@@ -53,7 +53,7 @@
                         style="font-family: Century Gothic; font-size:25px ; line-height: 30px;text-align: justify">
                         The Staffing Modification System automates reclassification requests for school
                         personnel
-                        (T2, T3, MT, HT, and Principal) from application to approval, providing real-time status
+                        (T2, T3, SPED, MT, HT, and Principal) from application to approval, providing real-time status
                         updates. It
                         streamlines the process, eliminates paperwork, and supports remote work by allowing access
                         to
@@ -449,7 +449,12 @@
                   </v-col>
                   <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
                     <v-text-field v-model="applicant.designation.district" :rules="[$validator.required]"
-                      label="District" hide-details />
+                      label="District" hide-details hint="" />
+                  </v-col>
+                  {{ applicant.designation.school }}
+                  <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1" v-if="is_school(qs?.title)">
+                    <v-text-field v-model="applicant.designation.school" label="School Name"
+                      hint="Please provide the complete official name of the school." persistent-hint />
                   </v-col>
 
                   <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
@@ -955,6 +960,7 @@ const applicant = ref({
     plantilla_no: "",
     division: "",
     district: "",
+    school: "",
     item_no: "",
     ipcrf_rating: "",
   },
@@ -986,11 +992,28 @@ const applicant = ref({
   approved: null,
 })
 
+function is_school(title: string): boolean {
+  const position_needs_school = [
+    'Master Teacher I',
+    'Master Teacher II',
+    'Head Teacher I',
+    'Head Teacher II',
+    'Head Teacher III',
+    'Head Teacher IV',
+    'Head Teacher V',
+    'Head Teacher VI',
+  ];
+  return position_needs_school.includes(title);
+}
+
 const back = () => {
   if (step.value === 4 && !qs?.value?.with_erf) return step.value = 2;
   return step.value--;
 }
 const next = () => {
+  if (is_school(qs.value.title) && applicant.value.designation.school === '') {
+    return swal({ text: "School field is required for the selected position!", icon: "info" });
+  }
   if (!applicant_form.value.isValid) return swal({ text: "Complete required fields", icon: "info" })
   if (applicant.value.personal_information.signature === '') return swal({ text: "E-signature is required!", icon: "info" })
   if (step.value === 2 && !qs?.value?.with_erf) return step.value = 4;
