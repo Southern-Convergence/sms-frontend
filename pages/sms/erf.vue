@@ -87,14 +87,38 @@
                       <span class="font-weight-bold  text-uppercase text-caption" density="compact">
                         II. Service Record
                       </span>
-                      <v-sheet class="mb-2" border width="70%">
+
+                      <v-sheet class="mb-2" border width="80%">
                         <v-data-table :headers="service_record_headers" :items="applicant_details.service_record"
                           density="compact"> <template #bottom v-if="!show_footer" />
                         </v-data-table>
                       </v-sheet>
-                      <span class="font-weight-bold text-uppercase text-caption">
+                      <v-sheet class="px-3 pt-3" border width="50%">
+                        <v-subtitle>
+                          <v-icon color="primary">mdi-calendar-month</v-icon>
+                          <span class="ml-2">Service Record Summary</span>
+                        </v-subtitle>
+                        <v-divider />
+                        <v-card-text>
+                          <v-row justify="center">
+                            <v-col cols="12" md="6">
+                              Total Year: <v-chip class="px-4" color="primary"> {{
+                                applicant_details?.equivalent_unit?.public_years_teaching }}
+                              </v-chip>
+                            </v-col>
+                            <v-col cols="12" md="6">
+                              Equivalent: <v-chip class="px-4" color="secondary"> {{
+                                applicant_details?.equivalent_unit?.yt_equivalent }}
+                              </v-chip>
+                            </v-col>
+                          </v-row>
+                        </v-card-text>
+
+                      </v-sheet>
+
+                      <p class="mt-3 font-weight-bold text-uppercase text-caption">
                         III. EQUIVALENT UNITS
-                      </span>
+                      </p>
                     </v-sheet>
 
                     <v-sheet class="ma-2 ml-15">
@@ -965,7 +989,10 @@ const attainment_headers = [
 const service_record_headers = [
   { title: 'Designation', key: 'designation', sortable: false },
   { title: 'From', key: 'from', sortable: false },
-  { title: 'To', key: 'to', sortable: false }
+  { title: 'To', key: 'to', sortable: false },
+  { title: "Year Count", key: "count", sortable: false },
+  { title: "Equivalent", key: "equivalent", sortable: false }
+
 ];
 const professional_study_headers =
   [
@@ -987,7 +1014,7 @@ const applicant_history = (id) => {
   });
 }
 
-const applicant_erf = (id) => {
+const applicant_erf = (id: any) => {
   router.push({
     name: 'printable-erf',
     query: {

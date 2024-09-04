@@ -481,6 +481,16 @@
                 </v-card-title>
                 <v-sheet border class="mx-4 mb-4">
                   <v-data-table :headers="education_attainment_headers" :items="applicant.educational_attainment">
+                    <template v-slot:item.actions="{ item }">
+                      <v-btn density="comfortable" color="error" dark icon variant="tonal" class="mx-2"
+                        @click="remove_table_item(item.selectable)">
+                        <v-icon icon left color="error">mdi-delete</v-icon>
+                      </v-btn>
+                      <!-- <v-btn density="comfortable" color="primary" dark icon variant="tonal" class="mx-2"
+                        @click="confirm_update(item.selectable)">
+                        <v-icon left>mdi-pencil</v-icon>
+                      </v-btn> -->
+                    </template>
                     <template #bottom v-if="!show_footer" /> </v-data-table>
                 </v-sheet>
                 <v-row dense class="mx-4">
@@ -506,16 +516,44 @@
                   <v-btn @click="service_record_dialog = true" density="compact" icon="mdi-plus" color="success" />
                 </v-card-title>
                 <v-row dense>
-
-                  <v-col cols="8">
-                    <v-sheet border>
+                  <v-col cols="7">
+                    <v-sheet border class="mx-4 mb-4">
                       <v-data-table :headers="service_record_headers" :items="applicant.service_record"
                         density="compact">
+                        <template v-slot:item.actions="{ item }">
+                          <v-btn density="comfortable" color="error" dark icon variant="tonal" class="ma-1"
+                            @click="remove_table_item(item.selectable)">
+                            <v-icon icon left color="error">mdi-delete</v-icon>
+                          </v-btn>
+                        </template>
                         <template v-slot:bottom v-if="!show_footer"></template>
                       </v-data-table>
                     </v-sheet>
-                  </v-col>
 
+                  </v-col>
+                  <v-col cols="3">
+                    <v-sheet border class="pa-3">
+                      <v-subtitle>
+                        <v-icon color="primary">mdi-calendar-month</v-icon>
+                        <span class="ml-2">Service Record Summary</span>
+                      </v-subtitle>
+                      <v-divider />
+                      <v-card-text>
+                        <v-row justify="center">
+                          <v-col cols="12" md="6">
+                            Total Year: <v-chip class="px-4" color="primary"> {{
+                              applicant.equivalent_unit.public_years_teaching }}
+                            </v-chip>
+                          </v-col>
+                          <v-col cols="12" md="6">
+                            Equivalent: <v-chip class="px-4" color="secondary"> {{
+                              applicant.equivalent_unit.yt_equivalent }}
+                            </v-chip>
+                          </v-col>
+                        </v-row>
+                      </v-card-text>
+                    </v-sheet>
+                  </v-col>
                 </v-row>
               </v-card-text>
               <v-card-text>
@@ -528,7 +566,6 @@
                       <v-row dense>
                         <v-col cols="12" class="text-caption text-grey-darken-1"> A. Total Number of Years
                           Teaching</v-col>
-
                         <v-col cols="5"> <v-text-field v-model="applicant.equivalent_unit.public_years_teaching"
                             label="Public Only" hide-details density="compact" type="number" readonly /></v-col>
                         <v-col cols="5"> <v-text-field label="Equivalent"
@@ -551,7 +588,7 @@
                     <v-col cols="12" class="text-caption text-grey-darken-1 mt-2">
                       C. Areas of Equivalent
                     </v-col>
-                    <v-col cols="12" class="px-2">
+                    <v-col cols="10" class="px-2">
                       <v-sheet>
                         <v-card-title class="text-caption">
                           1. Professional Study
@@ -561,6 +598,12 @@
                         <v-sheet border class="mx-4">
                           <v-data-table :headers="professional_study_headers" :items="applicant.professional_study"
                             density="compact">
+                            <template v-slot:item.actions="{ item }">
+                              <v-btn density="comfortable" color="error" dark icon variant="tonal" class="ma-1"
+                                @click="remove_table_item(item.selectable)">
+                                <v-icon icon left color="error">mdi-delete</v-icon>
+                              </v-btn>
+                            </template>
                             <template #bottom v-if="!show_footer"> </template> </v-data-table>
                         </v-sheet>
                       </v-sheet>
@@ -574,12 +617,7 @@
                         hide-details type="number" readonly /></v-col>
                     <v-col cols="12" xl="4" lg="4" md="4" sm="12" class="px-2"> <v-text-field label="Private School"
                         type="number" /></v-col>
-
-
-
                   </v-row>
-
-
                 </v-card-text>
               </v-card-text>
             </v-window-item>
@@ -646,6 +684,7 @@
       :subtitle="'Your educational background and civil service information'" @submit="add_education_attainment"
       :submitText="'Add'">
       <v-card-text class="ma-3">
+        {{ education_attainment }}
         <v-row dense>
           <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field v-model="education_attainment.date"
               label="Date" hide-details type="date" /></v-col>
@@ -862,6 +901,24 @@
             </v-card-actions>
           </v-window-item>
         </v-window>
+      </v-card>
+    </v-dialog>
+    <v-dialog max-width="40%" v-model="remove_item_dialog">
+      <v-card class="pa-4">
+        <v-card-title class="text-h5 text--primary">
+          Remove item
+        </v-card-title>
+        <v-divider />
+        <v-card-text class="ma-4 text-center">
+          <v-icon large color="warning" class="mb-2">mdi-alert-circle</v-icon>
+          <div class="text-h6">Are you sure you want to remove this item?</div>
+          <div class="text-body-2 mt-2">This action cannot be undone.</div>
+        </v-card-text>
+        <v-divider />
+        <v-card-actions class="justify-end">
+          <v-btn color="success" @click="remove_item_dialog = false">Cancel</v-btn>
+          <v-btn color="error" variant="tonal" dark @click="delete_table_item">Remove</v-btn>
+        </v-card-actions>
       </v-card>
     </v-dialog>
 
@@ -1132,9 +1189,13 @@ function format_date(date: Date | string): string {
   return 'Invalid Date';
 }
 const service_record_headers = ref([
-  { title: "Designation", key: "designation" },
-  { title: "From", key: "from" },
-  { title: "To", key: "to" }
+  { title: "Designation", key: "designation", sortable: false },
+  { title: "From", key: "from", sortable: false },
+  { title: "To", key: "to", sortable: false },
+  { title: "Year Count", key: "count", sortable: false },
+  { title: "Equivalent", key: "equivalent", sortable: false },
+  { title: "Actions", key: "actions", sortable: false },
+
 
 ]);
 
@@ -1142,41 +1203,79 @@ const service_record = ref<ServiceRecord>({
   designation: "",
   from: new Date(),
   to: new Date(),
+  count: 0,
+  equivalent: 0
 })
 
 const service_record_dialog = ref(false)
 const service_records = ref<ServiceRecord[]>([]);
 const service_record_form = ref()
+// function add_service_record() {
+//   const new_service_record: ServiceRecord = {
+//     designation: service_record.value.designation,
+//     from: format_date(service_record.value.from),
+//     to: format_date(service_record.value.to),
+
+//   }
+//   applicant.value.service_record.push(new_service_record);
+
+//   service_records.value.push(service_record.value);
+//   service_record_form.value.reset();
+
+//   service_record_dialog.value = false;
+//   const result = applicant.value.service_record.map((v: ServiceRecord) => {
+//     const d1 = new Date(v.from);
+//     const d2 = new Date(v.to);
+
+//     const MONTHS = 12;
+//     const FACTOR = 1000 * 60 * 60 * 24 * 30;
+//     const diff = Date.parse(d2) - Date.parse(d1);
+//     return parseInt(diff / FACTOR / MONTHS);
+
+//   });
+
+//   const total_years = result.length ? result.reduce((a, b) => a + b) : 0;
+//   applicant.value.equivalent_unit.public_years_teaching = total_years;
+
+//   const total_year_equivalent = total_years / 5;
+//   applicant.value.equivalent_unit.yt_equivalent = total_year_equivalent;
+
+// }
 function add_service_record() {
+  const from_date = new Date(service_record.value.from);
+  const to_date = new Date(service_record.value.to);
+
+  const MONTHS = 12;
+  const FACTOR = 1000 * 60 * 60 * 24 * 30;
+  const diff = Date.parse(to_date) - Date.parse(from_date);
+  const yearCount = parseInt(diff / FACTOR / MONTHS);
+  const equivalent = yearCount / 5;
+
+
   const new_service_record: ServiceRecord = {
     designation: service_record.value.designation,
     from: format_date(service_record.value.from),
     to: format_date(service_record.value.to),
-  }
+    count: yearCount,
+    equivalent: equivalent,
+  };
+
+
   applicant.value.service_record.push(new_service_record);
+  service_records.value.push(new_service_record);
 
-  service_records.value.push(service_record.value);
+
   service_record_form.value.reset();
-
   service_record_dialog.value = false;
-  const result = applicant.value.service_record.map((v: ServiceRecord) => {
-    const d1 = new Date(v.from);
-    const d2 = new Date(v.to);
 
-    const MONTHS = 12;
-    const FACTOR = 1000 * 60 * 60 * 24 * 30;
-    const diff = Date.parse(d2) - Date.parse(d1);
-    return parseInt(diff / FACTOR / MONTHS);
 
-  });
-
-  const total_years = result.length ? result.reduce((a, b) => a + b) : 0;
-  applicant.value.equivalent_unit.public_years_teaching = total_years;
-
+  const total_years = applicant.value.service_record.reduce((total, record) => total + (record?.count || 0), 0);
   const total_year_equivalent = total_years / 5;
-  applicant.value.equivalent_unit.yt_equivalent = total_year_equivalent;
 
+  applicant.value.equivalent_unit.public_years_teaching = total_years;
+  applicant.value.equivalent_unit.yt_equivalent = total_year_equivalent;
 }
+
 /**
  * END: SERVICE RECORD
  */
@@ -1184,12 +1283,14 @@ function add_service_record() {
  * START: EDUCATIONAL ATTAINMENT
  */
 const education_attainment_headers = ref([
-  { title: "Titles, Dergree Highest Grade Attained", key: "degree" },
-  { title: "Institution", key: "institution" },
-  { title: "Year Received", key: "year_received" },
-  { title: "Board Examination", key: "board_exam" },
-  { title: "Rating", key: "rating" },
-  { title: "new Date", key: "date" },
+  { title: "Date", key: "date", sortable: false },
+  { title: "Titles, Dergree Highest Grade Attained", key: "degree", sortable: false },
+  { title: "Institution", key: "institution", sortable: false },
+  { title: "Year Received", key: "year_received", sortable: false },
+  { title: "Board Examination", key: "board_exam", sortable: false },
+  { title: "Rating", key: "rating", sortable: false },
+  { title: "Actions", key: "actions", sortable: false },
+
 ])
 
 const education_attainment_dialog = ref(false)
@@ -1201,6 +1302,7 @@ const education_attainment = ref<EducationalAttainment>({
   rating: 0,
   date: new Date()
 });
+
 function add_education_attainment() {
   const new_educ: EducationalAttainment = {
     degree: education_attainment.value.degree,
@@ -1220,6 +1322,43 @@ function add_education_attainment() {
     date: new Date(),
   };
 }
+const remove_item_dialog = ref(false);
+let remove_item = ref<any>(null);
+
+function remove_table_item(item: any) {
+  remove_item.value = item;
+  remove_item_dialog.value = true;
+}
+
+
+// function confirm_update(item: any) {
+//   remove_item.value = item;
+//   Object.assign(education_attainment.value, item);
+//   education_attainment_dialog.value = true;
+// }
+function delete_table_item() {
+  if (applicant.value.educational_attainment) {
+    const index = applicant.value.educational_attainment.indexOf(remove_item?.value);
+    if (index > -1) {
+      applicant.value.educational_attainment.splice(index, 1);
+    }
+  }
+  if (applicant.value.service_record) {
+    const index = applicant.value.service_record.indexOf(remove_item?.value);
+    if (index > -1) {
+      applicant.value.service_record.splice(index, 1);
+    }
+  }
+  if (applicant.value.professional_study) {
+    const index = applicant.value.professional_study.indexOf(remove_item?.value);
+    if (index > -1) {
+      applicant.value.professional_study.splice(index, 1);
+    }
+  }
+
+  remove_item_dialog.value = false;
+  remove_item.value = null;
+}
 /**)
  * END: EDUCATIONAL ATTAINMENT
  */
@@ -1229,9 +1368,10 @@ function add_education_attainment() {
  */
 
 const professional_study_headers = ref([
-  { title: "Designation", key: "sy" },
-  { title: "Unit Number", key: "unit_no" },
-  { title: "Description", key: "description" }
+  { title: "Designation", key: "sy", sortable: false },
+  { title: "Unit Number", key: "unit_no", sortable: false },
+  { title: "Description", key: "description", sortable: false },
+  { title: "Actions", key: "actions", sortable: false },
 ])
 const professional_study_dialog = ref(false)
 
