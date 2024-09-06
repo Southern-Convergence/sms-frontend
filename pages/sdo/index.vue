@@ -3,7 +3,7 @@
 
 
     <v-row no-gutters>
-      <v-col cols="12"><v-btn prepend-icon="mdi-pencil-plus" @click="user_invite_dialog = true" color="indigo"
+      <v-col cols="8"><v-btn prepend-icon="mdi-pencil-plus" @click="user_invite_dialog = true" color="indigo"
           rounded="0">
           Invite
           User</v-btn>
@@ -141,13 +141,60 @@
 
       </v-col>
 
+      <v-col cols="4" class="mt-11">
+        <v-card>
+          <v-toolbar class="d-block border" color="blue-darken-4">
+            <v-toolbar-title>
+              <v-icon size="20" color="amber" left>mdi-account-card-details</v-icon> SDS Information Details
+            </v-toolbar-title>
+          </v-toolbar>
+          <v-card-text>
+            <p class="mb-4">
+              Please complete the Schools Division Information for the details required in the transmittal to the
+              Regional Office.
+            </p>
+            <v-row dense>
+              <v-col cols="12">
+                <v-text-field v-model="sds.first_name" label="First Name" prepend-inner-icon="mdi-account"
+                  hide-details />
+              </v-col>
+              <v-col cols="12">
+                <v-text-field v-model="sds.middle_name" label="Middle Name" prepend-inner-icon="mdi-account"
+                  hide-details />
+              </v-col>
+              <v-col cols="12">
+                <v-text-field v-model="sds.last_name" label="Last Name" prepend-inner-icon="mdi-account" hide-details />
+              </v-col>
+              <v-col cols="12">
+                <v-text-field v-model="sds.suffix" label="Suffix" prepend-inner-icon="mdi-format-letter-case"
+                  hide-details />
+              </v-col>
+              <v-col cols="12">
+                <v-text-field v-model="sds.position" label="Position" prepend-inner-icon="mdi-briefcase" hide-details />
+              </v-col>
+              <v-col cols="12">
+                <v-text-field v-model="sds.ces_rank" label="CES Rank" prepend-inner-icon="mdi-star" hide-details />
+              </v-col>
+              <v-col cols="12">
+                <v-textarea v-model="sds.address" label="Address" prepend-inner-icon="mdi-map-marker" hide-details
+                  rows="3" />
+              </v-col>
+
+              <v-col cols="12" class="mt-2">
+
+                <v-btn v-if="!sds?._id" @click="create_sds" color="success" variant="tonal" block>Create</v-btn>
+                <v-btn v-else @click="update_sds" color="success" variant="tonal" block>Update</v-btn>
+
+              </v-col>
+            </v-row>
+          </v-card-text>
+
+        </v-card>
+
+      </v-col>
 
 
     </v-row>
-
-
-
-
 
     <!-- Dialog -->
     <v-dialog v-model="user_invite_dialog" max-width="40%">
@@ -168,7 +215,6 @@
         <v-card-text>
           <v-form ref="sdo_user_form">
             <v-row dense>
-
               <v-col cols="12"><v-text-field v-model="invitation_form.email" density="compact" label="Email address"
                   prepend-inner-icon="mdi-email-outline" required
                   :rules="[(v) => /.+@.+/.test(v) || 'Invalid Email address']" /></v-col>
@@ -178,20 +224,12 @@
                   label="Middlename" /></v-col>
               <v-col cols="4"><v-text-field v-model="invitation_form.last_name" density="compact" hide-details="auto"
                   label="Lastname" required :rules="[v => !!v || 'Lastname is required']" /></v-col>
-
-
-
-
               <v-col cols="6">
                 <v-select v-model="invitation_form.apts" :items="sdo_roles" item-title="name" return-object label="Role"
                   hide-details="auto" item-value="_id" :rules="[v => !!v || 'Role is required']" />
               </v-col>
-
-
             </v-row>
           </v-form>
-
-
         </v-card-text>
         <v-divider />
         <v-card-actions>
@@ -229,9 +267,9 @@ definePageMeta({ layout: "barren" })
 onBeforeMount(() => {
   Promise.all([
     get_users(),
-
     get_apts(),
-    load_resources()
+    load_resources(),
+    get_sds(),
   ])
 })
 
@@ -311,9 +349,6 @@ async function get_users() {
 }
 
 
-
-
-
 async function invite_user() {
   loader.set("Sending out invitation form...");
 
@@ -357,7 +392,49 @@ const sdo_roles = computed(() => {
 })
 
 
+const sds = ref<Sds>({
+  first_name: "",
+  middle_name: "",
+  last_name: "",
+  suffix: "",
+  position: "",
+  ces_rank: "",
+  address: ""
+})
 
+async function create_sds() {
+  const { data, error } = await $rest('sms-sds/create-sds', {
+    method: "POST",
+    body: { ...sds.value }
+  })
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+}
+
+async function get_sds() {
+  const { data, error } = await $rest('sms-sds/get-sds', {
+    method: "GET",
+  })
+  if (data) {
+    Object.assign(sds.value, data)
+  }
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+}
+
+async function update_sds() {
+  console.log("IDDDDDD", sds?.value);
+
+  const { data, error } = await $rest('sms-sds/update-sds', {
+    method: "PUT",
+    body: {
+      sds: sds.value
+    }
+  });
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+  get_sds()
+  return swal({ title: "Sucess", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+
+}
 
 
 </script>
