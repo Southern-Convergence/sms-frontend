@@ -88,6 +88,8 @@ interface ServiceRecord {
     designation: string;
     from: Date | string;
     to: Date | string;
+    count: number,
+    equivalent: number
 
 }
 

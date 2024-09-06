@@ -58,7 +58,7 @@
                 <v-row no-gutters class="ma-2" justify="center">
                   <v-col cols="6" class="text-capitalize">Name : <b> {{
                     applicant_details?.personal_information?.first_name
-                      }} {{ applicant_details?.personal_information?.last_name }} </b>
+                  }} {{ applicant_details?.personal_information?.last_name }} </b>
                   </v-col>
                   <v-col cols="6">Date of Birth : <b> {{
                     applicant_details?.personal_information?.birthday }}
@@ -87,14 +87,38 @@
                       <span class="font-weight-bold  text-uppercase text-caption" density="compact">
                         II. Service Record
                       </span>
-                      <v-sheet class="mb-2" border width="70%">
+
+                      <v-sheet class="mb-2" border width="80%">
                         <v-data-table :headers="service_record_headers" :items="applicant_details.service_record"
                           density="compact"> <template #bottom v-if="!show_footer" />
                         </v-data-table>
                       </v-sheet>
-                      <span class="font-weight-bold text-uppercase text-caption">
+                      <v-sheet class="px-3 pt-3" border width="50%">
+                        <v-subtitle>
+                          <v-icon color="primary">mdi-calendar-month</v-icon>
+                          <span class="ml-2">Service Record Summary</span>
+                        </v-subtitle>
+                        <v-divider />
+                        <v-card-text>
+                          <v-row justify="center">
+                            <v-col cols="12" md="6">
+                              Total Year: <v-chip class="px-4" color="primary"> {{
+                                applicant_details?.equivalent_unit?.public_years_teaching }}
+                              </v-chip>
+                            </v-col>
+                            <v-col cols="12" md="6">
+                              Equivalent: <v-chip class="px-4" color="secondary"> {{
+                                applicant_details?.equivalent_unit?.yt_equivalent }}
+                              </v-chip>
+                            </v-col>
+                          </v-row>
+                        </v-card-text>
+
+                      </v-sheet>
+
+                      <p class="mt-3 font-weight-bold text-uppercase text-caption">
                         III. EQUIVALENT UNITS
-                      </span>
+                      </p>
                     </v-sheet>
 
                     <v-sheet class="ma-2 ml-15">
@@ -260,14 +284,14 @@
 
           <!-- Applicant Attachment -->
 
-          <v-col cols="12" class="my-2"
+          <!-- <v-col cols="12" class="my-2"
             v-if="user && user.role === 'Evaluator' && applicant_details?.status === 'Approved for Printing'">
             <v-alert border="start" close-label="Close Alert" color="primary"
               title="Attach the Output Requirement for DBM." variant="outlined">
               <v-file-input class="mt-3" variant="solo" v-model="applicant_details.output_requirement"
                 label="Output Requirement" />
             </v-alert>
-          </v-col>
+          </v-col> -->
 
 
           <v-col cols="12" class="my-5" v-if="applicant_details.status === 'For DBM' && user.side == 'SDO'">
@@ -695,19 +719,12 @@ async function assign_evaluator_applicant() {
 }
 
 async function attach_output_requirement() {
-  /* @ts-ignore */
-  applicant_details.value.output_requirement[0] = {
-    data: applicant_details.value.output_requirement[0],
-    name: applicant_details.value.output_requirement[0].name,
-    type: applicant_details.value.output_requirement[0].type,
-  }
-  const form = new FormData();
-  form.append("sms", applicant_details.value.output_requirement[0].data)
-  form.append("app_id", applicant_details.value._id);
-
+  const payload = {
+    app_id: route.query.id,
+  };
   const { data, error } = await $rest('new-applicant/attach-output-requirement', {
     method: "POST",
-    body: form
+    body: payload
   })
 
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
@@ -972,7 +989,10 @@ const attainment_headers = [
 const service_record_headers = [
   { title: 'Designation', key: 'designation', sortable: false },
   { title: 'From', key: 'from', sortable: false },
-  { title: 'To', key: 'to', sortable: false }
+  { title: 'To', key: 'to', sortable: false },
+  { title: "Year Count", key: "count", sortable: false },
+  { title: "Equivalent", key: "equivalent", sortable: false }
+
 ];
 const professional_study_headers =
   [
@@ -994,7 +1014,7 @@ const applicant_history = (id) => {
   });
 }
 
-const applicant_erf = (id) => {
+const applicant_erf = (id: any) => {
   router.push({
     name: 'printable-erf',
     query: {
