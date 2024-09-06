@@ -16,25 +16,25 @@
     </h4>
     <h5
       style="font-family: Tahoma, sans-serif; font-size: 10pt; font-weight: bold;line-height: 1.2mm; margin-bottom: 5px">
-      Schools Division Office of {{ sdo }}</h5>
+      Schools Division Office of {{ $attrs.sdo }}</h5>
 
     <hr class="my-2" style="background-color: black; height: 2px" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { defineProps } from 'vue';
+// import { defineProps } from 'vue';
 
 
-interface Props {
-  sdo: string;
-}
+// interface Props {
+//   sdo: string;
+// }
 
 
-const props = defineProps<Props>();
+// const props = defineProps<Props>();
 
 
-const sdo = props.sdo;
+// const sdo = props.sdo;
 </script>
 
 <style scoped></style>
