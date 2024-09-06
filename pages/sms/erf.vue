@@ -5,10 +5,7 @@
           <v-col cols="8" class="font-weight-bold text-h6"> EVALUATION /
             LIST OF
             REQUIREMENTS FORM</v-col>
-          <v-col cols="4"> <v-btn v-if="applicant_details?.status != 'For Signature'"
-              @click="view_applicant_info_dialog = true" class="font-weight-bold " prepend-icon="mdi-book" color="amber"
-              block density="compact">View
-              Applicant QS</v-btn></v-col>
+
         </v-row></v-card-title>
 
       <v-card-text>
@@ -41,10 +38,13 @@
               class="font-weight-bold" prepend-icon="mdi-history" color="primary" density="compact">View
               HISTORY</v-btn>
             <v-btn v-if="applicant_details.is_with_erf && applicant_details?.status != 'For Signature'"
-              @click="applicant_erf(applicant_details._id)" class="font-weight-bold ml-2" prepend-icon="mdi-printer"
+              @click="applicant_erf(applicant_details._id)" class="font-weight-bold mx-2" prepend-icon="mdi-printer"
               color="primary" density="compact"> {{ applicant_details.is_with_erf
                 ? "Print ERF & Transmital" : "Print Transmital" }}
             </v-btn>
+            <v-btn v-if="applicant_details?.status != 'For Signature'" @click="view_applicant_info_dialog = true"
+              class="font-weight-bold" prepend-icon="mdi-book" color="amber" density="compact">View
+              Applicant QS</v-btn>
           </v-col>
 
           <!-- Applicant Personal Information -->
@@ -53,17 +53,7 @@
               <v-card-title class="d-flex  font-weight-bold">
                 {{ applicant_details.is_with_erf === true ? '1. EQUIVALENT RECORD FORM ' : 'Applicant Details'
                 }}<v-spacer />
-                <!-- <span class="pr-2"> <v-btn v-if="applicant_details?.status != 'For Signature'"
-                    @click="applicant_history(applicant_details._id)" class="font-weight-bold"
-                    prepend-icon="mdi-history" color="primary" block density="compact">View
-                    HISTORY</v-btn></span>
 
-                <span>
-                  <v-btn v-if="applicant_details.is_with_erf && applicant_details?.status != 'For Signature'"
-                    @click="applicant_erf(applicant_details._id)" class="font-weight-bold ml-2"
-                    prepend-icon="mdi-printer" color="primary" block density="compact"> {{ applicant_details.is_with_erf
-                      ? "Print ERF & Transmital" : "Print Transmital" }}
-                  </v-btn></span> -->
               </v-card-title>
               <v-card-text>
                 <v-row no-gutters class="ma-2" justify="center">
