@@ -36,13 +36,24 @@
         </v-row>
         <!-- Application header -->
         <v-row dense>
+          <v-col cols="8">
+            <v-btn v-if="applicant_details?.status != 'For Signature'" @click="applicant_history(applicant_details._id)"
+              class="font-weight-bold" prepend-icon="mdi-history" color="primary" density="compact">View
+              HISTORY</v-btn>
+            <v-btn v-if="applicant_details.is_with_erf && applicant_details?.status != 'For Signature'"
+              @click="applicant_erf(applicant_details._id)" class="font-weight-bold ml-2" prepend-icon="mdi-printer"
+              color="primary" density="compact"> {{ applicant_details.is_with_erf
+                ? "Print ERF & Transmital" : "Print Transmital" }}
+            </v-btn>
+          </v-col>
 
           <!-- Applicant Personal Information -->
           <v-col :cols="applicant_details.is_with_erf ? '8' : '12'">
-            <v-card class="mx-auto mt-4" rounded="lg" border>
+            <v-card class="mx-auto" rounded="lg" border>
               <v-card-title class="d-flex  font-weight-bold">
                 {{ applicant_details.is_with_erf === true ? '1. EQUIVALENT RECORD FORM ' : 'Applicant Details'
-                }}<v-spacer /><span class="pr-2"> <v-btn v-if="applicant_details?.status != 'For Signature'"
+                }}<v-spacer />
+                <!-- <span class="pr-2"> <v-btn v-if="applicant_details?.status != 'For Signature'"
                     @click="applicant_history(applicant_details._id)" class="font-weight-bold"
                     prepend-icon="mdi-history" color="primary" block density="compact">View
                     HISTORY</v-btn></span>
@@ -50,9 +61,9 @@
                 <span>
                   <v-btn v-if="applicant_details.is_with_erf && applicant_details?.status != 'For Signature'"
                     @click="applicant_erf(applicant_details._id)" class="font-weight-bold ml-2"
-                    prepend-icon="mdi-printer" color="primary" block density="compact">
-                    Print
-                    ERF</v-btn></span>
+                    prepend-icon="mdi-printer" color="primary" block density="compact"> {{ applicant_details.is_with_erf
+                      ? "Print ERF & Transmital" : "Print Transmital" }}
+                  </v-btn></span> -->
               </v-card-title>
               <v-card-text>
                 <v-row no-gutters class="ma-2" justify="center">

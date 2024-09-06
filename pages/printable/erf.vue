@@ -241,19 +241,23 @@
               <div class="w-100" style="display: grid; place-items: center;">
                 <v-img :width="197" height="3vh" />
               </div>
-              <v-sheet class="text-center text-uppercase font-weight-bold" height="2vh"></v-sheet>
+              <div class="text-center text-uppercase font-weight-bold"> {{ sds.first_name }} {{
+                sds.middle_name
+                  ? sds.middle_name.charAt(0).toUpperCase() + '.' : "" }} {{
+                  sds.last_name }} {{ sds.suffix ? sds.suffix : "" }} {{ sds.ces_rank ? sds.ces_rank : "" }}</div>
+
               <hr />
               <center> School Division Superintendent </center>
             </div>
 
             <div class="w-50 justify-center  px-5">
-              <!-- {{ erf.assignees[2] }} -->
+
 
               <div class="w-100" style="display: grid; place-items: center;">
-                <v-img :width="197" height="3vh" :src="erf?.sdo_evaluator_esig" />
+                <v-img :width="197" height="3vh" :src="erf?.sdo_admin4_esig" />
               </div>
-              <div class="text-center text-uppercase font-weight-bold"> {{ erf?.sdo_evaluator_name ?
-                erf?.sdo_evaluator_name : '' }}</div>
+              <div class="text-center text-uppercase font-weight-bold"> {{ erf?.sdo_admin4_name ?
+                erf?.sdo_admin4_name : "" }}</div>
               <hr />
               <center> Evaluator </center>
             </div>
@@ -316,8 +320,9 @@
     </body>
 
 
-    <body class="printable-page">
+    <body class="printable-page" v-if="display_indorsement()">
       <div class="content">
+
         <commons-sdo-header :sdo="erf.division" />
 
 
@@ -341,8 +346,8 @@
             </v-col>
             <v-col cols="4">
               <v-row dense>
-                <v-col cols="4">DATE</v-col>
-                <v-col cols="8" class="font-weight-bold">:
+                <v-col cols="3">DATE</v-col>
+                <v-col cols="9" class="font-weight-bold">:
                   {{ erf?.assignees && erf.assignees.length ?
                     new Date(erf.assignees[2].timestamp).toLocaleDateString('en-US', {
                       month: 'long',
@@ -377,8 +382,8 @@
             </v-col>
             <v-col cols="4">
               <v-row dense>
-                <v-col cols="4">TO</v-col>
-                <v-col cols="8" class="font-weight-bold">: {{ erf.position }}
+                <v-col cols="3">TO</v-col>
+                <v-col cols="9" class="font-weight-bold">: {{ erf.position }}
                   <hr />
                 </v-col>
               </v-row>
@@ -479,8 +484,13 @@
             <v-col cols="5">
               <v-row dense>
                 <v-col cols="12"> Evaluated by:</v-col>
-                <v-col cols="12" class="text-center font-weight-bold"> {{ erf?.assignees && erf.assignees.length ?
-                  erf.assignees[1].name : '' }}
+
+                <v-col cols="12">
+                  <v-img :width="197" height="3vh" :src="erf?.sdo_admin4_esig" />
+
+                </v-col>
+                <v-col cols="12" class="text-center font-weight-bold text-uppercase"> {{ erf?.sdo_admin4_name ?
+                  erf?.sdo_admin4_name : "" }}
                   <hr />
                 </v-col>
                 <v-col cols="12" class="text-center"> Administrative Officer IV
@@ -492,8 +502,9 @@
             <v-col cols="5">
               <v-row dense>
                 <v-col cols="12"> Indorsed by:</v-col>
-                <v-col cols="12" class="text-center font-weight-bold"> {{ sds.first_name }} {{ sds.middle_name
-                  ? sds.middle_name.charAt(0).toUpperCase() + '.' : "" }} {{
+                <v-col cols="12" class="text-center font-weight-bold text-uppercase"> {{ sds.first_name }} {{
+                  sds.middle_name
+                    ? sds.middle_name.charAt(0).toUpperCase() + '.' : "" }} {{
                     sds.last_name }} {{ sds.suffix ? sds.suffix : "" }} {{ sds.ces_rank ? sds.ces_rank : "" }}
                   <hr />
                 </v-col>
@@ -577,7 +588,16 @@ async function get_sds() {
 function print() {
   window.print();
 }
-
+const display_indorsement = () => {
+  const acceptableStatuses = [
+    "Approved for Printing",
+    "Received Printout/s",
+    "For DBM",
+    "Completed"
+  ];
+  const status = erf?.value?.status;
+  return acceptableStatuses.includes(status);
+};
 </script>
 <style scoped>
 .printable-page {
