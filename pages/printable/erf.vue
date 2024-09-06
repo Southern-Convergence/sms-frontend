@@ -315,9 +315,12 @@
       </div>
     </body>
 
+
     <body class="printable-page">
       <div class="content">
-        <commons-header />
+        <commons-sdo-header :sdo="erf.division" />
+
+
         <v-sheet class="mx-5" v-if="erf">
           <h4 style="font-size: 14px" class="text-center text-uppercase gont-weight-bold my-3"> Evaluation/List of
             Requirements for {{
@@ -325,12 +328,13 @@
             }}</h4>
 
           <v-row dense>
+
             <v-col cols="8">
               <v-row dense>
                 <v-col cols="3">TO</v-col>
-                <v-col cols="9" class="font-weight-bold">: {{ rd.rd.first_name }} {{
-                  rd.rd.middle_name }} {{
-                    rd.rd.last_name }}
+                <v-col cols="9" class="font-weight-bold">: {{ rd?.rd?.first_name }} {{
+                  rd?.rd?.middle_name }} {{
+                    rd?.rd?.last_name }}
                   <hr />
                 </v-col>
               </v-row>
@@ -382,42 +386,41 @@
           </v-row>
 
           <v-row dense>
+
             <v-col cols="12">
-              <v-col cols="12">
 
-                <table border="1">
-                  <thead>
-                    <tr class="font-weight-bold">
-                      <th width="200px">Who will prepare</th>
-                      <th width="350px">Requirements</th>
-                      <th>Remarks</th>
-                    </tr>
-                  </thead>
-                  <tbody>
+              <table border="1">
+                <thead>
+                  <tr class="font-weight-bold">
+                    <th width="200px">Who will prepare</th>
+                    <th width="350px">Requirements</th>
+                    <th>Remarks</th>
+                  </tr>
+                </thead>
+                <tbody>
 
-                    <tr v-for="(attachment, index) in Object.values(erf?.attachments || {})" :key="index">
-                      <td class="pa-2" v-if="index === 0" :rowspan="Object.values(erf?.attachments || {}).length">
-                        Teacher Applicant/School
-                      </td>
-                      <td class="pa-2">{{ attachment?.description }}</td>
+                  <tr v-for="(attachment, index) in Object.values(erf?.attachments || {})" :key="index">
+                    <td class="pa-1" v-if="index === 0" :rowspan="Object.values(erf?.attachments || {}).length">
+                      Teacher Applicant/School
+                    </td>
+                    <td class="pa-1">{{ attachment?.description }}</td>
 
-                      <td class="text-center">Completed</td>
-                    </tr>
+                    <td class="text-center">Completed</td>
+                  </tr>
 
-                    <!-- Additional static rows if needed -->
-                    <tr>
-                      <td class="pa-2">Schools Divisions Office</td>
-                      <td class="pa-2">PAL</td>
-                      <td class="text-center">Completed</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-              </v-col>
-
-
+                  <!-- Additional static rows if needed -->
+                  <tr>
+                    <td class="pa-1">Schools Divisions Office</td>
+                    <td class="pa-1">PAL</td>
+                    <td class="text-center">Completed</td>
+                  </tr>
+                </tbody>
+              </table>
 
             </v-col>
+
+
+
 
 
 
@@ -430,19 +433,19 @@
 
                 <v-col cols="12">
                   <v-row dense class="d-flex align-center">
-                    <v-col cols="1"> <v-checkbox v-model="checkbox" hide-details color="success" /></v-col>
+                    <v-col cols="1"> <v-checkbox hide-details color="success" /></v-col>
                     <v-col cols="11"> Submission of Lacking Documents</v-col>
                   </v-row>
                 </v-col>
                 <v-col cols="12">
                   <v-row dense class="d-flex align-center">
-                    <v-col cols="1"> <v-checkbox v-model="checkbox" hide-details color="success" /></v-col>
+                    <v-col cols="1"> <v-checkbox hide-details color="success" /></v-col>
                     <v-col cols="11"> Correcyion of Entries</v-col>
                   </v-row>
                 </v-col>
                 <v-col cols="12">
                   <v-row dense class="d-flex align-center">
-                    <v-col cols="1"> <v-checkbox v-model="checkbox" hide-details color="success" /></v-col>
+                    <v-col cols="1"> <v-checkbox hide-details color="success" /></v-col>
                     <v-col cols="11"> Compliance of Deficiency</v-col>
                   </v-row>
                 </v-col>
@@ -463,7 +466,7 @@
                 </v-col>
                 <v-col cols="12">
                   <v-row dense class="d-flex align-center">
-                    <v-col cols="1"> <v-checkbox v-model="checkbox" hide-details color="success" /></v-col>
+                    <v-col cols="1"> <v-checkbox hide-details color="success" /></v-col>
                     <v-col cols="11"> For Return to applicant/school</v-col>
                   </v-row>
                 </v-col>
@@ -472,7 +475,7 @@
           </v-row>
 
 
-          <v-row dense justify="end" class="mt-5">
+          <v-row dense justify="end" class="mt-2">
             <v-col cols="5">
               <v-row dense>
                 <v-col cols="12"> Evaluated by:</v-col>
@@ -480,9 +483,7 @@
                   erf.assignees[1].name : '' }}
                   <hr />
                 </v-col>
-                <v-col cols="12" class="text-center"> {{ erf?.assignees && erf.assignees.length ?
-                  erf.assignees[1].name : '' }}
-
+                <v-col cols="12" class="text-center"> Administrative Officer IV
                 </v-col>
               </v-row>
             </v-col>
@@ -491,11 +492,12 @@
             <v-col cols="5">
               <v-row dense>
                 <v-col cols="12"> Indorsed by:</v-col>
-                <v-col cols="12" class="text-center font-weight-bold"> {{ erf?.assignees && erf.assignees.length ?
-                  erf.assignees[1].name : '' }}
+                <v-col cols="12" class="text-center font-weight-bold"> {{ sds.first_name }} {{ sds.middle_name
+                  ? sds.middle_name.charAt(0).toUpperCase() + '.' : "" }} {{
+                    sds.last_name }} {{ sds.suffix ? sds.suffix : "" }} {{ sds.ces_rank ? sds.ces_rank : "" }}
                   <hr />
                 </v-col>
-                <v-col cols="12" class="text-center"> Schools Division Superintendent
+                <v-col cols="12" class="text-center"> {{ sds.position }}
                 </v-col>
               </v-row>
             </v-col>
@@ -518,6 +520,7 @@
 <script lang="ts" setup>
 const router = useRouter();
 import swal from 'sweetalert';
+
 import useAuth from "~/store/auth";
 
 const { $rest } = useNuxtApp()
@@ -525,7 +528,8 @@ const route = useRoute();
 onBeforeMount(() => {
   Promise.all([
     get_erf(),
-    get_rd()
+    get_rd(),
+    get_sds()
   ]);
 
 
@@ -561,6 +565,15 @@ async function get_rd() {
   rd.value = data
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
 }
+const sds = ref({} as Sds)
+async function get_sds() {
+  const { data, error } = await $rest('sms-sds/get-sds', {
+    method: "GET",
+  })
+  sds.value = data
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+}
+
 function print() {
   window.print();
 }

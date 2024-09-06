@@ -63,3 +63,13 @@ interface Leadership {
   tile: string,
 
 }
+
+interface Sds {
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  suffix: string;
+  position: string;
+  ces_rank: string;
+  address: string
+}
