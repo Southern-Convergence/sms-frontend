@@ -486,10 +486,7 @@
                         @click="remove_table_item(item.selectable)">
                         <v-icon icon left color="error">mdi-delete</v-icon>
                       </v-btn>
-                      <!-- <v-btn density="comfortable" color="primary" dark icon variant="tonal" class="mx-2"
-                        @click="confirm_update(item.selectable)">
-                        <v-icon left>mdi-pencil</v-icon>
-                      </v-btn> -->
+
                     </template>
                     <template #bottom v-if="!show_footer" /> </v-data-table>
                 </v-sheet>
@@ -684,7 +681,7 @@
       :subtitle="'Your educational background and civil service information'" @submit="add_education_attainment"
       :submitText="'Add'">
       <v-card-text class="ma-3">
-        {{ education_attainment }}
+
         <v-row dense>
           <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field v-model="education_attainment.date"
               label="Date" hide-details type="date" /></v-col>
