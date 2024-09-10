@@ -175,12 +175,14 @@
               Department of Budget and Management, National Capital Region</b>,<b> Misamis St., Bago Bantay, Quezon
               City</b>,
             enclosing herein with copies of the Plantilla Allocation List covering the implementing approved Equivalent
-            Record Forms (ERF) of the folliwing Master Teacher IV, <b> Division of Manila</b>, this Region, for
+            Record Forms (ERF) of the folliwing Master Teacher IV, <b> Division of {{ application_data[0].division }}
+            </b>,
+            this Region, for
             post-audit
             and
             approval,
             chargeable
-            against the lump su, appropriation for reclassification of positions for CY 2024 to with:
+            against the lump sum, appropriation for reclassification of positions for CY 2024 to with:
 
 
             <v-card class="mt-5" flat>
