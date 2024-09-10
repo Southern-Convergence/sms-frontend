@@ -121,10 +121,16 @@
           </v-sheet>
 
           <v-card class="overflow-y-auto py-4" height="70vh" width="100%">
+
             <v-card-text v-if="applicant_history?.request_log && applicant_history.request_log.length > 0">
+
               <v-alert class="pa-4 ma-4 elevation-3" rounded="lg" v-for="(att, index) in reverse_logs" :key="index"
                 border="start" color="grey-lighten-5">
-
+                <p class="pl-6" v-if="applicant_history?.request_log?.slice(-1)[0]?.type === 'RO'">
+                  Please be patient as the <b>Regional Office </b>is processing a high volume of
+                  reclassification
+                  request.
+                </p>
 
                 <v-card-subtitle>
                   <v-icon icon="mdi-file-document" class="mr-1" color="indigo" /> Status :
