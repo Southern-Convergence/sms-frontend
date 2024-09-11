@@ -85,12 +85,26 @@ interface Transcipt {
 }
 
 interface ServiceRecord {
+
+    type: string,
     designation: string;
     from: Date | string;
     to: Date | string;
+    school: string;
+    school_acronym: string;
     count: number,
     equivalent: number
 
+}
+interface AdmExperience {
+    type: string,
+    designation: string,
+    from: string,
+    to: string,
+    school: string,
+    school_acronym: string,
+    count: number,
+    equivalent: number,
 }
 
 interface ProfessionalStudy {
