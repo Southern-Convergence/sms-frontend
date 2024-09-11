@@ -451,7 +451,7 @@
                     <v-text-field v-model="applicant.designation.district" :rules="[$validator.required]"
                       label="District" hide-details hint="" />
                   </v-col>
-                  {{ applicant.designation.school }}
+
                   <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1" v-if="is_school(qs?.title)">
                     <v-text-field v-model="applicant.designation.school" label="School Name"
                       hint="Please provide the complete official name of the school." persistent-hint />
@@ -466,11 +466,14 @@
                       label="Current Salary Grade" hide-details item-value="_id" />
                   </v-col>
 
-                  <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1" v-if="qs?.with_erf">
+                  <v-col cols="12" xl="2" lg="2" md="2" sm="6" class="px-1" v-if="qs?.with_erf">
                     <v-select v-model="applicant.designation.ipcrf_rating" :rules="[$validator.required]"
-                      label="IPCRF rating" hide-details
+                      label="IPCRF Rating" hide-details
                       :items="['Satisfactory', 'Very Satisfactory', 'Outstanding', 'Unsatifactory', 'Poor']" />
                   </v-col>
+                  <v-col cols="12" xl="2" lg="2" md="2" sm="6" class="px-1" v-if="qs?.with_erf">
+                    <v-text-field v-model="applicant.designation.ipcrf_equivalent" :rules="[$validator.required]"
+                      label="Performance Rating" hide-details type="number" /> </v-col>
                 </v-row>
               </v-card-text>
               <v-card-text v-if="qs?.with_erf">
@@ -507,6 +510,7 @@
               </v-card-text>
             </v-window-item>
             <v-window-item :value="3" v-if="qs?.with_erf">
+
               <v-card-text>
                 <v-card-title class="text-subtitle-2">
                   II. Service Record
@@ -576,10 +580,10 @@
                         <v-col cols="12" class="text-caption text-grey-darken-1">
                           B. Degree to Equivalent
                         </v-col>
-                        <v-col cols="5"> <v-text-field label="Public Schools" hide-details density="compact"
-                            type="number" readonly /></v-col>
-                        <v-col cols="5"> <v-text-field label="Private Schools" hide-details density="compact"
-                            type="number" /></v-col>
+                        <v-col cols="5"> <v-text-field v-model="applicant.equivalent_unit.private_years_teaching"
+                            label="Public Schools" hide-details density="compact" type="number" readonly /></v-col>
+                        <v-col cols="5"> <v-text-field v-model="applicant.equivalent_unit.pd_equivalent"
+                            label="Private Equivalent" hide-details density="compact" type="number" /></v-col>
                       </v-row>
                     </v-col>
                     <v-col cols="12" class="text-caption text-grey-darken-1 mt-2">
@@ -614,6 +618,28 @@
                         hide-details type="number" readonly /></v-col>
                     <v-col cols="12" xl="4" lg="4" md="4" sm="12" class="px-2"> <v-text-field label="Private School"
                         type="number" /></v-col>
+
+                    <v-col cols="10" class="pl-5" v-if="!adm_display">
+                      <v-sheet>
+                        <v-card-title class="text-caption">
+                          3. Administrative Supervisory Experience
+                          <v-btn @click="adm_experience_dialog = true" density="compact" icon="mdi-plus"
+                            color="success" />
+                        </v-card-title>
+                        <v-sheet border>
+                          <v-data-table :headers="adm_experience_headers" :items="applicant.adm_experience"
+                            density="compact">
+                            <template v-slot:item.actions="{ item }">
+                              <v-btn density="comfortable" color="error" dark icon variant="tonal" class="ma-1"
+                                @click="remove_table_item(item.selectable)">
+                                <v-icon icon left color="error">mdi-delete</v-icon>
+                              </v-btn>
+                            </template>
+                            <template v-slot:bottom v-if="!show_footer"></template>
+                          </v-data-table>
+                        </v-sheet>
+                      </v-sheet>
+                    </v-col>
                   </v-row>
                 </v-card-text>
               </v-card-text>
@@ -664,7 +690,12 @@
       <v-card-text class="my-2">
         <v-form ref="service_record_form">
           <v-row dense>
-            <v-col cols="12"> <v-text-field v-model="service_record.designation" label="Position/Designation"
+            <v-col cols="6"> <v-select v-model="service_record.type" :items="['Private', 'Public']" label="Type"
+                hide-details /></v-col>
+            <v-col cols="6"> <v-text-field v-model="service_record.designation" label="Position/Designation"
+                hide-details /></v-col>
+            <v-col cols="8"> <v-text-field v-model="service_record.school" label="School" hide-details /></v-col>
+            <v-col cols="4"> <v-text-field v-model="service_record.school_acronym" label="School Acronym"
                 hide-details /></v-col>
             <v-col cols="6"> <v-text-field v-model="service_record.from" label="From" hide-details
                 type="date" /></v-col>
@@ -675,6 +706,30 @@
       </v-card-text>
 
     </commons-dialog>
+
+    <commons-dialog max-width="35%" v-model="adm_experience_dialog" :icon="'mdi-face-agent'"
+      :title="'Administrative Supervisory Form'" :subtitle="'Employment History'" @submit="add_adm_experience"
+      :submitText="'Add'">
+      <v-card-text class="my-2">
+        <v-form ref="adm_experience_form">
+          <v-row dense>
+            <v-col cols="6"> <v-select v-model="adm_experience.type" :items="['Private', 'Public']" label="Type"
+                hide-details /></v-col>
+            <v-col cols="6"> <v-text-field v-model="adm_experience.designation" label="Position/Designation"
+                hide-details /></v-col>
+            <v-col cols="8"> <v-text-field v-model="adm_experience.school" label="School" hide-details /></v-col>
+            <v-col cols="4"> <v-text-field v-model="adm_experience.school_acronym" label="School Acronym"
+                hide-details /></v-col>
+            <v-col cols="6"> <v-text-field v-model="adm_experience.from" label="From" hide-details
+                type="date" /></v-col>
+            <v-col cols="6"> <v-text-field v-model="adm_experience.to" label="To" hide-details type="date" /></v-col>
+
+          </v-row>
+        </v-form>
+      </v-card-text>
+
+    </commons-dialog>
+
 
     <commons-dialog max-width="40%" v-model="education_attainment_dialog" icon="'mdi-school'"
       :title="'Education Attainment and Civil Service Eligibility'"
@@ -1017,6 +1072,7 @@ const applicant = ref({
     school: "",
     item_no: "",
     ipcrf_rating: "",
+    rating_equivalent: "",
   },
   educational_attainment: [],
   equivalent_unit: {
@@ -1032,8 +1088,8 @@ const applicant = ref({
     registrar_no: 0
   },
   service_record: [],
-  professional_study: [
-  ],
+  professional_study: [],
+  adm_experience: [],
   attachments: {
   },
 
@@ -1186,7 +1242,9 @@ function format_date(date: Date | string): string {
   return 'Invalid Date';
 }
 const service_record_headers = ref([
+  { title: "Type", key: "type", sortable: false },
   { title: "Designation", key: "designation", sortable: false },
+  { title: "School", key: "school", sortable: false },
   { title: "From", key: "from", sortable: false },
   { title: "To", key: "to", sortable: false },
   { title: "Year Count", key: "count", sortable: false },
@@ -1197,9 +1255,12 @@ const service_record_headers = ref([
 ]);
 
 const service_record = ref<ServiceRecord>({
+  type: "",
   designation: "",
   from: new Date(),
   to: new Date(),
+  school: "",
+  school_acronym: "",
   count: 0,
   equivalent: 0
 })
@@ -1207,37 +1268,7 @@ const service_record = ref<ServiceRecord>({
 const service_record_dialog = ref(false)
 const service_records = ref<ServiceRecord[]>([]);
 const service_record_form = ref()
-// function add_service_record() {
-//   const new_service_record: ServiceRecord = {
-//     designation: service_record.value.designation,
-//     from: format_date(service_record.value.from),
-//     to: format_date(service_record.value.to),
 
-//   }
-//   applicant.value.service_record.push(new_service_record);
-
-//   service_records.value.push(service_record.value);
-//   service_record_form.value.reset();
-
-//   service_record_dialog.value = false;
-//   const result = applicant.value.service_record.map((v: ServiceRecord) => {
-//     const d1 = new Date(v.from);
-//     const d2 = new Date(v.to);
-
-//     const MONTHS = 12;
-//     const FACTOR = 1000 * 60 * 60 * 24 * 30;
-//     const diff = Date.parse(d2) - Date.parse(d1);
-//     return parseInt(diff / FACTOR / MONTHS);
-
-//   });
-
-//   const total_years = result.length ? result.reduce((a, b) => a + b) : 0;
-//   applicant.value.equivalent_unit.public_years_teaching = total_years;
-
-//   const total_year_equivalent = total_years / 5;
-//   applicant.value.equivalent_unit.yt_equivalent = total_year_equivalent;
-
-// }
 function add_service_record() {
   const from_date = new Date(service_record.value.from);
   const to_date = new Date(service_record.value.to);
@@ -1246,13 +1277,20 @@ function add_service_record() {
   const FACTOR = 1000 * 60 * 60 * 24 * 30;
   const diff = Date.parse(to_date) - Date.parse(from_date);
   const yearCount = parseInt(diff / FACTOR / MONTHS);
-  const equivalent = yearCount / 5;
+  let equivalent = 0;
+  if (service_record.value.type === 'Public') {
+    equivalent = yearCount / 3;
+  } else if (service_record.value.type === 'Private') {
+    equivalent = yearCount / 5;
+  }
 
 
   const new_service_record: ServiceRecord = {
+    type: service_record.value.type,
     designation: service_record.value.designation,
     from: format_date(service_record.value.from),
     to: format_date(service_record.value.to),
+    school: service_record.value.school,
     count: yearCount,
     equivalent: equivalent,
   };
@@ -1266,11 +1304,30 @@ function add_service_record() {
   service_record_dialog.value = false;
 
 
-  const total_years = applicant.value.service_record.reduce((total, record) => total + (record?.count || 0), 0);
-  const total_year_equivalent = total_years / 5;
+  // const total_years = applicant.value.service_record.reduce((total, record) => total + (record?.count || 0), 0);
+  let total_public_year_equivalent = 0;
+  let total_public_years = 0;
+  let total_private_year_equivalent = 0;
+  let total_private_years = 0;
 
-  applicant.value.equivalent_unit.public_years_teaching = total_years;
-  applicant.value.equivalent_unit.yt_equivalent = total_year_equivalent;
+
+  applicant.value.service_record.forEach((record) => {
+    if (record.type === 'Public') {
+      total_public_year_equivalent += record.equivalent;
+      total_public_years += record.count;
+    } else if (record.type === 'Private') {
+      total_private_year_equivalent += record.equivalent;
+      total_private_years += record.count;
+    }
+  });
+
+
+  applicant.value.equivalent_unit.public_years_teaching = total_public_years;
+  applicant.value.equivalent_unit.yt_equivalent = total_public_year_equivalent;
+
+
+  applicant.value.equivalent_unit.private_years_teaching = total_private_years;
+  applicant.value.equivalent_unit.pd_equivalent = total_private_year_equivalent;
 }
 
 /**
@@ -1279,6 +1336,74 @@ function add_service_record() {
 /**
  * START: EDUCATIONAL ATTAINMENT
  */
+
+
+//  adm experience
+const adm_experience_headers = ref([
+  { title: "Type", key: "type", sortable: false },
+  { title: "Designation", key: "designation", sortable: false },
+  { title: "School", key: "school", sortable: false },
+  { title: "From", key: "from", sortable: false },
+  { title: "To", key: "to", sortable: false },
+  { title: "Year Count", key: "count", sortable: false },
+  { title: "Equivalent", key: "equivalent", sortable: false },
+  { title: "Actions", key: "actions", sortable: false },
+]);
+const adm_experience_dialog = ref(false)
+const adm_experiences = ref<ServiceRecord[]>([]);
+const adm_experience_form = ref()
+const adm_experience = ref<ServiceRecord>({
+  type: "",
+  designation: "",
+  from: new Date(),
+  to: new Date(),
+  school: "",
+  school_acronym: "",
+  count: 0,
+  equivalent: 0
+})
+
+function add_adm_experience() {
+  const from_date = new Date(adm_experience.value.from);
+  const to_date = new Date(adm_experience.value.to);
+
+  const MONTHS = 12;
+  const FACTOR = 1000 * 60 * 60 * 24 * 30;
+  const diff = Date.parse(to_date) - Date.parse(from_date);
+  const yearCount = parseInt(diff / FACTOR / MONTHS);
+  let equivalent = 0;
+  if (adm_experience.value.type === 'Public') {
+    equivalent = yearCount / 3;
+  } else if (adm_experience.value.type === 'Private') {
+    equivalent = yearCount / 5;
+  }
+
+
+
+  const new_adm_experience: AdmExperience = {
+    type: adm_experience.value.type,
+    designation: adm_experience.value.designation,
+    from: format_date(adm_experience.value.from),
+    to: format_date(adm_experience.value.to),
+    school: adm_experience.value.school,
+    school_acronym: adm_experience.value.school_acronym,
+    count: yearCount,
+    equivalent: equivalent,
+  };
+
+
+  applicant.value.adm_experience.push(new_adm_experience);
+  adm_experiences.value.push(new_adm_experience);
+
+
+  adm_experience_form.value.reset();
+  adm_experience_dialog.value = false;
+
+}
+const adm_display = computed(() => {
+  const ht_qs = ["Head Teacher I", "Head Teacher II", "Head Teacher III", "Head Teacher IV", "Head Teacher V", "Head Teacher VI"]
+  if (ht_qs === qs?.value?.title) return true
+})
 const education_attainment_headers = ref([
   { title: "Date", key: "date", sortable: false },
   { title: "Titles, Dergree Highest Grade Attained", key: "degree", sortable: false },
@@ -1513,6 +1638,8 @@ async function create_application() {
   if (!principal_form.value.isValid) {
     return swal({ text: "Principal Email is required!", icon: "info" });
   }
+  console.log("APPPPPP", applicant.value);
+
   const { attachments } = applicant.value;
   const temp = new FormData();
 
@@ -1588,7 +1715,6 @@ async function get_applicant_details() {
  * MATCHING
  */
 function next_window() {
-
   if (step.value === 2 && !qs.value.with_erf) {
     step.value = 4;
     confirmation_dialog.value = false
@@ -1745,7 +1871,6 @@ async function get_qs() {
   const { data, error } = await $rest('new-applicant/get-selected-qs', {
     method: "GET",
   });
-
   qs_data.value = data
 }
 
@@ -1753,6 +1878,9 @@ const selected_qs = computed(() => {
   const selectedPosition = position_data.value.find((pos) => pos._id === applicant.value.qualification.position);
   return selectedPosition || null;
 });
+
+
+
 
 
 function submit_application_dialog() {
