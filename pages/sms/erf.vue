@@ -59,7 +59,7 @@
                 <v-row no-gutters class="ma-2" justify="center">
                   <v-col cols="6" class="text-capitalize">Name : <b> {{
                     applicant_details?.personal_information?.first_name
-                      }} {{ applicant_details?.personal_information?.last_name }} </b>
+                  }} {{ applicant_details?.personal_information?.last_name }} </b>
                   </v-col>
                   <v-col cols="6">Date of Birth : <b> {{
                     applicant_details?.personal_information?.birthday }}
@@ -89,12 +89,16 @@
                         II. Service Record
                       </span>
 
-                      <v-sheet class="mb-2" border width="80%">
+                      <v-sheet class="mb-2" border width="100%">
                         <v-data-table :headers="service_record_headers" :items="applicant_details.service_record"
-                          density="compact"> <template #bottom v-if="!show_footer" />
+                          density="compact"> <template v-slot:item.equivalent="{ item }">
+                            {{ item?.selectable?.equivalent }}
+
+                          </template>
+                          <template #bottom v-if="!show_footer" />
                         </v-data-table>
                       </v-sheet>
-                      <v-sheet class="px-3 pt-3" border width="50%">
+                      <!-- <v-sheet class="px-3 pt-3" border width="50%">
                         <v-subtitle>
                           <v-icon color="primary">mdi-calendar-month</v-icon>
                           <span class="ml-2">Service Record Summary</span>
@@ -115,7 +119,7 @@
                           </v-row>
                         </v-card-text>
 
-                      </v-sheet>
+                      </v-sheet> -->
 
                       <p class="mt-3 font-weight-bold text-uppercase text-caption">
                         III. EQUIVALENT UNITS
@@ -132,8 +136,9 @@
                           <v-col cols="6"> Public Schools : <span class="pl-2"> {{
                             applicant_details?.equivalent_unit?.public_years_teaching }}</span>
                           </v-col>
+
                           <v-col cols="6"> Private Schools : <span class="pl-2"> {{
-                            applicant_details?.equivalent_unit?.yt_equivalent }}
+                            applicant_details?.equivalent_unit?.private_years_teaching }}
                             </span>
                           </v-col>
                         </v-row>
@@ -168,21 +173,25 @@
                           <v-col cols="6"> Public Schools : <b class="pl-2"> {{
                             applicant_details?.equivalent_unit?.public_years_teaching }}</b>
                           </v-col>
-                          <v-col cols="6"> Private Schools : <b class="pl-2"></b>
+                          <v-col cols="6"> Private Schools : <b class="pl-2"> {{
+                            applicant_details?.equivalent_unit?.private_years_teaching }}</b>
                           </v-col>
                         </v-row>
 
                       </v-sheet>
                     </v-sheet>
                     <v-row dense class="ml-15 mt-1">
+
                       LATEST IPCRF RATING : <div class="px-5 font-weight-bold" style="border-bottom: 1px solid black">
-                        {{
-                          applicant_details.designation?.ipcrf_rating }}</div>
+                        {{ applicant_details.designation?.ipcrf_rating }} , {{
+                          applicant_details.designation?.ipcrf_rating
+                        }}</div>
                     </v-row>
                   </v-col>
                 </v-row>
               </v-card-text>
             </v-card>
+
 
 
           </v-col>
@@ -197,7 +206,8 @@
           <v-col cols="4" v-if="applicant_details.is_with_erf && Object.keys(applicant_details).length">
             <div v-for="[key, value], index in Object.entries(applicant_details.attachments) ">
               <h5 class="pa-2 font-weight-bold text-subtitle-1 text-indigo"
-                v-if="applicant_details.is_with_erf && index === 0"> Applicant
+                v-if="applicant_details.is_with_erf && index === 0">
+                Applicant
                 Attachments</h5>
               <v-card class="mb-3" rounded="lg" border>
 
@@ -244,7 +254,8 @@
             v-for="[key, value], index in Object.entries(applicant_details.attachments) ">
             <div>
               <h5 class="pa-2 font-weight-bold text-subtitle-1 text-indigo"
-                v-if="applicant_details.is_with_erf && index === 0"> Applicant
+                v-if="applicant_details.is_with_erf && index === 0">
+                Applicant
                 Attachments</h5>
               <v-card class="mb-3" rounded="lg" border>
                 <v-card-text>
@@ -386,16 +397,24 @@
 
 
           </v-col>
-          <!-- applicant_details?.status != 'Completed' && applicant_details?.status != 'Pending' &&
-          applicant_details?.status != 'Received Printout/s' && (applicant_details?.status != 'Approved for Printing' &&
-          user.side === 'SDO') || applicant_details?.status === 'For Evaluation' || applicant_details?.status === 'For
+
+          <!--applicant_details?.status != 'Completed' && applicant_details?.status != 'Pending' &&
+            applicant_details?.status != 'Received Printout/s' && (applicant_details?.status != 'Approved for Printing' &&
+              user.side === 'SDO') || applicant_details?.status === 'For Evaluation' || applicant_details?.status === 'For
           Checking'" -->
-          <v-col cols="6" v-else-if="submit_display">
-            <v-btn @click="handle_application" block variant="tonal"
+          <v-col cols="6" v-else-if="applicant_details?.status === 'For Evaluation' && user.role === 'Evaluator'">
+            <v-btn @click="sdo_evaluator_dialog = true" block variant="tonal"
               :color="applicant_details?.status === 'Disapproved' ? 'error' : 'success'">
               {{ applicant_details?.status === 'Disapproved' ? 'Return to Principal' : 'Submit' }}
             </v-btn>
           </v-col>
+          <v-col cols="6" v-else-if="submit_display">
+            <v-btn @click="handle_application" block variant="tonal"
+              :color="applicant_details?.status === 'Disapproved' ? 'error' : 'success'">
+              {{ applicant_details?.status === 'Disapproved' ? 'Return to Principal' : 'Submitddd' }}
+            </v-btn>
+          </v-col>
+
         </v-row>
       </v-card-actions>
 
@@ -626,6 +645,28 @@
       </v-card>
     </v-dialog>
 
+    <commons-dialog v-model="sdo_evaluator_dialog" max-width="25%" icon="mdi-school"
+      title="For Evaluation: Complete the following" submitText="Submit" @submit="handle_application">
+      <v-card-text v-if="applicant_details.assignees[2]">
+        <p class="mb-4">Please fill out the range assessment and remarks, as these will be included in the applicant's
+          generated ERF
+        </p>
+        <template v-if="applicant_details.is_with_erf">
+          <v-text-field v-model="applicant_details.assignees[2].range_assessment.name" label="Enter Range Assessment"
+            prepend-icon="mdi-chart-bar" outlined />
+          <v-text-field v-model="applicant_details.assignees[2].range_assessment.remarks" label="Remarks"
+            prepend-icon="mdi-note-text" outlined />
+
+          <v-file-input v-model="applicant_details.assignees[2].pal" label="Upload Plantilla Allocation List"
+            outlined />
+        </template>
+        <template v-else>
+          <v-file-input v-model="applicant_details.assignees[2].pal" label="Upload Plantilla Allocation List"
+            outlined />
+        </template>
+      </v-card-text>
+    </commons-dialog>
+
 
   </div>
 
@@ -780,12 +821,17 @@ async function assign_ro_evaluator_applicant() {
  * end : evaluator
  */
 
+const sdo_evaluator_dialog = ref(false)
 
 const handle_application = async () => {
+
+
   const role = user && user.role;
   const side = user && user.side;
   const status = applicant_details.value.status;
   const attachment = applicant_details.value.attachments;
+  const range_assessment = applicant_details.value.assignees[2].range_assessment;
+  const pal = applicant_details.value.assignees[2].pal
 
   const is_attachment_valid = Object.values(applicant_details.value.attachments).every(attachment => typeof attachment.valid === 'boolean');
 
@@ -795,14 +841,27 @@ const handle_application = async () => {
       icon: "warning",
       buttons: { ok: false, cancel: false }
     });
-  };
+  }
 
-  const payload = {
-    attachment,
-    status,
-    app_id: route.query.id,
+  let payload;
 
-  };
+  if (side === 'SDO' && status === 'For Evaluation') {
+    payload = {
+      attachment,
+      status,
+      app_id: route.query.id,
+      range_assessment,
+      pal
+    };
+  } else {
+    payload = {
+      attachment,
+      status,
+      app_id: route.query.id,
+    };
+  }
+  console.log("ROleeee", role);
+
   switch (role) {
     case "Administrative Officer IV":
       handle_admin4(payload);
@@ -813,15 +872,14 @@ const handle_application = async () => {
     case "Verifier":
       handle_verifier(payload);
       break;
-
     case "Administrative Officer V":
       handle_admin5(payload);
       break;
-
     default:
       break;
   }
-}
+};
+
 
 const evaluator_signature_cond = ref(false);
 
@@ -849,18 +907,11 @@ function evaluator_clear_signature() {
   if (user.e_signature !== '')
     return evaluator_signature_cond.value = false;
 }
-
-
-
-
 const sdo_attachment_evaluator_condition = computed(() => {
   if (!user) return true;
   const valid = ['For Checking', 'For Evaluation', 'Disapproved'].includes(applicant_details.value.status);
   return valid
 })
-
-
-
 
 
 /**
@@ -905,17 +956,19 @@ const handle_admin4 = async (payload: any) => {
 
 }
 const handle_evaluator = async (payload: any) => {
-  const { data, error } = await $rest('new-applicant/handle-evaluator', { method: "PUT", body: payload })
+  const form = new FormData()
+  /* @ts-ignore */
+
+  form.append("range_assessment", payload.range_assessment)
+  form.append("pal", payload.pal[0])
+
+  form.append("form", JSON.stringify(payload));
+
+  console.log(form)
+
+  const { data, error } = await $rest('new-applicant/handle-evaluator', { method: "PUT", body: form })
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
-  // erf_form.value.forEach((item: any) => {
-  //   item.reset();
-  // });
-
   swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
-
-
-
-
 }
 // const handle_evaluator = async (payload: any) => {
 //   // const temp = new FormData();
@@ -988,9 +1041,11 @@ const attainment_headers = [
   { title: 'Date', key: 'date', sortable: false },
 ];
 const service_record_headers = [
+  { title: 'Type', key: 'type', sortable: false },
   { title: 'Designation', key: 'designation', sortable: false },
   { title: 'From', key: 'from', sortable: false },
   { title: 'To', key: 'to', sortable: false },
+  { title: 'School', key: 'school_acronym', sortable: false },
   { title: "Year Count", key: "count", sortable: false },
   { title: "Equivalent", key: "equivalent", sortable: false }
 

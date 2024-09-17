@@ -212,14 +212,7 @@
                 </tr>
 
 
-                <tr>
-                  <td> Adm. Supervisory Experience<br />
-                    a. Public Schools <br />
-                    b. Private Schools</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
+
 
                 <tr>
                   <td>
