@@ -12,7 +12,8 @@ interface Applicant {
     attachments?: { [key: string]: Att };
     status: string;
     signatories: Signatory[];
-    control_number: String
+    control_number: String,
+    pal: object
 }
 
 interface Att {

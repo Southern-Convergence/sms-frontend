@@ -1092,6 +1092,14 @@ const applicant = ref({
   adm_experience: [],
   attachments: {
   },
+  pal: {
+    link: [],
+    valid: "",
+    description: "",
+    remarks: "",
+    timestamp: ""
+
+  },
 
 
   display: true,
@@ -1245,6 +1253,7 @@ const service_record_headers = ref([
   { title: "Type", key: "type", sortable: false },
   { title: "Designation", key: "designation", sortable: false },
   { title: "School", key: "school", sortable: false },
+  { title: "Acronyn", key: "school_acronym", sortable: false },
   { title: "From", key: "from", sortable: false },
   { title: "To", key: "to", sortable: false },
   { title: "Year Count", key: "count", sortable: false },
@@ -1291,6 +1300,7 @@ function add_service_record() {
     from: format_date(service_record.value.from),
     to: format_date(service_record.value.to),
     school: service_record.value.school,
+    school_acronym: service_record.value.school_acronym,
     count: yearCount,
     equivalent: equivalent,
   };
