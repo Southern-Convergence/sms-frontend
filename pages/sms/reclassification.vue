@@ -17,6 +17,7 @@
 
           </v-row>
 
+
           <v-row dense v-if="user.role === 'Administrative Officer V' || user.role === 'Administrative Officer IV'">
             <v-col cols="6" class="mb-2" v-if="user.role === 'Administrative Officer IV'">
               <v-alert closable icon="mdi-information" variant="tonal" color="primary"> Reclass application with status
@@ -137,7 +138,7 @@
     <v-dialog width="500" v-model="evaluators_dialog">
       <v-card title="Select an RO Evaluator">
         <v-card-text>
-          {{ selected_ro_evaluator }}
+
           <v-select :items="evaluators" item-value="_id" item-title="title" v-model="selected_ro_evaluator" />
         </v-card-text>
         <v-card-actions class="">
