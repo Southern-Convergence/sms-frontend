@@ -12,10 +12,15 @@
 
         <!-- Application header -->
         <v-row no-gutters>
-          <v-col cols="5" class="text-subtitle-2 font-weight-bold"> TO : REGIONAL DIRECTOR
-            <p class="pl-7 font-weight-regular">Regional Director/DepEd - NCR
-            </p>
-
+          <v-col cols="5"> TO : <b class="text-uppercase text-subtitle-1 font-weight-bold">{{
+            rd?.rd?.first_name }} {{
+                rd?.rd?.middle_name
+                  ? rd?.rd?.middle_name : '' }}
+              {{ rd?.rd?.last_name }}</b>
+            <h5 class="pl-7 font-weight-regular">{{ rd?.rd?.position ? rd?.rd?.position : '' }}/{{
+              rd?.rd?.government_agency ? rd?.rd?.government_agency : '' }} - {{ rd?.rd?.region ?
+                rd?.rd?.region : '' }}
+            </h5>
           </v-col>
 
           <v-col cols="auto"> Application Date : <v-chip color="primary" density="compact">
@@ -34,21 +39,28 @@
         <!-- Application header -->
         <v-row dense>
           <v-col cols="8">
-            <v-btn v-if="applicant_details?.status != 'For Signature'" @click="applicant_history(applicant_details._id)"
-              class="font-weight-bold" prepend-icon="mdi-history" color="primary" density="compact">View
-              HISTORY</v-btn>
+
             <v-btn v-if="applicant_details.is_with_erf && applicant_details?.status != 'For Signature'"
               @click="applicant_erf(applicant_details._id)" class="font-weight-bold mx-2" prepend-icon="mdi-printer"
-              color="primary" density="compact"> {{ applicant_details.is_with_erf
-                ? "Print ERF & Transmital" : "Print Transmital" }}
+              color="primary" density="compact"> Print ERF
             </v-btn>
-            <v-btn v-if="applicant_details?.status != 'For Signature'" @click="view_applicant_info_dialog = true"
-              class="font-weight-bold" prepend-icon="mdi-book" color="amber" density="compact">View
-              Applicant QS</v-btn>
+            <v-btn v-if="applicant_details.is_with_erf && applicant_details?.status != 'For Signature'"
+              @click="applicant_transmital(applicant_details._id)" class="font-weight-bold mr-2"
+              prepend-icon="mdi-printer" color="primary" density="compact"> Print Transmital
+            </v-btn>
+
           </v-col>
+          <v-col cols="auto"> <v-btn v-if="applicant_details?.status != 'For Signature'"
+              @click="applicant_history(applicant_details._id)" class="font-weight-bold" prepend-icon="mdi-history"
+              color="primary" density="compact" variant="text">View
+              HISTORY</v-btn></v-col>
+          <v-col cols="2"> <v-btn v-if="applicant_details?.status != 'For Signature'"
+              @click="view_applicant_info_dialog = true" prepend-icon="mdi-book" color="primary" density="compact"
+              variant="text">View
+              Applicant QS</v-btn></v-col>
 
           <!-- Applicant Personal Information -->
-          <v-col :cols="applicant_details.is_with_erf ? '8' : '12'">
+          <v-col cols="12">
             <v-card class="mx-auto" rounded="lg" border>
               <v-card-title class="d-flex  font-weight-bold">
                 {{ applicant_details.is_with_erf === true ? '1. EQUIVALENT RECORD FORM ' : 'Applicant Details'
@@ -184,7 +196,7 @@
 
                       LATEST IPCRF RATING : <div class="px-5 font-weight-bold" style="border-bottom: 1px solid black">
                         {{ applicant_details.designation?.ipcrf_rating }} , {{
-                          applicant_details.designation?.ipcrf_rating
+                          applicant_details.designation?.ipcrf_equivalent
                         }}</div>
                     </v-row>
                   </v-col>
@@ -197,113 +209,58 @@
           </v-col>
 
 
-          <!-- Applicant Personal Information -->
-          <!-- <v-col cols="12" v-if="!applicant_details.is_with_erf">
-          <h4 class="pa-2 font-weight-bold text-subtitle-1 text-indigo"> Applicant
-            Attachments</h4>
-        </v-col> -->
-          <!-- Applicant Attachment -->
-          <v-col cols="4" v-if="applicant_details.is_with_erf && Object.keys(applicant_details).length">
-            <div v-for="[key, value], index in Object.entries(applicant_details.attachments) ">
-              <h5 class="pa-2 font-weight-bold text-subtitle-1 text-indigo"
-                v-if="applicant_details.is_with_erf && index === 0">
-                Applicant
-                Attachments</h5>
-              <v-card class="mb-3" rounded="lg" border>
-
-                <v-card-text>
-                  <v-sheet height="7vh">
-                    <b>
-                      {{ (index + 1) }}. {{ value.description }}
-
-                    </b>
-
-                  </v-sheet>
-
-                  <v-btn size="small" color="primary" class="d-flex " variant="tonal"
-                    @click="open_attachment_dialog(key)">
-                    <v-icon class="mr-2">mdi-attachment</v-icon>
-                    <span>View Attachment</span>
-                  </v-btn>
-                  <v-form ref="erf_form">
-                    <v-row dense v-if="sdo_attachment_evaluator_condition">
-                      <v-col cols="auto" class="mt-3 font-weight-bold text-grey "> Evaluation :</v-col>
-                      <v-col cols="auto">
-                        <v-checkbox color="success" label="Valid" @click="evaluate_attachment(key, true)" hide-details
-                          density="compact" :model-value="getCheckboxValue(key, true)" />
-                      </v-col>
-                      <v-col cols="auto">
-                        <v-checkbox color="error" label="Invalid" @click="evaluate_attachment(key, false)" hide-details
-                          density="compact" :model-value="getCheckboxValue(key, false)" />
-                      </v-col>
-                      <v-col cols="12" v-if="applicant_details.attachments[key].valid == false">
-                        <v-textarea label="Specify reason" v-model="remarks" rows="2" hide-details="auto"
-                          @update:model-value="remarks_attachment(key)"
-                          :model-value="applicant_details.attachments[key].remarks" bg-color="#E8EAF6" :rules="v => !!v"
-                          required />
-                      </v-col>
-                    </v-row>
-                  </v-form>
-
-                </v-card-text>
-
-              </v-card>
-            </div>
-          </v-col>
-          <v-col cols="6" v-if="!applicant_details.is_with_erf && Object.keys(applicant_details).length"
-            v-for="[key, value], index in Object.entries(applicant_details.attachments) ">
-            <div>
-              <h5 class="pa-2 font-weight-bold text-subtitle-1 text-indigo"
-                v-if="applicant_details.is_with_erf && index === 0">
-                Applicant
-                Attachments</h5>
-              <v-card class="mb-3" rounded="lg" border>
-                <v-card-text>
-                  <v-form ref="erf_form">
-                    <v-sheet height="7vh"><b>{{ index + 1 }}. {{ value.description }} </b></v-sheet>
-                    <v-btn size="small" color="primary" class="d-flex " variant="tonal"
-                      @click="open_attachment_dialog(key)">
-                      <v-icon class="mr-2">mdi-attachment</v-icon>
-                      <span>View Attachment</span>
-                    </v-btn>
-                    <v-row dense v-if="sdo_attachment_evaluator_condition">
-                      <v-col cols="auto" class="mt-3 font-weight-bold text-grey "> Evaluation :</v-col>
-                      <v-col cols="auto">
-                        <v-checkbox color="success" label="Valid" @click="evaluate_attachment(key, true)" hide-details
-                          density="compact" :model-value="getCheckboxValue(key, true)"
-                          :rules="[v => !!v || 'Reason is required']" />
-                      </v-col>
-                      <v-col cols="auto">
-                        <v-checkbox color="error" label="Invalid" @click="evaluate_attachment(key, false)" hide-details
-                          density="compact" :model-value="getCheckboxValue(key, false)"
-                          :rules="[v => !!v || 'Reason is required']" />
-                      </v-col>
-                      <v-col cols="12" v-if="applicant_details.attachments[key].valid == false">
-                        <v-textarea label="Specify reason" v-model="remarks" rows="2" hide-details="auto"
-                          @update:model-value="remarks_attachment(key)"
-                          :model-value="applicant_details.attachments[key].remarks" bg-color="#E8EAF6"
-                          :rules="[v => !!v || 'Reason is required']" required />
-                      </v-col>
-                    </v-row>
-                  </v-form>
-                </v-card-text>
-              </v-card>
-            </div>
+          <v-col cols="12">
+            <v-icon class="mr-2 mb-2 text-indigo" size="24">mdi-file-document</v-icon>
+            <span class="font-weight-bold text-h6 text-indigo">Applicant Attachments</span>
           </v-col>
 
 
+          <v-col cols="6" v-if="Object.keys(applicant_details).length"
+            v-for="[key, value], index in Object.entries(applicant_details?.attachments)">
 
 
-          <!-- Applicant Attachment -->
+            <v-card class="mb-3" rounded="lg" border>
 
-          <!-- <v-col cols="12" class="my-2"
-            v-if="user && user.role === 'Evaluator' && applicant_details?.status === 'Approved for Printing'">
-            <v-alert border="start" close-label="Close Alert" color="primary"
-              title="Attach the Output Requirement for DBM." variant="outlined">
-              <v-file-input class="mt-3" variant="solo" v-model="applicant_details.output_requirement"
-                label="Output Requirement" />
-            </v-alert>
-          </v-col> -->
+              <v-card-text>
+                <v-sheet height="7vh">
+                  <b>
+                    {{ (index + 1) }}. {{ value.description }}
+
+                  </b>
+
+                </v-sheet>
+
+                <v-btn size="small" color="primary" class="d-flex " variant="tonal"
+                  @click="open_attachment_dialog(key)">
+                  <v-icon class="mr-2">mdi-attachment</v-icon>
+                  <span>View Attachment</span>
+                </v-btn>
+                <v-form ref="erf_form">
+                  <v-row dense v-if="sdo_attachment_evaluator_condition">
+                    <v-col cols="auto" class="mt-3 font-weight-bold text-grey "> Evaluation :</v-col>
+                    <v-col cols="auto">
+                      <v-checkbox color="success" label="Valid" @click="evaluate_attachment(key, true)" hide-details
+                        density="compact" :model-value="getCheckboxValue(key, true)" />
+                    </v-col>
+                    <v-col cols="auto">
+                      <v-checkbox color="error" label="Invalid" @click="evaluate_attachment(key, false)" hide-details
+                        density="compact" :model-value="getCheckboxValue(key, false)" />
+                    </v-col>
+                    <v-col cols="12" v-if="applicant_details.attachments[key].valid == false">
+                      <v-textarea label="Specify reason" v-model="remarks" rows="2" hide-details="auto"
+                        @update:model-value="remarks_attachment(key)"
+                        :model-value="applicant_details.attachments[key].remarks" bg-color="#E8EAF6" :rules="v => !!v"
+                        required />
+                    </v-col>
+                  </v-row>
+                </v-form>
+
+              </v-card-text>
+
+            </v-card>
+
+          </v-col>
+
 
 
           <v-col cols="12" class="my-5" v-if="applicant_details.status === 'For DBM' && user.side == 'SDO'">
@@ -411,7 +368,7 @@
           <v-col cols="6" v-else-if="submit_display">
             <v-btn @click="handle_application" block variant="tonal"
               :color="applicant_details?.status === 'Disapproved' ? 'error' : 'success'">
-              {{ applicant_details?.status === 'Disapproved' ? 'Return to Principal' : 'Submitddd' }}
+              {{ applicant_details?.status === 'Disapproved' ? 'Return to Principal' : 'Submit' }}
             </v-btn>
           </v-col>
 
@@ -691,7 +648,8 @@ onBeforeMount(() => {
     get_applicant_details(),
     get_evaluators(),
     get_ro_evaluators(),
-    get_applicant_qs()
+    get_applicant_qs(),
+    get_rd(),
   ]);
 
   if (user) setPageLayout("barren");
@@ -1079,6 +1037,15 @@ const applicant_erf = (id: any) => {
   });
 }
 
+const applicant_transmital = (id: any) => {
+  router.push({
+    name: 'printable-transmittal',
+    query: {
+      id: id
+    }
+  });
+}
+
 
 // Start: Esignature
 const esig = ref(false)
@@ -1168,7 +1135,14 @@ async function get_applicant_qs() {
 
   applicant_qs_info.value = data;
 }
-
+const rd = ref({} as Rd)
+async function get_rd() {
+  const { data, error } = await $rest('sms-rd/get-rd', {
+    method: "GET",
+  })
+  rd.value = data
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
+}
 
 </script>
 <style scoped>

@@ -227,8 +227,14 @@
                     <v-col cols="4">
                       <v-text-field v-model="rd.rd.last_name" label="Last Name" hide-details />
                     </v-col>
-                    <v-col cols="12">
+                    <v-col cols="4">
+                      <v-text-field v-model="rd.rd.government_agency" label="Government Agency" hide-details />
+                    </v-col>
+                    <v-col cols="4">
                       <v-text-field v-model="rd.rd.position" label="CES Rank" hide-details />
+                    </v-col>
+                    <v-col cols="4">
+                      <v-text-field v-model="rd.rd.region" label="Region" hide-details />
                     </v-col>
 
                     <v-col cols="12">
@@ -1001,6 +1007,8 @@ const rd = ref<Rd>({
     last_name: "",
     ro_address: "",
     position: "",
+    government_agency: "",
+    region: "",
   },
   dbm: {
     first_name: "",
