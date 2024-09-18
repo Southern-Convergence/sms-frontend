@@ -65,9 +65,9 @@ interface Designation {
 interface EducationalAttainment {
     degree: string;
     institution: string;
-    year_received: number;
+    year_received: string;
     board_exam: string;
-    rating: number;
+    rating: string;
     date: Date;
 }
 
@@ -109,7 +109,7 @@ interface AdmExperience {
 }
 
 interface ProfessionalStudy {
-    sy: number;
+    sy: string;
     unit_no: string;
     description: string;
 }
