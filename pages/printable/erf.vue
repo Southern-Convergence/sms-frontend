@@ -399,18 +399,19 @@
           <div class="pl-5 mt-2 font-weight-bold">
             <div>IV. DEPED REGIONAL OFFICE ACTION:</div>
           </div>
-          <v-row dense style="line-height: 12px">
-            <v-col cols="6" class="d-flex"> Classification :
-              <div style="border-bottom: 1px solid black; width: 75%;" class="px-2"> {{ erf?.position }}</div>
+          <v-row dense>
+            <v-col cols="5" class="d-flex"> Classification :
+              <div style="border-bottom: 1px solid black; width: 65%; " class="px-2"> {{
+                erf?.position }}</div>
             </v-col>
-            <v-col cols="3" class="d-flex"> Range : <div style="border-bottom: 1px solid black; width: 70%;"
+            <v-col cols="3" class="d-flex"> Range : <div style="border-bottom: 1px solid black; width: 65%;"
                 class="px-2"> <span v-if="erf?.assignees && erf?.assignees[4]?.range_assignment"> {{ erf?.assignees &&
                   erf.assignees.length ?
                   erf.assignees[4].range_assignment.name : '' }}</span>
               </div>
             </v-col>
 
-            <v-col cols="3" class="d-flex"> Date: <div style="border-bottom: 1px solid black; width: 65%;" class="px-2">
+            <v-col cols="4" class="d-flex"> Date: <div style="border-bottom: 1px solid black; width: 70%;" class="px-2">
                 <span v-if="erf?.assignees && erf?.assignees[4]?.approved"> {{ erf?.assignees && erf.assignees.length
                   ?
                   new Date(erf.assignees[4].timestamp).toLocaleDateString('en-US', {
