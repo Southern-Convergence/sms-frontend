@@ -109,7 +109,7 @@
                   `${erf?.equivalent_unit?.public_years_teaching}
                   years` }}</div>
                 Equivalent : <div style="border-bottom: 1px solid black; width: 10%;" class="px-2">{{
-                  erf?.equivalent_unit?.yt_equivalent.toFixed(2) }}</div>
+                  erf?.equivalent_unit?.yt_equivalent }}</div>
 
               </div>
               <div class="d-flex" style="line-height: 14px"> B. Degree to Degree Equivalent (present degree) <div

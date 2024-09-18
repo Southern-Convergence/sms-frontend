@@ -589,7 +589,7 @@
                           B. Degree to Equivalent
                         </v-col>
                         <v-col cols="4"> <v-text-field v-model="applicant.equivalent_unit.present_degree"
-                            label="Degree or Degree Equivaelent (present degree)" hide-details
+                            label="Degree or Degree Equivalent (present degree)" hide-details
                             density="compact" /></v-col>
 
                       </v-row>
@@ -1100,16 +1100,6 @@ const applicant = ref({
   adm_experience: [],
   attachments: {
   },
-  pal: {
-    link: [],
-    valid: "",
-    description: "",
-    remarks: "",
-    timestamp: ""
-
-  },
-
-
   display: true,
   status: "For Signature",
   created_date: new Date(new Date()),
