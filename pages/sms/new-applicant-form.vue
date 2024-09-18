@@ -99,7 +99,7 @@
 
                         <v-card-text class="overflow-y-auto mt-0 pt-1" style="height: 55vh">
 
-                          {{ qs.status_of_appointment }}
+
                           <v-list-item class="mb-2" color=" white" rounded="rounded">
                             <template v-slot:prepend>
                               <v-icon color="primary" icon="mdi-account-hard-hat"></v-icon>
@@ -517,10 +517,13 @@
                   <v-btn @click="service_record_dialog = true" density="compact" icon="mdi-plus" color="success" />
                 </v-card-title>
                 <v-row dense>
-                  <v-col cols="7">
+                  <v-col cols="9">
                     <v-sheet border class="mx-4 mb-4">
                       <v-data-table :headers="service_record_headers" :items="applicant.service_record"
                         density="compact">
+                        <template v-slot:item.equivalent="{ item }">
+                          {{ item.selectable.equivalent ? item.selectable.equivalent.toFixed(1) : '' }}
+                        </template>
                         <template v-slot:item.actions="{ item }">
                           <v-btn density="comfortable" color="error" dark icon variant="tonal" class="ma-1"
                             @click="remove_table_item(item.selectable)">
@@ -543,12 +546,12 @@
                         <v-row justify="center">
                           <v-col cols="12" md="6">
                             Total Year: <v-chip class="px-4" color="primary"> {{
-                              applicant.equivalent_unit.public_years_teaching }}
+                              total_service_record }}
                             </v-chip>
                           </v-col>
                           <v-col cols="12" md="6">
                             Equivalent: <v-chip class="px-4" color="secondary"> {{
-                              applicant.equivalent_unit.yt_equivalent }}
+                              total_service_record_equivalent }}
                             </v-chip>
                           </v-col>
                         </v-row>
@@ -563,27 +566,32 @@
                 </v-card-title>
                 <v-card-text>
                   <v-row no-gutters>
-                    <v-col cols="6">
+                    <v-col cols="12">
                       <v-row dense>
                         <v-col cols="12" class="text-caption text-grey-darken-1"> A. Total Number of Years
                           Teaching</v-col>
-                        <v-col cols="5"> <v-text-field v-model="applicant.equivalent_unit.public_years_teaching"
+                        <v-col cols="2"> <v-text-field v-model="applicant.equivalent_unit.public_years_teaching"
                             label="Public Only" hide-details density="compact" type="number" readonly /></v-col>
-                        <v-col cols="5"> <v-text-field label="Equivalent"
+                        <v-col cols="2"> <v-text-field label="Equivalent"
                             v-model="applicant.equivalent_unit.yt_equivalent" hide-details density="compact"
                             type="number" readonly />
                         </v-col>
+                        <v-col cols="2"> <v-text-field v-model="applicant.equivalent_unit.private_years_teaching"
+                            label="Public Schools" hide-details density="compact" type="number" readonly /></v-col>
+                        <v-col cols="2"> <v-text-field v-model="applicant.equivalent_unit.pd_equivalent"
+                            label="Private Equivalent" hide-details density="compact" type="number" /></v-col>
                       </v-row>
                     </v-col>
-                    <v-col cols="6">
+
+                    <v-col cols="12">
                       <v-row dense>
                         <v-col cols="12" class="text-caption text-grey-darken-1">
                           B. Degree to Equivalent
                         </v-col>
-                        <v-col cols="5"> <v-text-field v-model="applicant.equivalent_unit.private_years_teaching"
-                            label="Public Schools" hide-details density="compact" type="number" readonly /></v-col>
-                        <v-col cols="5"> <v-text-field v-model="applicant.equivalent_unit.pd_equivalent"
-                            label="Private Equivalent" hide-details density="compact" type="number" /></v-col>
+                        <v-col cols="4"> <v-text-field v-model="applicant.equivalent_unit.present_degree"
+                            label="Degree or Degree Equivaelent (present degree)" hide-details
+                            density="compact" /></v-col>
+
                       </v-row>
                     </v-col>
                     <v-col cols="12" class="text-caption text-grey-darken-1 mt-2">
@@ -609,20 +617,21 @@
                         </v-sheet>
                       </v-sheet>
                     </v-col>
-                    <v-col cols="12" class="text-caption text-grey-darken-1 pl-5 mt-2">
+                    <!-- <v-col cols="12" class="text-caption text-grey-darken-1 pl-5 mt-2 mb-2">
                       2. Teaching Experience
 
                     </v-col>
                     <v-col cols="12" xl="4" lg="4" md="4" sm="12" class="px-2 ml-5">
                       <v-text-field label="Public Schools" v-model="applicant.equivalent_unit.public_years_teaching"
                         hide-details type="number" readonly /></v-col>
-                    <v-col cols="12" xl="4" lg="4" md="4" sm="12" class="px-2"> <v-text-field label="Private School"
-                        type="number" /></v-col>
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="12" class="px-2"> <v-text-field
+                        v-model="applicant.equivalent_unit.private_years_teaching" label="Private School"
+                        type="number" readonly /></v-col> -->
 
                     <v-col cols="10" class="pl-5" v-if="!adm_display">
                       <v-sheet>
                         <v-card-title class="text-caption">
-                          3. Administrative Supervisory Experience
+                          2. Administrative Supervisory Experience
                           <v-btn @click="adm_experience_dialog = true" density="compact" icon="mdi-plus"
                             color="success" />
                         </v-card-title>
@@ -745,11 +754,11 @@
           <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field
               v-model="education_attainment.institution" label="Name of Institution" hide-details /></v-col>
           <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field
-              v-model="education_attainment.year_received" label="Year Received" hide-details type="number" /></v-col>
+              v-model="education_attainment.year_received" label="Year Received" hide-details /></v-col>
           <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field v-model="education_attainment.board_exam"
               label="Board Examination" hide-details /></v-col>
           <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field v-model="education_attainment.rating"
-              label="Rating" hide-details type="number" /></v-col>
+              label="Rating" hide-details /></v-col>
         </v-row>
       </v-card-text>
     </commons-dialog>
@@ -759,12 +768,11 @@
       :submitText="'Add'">
       <v-card-text class="my-2">
         <v-row dense>
-          <v-col cols="12"> <v-text-field v-model="professional_study.sy" label="School Year" type="number"
+          <v-col cols="6"> <v-text-field v-model="professional_study.sy" label="School Year  (e.g., 2024–2025)"
+              hide-details="auto" /></v-col>
+          <v-col cols="6"> <v-text-field v-model="professional_study.unit_no" label="Unit Number" type="number"
               hide-details /></v-col>
-          <v-col cols="6"> <v-text-field v-model="professional_study.unit_no" label="Unit Number"
-              hide-details /></v-col>
-          <v-col cols="6"> <v-text-field v-model="professional_study.description" label="Description"
-              hide-details /></v-col>
+          <v-col cols="12"> <v-textarea v-model="professional_study.description" label="Description" rows="3" /></v-col>
         </v-row>
       </v-card-text>
     </commons-dialog>
@@ -1078,7 +1086,7 @@ const applicant = ref({
   equivalent_unit: {
     public_years_teaching: 0,
     yt_equivalent: 0,
-    present_degree: 0,
+    present_degree: "",
     pd_equivalent: 0,
     private_years_teaching: 0,
   },
@@ -1252,7 +1260,7 @@ function format_date(date: Date | string): string {
 const service_record_headers = ref([
   { title: "Type", key: "type", sortable: false },
   { title: "Designation", key: "designation", sortable: false },
-  { title: "School", key: "school", sortable: false },
+  // { title: "School", key: "school", sortable: false },
   { title: "Acronyn", key: "school_acronym", sortable: false },
   { title: "From", key: "from", sortable: false },
   { title: "To", key: "to", sortable: false },
@@ -1331,13 +1339,13 @@ function add_service_record() {
     }
   });
 
+  // Public
+  applicant.value.equivalent_unit.public_years_teaching = Number(total_public_years).toFixed(1);
+  applicant.value.equivalent_unit.yt_equivalent = Number(total_public_year_equivalent).toFixed(1);
 
-  applicant.value.equivalent_unit.public_years_teaching = total_public_years;
-  applicant.value.equivalent_unit.yt_equivalent = total_public_year_equivalent;
-
-
-  applicant.value.equivalent_unit.private_years_teaching = total_private_years;
-  applicant.value.equivalent_unit.pd_equivalent = total_private_year_equivalent;
+  // Private
+  applicant.value.equivalent_unit.private_years_teaching = Number(total_private_years).toFixed(1);
+  applicant.value.equivalent_unit.pd_equivalent = Number(total_private_year_equivalent).toFixed(1);
 }
 
 /**
@@ -1429,9 +1437,9 @@ const education_attainment_dialog = ref(false)
 const education_attainment = ref<EducationalAttainment>({
   degree: '',
   institution: '',
-  year_received: 0,
+  year_received: '',
   board_exam: '',
-  rating: 0,
+  rating: '',
   date: new Date()
 });
 
@@ -1509,7 +1517,7 @@ const professional_study_dialog = ref(false)
 
 const professional_study = ref<ProfessionalStudy>(
   {
-    sy: parseInt(new Date().getFullYear().toString()),
+    sy: "",
     unit_no: "",
     description: "",
   }
@@ -1865,6 +1873,20 @@ const private_equivalent_ma_units = computed(() => {
   return equivalent;
 });
 
+const total_service_record = computed(() => {
+  const public_experience = Number(applicant.value.equivalent_unit.public_years_teaching);
+  const private_experience = Number(applicant.value.equivalent_unit.private_years_teaching);
+  const result = public_experience + public_experience
+  return result;
+});
+const total_service_record_equivalent = computed(() => {
+  const public_experience = Number(applicant.value.equivalent_unit.yt_equivalent);
+  const private_experience = Number(applicant.value.equivalent_unit.pd_equivalent);
+  const result = public_experience + public_experience
+  return result;
+});
+
+
 
 const total_ma = computed(() => {
   const public_equivalent = Number(applicant.value.qualification.experience_sr_public_equivalent);
@@ -1888,8 +1910,6 @@ const selected_qs = computed(() => {
   const selectedPosition = position_data.value.find((pos) => pos._id === applicant.value.qualification.position);
   return selectedPosition || null;
 });
-
-
 
 
 

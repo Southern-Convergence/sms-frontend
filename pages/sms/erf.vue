@@ -203,33 +203,21 @@
                 </v-row>
               </v-card-text>
             </v-card>
-
-
-
           </v-col>
-
 
           <v-col cols="12">
             <v-icon class="mr-2 mb-2 text-indigo" size="24">mdi-file-document</v-icon>
             <span class="font-weight-bold text-h6 text-indigo">Applicant Attachments</span>
           </v-col>
-
-
           <v-col cols="6" v-if="Object.keys(applicant_details).length"
             v-for="[key, value], index in Object.entries(applicant_details?.attachments)">
-
-
             <v-card class="mb-3" rounded="lg" border>
-
               <v-card-text>
-                <v-sheet height="7vh">
+                <v-sheet height="8vh">
                   <b>
                     {{ (index + 1) }}. {{ value.description }}
-
                   </b>
-
                 </v-sheet>
-
                 <v-btn size="small" color="primary" class="d-flex " variant="tonal"
                   @click="open_attachment_dialog(key)">
                   <v-icon class="mr-2">mdi-attachment</v-icon>
@@ -614,11 +602,11 @@
           <v-text-field v-model="applicant_details.assignees[2].range_assessment.remarks" label="Remarks"
             prepend-icon="mdi-note-text" outlined />
 
-          <v-file-input v-model="applicant_details.assignees[2].pal" label="Upload Plantilla Allocation List"
+          <v-file-input v-model="applicant_details.assignees[2].pal.link" label="Upload Plantilla Allocation List"
             outlined />
         </template>
         <template v-else>
-          <v-file-input v-model="applicant_details.assignees[2].pal" label="Upload Plantilla Allocation List"
+          <v-file-input v-model="applicant_details.assignees[2].pal.link" label="Upload Plantilla Allocation List"
             outlined />
         </template>
       </v-card-text>
@@ -914,11 +902,13 @@ const handle_admin4 = async (payload: any) => {
 
 }
 const handle_evaluator = async (payload: any) => {
+  console.log('Payloaddd', payload);
+
   const form = new FormData()
   /* @ts-ignore */
 
   form.append("range_assessment", payload.range_assessment)
-  form.append("pal", payload.pal[0])
+  form.append("pal", payload.pal.link[0])
 
   form.append("form", JSON.stringify(payload));
 
