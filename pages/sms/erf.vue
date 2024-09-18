@@ -71,7 +71,7 @@
                 <v-row no-gutters class="ma-2" justify="center">
                   <v-col cols="6" class="text-capitalize">Name : <b> {{
                     applicant_details?.personal_information?.first_name
-                  }} {{ applicant_details?.personal_information?.last_name }} </b>
+                      }} {{ applicant_details?.personal_information?.last_name }} </b>
                   </v-col>
                   <v-col cols="6">Date of Birth : <b> {{
                     applicant_details?.personal_information?.birthday }}
@@ -350,7 +350,7 @@
           <v-col cols="6" v-else-if="applicant_details?.status === 'For Evaluation' && user.role === 'Evaluator'">
             <v-btn @click="sdo_evaluator_dialog = true" block variant="tonal"
               :color="applicant_details?.status === 'Disapproved' ? 'error' : 'success'">
-              {{ applicant_details?.status === 'Disapproved' ? 'Return to Principal' : 'Submit' }}
+              {{ applicant_details?.status === 'Disapproved' ? 'Return to Principal' : 'Submitff' }}
             </v-btn>
           </v-col>
           <v-col cols="6" v-else-if="submit_display">
@@ -597,9 +597,9 @@
           generated ERF
         </p>
         <template v-if="applicant_details.is_with_erf">
-          <v-text-field v-model="applicant_details.assignees[2].range_assessment.name" label="Enter Range Assessment"
+          <v-text-field v-model="applicant_details.assignees[2].range_assignment.name" label="Enter Range Assessment"
             prepend-icon="mdi-chart-bar" outlined />
-          <v-text-field v-model="applicant_details.assignees[2].range_assessment.remarks" label="Remarks"
+          <v-text-field v-model="applicant_details.assignees[2].range_assignment.remarks" label="Remarks"
             prepend-icon="mdi-note-text" outlined />
 
           <v-file-input v-model="applicant_details.assignees[2].pal.link" label="Upload Plantilla Allocation List"
@@ -776,7 +776,7 @@ const handle_application = async () => {
   const side = user && user.side;
   const status = applicant_details.value.status;
   const attachment = applicant_details.value.attachments;
-  const range_assessment = applicant_details.value.assignees[2].range_assessment;
+  const range_assignment = applicant_details.value.assignees[2].range_assignment;
   const pal = applicant_details.value.assignees[2].pal
 
   const is_attachment_valid = Object.values(applicant_details.value.attachments).every(attachment => typeof attachment.valid === 'boolean');
@@ -796,7 +796,7 @@ const handle_application = async () => {
       attachment,
       status,
       app_id: route.query.id,
-      range_assessment,
+      range_assignment,
       pal
     };
   } else {
@@ -907,7 +907,7 @@ const handle_evaluator = async (payload: any) => {
   const form = new FormData()
   /* @ts-ignore */
 
-  form.append("range_assessment", payload.range_assessment)
+  form.append("range_assignment", payload.range_assignment)
   form.append("pal", payload.pal.link[0])
 
   form.append("form", JSON.stringify(payload));

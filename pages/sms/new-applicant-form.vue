@@ -1100,16 +1100,6 @@ const applicant = ref({
   adm_experience: [],
   attachments: {
   },
-  pal: {
-    link: [],
-    valid: "",
-    description: "",
-    remarks: "",
-    timestamp: ""
-
-  },
-
-
   display: true,
   status: "For Signature",
   created_date: new Date(new Date()),
