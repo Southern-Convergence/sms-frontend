@@ -488,7 +488,7 @@
         </v-window>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="view_applicant_info_dialog" width="60%">
+    <v-dialog v-model="view_applicant_info_dialog" width="50%">
       <v-card flat class="mx-5">
         <v-toolbar color="indigo" v-if="$attrs['hide-toolbar'] !== ''" border>
           <v-list-item class="pl-2" density="compact">
@@ -505,7 +505,7 @@
           <table>
             <tbody>
               <tr>
-                <td width="30%"> Position</td>
+                <td width="20%"> Position</td>
                 <td class="text-uppercase text-primary font-weight-bold">
 
                   {{ applicant_qs_info?.position }}
