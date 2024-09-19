@@ -39,7 +39,6 @@
         <!-- Application header -->
         <v-row dense>
           <v-col cols="8">
-
             <v-btn v-if="applicant_details.is_with_erf && applicant_details?.status != 'For Signature'"
               @click="applicant_erf(applicant_details._id)" class="font-weight-bold mx-2" prepend-icon="mdi-printer"
               color="primary" density="compact"> Print ERF
@@ -347,10 +346,11 @@
             applicant_details?.status != 'Received Printout/s' && (applicant_details?.status != 'Approved for Printing' &&
               user.side === 'SDO') || applicant_details?.status === 'For Evaluation' || applicant_details?.status === 'For
           Checking'" -->
-          <v-col cols="6" v-else-if="applicant_details?.status === 'For Evaluation' && user.role === 'Evaluator'">
+          <v-col cols="6"
+            v-else-if="applicant_details?.status === 'For Evaluation' && user.role === 'Evaluator' || user.role === 'RO Evaluator'">
             <v-btn @click="sdo_evaluator_dialog = true" block variant="tonal"
               :color="applicant_details?.status === 'Disapproved' ? 'error' : 'success'">
-              {{ applicant_details?.status === 'Disapproved' ? 'Return to Principal' : 'Submitff' }}
+              {{ applicant_details?.status === 'Disapproved' ? 'Return to Principal' : 'Submit' }}
             </v-btn>
           </v-col>
           <v-col cols="6" v-else-if="submit_display">
@@ -488,7 +488,7 @@
         </v-window>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="view_applicant_info_dialog" width="60%">
+    <v-dialog v-model="view_applicant_info_dialog" width="50%">
       <v-card flat class="mx-5">
         <v-toolbar color="indigo" v-if="$attrs['hide-toolbar'] !== ''" border>
           <v-list-item class="pl-2" density="compact">
@@ -505,7 +505,7 @@
           <table>
             <tbody>
               <tr>
-                <td width="30%"> Position</td>
+                <td width="20%"> Position</td>
                 <td class="text-uppercase text-primary font-weight-bold">
 
                   {{ applicant_qs_info?.position }}
@@ -596,17 +596,24 @@
         <p class="mb-4">Please fill out the range assessment and remarks, as these will be included in the applicant's
           generated ERF
         </p>
-        <template v-if="applicant_details.is_with_erf">
+        <template v-if="applicant_details.is_with_erf && user.side === 'SDO'">
           <v-text-field v-model="applicant_details.assignees[2].range_assignment.name" label="Enter Range Assessment"
             prepend-icon="mdi-chart-bar" outlined />
           <v-text-field v-model="applicant_details.assignees[2].range_assignment.remarks" label="Remarks"
             prepend-icon="mdi-note-text" outlined />
 
-          <v-file-input v-model="applicant_details.assignees[2].pal.link" label="Upload Plantilla Allocation List"
+          <v-file-input v-model="applicant_details.assignees[2].pal" label="Upload Plantilla Allocation List"
             outlined />
         </template>
-        <template v-else>
-          <v-file-input v-model="applicant_details.assignees[2].pal.link" label="Upload Plantilla Allocation List"
+        <template v-if="applicant_details.is_with_erf && user.side === 'RO'">
+          <v-text-field v-model="applicant_details.assignees[4].range_assignment.name" label="Enter Range Assessment"
+            prepend-icon="mdi-chart-bar" outlined />
+          <v-text-field v-model="applicant_details.assignees[4].range_assignment.remarks" label="Remarks"
+            prepend-icon="mdi-note-text" outlined />
+
+        </template>
+        <template v-if="!applicant_details.is_with_erf && user.side === 'SDO'">
+          <v-file-input v-model="applicant_details.assignees[2].pal" label="Upload Plantilla Allocation List"
             outlined />
         </template>
       </v-card-text>
@@ -660,10 +667,12 @@ const enum ROLES {
 const evaluate_attachment = (key: string, value: boolean) => {
   applicant_details.value.attachments[key].valid = value;
 }
+
 const getCheckboxValue = (key: string, expected_value: boolean) => {
   const attachment = applicant_details.value.attachments[key];
   return attachment.valid === expected_value;
 };
+
 const remarks = ref("");
 const remarks_attachment = (key: string) => {
   applicant_details.value.attachments[key].remarks = remarks.value
@@ -770,13 +779,14 @@ async function assign_ro_evaluator_applicant() {
 const sdo_evaluator_dialog = ref(false)
 
 const handle_application = async () => {
-
-
   const role = user && user.role;
   const side = user && user.side;
   const status = applicant_details.value.status;
   const attachment = applicant_details.value.attachments;
-  const range_assignment = applicant_details.value.assignees[2].range_assignment;
+  const range_assignment = (user.side === 'SDO')
+    ? applicant_details.value.assignees[2].range_assignment
+    : applicant_details.value.assignees[4].range_assignment;
+
   const pal = applicant_details.value.assignees[2].pal
 
   const is_attachment_valid = Object.values(applicant_details.value.attachments).every(attachment => typeof attachment.valid === 'boolean');
@@ -799,6 +809,13 @@ const handle_application = async () => {
       range_assignment,
       pal
     };
+  } else if (side === 'RO' && status === 'For Evaluation') {
+    payload = {
+      attachment,
+      status,
+      range_assignment,
+      app_id: route.query.id,
+    };
   } else {
     payload = {
       attachment,
@@ -806,6 +823,7 @@ const handle_application = async () => {
       app_id: route.query.id,
     };
   }
+
   console.log("ROleeee", role);
 
   switch (role) {
@@ -814,6 +832,9 @@ const handle_application = async () => {
       break;
     case "Evaluator":
       handle_evaluator(payload);
+      break;
+    case "RO Evaluator":
+      handle_ro_evaluator(payload);
       break;
     case "Verifier":
       handle_verifier(payload);
@@ -902,21 +923,22 @@ const handle_admin4 = async (payload: any) => {
 
 }
 const handle_evaluator = async (payload: any) => {
-  console.log('Payloaddd', payload);
-
-  const form = new FormData()
+  const form = new FormData();
   /* @ts-ignore */
-
   form.append("range_assignment", payload.range_assignment)
-  form.append("pal", payload.pal.link[0])
-
+  form.append("pal", payload.pal[0])
   form.append("form", JSON.stringify(payload));
-
-  console.log(form)
-
   const { data, error } = await $rest('new-applicant/handle-evaluator', { method: "PUT", body: form })
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
   swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+
+}
+const handle_ro_evaluator = async (payload: any) => {
+  console.log("PAYYYYYLOADDD", payload);
+  const { data, error } = await $rest('new-applicant/handle-ro-evaluator', { method: "PUT", body: payload })
+  if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } });
+  swal({ title: "Success", text: data, icon: "success", buttons: { ok: false, cancel: false } })
+
 }
 // const handle_evaluator = async (payload: any) => {
 //   // const temp = new FormData();
@@ -964,6 +986,7 @@ const open_attachment_dialog = (attachment: string) => {
   const attachments = applicant_details.value.attachments;
   attach.value = { dialog: true, src: attachments[attachment], title: attachment };
 }
+
 
 
 

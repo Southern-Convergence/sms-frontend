@@ -546,7 +546,7 @@ const get_apts = async () => {
     roles.value = apts.filter(role => need_roles.includes(role.name))
 }
 
-const need_roles = ["Administrative Officer V", "Evaluator", "Verifier", "SDO Admin", "RO Admin"]
+const need_roles = ["Administrative Officer V", "RO Evaluator", "Verifier", "SDO Admin", "RO Admin"]
 
 const ro_roles = computed(() => {
     return roles.value.filter(role => need_roles.includes(role.name))

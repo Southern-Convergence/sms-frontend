@@ -1106,6 +1106,7 @@ const applicant = ref({
   request_log: [],
   output_requirement: [],
   approved: null,
+  pal: ""
 })
 
 function is_school(title: string): boolean {
