@@ -20,10 +20,12 @@
             The reclassification application period is already closed.
           </v-card-subtitle>
         </v-card-item>
+
       </v-card>
     </v-sheet>
     <v-sheet v-else class="w-100 d-flex align-center justify-center">
       <v-sheet width="88%" :border="step != 1">
+
         <v-form ref="applicant_form">
           <v-window v-model="step">
             <v-window-item :value="1">
@@ -46,9 +48,10 @@
                     System</b>
                 </v-card-subtitle>
                 <v-divider class="my-2" />
-                <v-card-text class="pa-8" style="height:78vh; justify-content: center; align-items: center;">
+                <v-card-text class="pa-8"
+                  style="height:78vh; justify-content: center; align-items: center;  overflow-y: auto; ">
                   <v-row dense v-if="!position_form" class="h-100 w-100 d-flex align-center justify-center">
-                    <v-col cols="5">
+                    <v-col cols="12" xl="5" lg="5" md="12" sm="12">
                       <v-card-text class="text-indigo"
                         style="font-family: Century Gothic; font-size:25px ; line-height: 30px;text-align: justify">
                         The Staffing Modification System automates reclassification requests for school
@@ -62,7 +65,7 @@
                       </v-card-text>
 
                     </v-col>
-                    <v-col cols="6" class="px-15">
+                    <v-col cols="12" xl="5" lg="5" md="12" sm="12" class="px-15">
                       <v-img src="/stronger.png" height="20vh" cover />
                       <h3> Click the list below and select the
                         position
@@ -78,7 +81,7 @@
                     </v-col>
                   </v-row>
                   <v-row v-if="position_form">
-                    <v-col cols="6" v-if="selected_qs">
+                    <v-col cols="12" xl="6" lg="6" md="12" sm="12" v-if="selected_qs">
                       <v-card rounded="xl" class="pa-5" variant="outlined">
                         <v-list-item class="mx-0 px-0 mb-2" density="compact">
                           <template v-slot:prepend>
@@ -166,7 +169,8 @@
                               Or if less
                               than 20
                               years in service :
-                              M.A. units + years in service (3 years in public or 5 years in private is equivalent to 1
+                              M.A. units + years in service (3 years in public or 5 years in private is equivalent to
+                              1
                               M.A.
                               unit) =
                               Total curriculum in M.A.</v-list-item-subtitle>
@@ -218,7 +222,7 @@
 
 
                     </v-col>
-                    <v-col cols="6">
+                    <v-col cols="12" xl="6" lg="6" md="12" sm="12">
                       <v-card class="pa-5" rounded="xl">
                         <v-list-item class="mx-0 px-0 mb-2" density="compact">
                           <template v-slot:prepend>
@@ -360,164 +364,161 @@
               </v-card>
             </v-window-item>
             <v-window-item :value="2">
-              <v-card-text>
-                <v-row dense>
-                  <v-col cols="12"> <v-icon class="mr-2 pb-2 " size="26" color="primary">mdi-account</v-icon>
-                    Personal
-                    Information </v-col>
+              <v-card-text style="max-height:88vh; justify-content: center; align-items: center;  overflow-y: auto">
+                <v-card-text>
+                  <v-row dense>
+                    <v-col cols="12"> <v-icon class="mr-2 pb-2 " size="26" color="primary">mdi-account</v-icon>
+                      Personal
+                      Information </v-col>
 
-                  <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                    <v-text-field v-model="applicant.personal_information.last_name" :rules="[$validator.required]"
-                      label="Surname" hide-details />
-                  </v-col>
-                  <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                    <v-text-field v-model="applicant.personal_information.first_name" :rules="[$validator.required]"
-                      label="Given Name" hide-details />
-                  </v-col>
-                  <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                    <v-text-field v-model="applicant.personal_information.middle_name" label="Middle Name"
-                      hide-details />
-                  </v-col>
-                  <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                    <v-text-field v-model="applicant.personal_information.email"
-                      :rules="[(v) => /.+@.+/.test(v) || 'Invalid Email address']" label="Email" hide-details />
-                  </v-col>
-                  <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                    <v-text-field v-model="applicant.personal_information.birthday" :rules="[$validator.required]"
-                      label="Birthday" type="date" hide-details />
-                  </v-col>
-                  <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                    <v-select v-model="applicant.personal_information.gender" :rules="[$validator.required]"
-                      label="Gender" :items="['Female', 'Male']" hide-details />
-                  </v-col>
-                  <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                    <v-text-field v-model="applicant.personal_information.contact_number" label="Contact Number"
-                      hide-details />
-                  </v-col>
-                  <v-col cols="12" xl="4" lg="4" md="4" sm="12" class="px-1 mt-1 ">
-                    <v-btn v-if="!applicant.personal_information.signature" prepend-icon="mdi-upload" color="primary"
-                      @click="esig = true">Upload
-                      E-signature</v-btn>
-                    <div v-else>
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
+                      <v-text-field v-model="applicant.personal_information.last_name" :rules="[$validator.required]"
+                        label="Surname" hide-details />
+                    </v-col>
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
+                      <v-text-field v-model="applicant.personal_information.first_name" :rules="[$validator.required]"
+                        label="Given Name" hide-details />
+                    </v-col>
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
+                      <v-text-field v-model="applicant.personal_information.middle_name" label="Middle Name"
+                        hide-details />
+                    </v-col>
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
+                      <v-text-field v-model="applicant.personal_information.email"
+                        :rules="[(v) => /.+@.+/.test(v) || 'Invalid Email address']" label="Email" hide-details />
+                    </v-col>
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
+                      <v-text-field v-model="applicant.personal_information.birthday" :rules="[$validator.required]"
+                        label="Birthday" type="date" hide-details />
+                    </v-col>
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
+                      <v-select v-model="applicant.personal_information.gender" :rules="[$validator.required]"
+                        label="Gender" :items="['Female', 'Male']" hide-details />
+                    </v-col>
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
+                      <v-text-field v-model="applicant.personal_information.contact_number" label="Contact Number"
+                        hide-details />
+                    </v-col>
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="12" class="px-1 mt-1 ">
+                      <v-btn v-if="!applicant.personal_information.signature" prepend-icon="mdi-upload" color="primary"
+                        @click="esig = true">Upload
+                        E-signature</v-btn>
+                      <div v-else>
 
-                      <div class="text-uppercase text-primary font-weight-bold mb-2">
-                        Signature :
+                        <div class="text-uppercase text-primary font-weight-bold mb-2">
+                          Signature :
+                        </div>
+                        <div class="d-flex justify-center mb-2">
+                          <v-img height="10vh" :src="applicant?.personal_information?.signature" contain
+                            class="border rounded-lg" />
+                        </div>
+                        <div class="text-center">
+                          <v-btn density="compact" color="red lighten-1" @click="clear_upload">
+                            <v-icon left>mdi-delete</v-icon>
+                            Clear
+                          </v-btn>
+                        </div>
                       </div>
-                      <div class="d-flex justify-center mb-2">
-                        <v-img height="10vh" :src="applicant?.personal_information?.signature" contain
-                          class="border rounded-lg" />
-                      </div>
-                      <div class="text-center">
-                        <v-btn density="compact" color="red lighten-1" @click="clear_upload">
-                          <v-icon left>mdi-delete</v-icon>
-                          Clear
+
+                    </v-col>
+
+                  </v-row>
+                </v-card-text>
+                <v-card-text>
+                  <v-row dense>
+                    <v-col cols="12"> <v-icon class="mr-2 pb-2" size="26" color="primary">mdi-briefcase-account</v-icon>
+                      Designation and Employment Information</v-col>
+
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
+                      <v-text-field v-model="applicant.designation.employee_no" :rules="[$validator.required]"
+                        label="Employee No" hide-details />
+                    </v-col>
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
+                      <v-text-field v-model="applicant.designation.plantilla_no" :rules="[$validator.required]"
+                        label="Plantilla No" hide-details />
+                    </v-col>
+
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
+                      <v-text-field v-model="applicant.designation.item_no" :rules="[$validator.required]"
+                        label="Item No" hide-details />
+                    </v-col>
+
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
+                      <v-select v-model="applicant.designation.division" :rules="[$validator.required]" label="Division"
+                        item-value="_id" :items="sdo_data" hide-details />
+                    </v-col>
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
+                      <v-text-field v-model="applicant.designation.district" :rules="[$validator.required]"
+                        label="District" hide-details hint="" />
+                    </v-col>
+
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1" v-if="is_school(qs?.title)">
+                      <v-text-field v-model="applicant.designation.school" label="School Name"
+                        hint="Please provide the complete official name of the school." persistent-hint />
+                    </v-col>
+
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
+                      <v-text-field v-model="applicant.designation.current_position" :rules="[$validator.required]"
+                        label="Current Position" hide-details item-value="_id" />
+                    </v-col>
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
+                      <v-select v-model="applicant.designation.current_sg" :rules="[$validator.required]"
+                        :items="sg_item" label="Current Salary Grade" hide-details item-value="_id" />
+                    </v-col>
+
+                    <v-col cols="12" xl="2" lg="2" md="2" sm="6" class="px-1" v-if="qs?.with_erf">
+                      <v-select v-model="applicant.designation.ipcrf_rating" :rules="[$validator.required]"
+                        label="IPCRF Rating" hide-details
+                        :items="['Satisfactory', 'Very Satisfactory', 'Outstanding', 'Unsatifactory', 'Poor']" />
+                    </v-col>
+                    <v-col cols="12" xl="2" lg="2" md="2" sm="6" class="px-1" v-if="qs?.with_erf">
+                      <v-text-field v-model="applicant.designation.ipcrf_equivalent" :rules="[$validator.required]"
+                        label="Performance Rating" hide-details type="number" /> </v-col>
+                  </v-row>
+                </v-card-text>
+                <v-card-text v-if="qs?.with_erf">
+                  <v-card-title class="text-subtitle-2 d-flex">
+                    I. Education Attainment and Civil Service Eligibility
+                    <v-btn @click="education_attainment_dialog = true" class="ml-2" density="compact" icon="mdi-plus"
+                      color="success" />
+                  </v-card-title>
+                  <v-sheet border class="mx-4 mb-4">
+                    <v-data-table :headers="education_attainment_headers" :items="applicant.educational_attainment">
+                      <template v-slot:item.actions="{ item }">
+                        <v-btn density="comfortable" color="error" dark icon variant="tonal" class="mx-2"
+                          @click="remove_table_item(item.selectable)">
+                          <v-icon icon left color="error">mdi-delete</v-icon>
                         </v-btn>
-                      </div>
-                    </div>
 
-
-
-
-
-
-                  </v-col>
-
-                </v-row>
-              </v-card-text>
-              <v-card-text>
-                <v-row dense>
-                  <v-col cols="12"> <v-icon class="mr-2 pb-2" size="26" color="primary">mdi-briefcase-account</v-icon>
-                    Designation and Employment Information</v-col>
-
-                  <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                    <v-text-field v-model="applicant.designation.employee_no" :rules="[$validator.required]"
-                      label="Employee No" hide-details />
-                  </v-col>
-                  <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                    <v-text-field v-model="applicant.designation.plantilla_no" :rules="[$validator.required]"
-                      label="Plantilla No" hide-details />
-                  </v-col>
-
-                  <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                    <v-text-field v-model="applicant.designation.item_no" :rules="[$validator.required]" label="Item No"
-                      hide-details />
-                  </v-col>
-
-                  <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                    <v-select v-model="applicant.designation.division" :rules="[$validator.required]" label="Division"
-                      item-value="_id" :items="sdo_data" hide-details />
-                  </v-col>
-                  <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                    <v-text-field v-model="applicant.designation.district" :rules="[$validator.required]"
-                      label="District" hide-details hint="" />
-                  </v-col>
-
-                  <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1" v-if="is_school(qs?.title)">
-                    <v-text-field v-model="applicant.designation.school" label="School Name"
-                      hint="Please provide the complete official name of the school." persistent-hint />
-                  </v-col>
-
-                  <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                    <v-text-field v-model="applicant.designation.current_position" :rules="[$validator.required]"
-                      label="Current Position" hide-details item-value="_id" />
-                  </v-col>
-                  <v-col cols="12" xl="4" lg="4" md="4" sm="6" class="px-1">
-                    <v-select v-model="applicant.designation.current_sg" :rules="[$validator.required]" :items="sg_item"
-                      label="Current Salary Grade" hide-details item-value="_id" />
-                  </v-col>
-
-                  <v-col cols="12" xl="2" lg="2" md="2" sm="6" class="px-1" v-if="qs?.with_erf">
-                    <v-select v-model="applicant.designation.ipcrf_rating" :rules="[$validator.required]"
-                      label="IPCRF Rating" hide-details
-                      :items="['Satisfactory', 'Very Satisfactory', 'Outstanding', 'Unsatifactory', 'Poor']" />
-                  </v-col>
-                  <v-col cols="12" xl="2" lg="2" md="2" sm="6" class="px-1" v-if="qs?.with_erf">
-                    <v-text-field v-model="applicant.designation.ipcrf_equivalent" :rules="[$validator.required]"
-                      label="Performance Rating" hide-details type="number" /> </v-col>
-                </v-row>
-              </v-card-text>
-              <v-card-text v-if="qs?.with_erf">
-                <v-card-title class="text-subtitle-2 d-flex">
-                  I. Education Attainment and Civil Service Eligibility
-                  <v-btn @click="education_attainment_dialog = true" class="ml-2" density="compact" icon="mdi-plus"
-                    color="success" />
-                </v-card-title>
-                <v-sheet border class="mx-4 mb-4">
-                  <v-data-table :headers="education_attainment_headers" :items="applicant.educational_attainment">
-                    <template v-slot:item.actions="{ item }">
-                      <v-btn density="comfortable" color="error" dark icon variant="tonal" class="mx-2"
-                        @click="remove_table_item(item.selectable)">
-                        <v-icon icon left color="error">mdi-delete</v-icon>
-                      </v-btn>
-
-                    </template>
-                    <template #bottom v-if="!show_footer" /> </v-data-table>
-                </v-sheet>
-                <v-row dense class="mx-4">
-                  <v-col cols="12"> Rergistrar details for Transcript of Records : </v-col>
-                  <v-col cols="4">
-                    <v-text-field v-model="applicant.transcript.registrar_name" label="Enter Register Complete Name"
-                      density="compact" hide-details="auto" />
-                  </v-col>
-                  <v-col cols="4"> <v-text-field v-model="applicant.transcript.registrar_email" label="Email Address"
-                      density="compact" hide-details="auto" />
-                  </v-col>
-                  <v-col cols="4">
-                    <v-text-field v-model="applicant.transcript.registrar_no" label="Contact Number" prefix="+63"
-                      mask="0 000 000 000" maxlength="10" density="compact" hide-details="auto"
-                      hint="Registrar Number is required" type="tel" /></v-col>
-                </v-row>
+                      </template>
+                      <template #bottom v-if="!show_footer" /> </v-data-table>
+                  </v-sheet>
+                  <v-row dense class="mx-2">
+                    <v-col cols="12"> Rergistrar details for Transcript of Records : </v-col>
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="12">
+                      <v-text-field v-model="applicant.transcript.registrar_name" label="Enter Register Complete Name"
+                        density="compact" hide-details="auto" />
+                    </v-col>
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="12"> <v-text-field
+                        v-model="applicant.transcript.registrar_email" label="Email Address" density="compact"
+                        hide-details="auto" />
+                    </v-col>
+                    <v-col cols="12" xl="4" lg="4" md="4" sm="12">
+                      <v-text-field v-model="applicant.transcript.registrar_no" label="Contact Number" prefix="+63"
+                        mask="0 000 000 000" maxlength="10" density="compact" hide-details="auto"
+                        hint="Registrar Number is required" type="tel" /></v-col>
+                  </v-row>
+                </v-card-text>
               </v-card-text>
             </v-window-item>
             <v-window-item :value="3" v-if="qs?.with_erf">
-
-              <v-card-text>
+              <v-card-text style="max-height:88vh; justify-content: center; align-items: center;  overflow-y: auto">
                 <v-card-title class="text-subtitle-2">
                   II. Service Record
                   <v-btn @click="service_record_dialog = true" density="compact" icon="mdi-plus" color="success" />
                 </v-card-title>
                 <v-row dense>
-                  <v-col cols="9">
+                  <v-col cols="12" xl="10" lg="10" md="12" sm="12">
                     <v-sheet border class="mx-4 mb-4">
                       <v-data-table :headers="service_record_headers" :items="applicant.service_record"
                         density="compact">
@@ -535,32 +536,9 @@
                     </v-sheet>
 
                   </v-col>
-                  <v-col cols="3">
-                    <v-sheet border class="pa-3">
-                      <v-subtitle>
-                        <v-icon color="primary">mdi-calendar-month</v-icon>
-                        <span class="ml-2">Service Record Summary</span>
-                      </v-subtitle>
-                      <v-divider />
-                      <v-card-text>
-                        <v-row justify="center">
-                          <v-col cols="12" md="6">
-                            Total Year: <v-chip class="px-4" color="primary"> {{
-                              total_service_record }}
-                            </v-chip>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            Equivalent: <v-chip class="px-4" color="secondary"> {{
-                              total_service_record_equivalent }}
-                            </v-chip>
-                          </v-col>
-                        </v-row>
-                      </v-card-text>
-                    </v-sheet>
-                  </v-col>
+
                 </v-row>
-              </v-card-text>
-              <v-card-text>
+
                 <v-card-title class="text-subtitle-2">
                   III. Equivalent Units
                 </v-card-title>
@@ -570,25 +548,42 @@
                       <v-row dense>
                         <v-col cols="12" class="text-caption text-grey-darken-1"> A. Total Number of Years
                           Teaching</v-col>
-                        <v-col cols="2"> <v-text-field v-model="applicant.equivalent_unit.public_years_teaching"
-                            label="Public Only" hide-details density="compact" type="number" readonly /></v-col>
-                        <v-col cols="2"> <v-text-field label="Equivalent"
+                        <v-col cols="2" xl="2" lg="2" md="6" sm="12"> <v-text-field
+                            v-model="applicant.equivalent_unit.public_years_teaching" label="Public Only" hide-details
+                            density="compact" type="number" readonly /></v-col>
+                        <v-col cols="2" xl="2" lg="2" md="6" sm="12"> <v-text-field label="Equivalent"
                             v-model="applicant.equivalent_unit.yt_equivalent" hide-details density="compact"
                             type="number" readonly />
                         </v-col>
-                        <v-col cols="2"> <v-text-field v-model="applicant.equivalent_unit.private_years_teaching"
-                            label="Public Schools" hide-details density="compact" type="number" readonly /></v-col>
-                        <v-col cols="2"> <v-text-field v-model="applicant.equivalent_unit.pd_equivalent"
-                            label="Private Equivalent" hide-details density="compact" type="number" /></v-col>
+                        <v-col cols="2" xl="2" lg="2" md="6" sm="12"> <v-text-field
+                            v-model="applicant.equivalent_unit.private_years_teaching" label="Public Schools"
+                            hide-details density="compact" type="number" readonly /></v-col>
+                        <v-col cols="2" xl="2" lg="2" md="6" sm="12"> <v-text-field
+                            v-model="applicant.equivalent_unit.pd_equivalent" label="Private Equivalent" hide-details
+                            density="compact" type="number" /></v-col>
                       </v-row>
                     </v-col>
-
+                    <v-col cols="12" class="mt-2">
+                      <v-row justify="start">
+                        <v-col cols="2" xl="2" lg="2" md="6" sm="6" class="font-weight-bold text-uppercase">
+                          Total Year: <v-chip class="px-4" color="primary"> {{
+                            total_service_record }}
+                          </v-chip>
+                        </v-col>
+                        <v-col cols="2" xl="2" lg="2" md="6" sm="6" class="font-weight-bold text-uppercase">
+                          Equivalent: <v-chip class="px-4" color="secondary"> {{
+                            total_service_record_equivalent }}
+                          </v-chip>
+                        </v-col>
+                      </v-row>
+                    </v-col>
                     <v-col cols="12">
                       <v-row dense>
                         <v-col cols="12" class="text-caption text-grey-darken-1">
                           B. Degree to Equivalent
                         </v-col>
-                        <v-col cols="4"> <v-text-field v-model="applicant.equivalent_unit.present_degree"
+                        <v-col cols="12" xl="4" lg="4" md="6" sm="12"> <v-text-field
+                            v-model="applicant.equivalent_unit.present_degree"
                             label="Degree or Degree Equivalent (present degree)" hide-details
                             density="compact" /></v-col>
 
@@ -597,7 +592,7 @@
                     <v-col cols="12" class="text-caption text-grey-darken-1 mt-2">
                       C. Areas of Equivalent
                     </v-col>
-                    <v-col cols="10" class="px-2">
+                    <v-col cols="12" xl="10" lg="10" md="12" sm="12" class="px-2">
                       <v-sheet>
                         <v-card-title class="text-caption">
                           1. Professional Study
@@ -617,18 +612,7 @@
                         </v-sheet>
                       </v-sheet>
                     </v-col>
-                    <!-- <v-col cols="12" class="text-caption text-grey-darken-1 pl-5 mt-2 mb-2">
-                      2. Teaching Experience
-
-                    </v-col>
-                    <v-col cols="12" xl="4" lg="4" md="4" sm="12" class="px-2 ml-5">
-                      <v-text-field label="Public Schools" v-model="applicant.equivalent_unit.public_years_teaching"
-                        hide-details type="number" readonly /></v-col>
-                    <v-col cols="12" xl="4" lg="4" md="4" sm="12" class="px-2"> <v-text-field
-                        v-model="applicant.equivalent_unit.private_years_teaching" label="Private School"
-                        type="number" readonly /></v-col> -->
-
-                    <v-col cols="10" class="pl-5" v-if="!adm_display">
+                    <v-col cols="12" xl="10" lg="10" md="12" sm="12" class="px-6" v-if="!adm_display">
                       <v-sheet>
                         <v-card-title class="text-caption">
                           2. Administrative Supervisory Experience
@@ -654,7 +638,7 @@
               </v-card-text>
             </v-window-item>
             <v-window-item :value="4">
-              <v-card-text style="min-height: 50vh">
+              <v-card-text style="max-height:85vh; justify-content: center; align-items: center; overflow-y: auto;">
                 <v-card-title class="text-subtitle-2">
                   III. Attachments
                 </v-card-title>
@@ -694,22 +678,23 @@
       </v-sheet>
     </v-sheet>
 
-    <commons-dialog max-width="35%" v-model="service_record_dialog" :icon="'mdi-face-agent'"
-      :title="'Service Record Form'" :subtitle="'Employment History'" @submit="add_service_record" :submitText="'Add'">
+    <commons-dialog width="35%" v-model="service_record_dialog" :icon="'mdi-face-agent'" :title="'Service Record Form'"
+      :subtitle="'Employment History'" @submit="add_service_record" :submitText="'Add'">
       <v-card-text class="my-2">
         <v-form ref="service_record_form">
           <v-row dense>
-            <v-col cols="6"> <v-select v-model="service_record.type" :items="['Private', 'Public']" label="Type"
+            <v-col cols="12" xl="6" lg="6" md="12" sm="12"> <v-select v-model="service_record.type"
+                :items="['Private', 'Public']" label="Type" hide-details /></v-col>
+            <v-col cols="12" xl="6" lg="6" md="12" sm="12"> <v-text-field v-model="service_record.designation"
+                label="Position/Designation" hide-details /></v-col>
+            <v-col cols="12" xl="8" lg="8" md="12" sm="12"> <v-text-field v-model="service_record.school" label="School"
                 hide-details /></v-col>
-            <v-col cols="6"> <v-text-field v-model="service_record.designation" label="Position/Designation"
-                hide-details /></v-col>
-            <v-col cols="8"> <v-text-field v-model="service_record.school" label="School" hide-details /></v-col>
-            <v-col cols="4"> <v-text-field v-model="service_record.school_acronym" label="School Acronym"
-                hide-details /></v-col>
-            <v-col cols="6"> <v-text-field v-model="service_record.from" label="From" hide-details
-                type="date" /></v-col>
-            <v-col cols="6"> <v-text-field v-model="service_record.to" label="To" hide-details type="date" /></v-col>
-
+            <v-col cols="12" xl="4" lg="4" md="12" sm="12"> <v-text-field v-model="service_record.school_acronym"
+                label="School Acronym" hide-details /></v-col>
+            <v-col cols="12" xl="6" lg="6" md="12" sm="12"> <v-text-field v-model="service_record.from" label="From"
+                hide-details type="date" /></v-col>
+            <v-col cols="12" xl="6" lg="6" md="12" sm="12"> <v-text-field v-model="service_record.to" label="To"
+                hide-details type="date" /></v-col>
           </v-row>
         </v-form>
       </v-card-text>
@@ -722,16 +707,18 @@
       <v-card-text class="my-2">
         <v-form ref="adm_experience_form">
           <v-row dense>
-            <v-col cols="6"> <v-select v-model="adm_experience.type" :items="['Private', 'Public']" label="Type"
+            <v-col cols="12" xl="6" lg="6" md="12" sm="12"> <v-select v-model="adm_experience.type"
+                :items="['Private', 'Public']" label="Type" hide-details /></v-col>
+            <v-col cols="12" xl="6" lg="6" md="12" sm="12"> <v-text-field v-model="adm_experience.designation"
+                label="Position/Designation" hide-details /></v-col>
+            <v-col cols="12" xl="8" lg="8" md="12" sm="12"> <v-text-field v-model="adm_experience.school" label="School"
                 hide-details /></v-col>
-            <v-col cols="6"> <v-text-field v-model="adm_experience.designation" label="Position/Designation"
-                hide-details /></v-col>
-            <v-col cols="8"> <v-text-field v-model="adm_experience.school" label="School" hide-details /></v-col>
-            <v-col cols="4"> <v-text-field v-model="adm_experience.school_acronym" label="School Acronym"
-                hide-details /></v-col>
-            <v-col cols="6"> <v-text-field v-model="adm_experience.from" label="From" hide-details
-                type="date" /></v-col>
-            <v-col cols="6"> <v-text-field v-model="adm_experience.to" label="To" hide-details type="date" /></v-col>
+            <v-col cols="12" xl="4" lg="4" md="12" sm="12"> <v-text-field v-model="adm_experience.school_acronym"
+                label="School Acronym" hide-details /></v-col>
+            <v-col cols="12" xl="6" lg="6" md="12" sm="12"> <v-text-field v-model="adm_experience.from" label="From"
+                hide-details type="date" /></v-col>
+            <v-col cols="12" xl="6" lg="6" md="12" sm="12"> <v-text-field v-model="adm_experience.to" label="To"
+                hide-details type="date" /></v-col>
 
           </v-row>
         </v-form>
@@ -740,24 +727,23 @@
     </commons-dialog>
 
 
-    <commons-dialog max-width="40%" v-model="education_attainment_dialog" icon="'mdi-school'"
+    <commons-dialog max-width="45%" v-model="education_attainment_dialog" icon="'mdi-school'"
       :title="'Education Attainment and Civil Service Eligibility'"
       :subtitle="'Your educational background and civil service information'" @submit="add_education_attainment"
       :submitText="'Add'">
       <v-card-text class="ma-3">
-
         <v-row dense>
-          <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field v-model="education_attainment.date"
-              label="Date" hide-details type="date" /></v-col>
-          <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field v-model="education_attainment.degree"
+          <v-col cols="12" xl="4" lg="6" md="12" sm="12"> <v-text-field v-model="education_attainment.date" label="Date"
+              hide-details type="date" /></v-col>
+          <v-col cols="12" xl="4" lg="6" md="12" sm="12"> <v-text-field v-model="education_attainment.degree"
               label="Title, Degree Highest Grade Attained" hide-details /></v-col>
-          <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field
-              v-model="education_attainment.institution" label="Name of Institution" hide-details /></v-col>
-          <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field
-              v-model="education_attainment.year_received" label="Year Received" hide-details /></v-col>
-          <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field v-model="education_attainment.board_exam"
+          <v-col cols="12" xl="4" lg="6" md="12" sm="12"> <v-text-field v-model="education_attainment.institution"
+              label="Name of Institution" hide-details /></v-col>
+          <v-col cols="12" xl="4" lg="6" md="12" sm="12"> <v-text-field v-model="education_attainment.year_received"
+              label="Year Received" hide-details /></v-col>
+          <v-col cols="12" xl="4" lg="6" md="12" sm="12"> <v-text-field v-model="education_attainment.board_exam"
               label="Board Examination" hide-details /></v-col>
-          <v-col cols="12" xxl="4" xl="4" lg="6" md="6" sm="12"> <v-text-field v-model="education_attainment.rating"
+          <v-col cols="12" xl="4" lg="6" md="12" sm="12"> <v-text-field v-model="education_attainment.rating"
               label="Rating" hide-details /></v-col>
         </v-row>
       </v-card-text>
@@ -768,10 +754,10 @@
       :submitText="'Add'">
       <v-card-text class="my-2">
         <v-row dense>
-          <v-col cols="6"> <v-text-field v-model="professional_study.sy" label="School Year  (e.g., 2024–2025)"
-              hide-details="auto" /></v-col>
-          <v-col cols="6"> <v-text-field v-model="professional_study.unit_no" label="Unit Number" type="number"
-              hide-details /></v-col>
+          <v-col cols="12" xl="6" lg="6" md="12" sm="12"> <v-text-field v-model="professional_study.sy"
+              label="School Year  (e.g., 2024–2025)" hide-details="auto" /></v-col>
+          <v-col cols="12" xl="6" lg="6" md="12" sm="12"> <v-text-field v-model="professional_study.unit_no"
+              label="Unit Number" type="number" hide-details /></v-col>
           <v-col cols="12"> <v-textarea v-model="professional_study.description" label="Description" rows="3" /></v-col>
         </v-row>
       </v-card-text>
@@ -1080,7 +1066,7 @@ const applicant = ref({
     school: "",
     item_no: "",
     ipcrf_rating: "",
-    rating_equivalent: "",
+    ipcrf_equivalent: 0,
   },
   educational_attainment: [],
   equivalent_unit: {
@@ -1868,13 +1854,13 @@ const total_service_record = computed(() => {
   const public_experience = Number(applicant.value.equivalent_unit.public_years_teaching);
   const private_experience = Number(applicant.value.equivalent_unit.private_years_teaching);
   const result = public_experience + public_experience
-  return result;
+  return Number(result).toFixed();
 });
 const total_service_record_equivalent = computed(() => {
   const public_experience = Number(applicant.value.equivalent_unit.yt_equivalent);
   const private_experience = Number(applicant.value.equivalent_unit.pd_equivalent);
-  const result = public_experience + public_experience
-  return result;
+  const result = public_experience + private_experience
+  return Number(result).toFixed();
 });
 
 

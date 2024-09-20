@@ -70,7 +70,7 @@
                 <v-row no-gutters class="ma-2" justify="center">
                   <v-col cols="6" class="text-capitalize">Name : <b> {{
                     applicant_details?.personal_information?.first_name
-                      }} {{ applicant_details?.personal_information?.last_name }} </b>
+                  }} {{ applicant_details?.personal_information?.last_name }} </b>
                   </v-col>
                   <v-col cols="6">Date of Birth : <b> {{
                     applicant_details?.personal_information?.birthday }}
@@ -299,7 +299,7 @@
           </v-col>
 
           <v-col cols="6"
-            v-else-if="user && user.role === ROLES.EVALUATOR && applicant_details?.status === 'Approved for Printing'">
+            v-else-if="user && user.role === ROLES.ROEVALUATOR && applicant_details?.status === 'Approved for Printing'">
             <v-btn variant="tonal" color="primary" block @click="attach_output_requirement">
               Received Hard Copies
             </v-btn>
@@ -347,7 +347,7 @@
               user.side === 'SDO') || applicant_details?.status === 'For Evaluation' || applicant_details?.status === 'For
           Checking'" -->
           <v-col cols="6"
-            v-else-if="applicant_details?.status === 'For Evaluation' && user.role === 'Evaluator' || user.role === 'RO Evaluator'">
+            v-else-if="applicant_details?.status === 'For Evaluation' && user.role === 'Evaluator' || applicant_details?.status === 'For Evaluation' && user.role === 'RO Evaluator'">
             <v-btn @click="sdo_evaluator_dialog = true" block variant="tonal"
               :color="applicant_details?.status === 'Disapproved' ? 'error' : 'success'">
               {{ applicant_details?.status === 'Disapproved' ? 'Return to Principal' : 'Submit' }}
@@ -655,6 +655,7 @@ const enum ROLES {
   PRINCIPAL = "Principal",
   ADMIN4 = "Administrative Officer IV",
   EVALUATOR = "Evaluator",
+  ROEVALUATOR = "RO Evaluator",
   VERIFIER = "Verifier",
   RECOMMENDING = "Recommending Approver",
   APPROVER = "Approver",
