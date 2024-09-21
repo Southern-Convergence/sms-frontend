@@ -67,7 +67,7 @@
                 <v-row no-gutters class="ma-2" justify="center">
                   <v-col cols="6" class="text-capitalize">Name : <b> {{
                     applicant_details?.personal_information?.first_name
-                      }} {{ applicant_details?.personal_information?.last_name }} </b>
+                  }} {{ applicant_details?.personal_information?.last_name }} </b>
                   </v-col>
                   <v-col cols="6">Date of Birth : <b> {{
                     applicant_details?.personal_information?.birthday }}
@@ -106,28 +106,7 @@
                           <template #bottom v-if="!show_footer" />
                         </v-data-table>
                       </v-sheet>
-                      <!-- <v-sheet class="px-3 pt-3" border width="50%">
-                        <v-subtitle>
-                          <v-icon color="primary">mdi-calendar-month</v-icon>
-                          <span class="ml-2">Service Record Summary</span>
-                        </v-subtitle>
-                        <v-divider />
-                        <v-card-text>
-                          <v-row justify="center">
-                            <v-col cols="12" md="6">
-                              Total Year: <v-chip class="px-4" color="primary"> {{
-                                applicant_details?.equivalent_unit?.public_years_teaching }}
-                              </v-chip>
-                            </v-col>
-                            <v-col cols="12" md="6">
-                              Equivalent: <v-chip class="px-4" color="secondary"> {{
-                                applicant_details?.equivalent_unit?.yt_equivalent }}
-                              </v-chip>
-                            </v-col>
-                          </v-row>
-                        </v-card-text>
 
-                      </v-sheet> -->
 
                       <p class="mt-3 font-weight-bold text-uppercase text-caption">
                         III. EQUIVALENT UNITS
@@ -187,9 +166,26 @@
                         </v-row>
 
                       </v-sheet>
-                    </v-sheet>
-                    <v-row dense class="ml-15 mt-1">
 
+                      <v-sheet class="ma-2 ml-15 "
+                        v-if="applicant_details.adm_experience && applicant_details.adm_experience.length">
+                        <span class=" text-caption" density="compact">
+                          3. Administrative Supervisory Experience
+                        </span>
+
+                        <v-sheet class="mb-2" border width="100%">
+                          <v-data-table :headers="service_record_headers" :items="applicant_details.adm_experience"
+                            density="compact">
+                            <template v-slot:item.equivalent="{ item }">
+                              {{ item?.selectable?.equivalent }}
+
+                            </template>
+                            <template #bottom v-if="!show_footer" />
+                          </v-data-table>
+                        </v-sheet>
+                      </v-sheet>
+                    </v-sheet>
+                    <v-row class="ml-15 mt-3">
                       LATEST IPCRF RATING : <div class="px-5 font-weight-bold" style="border-bottom: 1px solid black">
                         {{ applicant_details.designation?.ipcrf_rating }} , {{
                           applicant_details.designation?.ipcrf_equivalent
