@@ -1,12 +1,19 @@
 <template>
   <v-container>
     <div class="d-print-none">
-      <v-row>
-
+      <v-row justify="center">
         <v-col cols="6" class="d-flex ">
           <v-select v-if="user.side === 'RO'" label="Filter by SDO" v-model="selected_sdo" :items="sdo" item-value="_id"
-            persistent-hint clearable class="pr-2" />
-          <v-select label="Filter by year" persistent-hint clearable />
+            persistent-hint clearable />
+          <v-select label="Filter by Position" :items="positions" v-model="selected_position" item-value="_id"
+            persistent-hint clearable class="px-2" />
+          <v-select label="Filter by year" persistent-hint clearable v-model="selected_year" :items="years"
+            :menu-props="{ closeOnContentClick: false }" @change="custom_year" :allow-overflow="true">
+            <template v-slot:append-item>
+              <v-text-field class="mx-2" variant="underlined" v-model="added_year" label="Specify Year"
+                @input="add_year_items" hide-details />
+            </template>
+          </v-select>
           <v-btn @click="get_dashboard" class="ml-2 mt-1" color="primary">
             <v-icon class="pr-1">mdi-filter</v-icon>Filter</v-btn>
         </v-col>
@@ -19,6 +26,7 @@
 
 
     <body class="printable-page" v-else>
+
       <div class="content">
         <commons-header />
         <v-sheet class="ma-5">
@@ -81,18 +89,33 @@ const user = useAuth().user;
 const router = useRouter();
 onBeforeMount(() => {
   get_sdo();
-  get_dashboard()
+  get_dashboard();
+  get_position()
 });
 
+const selected_year = ref(null);
+const added_year = ref('');
+const years = ref([2024, 2025, 2026]);
+
+const custom_year = (year: any) => {
+  if (!years.value.includes(year)) {
+    added_year.value = year;
+  }
+};
+const add_year_items = () => {
+  if (added_year.value) {
+    selected_year.value = added_year.value;
+  }
+};
 const applicants = ref([]);
 async function get_dashboard() {
-
   if (user.side === 'SDO') {
     user.division = selected_sdo.value
   }
-
   const payload = {
-    sdo: selected_sdo.value
+    sdo: selected_sdo.value,
+    position: selected_position.value,
+    // sy: Number(selected_year.value)
   };
   const { data, error } = await $rest('new-applicant/get-dashboard', {
     method: "GET",
@@ -109,6 +132,17 @@ async function get_sdo() {
     method: "GET"
   });
   sdo.value = data;
+
+}
+
+const positions = ref([]);
+const selected_position = ref("");
+async function get_position() {
+  const { data, error } = await $rest('new-applicant/get-all-position', {
+    method: "GET"
+  });
+
+  positions.value = data;
 
 }
 function print() {

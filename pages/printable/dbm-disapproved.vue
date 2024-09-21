@@ -1,36 +1,44 @@
 <template>
   <v-container>
     <div class="d-print-none">
-      <v-row>
-        <v-col cols="4" class="d-flex ">
+      <v-row justify="center">
+        <v-col cols="6" class="d-flex ">
           <v-select v-if="user.side === 'RO'" label="Filter by SDO" v-model="selected_sdo" :items="sdo" item-value="_id"
-            persistent-hint clearable class="pr-2" />
-          <v-select label="Filter by year" persistent-hint clearable />
+            persistent-hint clearable />
+          <v-select label="Filter by Position" :items="positions" v-model="selected_position" item-value="_id"
+            persistent-hint clearable class="px-2" />
+          <v-select label="Filter by year" persistent-hint clearable v-model="selected_year" :items="years"
+            :menu-props="{ closeOnContentClick: false }" @change="custom_year" :allow-overflow="true">
+            <template v-slot:append-item>
+              <v-text-field class="mx-2" variant="underlined" v-model="added_year" label="Specify Year"
+                @input="add_year_items" hide-details />
+            </template>
+          </v-select>
           <v-btn @click="get_dashboard" class="ml-2 mt-1" color="primary">
             <v-icon class="pr-1">mdi-filter</v-icon>Filter</v-btn>
         </v-col>
       </v-row>
     </div>
-    <div class="notprintable" v-if="!applicants.length && selected_sdo">
-      <v-alert icon="mdi-alert-circle" title="No Data Found" text="There are no disapproved reclassifications by DBM."
+    <div class="notprintable" v-if="!applicants.length">
+      <v-alert icon="mdi-alert-circle" title="No Data Found" text="There are no approved reclassifications by DBM."
         type="error" variant="tonal"></v-alert>
     </div>
 
-    <body class="printable-page" v-if="applicants.length">
+
+    <body class="printable-page" v-else>
+
       <div class="content">
         <commons-header />
         <v-sheet class="ma-5">
-          <h3 class="text-center">Summary of Reclassifications Disapproved by DBM</h3>
+          <h3 class="text-center">Summary of Reclassifications Approved by DBM</h3>
 
           <v-sheet class="mt-5" border>
-
             <table>
               <thead>
                 <tr>
-                  <th> NAME</th>
                   <th> CONTROL NUMBER</th>
-
-                  <th>SCHOOL DIVISION OFFICE</th>
+                  <th> NAME</th>
+                  <th>SDO</th>
                   <th>FROM</th>
                   <th>TO</th>
                   <th>DATE APPLIED</th>
@@ -39,8 +47,9 @@
 
               </thead>
               <tbody>
+
                 <tr v-for="app, index in applicants" :key="app">
-                  <td> {{ app.full_name }}</td>
+                  <td> {{ index + 1 }}. {{ app.full_name }}</td>
                   <td>{{ app.control_number }}</td>
                   <td class="text-center"> {{ app.division }} </td>
                   <td class="text-center"> {{ app.current_position }}</td>
@@ -50,6 +59,7 @@
                     day: '2-digit', year: 'numeric'
                   }) }}</td>
 
+
                 </tr>
               </tbody>
             </table>
@@ -58,12 +68,16 @@
 
       </div>
     </body>
+
+
+
     <div style="position: fixed; bottom: 20px; right: 20px;" class="d-print-none">
       <v-btn icon="mdi-printer" fixed fab color="primary" size="large" class="mb-2" @click="print()">
       </v-btn> <br />
       <v-btn icon="mdi-keyboard-return" fixed fab size="large" @click="$router.back()">
       </v-btn>
     </div>
+
   </v-container>
 </template>
 
@@ -73,30 +87,43 @@ const { $rest } = useNuxtApp();
 const auth = useAuth();
 const user = useAuth().user;
 const router = useRouter();
-
 onBeforeMount(() => {
-
   get_sdo();
-  get_dashboard()
+  get_dashboard();
+  get_position()
 });
 
+const selected_year = ref(null);
+const added_year = ref('');
+const years = ref([2024, 2025, 2026]);
+
+const custom_year = (year: any) => {
+  if (!years.value.includes(year)) {
+    added_year.value = year;
+  }
+};
+const add_year_items = () => {
+  if (added_year.value) {
+    selected_year.value = added_year.value;
+  }
+};
 const applicants = ref([]);
 async function get_dashboard() {
   if (user.side === 'SDO') {
     user.division = selected_sdo.value
   }
   const payload = {
-    sdo: selected_sdo.value
+    sdo: selected_sdo.value,
+    position: selected_position.value,
+    // sy: Number(selected_year.value)
   };
   const { data, error } = await $rest('new-applicant/get-dashboard', {
     method: "GET",
     query: payload,
   });
-  const filtered_disapproved = data.filter((applicant: any) => !applicant.approved && applicant.status === 'Completed');
-  applicants.value = filtered_disapproved
+  const filtered_approved = data.filter((applicant: any) => !applicant.approved && applicant.status === 'Completed');
+  applicants.value = filtered_approved
 }
-
-
 
 const sdo = ref([]);
 const selected_sdo = ref("");
@@ -105,6 +132,17 @@ async function get_sdo() {
     method: "GET"
   });
   sdo.value = data;
+
+}
+
+const positions = ref([]);
+const selected_position = ref("");
+async function get_position() {
+  const { data, error } = await $rest('new-applicant/get-all-position', {
+    method: "GET"
+  });
+
+  positions.value = data;
 
 }
 function print() {
@@ -122,10 +160,7 @@ function print() {
 
 }
 
-.notprintable {
-  margin: 0 auto;
-  width: 210mm;
-}
+
 
 * {
   font-size: 13px

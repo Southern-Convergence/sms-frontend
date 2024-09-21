@@ -3,13 +3,10 @@
     <v-card flat class="w-100">
       <v-card-title> <v-row dense>
           <v-col cols="8" class="font-weight-bold text-h6"> EVALUATION /
-            LIST OF
-            REQUIREMENTS FORM</v-col>
-
-        </v-row></v-card-title>
-
+            LIST OF REQUIREMENTS FORM</v-col>
+        </v-row>
+      </v-card-title>
       <v-card-text>
-
         <!-- Application header -->
         <v-row no-gutters>
           <v-col cols="5"> TO : <b class="text-uppercase text-subtitle-1 font-weight-bold">{{
@@ -70,7 +67,7 @@
                 <v-row no-gutters class="ma-2" justify="center">
                   <v-col cols="6" class="text-capitalize">Name : <b> {{
                     applicant_details?.personal_information?.first_name
-                  }} {{ applicant_details?.personal_information?.last_name }} </b>
+                      }} {{ applicant_details?.personal_information?.last_name }} </b>
                   </v-col>
                   <v-col cols="6">Date of Birth : <b> {{
                     applicant_details?.personal_information?.birthday }}
@@ -222,7 +219,8 @@
                   <v-icon class="mr-2">mdi-attachment</v-icon>
                   <span>View Attachment</span>
                 </v-btn>
-                <v-form ref="erf_form">
+
+                <v-form ref="erf_form" v-if="!route?.query?.display">
                   <v-row dense v-if="sdo_attachment_evaluator_condition">
                     <v-col cols="auto" class="mt-3 font-weight-bold text-grey "> Evaluation :</v-col>
                     <v-col cols="auto">
@@ -265,7 +263,7 @@
         </v-row>
         <v-col cols="12" class="d-flex justify-center"
           v-if="applicant_details.status === 'For Evaluation' || applicant_details.status === 'For Checking'">
-          <v-sheet height="17vh" class="text-center w-50  justify-center">
+          <v-sheet class="text-center w-50  justify-center" v-if="!route?.query?.display">
             <div>
               <v-sheet class="d-flex align-center justify-center" min-height="7vh">
                 <div v-show="evaluator_signature_cond">
@@ -291,7 +289,7 @@
 
 
       </v-card-text>
-      <v-card-actions>
+      <v-card-actions v-if="!route?.query?.display">
         <v-row justify="center">
           <v-col cols="6"
             v-if="user && user.role === 'Administrative Officer IV' && applicant_details.status === 'Pending'">
@@ -650,6 +648,12 @@ onBeforeMount(() => {
   if (user) setPageLayout("barren");
 });
 
+// onMounted(() => {
+//   if (route.query.display === 'false' && applicant_details?.value) {
+//     applicant_details.value.display = false;
+//   }
+// });
+
 
 const enum ROLES {
   PRINCIPAL = "Principal",
@@ -662,6 +666,10 @@ const enum ROLES {
   ADMIN5 = "Administrative Officer V",
   RO_EVALUATOR = "RO Evaluator",
 }
+
+
+
+
 
 
 // EVALUATES APPLICANT ATTACHMENT

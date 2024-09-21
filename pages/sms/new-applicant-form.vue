@@ -1299,7 +1299,6 @@ function add_service_record() {
   service_record_dialog.value = false;
 
 
-  // const total_years = applicant.value.service_record.reduce((total, record) => total + (record?.count || 0), 0);
   let total_public_year_equivalent = 0;
   let total_public_years = 0;
   let total_private_year_equivalent = 0;
@@ -1853,7 +1852,7 @@ const private_equivalent_ma_units = computed(() => {
 const total_service_record = computed(() => {
   const public_experience = Number(applicant.value.equivalent_unit.public_years_teaching);
   const private_experience = Number(applicant.value.equivalent_unit.private_years_teaching);
-  const result = public_experience + public_experience
+  const result = public_experience + private_experience
   return Number(result).toFixed();
 });
 const total_service_record_equivalent = computed(() => {
