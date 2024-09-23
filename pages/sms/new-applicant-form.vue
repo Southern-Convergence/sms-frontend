@@ -1632,7 +1632,7 @@ async function create_application() {
   }
 
   const { attachments } = applicant.value;
-  const temp = new FormData(); a
+  const temp = new FormData();
 
   Object.entries(attachments).forEach(([title, file]) => {
     file.forEach((v: any) => {
