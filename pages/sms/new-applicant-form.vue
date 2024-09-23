@@ -1044,29 +1044,29 @@ const applicant = ref({
     status_of_appointment: false,
   },
   personal_information: {
-    last_name: "Paclian",
-    first_name: "Yanyan",
+    last_name: "",
+    first_name: "",
     middle_name: "",
-    email: "yan@gmail.com",
+    email: "",
     birthday: new Date,
-    gender: "Female",
-    signature: "e",
-    contact_number: "0987654"
+    gender: "",
+    signature: "",
+    contact_number: ""
   },
   principal: {
     email: "",
     signature: "",
   },
   designation: {
-    current_position: "d",
-    current_sg: "d",
-    employee_no: "d",
-    plantilla_no: "d",
-    division: "d",
-    district: "d",
-    school: "d",
-    item_no: "d",
-    ipcrf_rating: "d",
+    current_position: "",
+    current_sg: "",
+    employee_no: "",
+    plantilla_no: "",
+    division: "",
+    district: "",
+    school: "",
+    item_no: "",
+    ipcrf_rating: "",
     ipcrf_equivalent: 0,
   },
   educational_attainment: [],
@@ -1630,10 +1630,9 @@ async function create_application() {
   if (!principal_form.value.isValid) {
     return swal({ text: "Principal Email is required!", icon: "info" });
   }
-  console.log("APPPPPP", applicant.value);
 
   const { attachments } = applicant.value;
-  const temp = new FormData();
+  const temp = new FormData(); a
 
   Object.entries(attachments).forEach(([title, file]) => {
     file.forEach((v: any) => {
@@ -1649,10 +1648,10 @@ async function create_application() {
     method: "POST",
     body: temp
   });
-
   loading.value = false
   applicant_form.value.reset()
   if (error) return swal({ title: "Error", text: error, icon: "error" });
+
   return swal({ title: "Success", text: data, icon: "success" });
 
 }
