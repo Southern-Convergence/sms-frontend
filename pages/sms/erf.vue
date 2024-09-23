@@ -3,13 +3,10 @@
     <v-card flat class="w-100">
       <v-card-title> <v-row dense>
           <v-col cols="8" class="font-weight-bold text-h6"> EVALUATION /
-            LIST OF
-            REQUIREMENTS FORM</v-col>
-
-        </v-row></v-card-title>
-
+            LIST OF REQUIREMENTS FORM</v-col>
+        </v-row>
+      </v-card-title>
       <v-card-text>
-
         <!-- Application header -->
         <v-row no-gutters>
           <v-col cols="5"> TO : <b class="text-uppercase text-subtitle-1 font-weight-bold">{{
@@ -109,28 +106,7 @@
                           <template #bottom v-if="!show_footer" />
                         </v-data-table>
                       </v-sheet>
-                      <!-- <v-sheet class="px-3 pt-3" border width="50%">
-                        <v-subtitle>
-                          <v-icon color="primary">mdi-calendar-month</v-icon>
-                          <span class="ml-2">Service Record Summary</span>
-                        </v-subtitle>
-                        <v-divider />
-                        <v-card-text>
-                          <v-row justify="center">
-                            <v-col cols="12" md="6">
-                              Total Year: <v-chip class="px-4" color="primary"> {{
-                                applicant_details?.equivalent_unit?.public_years_teaching }}
-                              </v-chip>
-                            </v-col>
-                            <v-col cols="12" md="6">
-                              Equivalent: <v-chip class="px-4" color="secondary"> {{
-                                applicant_details?.equivalent_unit?.yt_equivalent }}
-                              </v-chip>
-                            </v-col>
-                          </v-row>
-                        </v-card-text>
 
-                      </v-sheet> -->
 
                       <p class="mt-3 font-weight-bold text-uppercase text-caption">
                         III. EQUIVALENT UNITS
@@ -190,9 +166,26 @@
                         </v-row>
 
                       </v-sheet>
-                    </v-sheet>
-                    <v-row dense class="ml-15 mt-1">
 
+                      <v-sheet class="ma-2 ml-15 "
+                        v-if="applicant_details.adm_experience && applicant_details.adm_experience.length">
+                        <span class=" text-caption" density="compact">
+                          3. Administrative Supervisory Experience
+                        </span>
+
+                        <v-sheet class="mb-2" border width="100%">
+                          <v-data-table :headers="service_record_headers" :items="applicant_details.adm_experience"
+                            density="compact">
+                            <template v-slot:item.equivalent="{ item }">
+                              {{ item?.selectable?.equivalent }}
+
+                            </template>
+                            <template #bottom v-if="!show_footer" />
+                          </v-data-table>
+                        </v-sheet>
+                      </v-sheet>
+                    </v-sheet>
+                    <v-row class="ml-15 mt-3">
                       LATEST IPCRF RATING : <div class="px-5 font-weight-bold" style="border-bottom: 1px solid black">
                         {{ applicant_details.designation?.ipcrf_rating }} , {{
                           applicant_details.designation?.ipcrf_equivalent
@@ -222,7 +215,8 @@
                   <v-icon class="mr-2">mdi-attachment</v-icon>
                   <span>View Attachment</span>
                 </v-btn>
-                <v-form ref="erf_form">
+
+                <v-form ref="erf_form" v-if="!route?.query?.display">
                   <v-row dense v-if="sdo_attachment_evaluator_condition">
                     <v-col cols="auto" class="mt-3 font-weight-bold text-grey "> Evaluation :</v-col>
                     <v-col cols="auto">
@@ -265,7 +259,7 @@
         </v-row>
         <v-col cols="12" class="d-flex justify-center"
           v-if="applicant_details.status === 'For Evaluation' || applicant_details.status === 'For Checking'">
-          <v-sheet height="17vh" class="text-center w-50  justify-center">
+          <v-sheet class="text-center w-50  justify-center" v-if="!route?.query?.display">
             <div>
               <v-sheet class="d-flex align-center justify-center" min-height="7vh">
                 <div v-show="evaluator_signature_cond">
@@ -291,7 +285,7 @@
 
 
       </v-card-text>
-      <v-card-actions>
+      <v-card-actions v-if="!route?.query?.display">
         <v-row justify="center">
           <v-col cols="6"
             v-if="user && user.role === 'Administrative Officer IV' && applicant_details.status === 'Pending'">
@@ -650,6 +644,12 @@ onBeforeMount(() => {
   if (user) setPageLayout("barren");
 });
 
+// onMounted(() => {
+//   if (route.query.display === 'false' && applicant_details?.value) {
+//     applicant_details.value.display = false;
+//   }
+// });
+
 
 const enum ROLES {
   PRINCIPAL = "Principal",
@@ -662,6 +662,10 @@ const enum ROLES {
   ADMIN5 = "Administrative Officer V",
   RO_EVALUATOR = "RO Evaluator",
 }
+
+
+
+
 
 
 // EVALUATES APPLICANT ATTACHMENT

@@ -1,7 +1,8 @@
 <template>
   <v-sheet>
     <v-card class="pa-10 " rounded="lg" flat>
-      <v-card-text> <v-row :class="`${$vuetify.display.mobile ? 'text-center' : ''}`" dense>
+      <v-card-text>
+        <v-row :class="`${$vuetify.display.mobile ? 'text-center' : ''}`" dense>
           <v-col cols="12">
             <h6 class="text-h5 text-primary">Summary of Reclassification Application/s</h6>
 
@@ -47,8 +48,11 @@
                   </v-chip>
                 </template>
                 <template v-slot:item.actions="{ item }">
-                  <v-btn color="teal" density="compact" @click="load_erf_form(item.selectable._id)"
-                    append-icon="mdi-history"> History
+                  <v-btn class="mr-1" color="teal" density="compact" @click="load_history_form(item.selectable._id)"
+                    prepend-icon="mdi-history"> History
+                  </v-btn>
+                  <v-btn color="primary" density="compact" @click="load_erf_form(item.selectable._id)"
+                    prepend-icon="mdi-eye"> ERF
                   </v-btn>
                 </template>
               </v-data-table>
@@ -122,7 +126,18 @@ async function get_applicants() {
 
   if (error) return swal({ title: "Error", text: error, icon: "error", buttons: { ok: false, cancel: false } })
 }
+
+
 const load_erf_form = (id: any) => {
+  router.push({
+    name: 'sms-erf',
+    query: {
+      id: id,
+      display: 'true'
+    }
+  });
+}
+const load_history_form = (id: any) => {
   router.push({
     name: 'sms-applicant-history',
     query: {
@@ -130,6 +145,5 @@ const load_erf_form = (id: any) => {
     }
   });
 }
-
 
 </script>

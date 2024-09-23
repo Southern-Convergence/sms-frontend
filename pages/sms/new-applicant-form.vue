@@ -477,7 +477,7 @@
                   </v-row>
                 </v-card-text>
                 <v-card-text v-if="qs?.with_erf">
-                  <v-card-title class="text-subtitle-2 d-flex">
+                  <v-card-title class="text-subtitle-1 text-primary">
                     I. Education Attainment and Civil Service Eligibility
                     <v-btn @click="education_attainment_dialog = true" class="ml-2" density="compact" icon="mdi-plus"
                       color="success" />
@@ -485,7 +485,7 @@
                   <v-sheet border class="mx-4 mb-4">
                     <v-data-table :headers="education_attainment_headers" :items="applicant.educational_attainment">
                       <template v-slot:item.actions="{ item }">
-                        <v-btn density="comfortable" color="error" dark icon variant="tonal" class="mx-2"
+                        <v-btn density="comfortable" color="error" dark icon variant="text" class="mx-2"
                           @click="remove_table_item(item.selectable)">
                           <v-icon icon left color="error">mdi-delete</v-icon>
                         </v-btn>
@@ -513,8 +513,8 @@
             </v-window-item>
             <v-window-item :value="3" v-if="qs?.with_erf">
               <v-card-text style="max-height:88vh; justify-content: center; align-items: center;  overflow-y: auto">
-                <v-card-title class="text-subtitle-2">
-                  II. Service Record
+                <v-card-title class="text-subtitle-1 text-primary">
+                  II. Service Record {{ public_teaching }}
                   <v-btn @click="service_record_dialog = true" density="compact" icon="mdi-plus" color="success" />
                 </v-card-title>
                 <v-row dense>
@@ -526,7 +526,7 @@
                           {{ item.selectable.equivalent ? item.selectable.equivalent.toFixed(1) : '' }}
                         </template>
                         <template v-slot:item.actions="{ item }">
-                          <v-btn density="comfortable" color="error" dark icon variant="tonal" class="ma-1"
+                          <v-btn density="comfortable" color="error" dark icon variant="text" class="ma-1"
                             @click="remove_table_item(item.selectable)">
                             <v-icon icon left color="error">mdi-delete</v-icon>
                           </v-btn>
@@ -539,14 +539,14 @@
 
                 </v-row>
 
-                <v-card-title class="text-subtitle-2">
+                <v-card-title class="text-subtitle-1 text-primary">
                   III. Equivalent Units
                 </v-card-title>
                 <v-card-text>
                   <v-row no-gutters>
                     <v-col cols="12">
                       <v-row dense>
-                        <v-col cols="12" class="text-caption text-grey-darken-1"> A. Total Number of Years
+                        <v-col cols="12" class="text-subtitle-2"> A. Total Number of Years
                           Teaching</v-col>
                         <v-col cols="2" xl="2" lg="2" md="6" sm="12"> <v-text-field
                             v-model="applicant.equivalent_unit.public_years_teaching" label="Public Only" hide-details
@@ -563,23 +563,23 @@
                             density="compact" type="number" /></v-col>
                       </v-row>
                     </v-col>
-                    <v-col cols="12" class="mt-2">
+                    <v-col cols="12" class="my-3">
                       <v-row justify="start">
-                        <v-col cols="2" xl="2" lg="2" md="6" sm="6" class="font-weight-bold text-uppercase">
-                          Total Year: <v-chip class="px-4" color="primary"> {{
-                            total_service_record }}
+                        <v-col cols="2" xl="2" lg="2" md="6" sm="6">
+                          <v-chip class="pa-4 font-weight-bold text-substitle-1" color="primary"> {{
+                            ` Total Year - ${total_service_record}` }} {{ public_teaching }}
                           </v-chip>
                         </v-col>
-                        <v-col cols="2" xl="2" lg="2" md="6" sm="6" class="font-weight-bold text-uppercase">
-                          Equivalent: <v-chip class="px-4" color="secondary"> {{
-                            total_service_record_equivalent }}
+                        <v-col cols="2" xl="2" lg="2" md="6" sm="6">
+                          <v-chip class="pa-4 font-weight-bold text-substitle-1" color="success">
+                            {{ `Total Equivalent - ${total_service_record_equivalent}` }} {{ private_teaching }}
                           </v-chip>
                         </v-col>
                       </v-row>
                     </v-col>
                     <v-col cols="12">
                       <v-row dense>
-                        <v-col cols="12" class="text-caption text-grey-darken-1">
+                        <v-col cols="12" class="text-subtitle-2">
                           B. Degree to Equivalent
                         </v-col>
                         <v-col cols="12" xl="4" lg="4" md="6" sm="12"> <v-text-field
@@ -589,12 +589,12 @@
 
                       </v-row>
                     </v-col>
-                    <v-col cols="12" class="text-caption text-grey-darken-1 mt-2">
+                    <v-col cols="12" class="text-subtitle-2 mt-2">
                       C. Areas of Equivalent
                     </v-col>
-                    <v-col cols="12" xl="10" lg="10" md="12" sm="12" class="px-2">
+                    <v-col cols="12" xl="8" lg="8" md="12" sm="12" class="px-2">
                       <v-sheet>
-                        <v-card-title class="text-caption">
+                        <v-card-title class="text-subtitle-2  text-grey-darken-1">
                           1. Professional Study
                           <v-btn @click="professional_study_dialog = true" density="compact" icon="mdi-plus"
                             color="success" />
@@ -603,7 +603,7 @@
                           <v-data-table :headers="professional_study_headers" :items="applicant.professional_study"
                             density="compact">
                             <template v-slot:item.actions="{ item }">
-                              <v-btn density="comfortable" color="error" dark icon variant="tonal" class="ma-1"
+                              <v-btn density="comfortable" color="error" dark icon variant="text" class="ma-1"
                                 @click="remove_table_item(item.selectable)">
                                 <v-icon icon left color="error">mdi-delete</v-icon>
                               </v-btn>
@@ -612,18 +612,19 @@
                         </v-sheet>
                       </v-sheet>
                     </v-col>
-                    <v-col cols="12" xl="10" lg="10" md="12" sm="12" class="px-6" v-if="!adm_display">
+                    <v-col cols="12" xl="10" lg="10" md="12" sm="12" v-if="!adm_display">
                       <v-sheet>
-                        <v-card-title class="text-caption">
+                        <v-card-title class="text-subtitle-2  text-grey-darken-1">
                           2. Administrative Supervisory Experience
-                          <v-btn @click="adm_experience_dialog = true" density="compact" icon="mdi-plus"
+                          <v-btn @click="adm_experience_dialog = true" class="ml-2" density="compact" icon="mdi-plus"
                             color="success" />
+
                         </v-card-title>
-                        <v-sheet border>
+                        <v-sheet border class="mx-4">
                           <v-data-table :headers="adm_experience_headers" :items="applicant.adm_experience"
                             density="compact">
                             <template v-slot:item.actions="{ item }">
-                              <v-btn density="comfortable" color="error" dark icon variant="tonal" class="ma-1"
+                              <v-btn density="comfortable" variant="text" icon class="ma-1"
                                 @click="remove_table_item(item.selectable)">
                                 <v-icon icon left color="error">mdi-delete</v-icon>
                               </v-btn>
@@ -1266,7 +1267,6 @@ const service_record_form = ref()
 function add_service_record() {
   const from_date = new Date(service_record.value.from);
   const to_date = new Date(service_record.value.to);
-
   const MONTHS = 12;
   const FACTOR = 1000 * 60 * 60 * 24 * 30;
   const diff = Date.parse(to_date) - Date.parse(from_date);
@@ -1277,8 +1277,6 @@ function add_service_record() {
   } else if (service_record.value.type === 'Private') {
     equivalent = yearCount / 5;
   }
-
-
   const new_service_record: ServiceRecord = {
     type: service_record.value.type,
     designation: service_record.value.designation,
@@ -1289,41 +1287,40 @@ function add_service_record() {
     count: yearCount,
     equivalent: equivalent,
   };
-
-
   applicant.value.service_record.push(new_service_record);
   service_records.value.push(new_service_record);
-
-
   service_record_form.value.reset();
   service_record_dialog.value = false;
 
 
-  // const total_years = applicant.value.service_record.reduce((total, record) => total + (record?.count || 0), 0);
-  let total_public_year_equivalent = 0;
-  let total_public_years = 0;
-  let total_private_year_equivalent = 0;
-  let total_private_years = 0;
-
-
-  applicant.value.service_record.forEach((record) => {
-    if (record.type === 'Public') {
-      total_public_year_equivalent += record.equivalent;
-      total_public_years += record.count;
-    } else if (record.type === 'Private') {
-      total_private_year_equivalent += record.equivalent;
-      total_private_years += record.count;
-    }
-  });
-
-  // Public
-  applicant.value.equivalent_unit.public_years_teaching = Number(total_public_years).toFixed(1);
-  applicant.value.equivalent_unit.yt_equivalent = Number(total_public_year_equivalent).toFixed(1);
-
-  // Private
-  applicant.value.equivalent_unit.private_years_teaching = Number(total_private_years).toFixed(1);
-  applicant.value.equivalent_unit.pd_equivalent = Number(total_private_year_equivalent).toFixed(1);
 }
+
+const public_teaching = computed(() => {
+  const { total_years, total_equivalent } = applicant.value.service_record
+    .filter(record => record.type === 'Public')
+    .reduce((acc, record) => {
+      acc.total_years += record.count;
+      acc.total_equivalent += record.equivalent;
+      return acc;
+    }, { total_years: 0, total_equivalent: 0 });
+  applicant.value.equivalent_unit.public_years_teaching = Number(total_years.toFixed(1));
+  applicant.value.equivalent_unit.yt_equivalent = Number(total_equivalent.toFixed(1));
+});
+
+const private_teaching = computed(() => {
+  const { total_years, total_equivalent } = applicant.value.service_record
+    .filter(record => record.type === 'Private')
+    .reduce((acc, record) => {
+      acc.total_years += record.count;
+      acc.total_equivalent += record.equivalent;
+      return acc;
+    }, { total_years: 0, total_equivalent: 0 });
+  applicant.value.equivalent_unit.private_years_teaching = Number(total_years.toFixed(1));
+  applicant.value.equivalent_unit.pd_equivalent = Number(total_equivalent.toFixed(1));
+});
+
+
+
 
 /**
  * END: SERVICE RECORD
@@ -1633,10 +1630,9 @@ async function create_application() {
   if (!principal_form.value.isValid) {
     return swal({ text: "Principal Email is required!", icon: "info" });
   }
-  console.log("APPPPPP", applicant.value);
 
   const { attachments } = applicant.value;
-  const temp = new FormData();
+  const temp = new FormData(); a
 
   Object.entries(attachments).forEach(([title, file]) => {
     file.forEach((v: any) => {
@@ -1652,10 +1648,10 @@ async function create_application() {
     method: "POST",
     body: temp
   });
-
   loading.value = false
   applicant_form.value.reset()
   if (error) return swal({ title: "Error", text: error, icon: "error" });
+
   return swal({ title: "Success", text: data, icon: "success" });
 
 }
@@ -1853,7 +1849,7 @@ const private_equivalent_ma_units = computed(() => {
 const total_service_record = computed(() => {
   const public_experience = Number(applicant.value.equivalent_unit.public_years_teaching);
   const private_experience = Number(applicant.value.equivalent_unit.private_years_teaching);
-  const result = public_experience + public_experience
+  const result = public_experience + private_experience
   return Number(result).toFixed();
 });
 const total_service_record_equivalent = computed(() => {
