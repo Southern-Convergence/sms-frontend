@@ -24,21 +24,21 @@
         type="error" variant="tonal"></v-alert>
     </div>
 
-
     <body class="printable-page" v-else>
 
       <div class="content">
         <commons-header />
         <v-sheet class="ma-5">
-          <h3 class="text-center">Summary of Reclassifications Approved by DBM</h3>
+          <h3 class="text-center">Summary of Reclassifications Approved by DBM {{ user.side === 'RO'
+            ? '' : `of ${applicants[0].division}` }}</h3>
 
           <v-sheet class="mt-5" border>
             <table>
               <thead>
                 <tr>
-                  <th> CONTROL NUMBER</th>
-                  <th> NAME</th>
-                  <th>SDO</th>
+                  <th>NAME</th>
+                  <th>CONTROL NUMBER</th>
+                  <th v-if="user.side === 'RO'">SDO</th>
                   <th>FROM</th>
                   <th>TO</th>
                   <th>DATE APPLIED</th>
@@ -51,7 +51,7 @@
                 <tr v-for="app, index in applicants" :key="app">
                   <td> {{ index + 1 }}. {{ app.full_name }}</td>
                   <td>{{ app.control_number }}</td>
-                  <td class="text-center"> {{ app.division }} </td>
+                  <td class="text-center" v-if="user.side === 'RO'"> {{ app.division }} </td>
                   <td class="text-center"> {{ app.current_position }}</td>
                   <td class="text-center"> {{ app.position }}</td>
                   <td class="text-center">{{ new Date(app.created_date).toLocaleDateString('en-US', {
