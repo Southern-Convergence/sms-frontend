@@ -355,7 +355,7 @@
           </v-col>
 
         </v-row>
-        {{ applicant_details.is_with_erf }}
+
       </v-card-actions>
 
     </v-card>
@@ -747,9 +747,13 @@ const getapprvo = (expected_value: boolean) => {
 };
 async function complete_reclass() {
   let approval_status = applicant_details.value.approved;
+  let applicant_email = applicant_details.value.personal_information.email;
+  let applicant_name = `${applicant_details.value.personal_information.first_name}  ${applicant_details.value.personal_information.last_name}`
   const payload = {
     app_id: route.query.id,
-    approved: approval_status
+    approved: approval_status,
+    email: applicant_email,
+    name: applicant_name
   };
   console.log('Compleetetet', payload);
 
