@@ -1,5 +1,6 @@
 <template>
   <v-sheet height="100vh" class="d-flex align-center justify-center">
+
     <!-- <v-card rounded="lg" width="40%">
         <v-toolbar color="indigo" border>
           <v-list-item class="pl-2" density="compact">
@@ -149,6 +150,13 @@
                       : (att.side === 'School' ? 'School' : 'Regional Office')
                     }}
                   </b>
+                </v-card-subtitle>
+                <v-card-subtitle v-if="att.status === 'Pending'">
+                  <v-icon icon="mdi-office-building" class="mr-1" color="indigo" /> Principal Email :
+                  <i class="text-blue">
+                    {{ applicant_history?.principal }}
+                  </i>
+                  <span> </span>
                 </v-card-subtitle>
                 <v-card-subtitle class="text-caption" v-if="user || user?.side === 'SDO'">
                   <v-icon icon="mdi-calendar" class="mr-1" color="blue" /> Date : {{ new
