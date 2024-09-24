@@ -197,9 +197,9 @@
             </v-card>
           </v-col>
 
-          <v-col cols="12">
+          <v-col cols="12" class="my-2 font-weight-bold text-h6  text-uppercase">
             <v-icon class="mr-2 mb-2 text-indigo" size="24">mdi-file-document</v-icon>
-            <span class="font-weight-bold text-h6 text-indigo">Applicant Attachments</span>
+            Applicant Attachments
           </v-col>
           <v-col cols="6" v-if="Object.keys(applicant_details).length"
             v-for="[key, value], index in Object.entries(applicant_details?.attachments)">
@@ -313,7 +313,7 @@
                     applicant_details?.principal?.name
                   }}</div>
                   <hr />
-                  <div class="text-center">Principal</div>
+                  <div class="text-center">Principal/School Head</div>
                 </div>
               </v-col>
             </v-row>
@@ -341,7 +341,7 @@
               user.side === 'SDO') || applicant_details?.status === 'For Evaluation' || applicant_details?.status === 'For
           Checking'" -->
           <v-col cols="6"
-            v-else-if="applicant_details?.status === 'For Evaluation' && user.role === 'Evaluator' || applicant_details?.status === 'For Evaluation' && user.role === 'RO Evaluator'">
+            v-else-if="applicant_details?.status === 'For Evaluation' && user.role === 'Evaluator' || applicant_details?.status === 'For Evaluation' && user.role === 'RO Evaluator' && applicant_details.is_with_erf === false">
             <v-btn @click="sdo_evaluator_dialog = true" block variant="tonal"
               :color="applicant_details?.status === 'Disapproved' ? 'error' : 'success'">
               {{ applicant_details?.status === 'Disapproved' ? 'Return to Principal' : 'Submit' }}
@@ -355,6 +355,7 @@
           </v-col>
 
         </v-row>
+
       </v-card-actions>
 
     </v-card>
@@ -587,10 +588,11 @@
     <commons-dialog v-model="sdo_evaluator_dialog" max-width="25%" icon="mdi-school"
       title="For Evaluation: Complete the following" submitText="Submit" @submit="handle_application">
       <v-card-text v-if="applicant_details.assignees[2]">
-        <p class="mb-4">Please fill out the range assessment and remarks, as these will be included in the applicant's
-          generated ERF
-        </p>
+
         <template v-if="applicant_details.is_with_erf && user.side === 'SDO'">
+          <p class="mb-4">Please fill out the range assessment and remarks, as these will be included in the applicant's
+            generated ERF
+          </p>
           <v-text-field v-model="applicant_details.assignees[2].range_assignment.name" label="Enter Range Assessment"
             prepend-icon="mdi-chart-bar" outlined />
           <v-text-field v-model="applicant_details.assignees[2].range_assignment.remarks" label="Remarks"
@@ -600,6 +602,9 @@
             outlined />
         </template>
         <template v-if="applicant_details.is_with_erf && user.side === 'RO'">
+          <p class="mb-4">Please fill out the range assessment and remarks, as these will be included in the applicant's
+            generated ERF
+          </p>
           <v-text-field v-model="applicant_details.assignees[4].range_assignment.name" label="Enter Range Assessment"
             prepend-icon="mdi-chart-bar" outlined />
           <v-text-field v-model="applicant_details.assignees[4].range_assignment.remarks" label="Remarks"
@@ -607,6 +612,7 @@
 
         </template>
         <template v-if="!applicant_details.is_with_erf && user.side === 'SDO'">
+
           <v-file-input v-model="applicant_details.assignees[2].pal" label="Upload Plantilla Allocation List"
             outlined />
         </template>
@@ -741,10 +747,16 @@ const getapprvo = (expected_value: boolean) => {
 };
 async function complete_reclass() {
   let approval_status = applicant_details.value.approved;
+  let applicant_email = applicant_details.value.personal_information.email;
+  let applicant_name = `${applicant_details.value.personal_information.first_name}  ${applicant_details.value.personal_information.last_name}`
   const payload = {
     app_id: route.query.id,
-    approved: approval_status
+    approved: approval_status,
+    email: applicant_email,
+    name: applicant_name
   };
+  console.log('Compleetetet', payload);
+
   const { data, error } = await $rest('new-applicant/complete-application', {
     method: "PUT",
     body: payload

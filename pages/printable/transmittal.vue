@@ -122,19 +122,19 @@
 
                 <v-col cols="12">
                   <v-row dense class="d-flex align-center">
-                    <v-col cols="1" class="ma-0 pa-0"> <v-checkbox hide-details color="success" /></v-col>
+                    <v-col cols="1" class="ma-0 pa-0"> <v-checkbox hide-details color="success" readonly /></v-col>
                     <v-col cols="11"> Submission of Lacking Documents</v-col>
                   </v-row>
                 </v-col>
                 <v-col cols="12">
                   <v-row dense class="d-flex align-center">
-                    <v-col cols="1" class="ma-0 pa-0"> <v-checkbox hide-details color="success" /></v-col>
-                    <v-col cols="11"> Correcyion of Entries</v-col>
+                    <v-col cols="1" class="ma-0 pa-0"> <v-checkbox hide-details color="success" readonly /></v-col>
+                    <v-col cols="11"> Correction of Entries</v-col>
                   </v-row>
                 </v-col>
                 <v-col cols="12">
                   <v-row dense class="d-flex align-center">
-                    <v-col cols="1" class="ma-0 pa-0"> <v-checkbox hide-details color="success" /></v-col>
+                    <v-col cols="1" class="ma-0 pa-0"> <v-checkbox hide-details color="success" readonly /></v-col>
                     <v-col cols="11"> Compliance of Deficiency</v-col>
                   </v-row>
                 </v-col>
@@ -156,7 +156,7 @@
                 </v-col>
                 <v-col cols="12">
                   <v-row no-gutters class="d-flex align-center">
-                    <v-col cols="1" class="ma-0 pa-0"> <v-checkbox hide-details color="success" /></v-col>
+                    <v-col cols="1" class="ma-0 pa-0"> <v-checkbox hide-details color="success" readonly /></v-col>
                     <v-col cols="11"> For Return to applicant/school</v-col>
                   </v-row>
                 </v-col>

@@ -549,14 +549,14 @@
                         <v-col cols="12" class="text-subtitle-2"> A. Total Number of Years
                           Teaching</v-col>
                         <v-col cols="2" xl="2" lg="2" md="6" sm="12"> <v-text-field
-                            v-model="applicant.equivalent_unit.public_years_teaching" label="Public Only" hide-details
-                            density="compact" type="number" readonly /></v-col>
-                        <v-col cols="2" xl="2" lg="2" md="6" sm="12"> <v-text-field label="Equivalent"
+                            v-model="applicant.equivalent_unit.public_years_teaching" label="Public Schools"
+                            hide-details density="compact" type="number" readonly /></v-col>
+                        <v-col cols="2" xl="2" lg="2" md="6" sm="12"> <v-text-field label="Public Equivalent"
                             v-model="applicant.equivalent_unit.yt_equivalent" hide-details density="compact"
                             type="number" readonly />
                         </v-col>
                         <v-col cols="2" xl="2" lg="2" md="6" sm="12"> <v-text-field
-                            v-model="applicant.equivalent_unit.private_years_teaching" label="Public Schools"
+                            v-model="applicant.equivalent_unit.private_years_teaching" label="Private Schools"
                             hide-details density="compact" type="number" readonly /></v-col>
                         <v-col cols="2" xl="2" lg="2" md="6" sm="12"> <v-text-field
                             v-model="applicant.equivalent_unit.pd_equivalent" label="Private Equivalent" hide-details
@@ -612,9 +612,9 @@
                         </v-sheet>
                       </v-sheet>
                     </v-col>
-                    <v-col cols="12" xl="10" lg="10" md="12" sm="12" v-if="!adm_display">
+                    <v-col cols="12" xl="10" lg="10" md="12" sm="12" v-if="is_school(qs?.title)">
                       <v-sheet>
-                        <v-card-title class="text-subtitle-2  text-grey-darken-1">
+                        <v-card-title class=" text-subtitle-2 text-grey-darken-1">
                           2. Administrative Supervisory Experience
                           <v-btn @click="adm_experience_dialog = true" class="ml-2" density="compact" icon="mdi-plus"
                             color="success" />
@@ -647,6 +647,8 @@
                   text="Ensure  that all uploaded documents adhere to the prescribed standards and are
                   valid for processing. Your attention to document accuracy is crucial for a smooth application process."></v-alert>
                 <v-row no-gutters>
+
+
                   <v-col cols="12" xl="6" lg="6" md="6" sm="12"
                     v-for="( attachment_title, index )  in selected_qs?.attachment">
                     <v-file-input variant="underlined" :label="attachment_title" :key="index"
@@ -836,7 +838,7 @@
               </v-avatar>
             </template>
 
-            <v-list-item-title>Principal Email is required!</v-list-item-title>
+            <v-list-item-title>Principal/School Head Email is required!</v-list-item-title>
 
           </v-list-item>
 
@@ -845,12 +847,15 @@
         </v-toolbar>
 
         <v-card-text class="ma-4">
-          <p class="mb-3"> Please enter the email address of your school principal to validate the authenticity of the
+          <p class="mb-3"> Please enter the email address of your school principal/school head to validate the
+            authenticity
+            of the
             attached
             document/s.</p>
           <v-form ref="principal_form">
             <v-text-field v-model="applicant.principal.email"
-              :rules="[(v) => /.+@.+/.test(v) || 'Invalid Email address']" label="Enter Principal's Email Address" />
+              :rules="[(v) => /.+@.+/.test(v) || 'Invalid Email address']"
+              label="Enter Principal's/School Head Email Address" />
           </v-form>
         </v-card-text>
         <v-divider />
@@ -870,11 +875,11 @@
     </v-dialog>
 
     <commons-dialog max-width="35%" v-model="update_dialog" :icon="'mdi-information'"
-      :title="'Principal Email Address is required!'" :submitText="'Submit'" @submit="update_applicant">
+      :title="'Principal/School Head Email Address is required!'" :submitText="'Submit'" @submit="update_applicant">
       <v-card-text class="ma-4 ">
-        Please enter the email address of your school principal to validate the authenticity of the attached
+        Please enter the email address of your school principal/school head to validate the authenticity of the attached
         document/s.
-        <v-text-field v-model="applicant.principal.email" label="Enter Principal's Email Address" />
+        <v-text-field v-model="applicant.principal.email" label="Enter Principal's/School Head's Email Address" />
       </v-card-text>
     </commons-dialog>
     <v-dialog v-model="esig" width="550" height="450">
@@ -1392,10 +1397,7 @@ function add_adm_experience() {
   adm_experience_dialog.value = false;
 
 }
-const adm_display = computed(() => {
-  const ht_qs = ["Head Teacher I", "Head Teacher II", "Head Teacher III", "Head Teacher IV", "Head Teacher V", "Head Teacher VI"]
-  if (ht_qs === qs?.value?.title) return true
-})
+
 const education_attainment_headers = ref([
   { title: "Date", key: "date", sortable: false },
   { title: "Titles, Dergree Highest Grade Attained", key: "degree", sortable: false },
@@ -1628,7 +1630,7 @@ const loading = ref(false)
 // CREATE 
 async function create_application() {
   if (!principal_form.value.isValid) {
-    return swal({ text: "Principal Email is required!", icon: "info" });
+    return swal({ text: "Principal/School Head Email is required!", icon: "info" });
   }
 
   const { attachments } = applicant.value;

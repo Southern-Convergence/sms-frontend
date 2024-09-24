@@ -32,6 +32,7 @@
             </v-col>
 
             <v-spacer />
+
             <v-col cols="2"> <v-select class="pr-2" label="Filter by Position" v-model="selected_position"
                 :items="positions" item-value="_id" persistent-hint clearable /></v-col>
             <v-col cols="2" v-if="user.role === 'Administrative Officer V'"> <v-select class="pr-2"
@@ -41,14 +42,14 @@
                 v-model="selected_status" :items="['RO Pending', 'Received Printout/s']" persistent-hint clearable />
             </v-col>
             <v-col cols="auto" class="text-grey d-flex">
-              <v-btn @click="get_application" class="mt-1" color="primary">
+              <v-btn @click="filter_reclass" class="mt-1" color="primary">
                 <v-icon class="pr-1">mdi-filter</v-icon>Filter</v-btn>
             </v-col>
-            <v-col cols="auto" v-if="selected_status === 'RO Pending'">
+            <v-col cols="auto" v-if="is_filtered && selected_status === 'RO Pending'">
               <v-btn @click="evaluators_dialog = true" class="mt-1" color="primary">Assign to
                 Evaluator</v-btn>
             </v-col>
-            <v-col cols="auto" v-if="selected_status === 'Received Printout/s'">
+            <v-col cols="auto" v-if="is_filtered && selected_status === 'Received Printout/s'">
               <v-btn @click="endorsement_dialog = true" class="mt-1" color="amber">Generate
                 Endorsment
               </v-btn>
@@ -82,13 +83,17 @@
                         </v-avatar>
                       </v-img>
                     </div>
+
                     <div>
                       <div class="w-40 text-body-1 font-weight-bold d-flex">
                         {{ value.full_name }}
 
                       </div>
 
-                      <div class="mb-1 text-body-2 text-grey">{{ value.position }}
+                      <div class="mb-1 text-body-2 text-grey">{{ value.position }} <span v-if="value.education_level">
+                          {{ `-
+                          ${value.education_level}`
+                          }}</span>
                         <i class="font-weight-regular text-primary" v-if="value.is_with_erf" color="primary">(with
                           ERF)</i>
                       </div>
@@ -257,6 +262,12 @@ const endorsement_dialog = ref(false)
 const tab = ref(null);
 const is_hovered = ref(false);
 const evaluators_dialog = ref(false)
+const is_filtered = ref(false)
+function filter_reclass() {
+
+  get_application();
+  is_filtered.value = true;
+}
 const tabItems = ref([
   { label: 'For Signature', value: 'For Signature' },
   { label: 'Pending', value: 'Pending' },
