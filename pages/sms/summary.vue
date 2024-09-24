@@ -52,7 +52,7 @@
                     prepend-icon="mdi-history"> History
                   </v-btn>
                   <v-btn color="primary" density="compact" @click="load_erf_form(item.selectable._id)"
-                    prepend-icon="mdi-eye"> ERF
+                    prepend-icon="mdi-eye"> See more
                   </v-btn>
                 </template>
               </v-data-table>
