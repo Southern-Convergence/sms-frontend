@@ -92,7 +92,7 @@
 
 </v-card> -->
     <v-sheet class="h-100 w-100 d-flex align-center justify-center" color="#ECEFF1">
-      <v-card rounded="lg" width="40%" class="mx-auto my-0">
+      <v-card rounded="lg" width="600px" class="mx-auto my-0">
         <v-toolbar :color="'indigo'" border>
           <v-list-item class="pl-2" density="compact">
             <template v-slot:prepend>
@@ -122,9 +122,7 @@
           </v-sheet>
 
           <v-card class="overflow-y-auto py-4" height="70vh" width="100%">
-
             <v-card-text v-if="applicant_history?.request_log && applicant_history.request_log.length > 0">
-
               <v-alert class="pa-4 ma-4 elevation-3" rounded="lg" v-for="(att, index) in reverse_logs" :key="index"
                 border="start" color="grey-lighten-5">
                 <p class="pl-6" v-if="applicant_history?.request_log?.slice(-1)[0]?.type === 'RO'">
