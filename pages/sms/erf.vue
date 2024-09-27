@@ -336,12 +336,9 @@
 
           </v-col>
 
-          <!--applicant_details?.status != 'Completed' && applicant_details?.status != 'Pending' &&
-            applicant_details?.status != 'Received Printout/s' && (applicant_details?.status != 'Approved for Printing' &&
-              user.side === 'SDO') || applicant_details?.status === 'For Evaluation' || applicant_details?.status === 'For
-          Checking'" -->
+          <!-- Check on its condition medju hubog hubog pa -->
           <v-col cols="6"
-            v-else-if="applicant_details?.status === 'For Evaluation' && user.role === 'Evaluator' || applicant_details?.status === 'For Evaluation' && user.role === 'RO Evaluator' && applicant_details.is_with_erf === false">
+            v-else-if="(applicant_details?.status === 'For Evaluation' && user.role === 'Evaluator') || (applicant_details?.status === 'For Evaluation' && user.role === 'RO Evaluator' && applicant_details.is_with_erf === true)">
             <v-btn @click="sdo_evaluator_dialog = true" block variant="tonal"
               :color="applicant_details?.status === 'Disapproved' ? 'error' : 'success'">
               {{ applicant_details?.status === 'Disapproved' ? 'Return to Principal' : 'Submit' }}
@@ -483,7 +480,115 @@
         </v-window>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="view_applicant_info_dialog" width="50%">
+    <v-dialog v-model="view_applicant_info_dialog" width="60%">
+      <v-card>
+        <v-toolbar color="indigo" v-if="$attrs['hide-toolbar'] !== ''" border>
+          <v-list-item class="pl-2" density="compact">
+
+            <v-list-item-title> <v-icon class="px-4 pb-2" size="24" icon="mdi-account" dark />APPLICANT
+              INFORMATION</v-list-item-title>
+
+          </v-list-item>
+
+          <v-spacer />
+          <v-btn class="mr-0" @click="view_applicant_info_dialog = false" rounded="0" icon="mdi-close" />
+        </v-toolbar>
+
+        <!-- Content Section -->
+        <v-card-text style="height:68vh; justify-content: center; align-items: center;  overflow-y: auto; ">
+
+          <v-table dense class="mx-0">
+            <tbody>
+              <tr>
+                <td width="20%"><strong>Position</strong></td>
+                <td class="text-uppercase text-primary font-weight-bold">
+                  {{ applicant_qs_info?.position }}
+                </td>
+              </tr>
+              <tr v-if="applicant_qs_info?.education_level">
+                <td><strong>Education Level</strong></td>
+                <td>{{ applicant_qs_info?.education_level }}</td>
+              </tr>
+              <tr>
+                <td><strong>Education</strong></td>
+                <td class="py-1">
+                  <v-chip class="mt-1" density="comfortable" color="primary"
+                    v-for="(educ, index) in applicant_qs_info?.education" :key="index">
+                    {{ educ }} <br />
+                  </v-chip>
+                </td>
+              </tr>
+              <tr v-if="applicant_qs_info?.qualification?.graduate_units">
+                <td><strong>Graduate Units</strong></td>
+                <td>{{ applicant_qs_info?.qualification?.graduate_units }}</td>
+              </tr>
+              <tr>
+                <td><strong>M.A. Units</strong></td>
+                <td>{{ applicant_qs_info?.qualification?.ma_units }}</td>
+              </tr>
+              <tr v-if="applicant_qs_info?.qualification?.experience_sr_public > 0">
+                <td><strong>Public Experience</strong></td>
+                <td>{{ applicant_qs_info?.qualification?.experience_sr_public }} years</td>
+                <td><strong>Equivalent</strong></td>
+                <td>{{ applicant_qs_info?.qualification?.experience_sr_public_equivalent }} M.A. Units</td>
+              </tr>
+              <tr v-if="applicant_qs_info?.qualification?.experience_sr_private > 0">
+                <td><strong>Private Experience</strong></td>
+                <td>{{ applicant_qs_info?.qualification?.experience_sr_private }} years</td>
+                <td><strong>Equivalent</strong></td>
+                <td>{{ applicant_qs_info?.qualification?.experience_sr_private_equivalent }} M.A. Units</td>
+              </tr>
+              <tr v-if="applicant_qs_info?.qualification?.total_ma > 0">
+                <td><strong class="text-primary">Total M.A. Units</strong></td>
+                <td>{{ applicant_qs_info?.qualification?.total_ma }}</td>
+              </tr>
+              <tr v-if="applicant_qs_info?.experience?.length > 0">
+                <td><strong>Experience</strong></td>
+                <td class="py-1">
+
+                  <v-chip class="mt-1" density="comfortable" color="primary"
+                    v-for="(exp, index) in applicant_qs_info?.experience" :key="index">
+                    {{ exp }} <br />
+                  </v-chip>
+                </td>
+              </tr>
+              <tr v-if="applicant_qs_info?.rating">
+                <td><strong>Performance Rating</strong></td>
+                <td>{{ applicant_qs_info?.rating }}</td>
+              </tr>
+              <tr>
+                <td><strong>Training Hours</strong></td>
+                <td>{{ applicant_qs_info?.qualification?.training }}</td>
+              </tr>
+              <tr v-if="applicant_qs_info?.leadership?.length > 0">
+                <td><strong>Leadership and Potential Points</strong></td>
+                <td class="py-1">
+                  <v-chip class="mt-1" density="comfortable" color="primary"
+                    v-for="(lead, index) in applicant_qs_info?.leadership" :key="index">
+                    {{ lead }} <br />
+                  </v-chip>
+
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Attachments</strong></td>
+                <td>
+                  <p v-for="(attach, index) in applicant_qs_info?.attachments" :key="index" class="mb-1">
+                    <v-icon size="16" color="primary" class="mr-1">mdi-attachment</v-icon>
+                    {{ attach.description }}
+                  </p>
+
+                </td>
+              </tr>
+            </tbody>
+          </v-table>
+
+
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
+    <!-- <v-dialog v-model="view_applicant_info_dialog" width="800px">
       <v-card flat class="mx-5">
         <v-toolbar color="indigo" v-if="$attrs['hide-toolbar'] !== ''" border>
           <v-list-item class="pl-2" density="compact">
@@ -500,19 +605,22 @@
           <table>
             <tbody>
               <tr>
-                <td width="20%"> Position</td>
+                <td width="30%"> Position</td>
                 <td class="text-uppercase text-primary font-weight-bold">
 
                   {{ applicant_qs_info?.position }}
                 </td>
               </tr>
+
               <tr v-if="applicant_qs_info?.education_level">
                 <td> Education Level</td>
                 <td> {{ applicant_qs_info?.education_level }}</td>
               </tr>
               <tr>
                 <td> Education</td>
-                <td v-for="educ, index in applicant_qs_info?.education" :key="educ">{{ educ }}</td>
+                <td>
+                  <p v-for="educ, index in applicant_qs_info?.education" :key="educ">{{ educ }} <br /> </p>
+                </td>
               </tr>
               <tr v-if="applicant_qs_info?.qualification?.graduate_units">
                 <td> Graduate Units</td>
@@ -583,7 +691,7 @@
 
         </v-card-text>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
 
     <commons-dialog v-model="sdo_evaluator_dialog" max-width="25%" icon="mdi-school"
       title="For Evaluation: Complete the following" submitText="Submit" @submit="handle_application">
