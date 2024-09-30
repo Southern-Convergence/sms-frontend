@@ -37,7 +37,8 @@
                   <span class="text-primary">{{ item.selectable.control_number }}</span>
                 </template>
                 <template v-slot:item.status="{ item }">
-                  <v-chip color="success" variant="text">{{ item.selectable.status }}</v-chip>
+                  <v-chip :color="item.selectable.status === 'with Discrepancy' ? 'error' : 'success'" variant="text">{{
+                    item.selectable.status }}</v-chip>
                 </template>
 
                 <template v-slot:item.actions="{ item }">
@@ -59,10 +60,12 @@
 
                       <v-list>
                         <v-list-item @click="load_endorsement_letter(item.selectable._id)"
-                          v-if="item.selectable.status === 'For Verification' && user.role === 'Verifier'">
+                          v-if="item.selectable.status === 'For Verification' || item.selectable.status === 'Resubmitted' && user.role === 'Verifier'">
                           <v-icon class="px-4" color="primary"> mdi-magnify</v-icon>
 
-                          {{ item.selectable.status === 'For Verification' ? 'Verify' : 'View' }}
+                          {{ item.selectable.status === 'For Verification' || item.selectable.status === 'Resubmitted'
+                            ? 'Verify' : 'View'
+                          }}
                         </v-list-item>
 
                         <v-list-item v-else @click="load_endorsement_letter(item.selectable._id)">
@@ -109,16 +112,17 @@
         </v-toolbar>
 
 
-        <v-card-text>
+        <v-card-text style="max-height:68vh; justify-content: center; align-items: center;  overflow-y: auto; ">
           <v-alert color="primary" variant="outlined" v-for="log in logs_data.selectable.endorsement_log" :key="log"
             border="start" class="mb-4">
-
             <v-card>
-
               <v-card-subtitle class="mb-2 d-flex align-center">
-                <v-icon color="blue darken-2" class="mr-2">mdi-check-circle</v-icon>
+                <v-icon :color="log.status === 'with Discrepancy' ? 'error' : 'primary'" class="mr-2">{{
+                  log.status === 'with Discrepancy' ? 'mdi-alpha-x-circle ' : 'mdi-check-circle' }}</v-icon>
                 Status:
-                <b class="text-capitalize ml-1 text-primary"> {{ log.status }}</b>
+                <b class="ml-1" :class="log.status === 'with Discrepancy' ? 'text-red' : 'text-primary'"> {{
+                  log.status
+                }} </b>
               </v-card-subtitle>
 
 
@@ -131,7 +135,7 @@
 
               <v-card-subtitle class="d-flex align-center text-caption mb-3">
                 <v-icon color="orange darken-2" class="mr-2">mdi-calendar-clock</v-icon>
-                {{ log.status === 'Verified' ? 'Date Verified' : 'Date Generated' }}:
+                Date :
                 <span class="text-blue ml-1">
                   {{ new Date(log.timestamp).toLocaleString('en-US', {
                     month: 'long',

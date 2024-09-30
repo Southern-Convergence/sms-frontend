@@ -40,7 +40,8 @@
               @click="applicant_erf(applicant_details._id)" class="font-weight-bold mx-2" prepend-icon="mdi-printer"
               color="primary" density="compact"> Print ERF
             </v-btn>
-            <v-btn v-if="applicant_details.is_with_erf && applicant_details?.status != 'For Signature'"
+            <v-btn
+              v-if="!['For Signature', 'Pending', 'RO Pending', 'For Evaluation', 'For Checking'].includes(applicant_details?.status)"
               @click="applicant_transmital(applicant_details._id)" class="font-weight-bold mr-2"
               prepend-icon="mdi-printer" color="primary" density="compact"> Print Transmital
             </v-btn>
@@ -67,7 +68,7 @@
                 <v-row no-gutters class="ma-2" justify="center">
                   <v-col cols="6" class="text-capitalize">Name : <b> {{
                     applicant_details?.personal_information?.first_name
-                  }} {{ applicant_details?.personal_information?.last_name }} </b>
+                      }} {{ applicant_details?.personal_information?.last_name }} </b>
                   </v-col>
                   <v-col cols="6">Date of Birth : <b> {{
                     applicant_details?.personal_information?.birthday }}
@@ -197,7 +198,7 @@
             </v-card>
           </v-col>
 
-          <v-col cols="12" class="my-2 font-weight-bold text-h6  text-uppercase">
+          <v-col cols="12" class="my-2 font-weight-bold  text-uppercase text-primary">
             <v-icon class="mr-2 mb-2 text-indigo" size="24">mdi-file-document</v-icon>
             Applicant Attachments
           </v-col>

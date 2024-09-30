@@ -99,9 +99,10 @@
                   <!-- Additional static rows if needed -->
                   <tr>
                     <td class="pa-1">Schools Divisions Office</td>
-                    <td class="pa-1"> <span v-if="erf?.assignees && erf?.assignees[2].pal"> Plantilla Allocation
+                    <td class="pa-1"> <span v-if="erf?.assignees && erf?.assignees[2].approved"> Plantilla Allocation
                         List</span></td>
-                    <td class="text-center"> <span v-if="erf?.assignees && erf?.assignees[2].pal">Completed </span></td>
+                    <td class="text-center"> <span v-if="erf?.assignees && erf?.assignees[2].approved">Completed </span>
+                    </td>
                   </tr>
                 </tbody>
               </table>
