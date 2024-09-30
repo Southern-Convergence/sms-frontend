@@ -96,12 +96,14 @@
       <v-btn v-if="endorsement_data.status === 'Verified' && user.role === 'Administrative Officer V'" color="primary"
         icon="mdi-printer" size="large" class="mb-2" @click="print()">
       </v-btn>
-      <v-btn v-if="endorsement_data.status === 'For Verification' && user.role === 'Verifier'" color="primary"
-        size="large" rounded="xl" class="mb-2" prepend-icon="mdi-check-all" @click="verify_dialog = true">
+      <v-btn
+        v-if="(endorsement_data.status === 'Resubmitted' || endorsement_data.status === 'For Verification') && user.role === 'Verifier'"
+        color="primary" size="large" rounded="xl" class="mb-2" prepend-icon="mdi-check-all"
+        @click="verify_dialog = true">
         Verify
       </v-btn>
-      <v-btn v-if="endorsement_data.status === 'Discrepancy' && user.role === 'Administrative Officer V'" color="amber"
-        size="large" rounded="xl" class="mb-2" prepend-icon="mdi-check-all" @click="verify_dialog = true">
+      <v-btn v-if="endorsement_data.status === 'with Discrepancy' && user.role === 'Administrative Officer V'"
+        color="amber" size="large" rounded="xl" class="mb-2" prepend-icon="mdi-check-all" @click="verify_dialog = true">
         Resubmit
       </v-btn> <br />
       <v-btn icon="mdi-keyboard-return" size="large" @click="$router.back()">
@@ -171,12 +173,21 @@ const remarks = ref('')
 
 async function update_endorsement_letter() {
   let status;
+  console.log("endorsement_dataendorsement_dataendorsement_data", endorsement_data.value.status);
+  console.log('USereeeeeeeeeeeee', user.role);
 
-  if (user.role === 'Administrative Officer V') {
+  if (user.role === 'Administrative Officer V' && endorsement_data?.value.status === 'with Discrepancy') {
+    status = "Resubmitted";
+  } else if (user.role === 'Administrative Officer V') {
+    console.log("IWooooooooooooooooooont");
     status = "For Verification";
-  } else {
-    status = remarks.value === '' ? "Verified" : "Discrepancy";
+  } else if (user.role === 'Verifier' && remarks.value != '') {
+    status = "with Discrepancy";
+  } else if (user.role === 'Verifier' && remarks.value === '') {
+    status = "Verified";
   }
+
+  console.log("Stauuuuuuuuuuuuusss", status);
 
 
   const payload = {

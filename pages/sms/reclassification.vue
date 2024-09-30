@@ -19,7 +19,7 @@
 
 
           <v-row dense v-if="user.role === 'Administrative Officer V' || user.role === 'Administrative Officer IV'">
-            <v-col cols="6" class="mb-2" v-if="user.role === 'Administrative Officer IV'">
+            <!-- <v-col cols="6" class="mb-2" v-if="user.role === 'Administrative Officer IV'">
               <v-alert closable icon="mdi-information" variant="tonal" color="primary"> Reclass application with status
                 <b>Approval
                   for
@@ -27,9 +27,9 @@
                 Form.
                 Obtain
                 the signature of your Schools Division Superintendent and send the completed form along with the
-                applicant's original documents.</v-alert>
+                applicant's original documents.</v-alert> =
 
-            </v-col>
+            </v-col> -->
 
             <v-spacer />
 
@@ -55,9 +55,10 @@
               </v-btn>
             </v-col>
 
+
           </v-row>
 
-          <v-row dense v-if="user.role === 'Evaluator' && user.side === 'RO'">
+          <v-row dense v-if="user.role === 'RO Evaluator'">
             <v-col cols="3">
               <v-select label="Filter per School" v-model="selected_school" :items="school_name" />
             </v-col>
